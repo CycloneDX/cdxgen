@@ -145,10 +145,11 @@ export function collectSwiftInfo(dir: string): {
 /**
  * Method to run a swift command
  *
- * @param {string} dir Working directory
+ * @param {String} dir Working directory
+ * @param {Array} args Command arguments
  * @returns Object containing swift details
  */
-export function runSwiftCommand(dir: string, args: any): any;
+export function runSwiftCommand(dir: string, args: any[]): any;
 export function collectEnvInfo(dir: any): {
     type: string;
     name: string;

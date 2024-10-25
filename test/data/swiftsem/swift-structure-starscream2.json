@@ -1,0 +1,3702 @@
+{
+  "key.diagnostic_stage": "source.diagnostic.stage.swift.parse",
+  "key.length": 7548,
+  "key.offset": 0,
+  "key.substructure": [
+    {
+      "key.accessibility": "source.lang.swift.accessibility.internal",
+      "key.attributes": [
+        {
+          "key.attribute": "source.decl.attribute.internal",
+          "key.length": 8,
+          "key.offset": 37
+        }
+      ],
+      "key.bodylength": 265,
+      "key.bodyoffset": 96,
+      "key.elements": [
+        {
+          "key.kind": "source.lang.swift.structure.elem.typeref",
+          "key.length": 9,
+          "key.offset": 85
+        }
+      ],
+      "key.inheritedtypes": [
+        {
+          "key.name": "AnyObject"
+        }
+      ],
+      "key.kind": "source.lang.swift.decl.protocol",
+      "key.length": 316,
+      "key.name": "HAResponseControllerDelegate",
+      "key.namelength": 28,
+      "key.nameoffset": 55,
+      "key.offset": 46,
+      "key.substructure": [
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 131,
+          "key.name": "responseController(_:didTransitionTo:)",
+          "key.namelength": 126,
+          "key.nameoffset": 106,
+          "key.offset": 101,
+          "key.substructure": [
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 34,
+              "key.name": "controller",
+              "key.offset": 134,
+              "key.typename": "HAResponseController"
+            },
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 48,
+              "key.name": "phase",
+              "key.namelength": 15,
+              "key.nameoffset": 178,
+              "key.offset": 178,
+              "key.typename": "HAResponseControllerPhase"
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 123,
+          "key.name": "responseController(_:didReceive:)",
+          "key.namelength": 118,
+          "key.nameoffset": 242,
+          "key.offset": 237,
+          "key.substructure": [
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 34,
+              "key.name": "controller",
+              "key.offset": 270,
+              "key.typename": "HAResponseController"
+            },
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 40,
+              "key.name": "response",
+              "key.namelength": 10,
+              "key.nameoffset": 314,
+              "key.offset": 314,
+              "key.typename": "HAWebSocketResponse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key.accessibility": "source.lang.swift.accessibility.internal",
+      "key.attributes": [
+        {
+          "key.attribute": "source.decl.attribute.internal",
+          "key.length": 8,
+          "key.offset": 364
+        }
+      ],
+      "key.bodylength": 608,
+      "key.bodyoffset": 416,
+      "key.elements": [
+        {
+          "key.kind": "source.lang.swift.structure.elem.typeref",
+          "key.length": 9,
+          "key.offset": 405
+        }
+      ],
+      "key.inheritedtypes": [
+        {
+          "key.name": "Equatable"
+        }
+      ],
+      "key.kind": "source.lang.swift.decl.enum",
+      "key.length": 652,
+      "key.name": "HAResponseControllerPhase",
+      "key.namelength": 25,
+      "key.nameoffset": 378,
+      "key.offset": 373,
+      "key.substructure": [
+        {
+          "key.kind": "source.lang.swift.decl.enumcase",
+          "key.length": 9,
+          "key.offset": 421,
+          "key.substructure": [
+            {
+              "key.accessibility": "source.lang.swift.accessibility.internal",
+              "key.kind": "source.lang.swift.decl.enumelement",
+              "key.length": 4,
+              "key.name": "auth",
+              "key.namelength": 4,
+              "key.nameoffset": 426,
+              "key.offset": 426
+            }
+          ]
+        },
+        {
+          "key.kind": "source.lang.swift.decl.enumcase",
+          "key.length": 29,
+          "key.offset": 435,
+          "key.substructure": [
+            {
+              "key.accessibility": "source.lang.swift.accessibility.internal",
+              "key.kind": "source.lang.swift.decl.enumelement",
+              "key.length": 24,
+              "key.name": "command(version:)",
+              "key.namelength": 24,
+              "key.nameoffset": 440,
+              "key.offset": 440,
+              "key.substructure": [
+                {
+                  "key.kind": "source.lang.swift.decl.var.parameter",
+                  "key.length": 15,
+                  "key.name": "version",
+                  "key.namelength": 7,
+                  "key.nameoffset": 448,
+                  "key.offset": 448,
+                  "key.typename": "String"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key.kind": "source.lang.swift.decl.enumcase",
+          "key.length": 48,
+          "key.offset": 469,
+          "key.substructure": [
+            {
+              "key.accessibility": "source.lang.swift.accessibility.internal",
+              "key.kind": "source.lang.swift.decl.enumelement",
+              "key.length": 43,
+              "key.name": "disconnected(error:forReset:)",
+              "key.namelength": 43,
+              "key.nameoffset": 474,
+              "key.offset": 474,
+              "key.substructure": [
+                {
+                  "key.kind": "source.lang.swift.decl.var.parameter",
+                  "key.length": 13,
+                  "key.name": "error",
+                  "key.namelength": 5,
+                  "key.nameoffset": 487,
+                  "key.offset": 487,
+                  "key.typename": "Error?"
+                },
+                {
+                  "key.kind": "source.lang.swift.decl.var.parameter",
+                  "key.length": 14,
+                  "key.name": "forReset",
+                  "key.namelength": 8,
+                  "key.nameoffset": 502,
+                  "key.offset": 502,
+                  "key.typename": "Bool"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.bodylength": 410,
+          "key.bodyoffset": 612,
+          "key.kind": "source.lang.swift.decl.function.method.static",
+          "key.length": 500,
+          "key.name": "==(_:_:)",
+          "key.namelength": 67,
+          "key.nameoffset": 535,
+          "key.offset": 523,
+          "key.substructure": [
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 30,
+              "key.name": "lhs",
+              "key.offset": 539,
+              "key.typename": "HAResponseControllerPhase"
+            },
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 30,
+              "key.name": "rhs",
+              "key.offset": 571,
+              "key.typename": "HAResponseControllerPhase"
+            },
+            {
+              "key.elements": [
+                {
+                  "key.kind": "source.lang.swift.structure.elem.expr",
+                  "key.length": 10,
+                  "key.offset": 628
+                }
+              ],
+              "key.kind": "source.lang.swift.stmt.switch",
+              "key.length": 396,
+              "key.offset": 621,
+              "key.substructure": [
+                {
+                  "key.bodylength": 8,
+                  "key.bodyoffset": 629,
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.expr",
+                      "key.length": 3,
+                      "key.offset": 629
+                    },
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.expr",
+                      "key.length": 3,
+                      "key.offset": 634
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.expr.tuple",
+                  "key.length": 10,
+                  "key.offset": 628
+                },
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 14,
+                      "key.offset": 654
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 44,
+                  "key.offset": 649,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 12,
+                      "key.bodyoffset": 655,
+                      "key.elements": [
+                        {
+                          "key.kind": "source.lang.swift.structure.elem.expr",
+                          "key.length": 5,
+                          "key.offset": 655
+                        },
+                        {
+                          "key.kind": "source.lang.swift.structure.elem.expr",
+                          "key.length": 5,
+                          "key.offset": 662
+                        }
+                      ],
+                      "key.kind": "source.lang.swift.expr.tuple",
+                      "key.length": 14,
+                      "key.offset": 654
+                    }
+                  ]
+                },
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 48,
+                      "key.offset": 707
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 98,
+                  "key.offset": 702,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 42,
+                      "key.bodyoffset": 712,
+                      "key.elements": [
+                        {
+                          "key.kind": "source.lang.swift.structure.elem.expr",
+                          "key.length": 20,
+                          "key.offset": 712
+                        },
+                        {
+                          "key.kind": "source.lang.swift.structure.elem.expr",
+                          "key.length": 20,
+                          "key.offset": 734
+                        }
+                      ],
+                      "key.kind": "source.lang.swift.expr.tuple",
+                      "key.length": 44,
+                      "key.offset": 711,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 10,
+                          "key.bodyoffset": 721,
+                          "key.kind": "source.lang.swift.expr.call",
+                          "key.length": 20,
+                          "key.name": ".command",
+                          "key.namelength": 8,
+                          "key.nameoffset": 712,
+                          "key.offset": 712,
+                          "key.substructure": [
+                            {
+                              "key.bodylength": 10,
+                              "key.bodyoffset": 721,
+                              "key.kind": "source.lang.swift.expr.argument",
+                              "key.length": 10,
+                              "key.offset": 721,
+                              "key.substructure": [
+                                {
+                                  "key.kind": "source.lang.swift.decl.var.local",
+                                  "key.length": 10,
+                                  "key.name": "lhsVersion",
+                                  "key.namelength": 10,
+                                  "key.nameoffset": 721,
+                                  "key.offset": 721
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "key.bodylength": 10,
+                          "key.bodyoffset": 743,
+                          "key.kind": "source.lang.swift.expr.call",
+                          "key.length": 20,
+                          "key.name": ".command",
+                          "key.namelength": 8,
+                          "key.nameoffset": 734,
+                          "key.offset": 734,
+                          "key.substructure": [
+                            {
+                              "key.bodylength": 10,
+                              "key.bodyoffset": 743,
+                              "key.kind": "source.lang.swift.expr.argument",
+                              "key.length": 10,
+                              "key.offset": 743,
+                              "key.substructure": [
+                                {
+                                  "key.kind": "source.lang.swift.decl.var.local",
+                                  "key.length": 10,
+                                  "key.name": "rhsVersion",
+                                  "key.namelength": 10,
+                                  "key.nameoffset": 743,
+                                  "key.offset": 743
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 74,
+                      "key.offset": 814
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 168,
+                  "key.offset": 809,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 68,
+                      "key.bodyoffset": 819,
+                      "key.elements": [
+                        {
+                          "key.kind": "source.lang.swift.structure.elem.expr",
+                          "key.length": 33,
+                          "key.offset": 819
+                        },
+                        {
+                          "key.kind": "source.lang.swift.structure.elem.expr",
+                          "key.length": 33,
+                          "key.offset": 854
+                        }
+                      ],
+                      "key.kind": "source.lang.swift.expr.tuple",
+                      "key.length": 70,
+                      "key.offset": 818,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 18,
+                          "key.bodyoffset": 833,
+                          "key.kind": "source.lang.swift.expr.call",
+                          "key.length": 33,
+                          "key.name": ".disconnected",
+                          "key.namelength": 13,
+                          "key.nameoffset": 819,
+                          "key.offset": 819,
+                          "key.substructure": [
+                            {
+                              "key.bodylength": 8,
+                              "key.bodyoffset": 833,
+                              "key.kind": "source.lang.swift.expr.argument",
+                              "key.length": 8,
+                              "key.offset": 833,
+                              "key.substructure": [
+                                {
+                                  "key.kind": "source.lang.swift.decl.var.local",
+                                  "key.length": 8,
+                                  "key.name": "lhsError",
+                                  "key.namelength": 8,
+                                  "key.nameoffset": 833,
+                                  "key.offset": 833
+                                }
+                              ]
+                            },
+                            {
+                              "key.bodylength": 8,
+                              "key.bodyoffset": 843,
+                              "key.kind": "source.lang.swift.expr.argument",
+                              "key.length": 8,
+                              "key.offset": 843,
+                              "key.substructure": [
+                                {
+                                  "key.kind": "source.lang.swift.decl.var.local",
+                                  "key.length": 8,
+                                  "key.name": "lhsReset",
+                                  "key.namelength": 8,
+                                  "key.nameoffset": 843,
+                                  "key.offset": 843
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "key.bodylength": 18,
+                          "key.bodyoffset": 868,
+                          "key.kind": "source.lang.swift.expr.call",
+                          "key.length": 33,
+                          "key.name": ".disconnected",
+                          "key.namelength": 13,
+                          "key.nameoffset": 854,
+                          "key.offset": 854,
+                          "key.substructure": [
+                            {
+                              "key.bodylength": 8,
+                              "key.bodyoffset": 868,
+                              "key.kind": "source.lang.swift.expr.argument",
+                              "key.length": 8,
+                              "key.offset": 868,
+                              "key.substructure": [
+                                {
+                                  "key.kind": "source.lang.swift.decl.var.local",
+                                  "key.length": 8,
+                                  "key.name": "rhsError",
+                                  "key.namelength": 8,
+                                  "key.nameoffset": 868,
+                                  "key.offset": 868
+                                }
+                              ]
+                            },
+                            {
+                              "key.bodylength": 8,
+                              "key.bodyoffset": 878,
+                              "key.kind": "source.lang.swift.expr.argument",
+                              "key.length": 8,
+                              "key.offset": 878,
+                              "key.substructure": [
+                                {
+                                  "key.kind": "source.lang.swift.decl.var.local",
+                                  "key.length": 8,
+                                  "key.name": "rhsReset",
+                                  "key.namelength": 8,
+                                  "key.nameoffset": 878,
+                                  "key.offset": 878
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 7,
+                      "key.offset": 986
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 21,
+                  "key.offset": 986
+                }
+              ]
+            }
+          ],
+          "key.typename": "Bool"
+        }
+      ]
+    },
+    {
+      "key.accessibility": "source.lang.swift.accessibility.internal",
+      "key.attributes": [
+        {
+          "key.attribute": "source.decl.attribute.internal",
+          "key.length": 8,
+          "key.offset": 1027
+        }
+      ],
+      "key.bodylength": 377,
+      "key.bodyoffset": 1078,
+      "key.elements": [
+        {
+          "key.kind": "source.lang.swift.structure.elem.typeref",
+          "key.length": 9,
+          "key.offset": 1067
+        }
+      ],
+      "key.inheritedtypes": [
+        {
+          "key.name": "AnyObject"
+        }
+      ],
+      "key.kind": "source.lang.swift.decl.protocol",
+      "key.length": 420,
+      "key.name": "HAResponseController",
+      "key.namelength": 20,
+      "key.nameoffset": 1045,
+      "key.offset": 1036,
+      "key.substructure": [
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.bodylength": 9,
+          "key.bodyoffset": 1128,
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.length": 55,
+          "key.name": "delegate",
+          "key.namelength": 8,
+          "key.nameoffset": 1087,
+          "key.offset": 1083,
+          "key.setter_accessibility": "source.lang.swift.accessibility.internal",
+          "key.typename": "HAResponseControllerDelegate?"
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.bodylength": 9,
+          "key.bodyoffset": 1173,
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.length": 40,
+          "key.name": "workQueue",
+          "key.namelength": 9,
+          "key.nameoffset": 1147,
+          "key.offset": 1143,
+          "key.setter_accessibility": "source.lang.swift.accessibility.internal",
+          "key.typename": "DispatchQueue"
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.bodylength": 5,
+          "key.bodyoffset": 1226,
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.length": 44,
+          "key.name": "phase",
+          "key.namelength": 5,
+          "key.nameoffset": 1192,
+          "key.offset": 1188,
+          "key.typename": "HAResponseControllerPhase"
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 12,
+          "key.name": "reset()",
+          "key.namelength": 7,
+          "key.nameoffset": 1243,
+          "key.offset": 1238
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 15,
+          "key.name": "didWrite()",
+          "key.namelength": 10,
+          "key.nameoffset": 1260,
+          "key.offset": 1255
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 49,
+          "key.name": "didReceive(event:)",
+          "key.namelength": 44,
+          "key.nameoffset": 1280,
+          "key.offset": 1275,
+          "key.substructure": [
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 32,
+              "key.name": "event",
+              "key.namelength": 5,
+              "key.nameoffset": 1291,
+              "key.offset": 1291,
+              "key.typename": "Starscream.WebSocketEvent"
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 125,
+          "key.name": "didReceive(for:response:)",
+          "key.namelength": 120,
+          "key.nameoffset": 1334,
+          "key.offset": 1329,
+          "key.substructure": [
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 35,
+              "key.name": "identifier",
+              "key.namelength": 3,
+              "key.nameoffset": 1354,
+              "key.offset": 1354,
+              "key.typename": "HARequestIdentifier"
+            },
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 49,
+              "key.name": "response",
+              "key.namelength": 8,
+              "key.nameoffset": 1399,
+              "key.offset": 1399,
+              "key.typename": "Result<(HTTPURLResponse, Data?), Error>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key.accessibility": "source.lang.swift.accessibility.internal",
+      "key.attributes": [
+        {
+          "key.attribute": "source.decl.attribute.internal",
+          "key.length": 8,
+          "key.offset": 1458
+        }
+      ],
+      "key.bodylength": 6025,
+      "key.bodyoffset": 1521,
+      "key.elements": [
+        {
+          "key.kind": "source.lang.swift.structure.elem.typeref",
+          "key.length": 20,
+          "key.offset": 1499
+        }
+      ],
+      "key.inheritedtypes": [
+        {
+          "key.name": "HAResponseController"
+        }
+      ],
+      "key.kind": "source.lang.swift.decl.class",
+      "key.length": 6080,
+      "key.name": "HAResponseControllerImpl",
+      "key.namelength": 24,
+      "key.nameoffset": 1473,
+      "key.offset": 1467,
+      "key.substructure": [
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.weak",
+              "key.length": 4,
+              "key.offset": 1526
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.length": 43,
+          "key.name": "delegate",
+          "key.namelength": 8,
+          "key.nameoffset": 1535,
+          "key.offset": 1531,
+          "key.setter_accessibility": "source.lang.swift.accessibility.internal",
+          "key.typename": "HAResponseControllerDelegate?"
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.length": 40,
+          "key.name": "workQueue",
+          "key.namelength": 9,
+          "key.nameoffset": 1583,
+          "key.offset": 1579,
+          "key.setter_accessibility": "source.lang.swift.accessibility.internal",
+          "key.typename": "DispatchQueue"
+        },
+        {
+          "key.bodylength": 0,
+          "key.bodyoffset": 1618,
+          "key.kind": "source.lang.swift.expr.call",
+          "key.length": 9,
+          "key.name": ".global",
+          "key.namelength": 7,
+          "key.nameoffset": 1610,
+          "key.offset": 1610
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.setter_access.private",
+              "key.length": 12,
+              "key.offset": 1625
+            }
+          ],
+          "key.bodylength": 220,
+          "key.bodyoffset": 1720,
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.length": 303,
+          "key.name": "phase",
+          "key.namelength": 5,
+          "key.nameoffset": 1642,
+          "key.offset": 1638,
+          "key.setter_accessibility": "source.lang.swift.accessibility.private",
+          "key.typename": "HAResponseControllerPhase"
+        },
+        {
+          "key.bodylength": 26,
+          "key.bodyoffset": 1691,
+          "key.kind": "source.lang.swift.expr.call",
+          "key.length": 41,
+          "key.name": ".disconnected",
+          "key.namelength": 13,
+          "key.nameoffset": 1677,
+          "key.offset": 1677,
+          "key.substructure": [
+            {
+              "key.bodylength": 3,
+              "key.bodyoffset": 1698,
+              "key.kind": "source.lang.swift.expr.argument",
+              "key.length": 10,
+              "key.name": "error",
+              "key.namelength": 5,
+              "key.nameoffset": 1691,
+              "key.offset": 1691
+            },
+            {
+              "key.bodylength": 4,
+              "key.bodyoffset": 1713,
+              "key.kind": "source.lang.swift.expr.argument",
+              "key.length": 14,
+              "key.name": "forReset",
+              "key.namelength": 8,
+              "key.nameoffset": 1703,
+              "key.offset": 1703
+            }
+          ]
+        },
+        {
+          "key.elements": [
+            {
+              "key.kind": "source.lang.swift.structure.elem.condition_expr",
+              "key.length": 17,
+              "key.offset": 1753
+            }
+          ],
+          "key.kind": "source.lang.swift.stmt.if",
+          "key.length": 104,
+          "key.offset": 1750,
+          "key.substructure": [
+            {
+              "key.bodylength": 81,
+              "key.bodyoffset": 1772,
+              "key.kind": "source.lang.swift.stmt.brace",
+              "key.length": 83,
+              "key.offset": 1771,
+              "key.substructure": [
+                {
+                  "key.bodylength": 37,
+                  "key.bodyoffset": 1802,
+                  "key.kind": "source.lang.swift.expr.call",
+                  "key.length": 51,
+                  "key.name": "HAGlobal.log",
+                  "key.namelength": 12,
+                  "key.nameoffset": 1789,
+                  "key.offset": 1789,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 5,
+                      "key.bodyoffset": 1802,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 5,
+                      "key.offset": 1802
+                    },
+                    {
+                      "key.bodylength": 30,
+                      "key.bodyoffset": 1809,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 30,
+                      "key.offset": 1809
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key.bodylength": 28,
+          "key.bodyoffset": 1896,
+          "key.kind": "source.lang.swift.expr.call",
+          "key.length": 58,
+          "key.name": "delegate?.responseController",
+          "key.namelength": 28,
+          "key.nameoffset": 1867,
+          "key.offset": 1867,
+          "key.substructure": [
+            {
+              "key.bodylength": 4,
+              "key.bodyoffset": 1896,
+              "key.kind": "source.lang.swift.expr.argument",
+              "key.length": 4,
+              "key.offset": 1896
+            },
+            {
+              "key.bodylength": 5,
+              "key.bodyoffset": 1919,
+              "key.kind": "source.lang.swift.expr.argument",
+              "key.length": 22,
+              "key.name": "didTransitionTo",
+              "key.namelength": 15,
+              "key.nameoffset": 1902,
+              "key.offset": 1902
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.bodylength": 63,
+          "key.bodyoffset": 1961,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 78,
+          "key.name": "reset()",
+          "key.namelength": 7,
+          "key.nameoffset": 1952,
+          "key.offset": 1947,
+          "key.substructure": [
+            {
+              "key.bodylength": 26,
+              "key.bodyoffset": 1992,
+              "key.kind": "source.lang.swift.expr.call",
+              "key.length": 41,
+              "key.name": ".disconnected",
+              "key.namelength": 13,
+              "key.nameoffset": 1978,
+              "key.offset": 1978,
+              "key.substructure": [
+                {
+                  "key.bodylength": 3,
+                  "key.bodyoffset": 1999,
+                  "key.kind": "source.lang.swift.expr.argument",
+                  "key.length": 10,
+                  "key.name": "error",
+                  "key.namelength": 5,
+                  "key.nameoffset": 1992,
+                  "key.offset": 1992
+                },
+                {
+                  "key.bodylength": 4,
+                  "key.bodyoffset": 2014,
+                  "key.kind": "source.lang.swift.expr.argument",
+                  "key.length": 14,
+                  "key.name": "forReset",
+                  "key.namelength": 8,
+                  "key.nameoffset": 2004,
+                  "key.offset": 2004
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.bodylength": 3038,
+          "key.bodyoffset": 2082,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 3090,
+          "key.name": "didReceive(event:)",
+          "key.namelength": 44,
+          "key.nameoffset": 2036,
+          "key.offset": 2031,
+          "key.substructure": [
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 32,
+              "key.name": "event",
+              "key.namelength": 5,
+              "key.nameoffset": 2047,
+              "key.offset": 2047,
+              "key.typename": "Starscream.WebSocketEvent"
+            },
+            {
+              "key.elements": [
+                {
+                  "key.kind": "source.lang.swift.structure.elem.expr",
+                  "key.length": 5,
+                  "key.offset": 2098
+                }
+              ],
+              "key.kind": "source.lang.swift.stmt.switch",
+              "key.length": 3024,
+              "key.offset": 2091,
+              "key.substructure": [
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 23,
+                      "key.offset": 2119
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 125,
+                  "key.offset": 2114,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 7,
+                      "key.bodyoffset": 2134,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 19,
+                      "key.name": ".connected",
+                      "key.namelength": 10,
+                      "key.nameoffset": 2123,
+                      "key.offset": 2123,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 7,
+                          "key.bodyoffset": 2134,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 7,
+                          "key.offset": 2134,
+                          "key.substructure": [
+                            {
+                              "key.kind": "source.lang.swift.decl.var.local",
+                              "key.length": 7,
+                              "key.name": "headers",
+                              "key.namelength": 7,
+                              "key.nameoffset": 2134,
+                              "key.offset": 2134
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "key.bodylength": 43,
+                      "key.bodyoffset": 2169,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 57,
+                      "key.name": "HAGlobal.log",
+                      "key.namelength": 12,
+                      "key.nameoffset": 2156,
+                      "key.offset": 2156,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 5,
+                          "key.bodyoffset": 2169,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 5,
+                          "key.offset": 2169
+                        },
+                        {
+                          "key.bodylength": 36,
+                          "key.bodyoffset": 2176,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 36,
+                          "key.offset": 2176
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 31,
+                      "key.offset": 2253
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 178,
+                  "key.offset": 2248,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 12,
+                      "key.bodyoffset": 2271,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 27,
+                      "key.name": ".disconnected",
+                      "key.namelength": 13,
+                      "key.nameoffset": 2257,
+                      "key.offset": 2257,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 6,
+                          "key.bodyoffset": 2271,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 6,
+                          "key.offset": 2271,
+                          "key.substructure": [
+                            {
+                              "key.kind": "source.lang.swift.decl.var.local",
+                              "key.length": 6,
+                              "key.name": "reason",
+                              "key.namelength": 6,
+                              "key.nameoffset": 2271,
+                              "key.offset": 2271
+                            }
+                          ]
+                        },
+                        {
+                          "key.bodylength": 4,
+                          "key.bodyoffset": 2279,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 4,
+                          "key.offset": 2279,
+                          "key.substructure": [
+                            {
+                              "key.kind": "source.lang.swift.decl.var.local",
+                              "key.length": 4,
+                              "key.name": "code",
+                              "key.namelength": 4,
+                              "key.nameoffset": 2279,
+                              "key.offset": 2279
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "key.bodylength": 51,
+                      "key.bodyoffset": 2311,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 65,
+                      "key.name": "HAGlobal.log",
+                      "key.namelength": 12,
+                      "key.nameoffset": 2298,
+                      "key.offset": 2298,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 5,
+                          "key.bodyoffset": 2311,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 5,
+                          "key.offset": 2311
+                        },
+                        {
+                          "key.bodylength": 44,
+                          "key.bodyoffset": 2318,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 44,
+                          "key.offset": 2318
+                        }
+                      ]
+                    },
+                    {
+                      "key.bodylength": 27,
+                      "key.bodyoffset": 2398,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 42,
+                      "key.name": ".disconnected",
+                      "key.namelength": 13,
+                      "key.nameoffset": 2384,
+                      "key.offset": 2384,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 3,
+                          "key.bodyoffset": 2405,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 10,
+                          "key.name": "error",
+                          "key.namelength": 5,
+                          "key.nameoffset": 2398,
+                          "key.offset": 2398
+                        },
+                        {
+                          "key.bodylength": 5,
+                          "key.bodyoffset": 2420,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 15,
+                          "key.name": "forReset",
+                          "key.namelength": 8,
+                          "key.nameoffset": 2410,
+                          "key.offset": 2410
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 17,
+                      "key.offset": 2440
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 1775,
+                  "key.offset": 2435,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 6,
+                      "key.bodyoffset": 2450,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 13,
+                      "key.name": ".text",
+                      "key.namelength": 5,
+                      "key.nameoffset": 2444,
+                      "key.offset": 2444,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 6,
+                          "key.bodyoffset": 2450,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 6,
+                          "key.offset": 2450,
+                          "key.substructure": [
+                            {
+                              "key.kind": "source.lang.swift.decl.var.local",
+                              "key.length": 6,
+                              "key.name": "string",
+                              "key.namelength": 6,
+                              "key.nameoffset": 2450,
+                              "key.offset": 2450
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "key.bodylength": 1721,
+                      "key.bodyoffset": 2488,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 1739,
+                      "key.name": "workQueue.async",
+                      "key.namelength": 15,
+                      "key.nameoffset": 2471,
+                      "key.offset": 2471,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 1723,
+                          "key.bodyoffset": 2487,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 1723,
+                          "key.offset": 2487,
+                          "key.substructure": [
+                            {
+                              "key.kind": "source.lang.swift.decl.var.local",
+                              "key.length": 4,
+                              "key.name": "self",
+                              "key.namelength": 4,
+                              "key.nameoffset": 2490,
+                              "key.offset": 2490
+                            },
+                            {
+                              "key.bodylength": 1721,
+                              "key.bodyoffset": 2488,
+                              "key.kind": "source.lang.swift.expr.closure",
+                              "key.length": 1723,
+                              "key.offset": 2487,
+                              "key.substructure": [
+                                {
+                                  "key.bodylength": 1721,
+                                  "key.bodyoffset": 2488,
+                                  "key.kind": "source.lang.swift.stmt.brace",
+                                  "key.length": 1723,
+                                  "key.offset": 2487,
+                                  "key.substructure": [
+                                    {
+                                      "key.kind": "source.lang.swift.decl.var.local",
+                                      "key.length": 33,
+                                      "key.name": "response",
+                                      "key.namelength": 8,
+                                      "key.nameoffset": 2519,
+                                      "key.offset": 2515,
+                                      "key.typename": "HAWebSocketResponse"
+                                    },
+                                    {
+                                      "key.bodylength": 492,
+                                      "key.bodyoffset": 2570,
+                                      "key.kind": "source.lang.swift.stmt.brace",
+                                      "key.length": 494,
+                                      "key.offset": 2569,
+                                      "key.substructure": [
+                                        {
+                                          "key.kind": "source.lang.swift.decl.var.local",
+                                          "key.length": 37,
+                                          "key.name": "data",
+                                          "key.namelength": 4,
+                                          "key.nameoffset": 2696,
+                                          "key.offset": 2692
+                                        },
+                                        {
+                                          "key.bodylength": 12,
+                                          "key.bodyoffset": 2715,
+                                          "key.kind": "source.lang.swift.expr.call",
+                                          "key.length": 25,
+                                          "key.name": "string.data",
+                                          "key.namelength": 11,
+                                          "key.nameoffset": 2703,
+                                          "key.offset": 2703,
+                                          "key.substructure": [
+                                            {
+                                              "key.bodylength": 5,
+                                              "key.bodyoffset": 2722,
+                                              "key.kind": "source.lang.swift.expr.argument",
+                                              "key.length": 12,
+                                              "key.name": "using",
+                                              "key.namelength": 5,
+                                              "key.nameoffset": 2715,
+                                              "key.offset": 2715
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "key.elements": [
+                                            {
+                                              "key.kind": "source.lang.swift.structure.elem.condition_expr",
+                                              "key.length": 86,
+                                              "key.offset": 2757
+                                            }
+                                          ],
+                                          "key.kind": "source.lang.swift.stmt.guard",
+                                          "key.length": 220,
+                                          "key.offset": 2751,
+                                          "key.substructure": [
+                                            {
+                                              "key.kind": "source.lang.swift.decl.var.local",
+                                              "key.length": 4,
+                                              "key.name": "json",
+                                              "key.namelength": 4,
+                                              "key.nameoffset": 2761,
+                                              "key.offset": 2761
+                                            },
+                                            {
+                                              "key.bodylength": 23,
+                                              "key.bodyoffset": 2801,
+                                              "key.kind": "source.lang.swift.expr.call",
+                                              "key.length": 53,
+                                              "key.name": "JSONSerialization.jsonObject",
+                                              "key.namelength": 28,
+                                              "key.nameoffset": 2772,
+                                              "key.offset": 2772,
+                                              "key.substructure": [
+                                                {
+                                                  "key.bodylength": 4,
+                                                  "key.bodyoffset": 2807,
+                                                  "key.kind": "source.lang.swift.expr.argument",
+                                                  "key.length": 10,
+                                                  "key.name": "with",
+                                                  "key.namelength": 4,
+                                                  "key.nameoffset": 2801,
+                                                  "key.offset": 2801
+                                                },
+                                                {
+                                                  "key.bodylength": 2,
+                                                  "key.bodyoffset": 2822,
+                                                  "key.kind": "source.lang.swift.expr.argument",
+                                                  "key.length": 11,
+                                                  "key.name": "options",
+                                                  "key.namelength": 7,
+                                                  "key.nameoffset": 2813,
+                                                  "key.offset": 2813,
+                                                  "key.substructure": [
+                                                    {
+                                                      "key.bodylength": 0,
+                                                      "key.bodyoffset": 2823,
+                                                      "key.kind": "source.lang.swift.expr.array",
+                                                      "key.length": 2,
+                                                      "key.offset": 2822
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "key.bodylength": 120,
+                                              "key.bodyoffset": 2850,
+                                              "key.kind": "source.lang.swift.stmt.brace",
+                                              "key.length": 122,
+                                              "key.offset": 2849,
+                                              "key.substructure": [
+                                                {
+                                                  "key.bodylength": 50,
+                                                  "key.bodyoffset": 2898,
+                                                  "key.kind": "source.lang.swift.expr.call",
+                                                  "key.length": 68,
+                                                  "key.name": "HAError.internal",
+                                                  "key.namelength": 16,
+                                                  "key.nameoffset": 2881,
+                                                  "key.offset": 2881,
+                                                  "key.substructure": [
+                                                    {
+                                                      "key.bodylength": 32,
+                                                      "key.bodyoffset": 2916,
+                                                      "key.kind": "source.lang.swift.expr.argument",
+                                                      "key.length": 50,
+                                                      "key.name": "debugDescription",
+                                                      "key.namelength": 16,
+                                                      "key.nameoffset": 2898,
+                                                      "key.offset": 2898
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "key.bodylength": 16,
+                                          "key.bodyoffset": 3028,
+                                          "key.kind": "source.lang.swift.expr.call",
+                                          "key.length": 37,
+                                          "key.name": "HAWebSocketResponse",
+                                          "key.namelength": 19,
+                                          "key.nameoffset": 3008,
+                                          "key.offset": 3008,
+                                          "key.substructure": [
+                                            {
+                                              "key.bodylength": 4,
+                                              "key.bodyoffset": 3040,
+                                              "key.kind": "source.lang.swift.expr.argument",
+                                              "key.length": 16,
+                                              "key.name": "dictionary",
+                                              "key.namelength": 10,
+                                              "key.nameoffset": 3028,
+                                              "key.offset": 3028
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "key.elements": [
+                                        {
+                                          "key.kind": "source.lang.swift.structure.elem.pattern",
+                                          "key.length": 1,
+                                          "key.offset": 3070
+                                        }
+                                      ],
+                                      "key.kind": "source.lang.swift.stmt.case",
+                                      "key.length": 123,
+                                      "key.offset": 3064,
+                                      "key.substructure": [
+                                        {
+                                          "key.bodylength": 36,
+                                          "key.bodyoffset": 3105,
+                                          "key.kind": "source.lang.swift.expr.call",
+                                          "key.length": 50,
+                                          "key.name": "HAGlobal.log",
+                                          "key.namelength": 12,
+                                          "key.nameoffset": 3092,
+                                          "key.offset": 3092,
+                                          "key.substructure": [
+                                            {
+                                              "key.bodylength": 6,
+                                              "key.bodyoffset": 3105,
+                                              "key.kind": "source.lang.swift.expr.argument",
+                                              "key.length": 6,
+                                              "key.offset": 3105
+                                            },
+                                            {
+                                              "key.bodylength": 28,
+                                              "key.bodyoffset": 3113,
+                                              "key.kind": "source.lang.swift.expr.argument",
+                                              "key.length": 28,
+                                              "key.offset": 3113
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "key.elements": [
+                                        {
+                                          "key.kind": "source.lang.swift.structure.elem.expr",
+                                          "key.length": 8,
+                                          "key.offset": 3212
+                                        }
+                                      ],
+                                      "key.kind": "source.lang.swift.stmt.switch",
+                                      "key.length": 695,
+                                      "key.offset": 3205,
+                                      "key.substructure": [
+                                        {
+                                          "key.elements": [
+                                            {
+                                              "key.kind": "source.lang.swift.structure.elem.pattern",
+                                              "key.length": 16,
+                                              "key.offset": 3244
+                                            }
+                                          ],
+                                          "key.kind": "source.lang.swift.stmt.case",
+                                          "key.length": 90,
+                                          "key.offset": 3239,
+                                          "key.substructure": [
+                                            {
+                                              "key.bodylength": 5,
+                                              "key.bodyoffset": 3254,
+                                              "key.kind": "source.lang.swift.expr.call",
+                                              "key.length": 12,
+                                              "key.name": ".auth",
+                                              "key.namelength": 5,
+                                              "key.nameoffset": 3248,
+                                              "key.offset": 3248,
+                                              "key.substructure": [
+                                                {
+                                                  "key.bodylength": 5,
+                                                  "key.bodyoffset": 3254,
+                                                  "key.kind": "source.lang.swift.expr.argument",
+                                                  "key.length": 5,
+                                                  "key.offset": 3254,
+                                                  "key.substructure": [
+                                                    {
+                                                      "key.kind": "source.lang.swift.decl.var.local",
+                                                      "key.length": 5,
+                                                      "key.name": "state",
+                                                      "key.namelength": 5,
+                                                      "key.nameoffset": 3254,
+                                                      "key.offset": 3254
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "key.bodylength": 33,
+                                              "key.bodyoffset": 3295,
+                                              "key.kind": "source.lang.swift.expr.call",
+                                              "key.length": 47,
+                                              "key.name": "HAGlobal.log",
+                                              "key.namelength": 12,
+                                              "key.nameoffset": 3282,
+                                              "key.offset": 3282,
+                                              "key.substructure": [
+                                                {
+                                                  "key.bodylength": 5,
+                                                  "key.bodyoffset": 3295,
+                                                  "key.kind": "source.lang.swift.expr.argument",
+                                                  "key.length": 5,
+                                                  "key.offset": 3295
+                                                },
+                                                {
+                                                  "key.bodylength": 26,
+                                                  "key.bodyoffset": 3302,
+                                                  "key.kind": "source.lang.swift.expr.argument",
+                                                  "key.length": 26,
+                                                  "key.offset": 3302
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "key.elements": [
+                                            {
+                                              "key.kind": "source.lang.swift.structure.elem.pattern",
+                                              "key.length": 43,
+                                              "key.offset": 3351
+                                            }
+                                          ],
+                                          "key.kind": "source.lang.swift.stmt.case",
+                                          "key.length": 127,
+                                          "key.offset": 3346,
+                                          "key.substructure": [
+                                            {
+                                              "key.bodylength": 31,
+                                              "key.bodyoffset": 3362,
+                                              "key.kind": "source.lang.swift.expr.call",
+                                              "key.length": 39,
+                                              "key.name": ".event",
+                                              "key.namelength": 6,
+                                              "key.nameoffset": 3355,
+                                              "key.offset": 3355,
+                                              "key.substructure": [
+                                                {
+                                                  "key.bodylength": 10,
+                                                  "key.bodyoffset": 3374,
+                                                  "key.kind": "source.lang.swift.expr.argument",
+                                                  "key.length": 22,
+                                                  "key.name": "identifier",
+                                                  "key.namelength": 10,
+                                                  "key.nameoffset": 3362,
+                                                  "key.offset": 3362,
+                                                  "key.substructure": [
+                                                    {
+                                                      "key.kind": "source.lang.swift.decl.var.local",
+                                                      "key.length": 10,
+                                                      "key.name": "identifier",
+                                                      "key.namelength": 10,
+                                                      "key.nameoffset": 3374,
+                                                      "key.offset": 3374
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "key.bodylength": 1,
+                                                  "key.bodyoffset": 3392,
+                                                  "key.kind": "source.lang.swift.expr.argument",
+                                                  "key.length": 7,
+                                                  "key.name": "data",
+                                                  "key.namelength": 4,
+                                                  "key.nameoffset": 3386,
+                                                  "key.offset": 3386
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "key.bodylength": 43,
+                                              "key.bodyoffset": 3429,
+                                              "key.kind": "source.lang.swift.expr.call",
+                                              "key.length": 57,
+                                              "key.name": "HAGlobal.log",
+                                              "key.namelength": 12,
+                                              "key.nameoffset": 3416,
+                                              "key.offset": 3416,
+                                              "key.substructure": [
+                                                {
+                                                  "key.bodylength": 5,
+                                                  "key.bodyoffset": 3429,
+                                                  "key.kind": "source.lang.swift.expr.argument",
+                                                  "key.length": 5,
+                                                  "key.offset": 3429
+                                                },
+                                                {
+                                                  "key.bodylength": 36,
+                                                  "key.bodyoffset": 3436,
+                                                  "key.kind": "source.lang.swift.expr.argument",
+                                                  "key.length": 36,
+                                                  "key.offset": 3436
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "key.elements": [
+                                            {
+                                              "key.kind": "source.lang.swift.structure.elem.pattern",
+                                              "key.length": 51,
+                                              "key.offset": 3495
+                                            }
+                                          ],
+                                          "key.kind": "source.lang.swift.stmt.case",
+                                          "key.length": 392,
+                                          "key.offset": 3490,
+                                          "key.substructure": [
+                                            {
+                                              "key.bodylength": 38,
+                                              "key.bodyoffset": 3507,
+                                              "key.kind": "source.lang.swift.expr.call",
+                                              "key.length": 47,
+                                              "key.name": ".result",
+                                              "key.namelength": 7,
+                                              "key.nameoffset": 3499,
+                                              "key.offset": 3499,
+                                              "key.substructure": [
+                                                {
+                                                  "key.bodylength": 10,
+                                                  "key.bodyoffset": 3519,
+                                                  "key.kind": "source.lang.swift.expr.argument",
+                                                  "key.length": 22,
+                                                  "key.name": "identifier",
+                                                  "key.namelength": 10,
+                                                  "key.nameoffset": 3507,
+                                                  "key.offset": 3507,
+                                                  "key.substructure": [
+                                                    {
+                                                      "key.kind": "source.lang.swift.decl.var.local",
+                                                      "key.length": 10,
+                                                      "key.name": "identifier",
+                                                      "key.namelength": 10,
+                                                      "key.nameoffset": 3519,
+                                                      "key.offset": 3519
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "key.bodylength": 6,
+                                                  "key.bodyoffset": 3539,
+                                                  "key.kind": "source.lang.swift.expr.argument",
+                                                  "key.length": 14,
+                                                  "key.name": "result",
+                                                  "key.namelength": 6,
+                                                  "key.nameoffset": 3531,
+                                                  "key.offset": 3531,
+                                                  "key.substructure": [
+                                                    {
+                                                      "key.kind": "source.lang.swift.decl.var.local",
+                                                      "key.length": 6,
+                                                      "key.name": "result",
+                                                      "key.namelength": 6,
+                                                      "key.nameoffset": 3539,
+                                                      "key.offset": 3539
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "key.elements": [
+                                                {
+                                                  "key.kind": "source.lang.swift.structure.elem.expr",
+                                                  "key.length": 6,
+                                                  "key.offset": 3575
+                                                }
+                                              ],
+                                              "key.kind": "source.lang.swift.stmt.switch",
+                                              "key.length": 314,
+                                              "key.offset": 3568,
+                                              "key.substructure": [
+                                                {
+                                                  "key.elements": [
+                                                    {
+                                                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                                                      "key.length": 8,
+                                                      "key.offset": 3609
+                                                    }
+                                                  ],
+                                                  "key.kind": "source.lang.swift.stmt.case",
+                                                  "key.length": 100,
+                                                  "key.offset": 3604,
+                                                  "key.substructure": [
+                                                    {
+                                                      "key.bodylength": 47,
+                                                      "key.bodyoffset": 3656,
+                                                      "key.kind": "source.lang.swift.expr.call",
+                                                      "key.length": 61,
+                                                      "key.name": "HAGlobal.log",
+                                                      "key.namelength": 12,
+                                                      "key.nameoffset": 3643,
+                                                      "key.offset": 3643,
+                                                      "key.substructure": [
+                                                        {
+                                                          "key.bodylength": 5,
+                                                          "key.bodyoffset": 3656,
+                                                          "key.kind": "source.lang.swift.expr.argument",
+                                                          "key.length": 5,
+                                                          "key.offset": 3656
+                                                        },
+                                                        {
+                                                          "key.bodylength": 40,
+                                                          "key.bodyoffset": 3663,
+                                                          "key.kind": "source.lang.swift.expr.argument",
+                                                          "key.length": 40,
+                                                          "key.offset": 3663
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "key.elements": [
+                                                    {
+                                                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                                                      "key.length": 19,
+                                                      "key.offset": 3730
+                                                    }
+                                                  ],
+                                                  "key.kind": "source.lang.swift.stmt.case",
+                                                  "key.length": 135,
+                                                  "key.offset": 3725,
+                                                  "key.substructure": [
+                                                    {
+                                                      "key.bodylength": 5,
+                                                      "key.bodyoffset": 3743,
+                                                      "key.kind": "source.lang.swift.expr.call",
+                                                      "key.length": 15,
+                                                      "key.name": ".failure",
+                                                      "key.namelength": 8,
+                                                      "key.nameoffset": 3734,
+                                                      "key.offset": 3734,
+                                                      "key.substructure": [
+                                                        {
+                                                          "key.bodylength": 5,
+                                                          "key.bodyoffset": 3743,
+                                                          "key.kind": "source.lang.swift.expr.argument",
+                                                          "key.length": 5,
+                                                          "key.offset": 3743,
+                                                          "key.substructure": [
+                                                            {
+                                                              "key.kind": "source.lang.swift.decl.var.local",
+                                                              "key.length": 5,
+                                                              "key.name": "error",
+                                                              "key.namelength": 5,
+                                                              "key.nameoffset": 3743,
+                                                              "key.offset": 3743
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "key.bodylength": 71,
+                                                      "key.bodyoffset": 3788,
+                                                      "key.kind": "source.lang.swift.expr.call",
+                                                      "key.length": 85,
+                                                      "key.name": "HAGlobal.log",
+                                                      "key.namelength": 12,
+                                                      "key.nameoffset": 3775,
+                                                      "key.offset": 3775,
+                                                      "key.substructure": [
+                                                        {
+                                                          "key.bodylength": 5,
+                                                          "key.bodyoffset": 3788,
+                                                          "key.kind": "source.lang.swift.expr.argument",
+                                                          "key.length": 5,
+                                                          "key.offset": 3788
+                                                        },
+                                                        {
+                                                          "key.bodylength": 64,
+                                                          "key.bodyoffset": 3795,
+                                                          "key.kind": "source.lang.swift.expr.argument",
+                                                          "key.length": 64,
+                                                          "key.offset": 3795
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "key.bodylength": 251,
+                                      "key.bodyoffset": 3944,
+                                      "key.kind": "source.lang.swift.expr.call",
+                                      "key.length": 278,
+                                      "key.name": "DispatchQueue.main.async",
+                                      "key.namelength": 24,
+                                      "key.nameoffset": 3918,
+                                      "key.offset": 3918,
+                                      "key.substructure": [
+                                        {
+                                          "key.bodylength": 253,
+                                          "key.bodyoffset": 3943,
+                                          "key.kind": "source.lang.swift.expr.argument",
+                                          "key.length": 253,
+                                          "key.offset": 3943,
+                                          "key.substructure": [
+                                            {
+                                              "key.kind": "source.lang.swift.decl.var.local",
+                                              "key.length": 4,
+                                              "key.name": "self",
+                                              "key.namelength": 4,
+                                              "key.nameoffset": 3946,
+                                              "key.offset": 3946
+                                            },
+                                            {
+                                              "key.bodylength": 251,
+                                              "key.bodyoffset": 3944,
+                                              "key.kind": "source.lang.swift.expr.closure",
+                                              "key.length": 253,
+                                              "key.offset": 3943,
+                                              "key.substructure": [
+                                                {
+                                                  "key.bodylength": 251,
+                                                  "key.bodyoffset": 3944,
+                                                  "key.kind": "source.lang.swift.stmt.brace",
+                                                  "key.length": 253,
+                                                  "key.offset": 3943,
+                                                  "key.substructure": [
+                                                    {
+                                                      "key.elements": [
+                                                        {
+                                                          "key.kind": "source.lang.swift.structure.elem.condition_expr",
+                                                          "key.length": 39,
+                                                          "key.offset": 3978
+                                                        }
+                                                      ],
+                                                      "key.kind": "source.lang.swift.stmt.if",
+                                                      "key.length": 125,
+                                                      "key.offset": 3975,
+                                                      "key.substructure": [
+                                                        {
+                                                          "key.bodylength": 12,
+                                                          "key.bodyoffset": 3993,
+                                                          "key.kind": "source.lang.swift.expr.call",
+                                                          "key.length": 19,
+                                                          "key.name": ".auth",
+                                                          "key.namelength": 5,
+                                                          "key.nameoffset": 3987,
+                                                          "key.offset": 3987,
+                                                          "key.substructure": [
+                                                            {
+                                                              "key.bodylength": 12,
+                                                              "key.bodyoffset": 3993,
+                                                              "key.kind": "source.lang.swift.expr.argument",
+                                                              "key.length": 12,
+                                                              "key.offset": 3993,
+                                                              "key.substructure": [
+                                                                {
+                                                                  "key.bodylength": 7,
+                                                                  "key.bodyoffset": 3997,
+                                                                  "key.kind": "source.lang.swift.expr.call",
+                                                                  "key.length": 12,
+                                                                  "key.name": ".ok",
+                                                                  "key.namelength": 3,
+                                                                  "key.nameoffset": 3993,
+                                                                  "key.offset": 3993,
+                                                                  "key.substructure": [
+                                                                    {
+                                                                      "key.bodylength": 7,
+                                                                      "key.bodyoffset": 3997,
+                                                                      "key.kind": "source.lang.swift.expr.argument",
+                                                                      "key.length": 7,
+                                                                      "key.offset": 3997,
+                                                                      "key.substructure": [
+                                                                        {
+                                                                          "key.kind": "source.lang.swift.decl.var.local",
+                                                                          "key.length": 7,
+                                                                          "key.name": "version",
+                                                                          "key.namelength": 7,
+                                                                          "key.nameoffset": 3997,
+                                                                          "key.offset": 3997
+                                                                        }
+                                                                      ]
+                                                                    }
+                                                                  ]
+                                                                }
+                                                              ]
+                                                            }
+                                                          ]
+                                                        },
+                                                        {
+                                                          "key.bodylength": 80,
+                                                          "key.bodyoffset": 4019,
+                                                          "key.kind": "source.lang.swift.stmt.brace",
+                                                          "key.length": 82,
+                                                          "key.offset": 4018,
+                                                          "key.substructure": [
+                                                            {
+                                                              "key.bodylength": 16,
+                                                              "key.bodyoffset": 4061,
+                                                              "key.kind": "source.lang.swift.expr.call",
+                                                              "key.length": 26,
+                                                              "key.name": ".command",
+                                                              "key.namelength": 8,
+                                                              "key.nameoffset": 4052,
+                                                              "key.offset": 4052,
+                                                              "key.substructure": [
+                                                                {
+                                                                  "key.bodylength": 7,
+                                                                  "key.bodyoffset": 4070,
+                                                                  "key.kind": "source.lang.swift.expr.argument",
+                                                                  "key.length": 16,
+                                                                  "key.name": "version",
+                                                                  "key.namelength": 7,
+                                                                  "key.nameoffset": 4061,
+                                                                  "key.offset": 4061
+                                                                }
+                                                              ]
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "key.bodylength": 26,
+                                                      "key.bodyoffset": 4151,
+                                                      "key.kind": "source.lang.swift.expr.call",
+                                                      "key.length": 56,
+                                                      "key.name": "delegate?.responseController",
+                                                      "key.namelength": 28,
+                                                      "key.nameoffset": 4122,
+                                                      "key.offset": 4122,
+                                                      "key.substructure": [
+                                                        {
+                                                          "key.bodylength": 4,
+                                                          "key.bodyoffset": 4151,
+                                                          "key.kind": "source.lang.swift.expr.argument",
+                                                          "key.length": 4,
+                                                          "key.offset": 4151
+                                                        },
+                                                        {
+                                                          "key.bodylength": 8,
+                                                          "key.bodyoffset": 4169,
+                                                          "key.kind": "source.lang.swift.expr.argument",
+                                                          "key.length": 20,
+                                                          "key.name": "didReceive",
+                                                          "key.namelength": 10,
+                                                          "key.nameoffset": 4157,
+                                                          "key.offset": 4157
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 17,
+                      "key.offset": 4224
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 94,
+                  "key.offset": 4219,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 4,
+                      "key.bodyoffset": 4236,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 13,
+                      "key.name": ".binary",
+                      "key.namelength": 7,
+                      "key.nameoffset": 4228,
+                      "key.offset": 4228,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 4,
+                          "key.bodyoffset": 4236,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 4,
+                          "key.offset": 4236,
+                          "key.substructure": [
+                            {
+                              "key.kind": "source.lang.swift.decl.var.local",
+                              "key.length": 4,
+                              "key.name": "data",
+                              "key.namelength": 4,
+                              "key.nameoffset": 4236,
+                              "key.offset": 4236
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "key.bodylength": 44,
+                      "key.bodyoffset": 4268,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 58,
+                      "key.name": "HAGlobal.log",
+                      "key.namelength": 12,
+                      "key.nameoffset": 4255,
+                      "key.offset": 4255,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 5,
+                          "key.bodyoffset": 4268,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 5,
+                          "key.offset": 4268
+                        },
+                        {
+                          "key.bodylength": 37,
+                          "key.bodyoffset": 4275,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 37,
+                          "key.offset": 4275
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 5,
+                      "key.offset": 4327
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 51,
+                  "key.offset": 4322,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 13,
+                      "key.bodyoffset": 4359,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 27,
+                      "key.name": "HAGlobal.log",
+                      "key.namelength": 12,
+                      "key.nameoffset": 4346,
+                      "key.offset": 4346,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 5,
+                          "key.bodyoffset": 4359,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 5,
+                          "key.offset": 4359
+                        },
+                        {
+                          "key.bodylength": 6,
+                          "key.bodyoffset": 4366,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 6,
+                          "key.offset": 4366
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 5,
+                      "key.offset": 4387
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 51,
+                  "key.offset": 4382,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 13,
+                      "key.bodyoffset": 4419,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 27,
+                      "key.name": "HAGlobal.log",
+                      "key.namelength": 12,
+                      "key.nameoffset": 4406,
+                      "key.offset": 4406,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 5,
+                          "key.bodyoffset": 4419,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 5,
+                          "key.offset": 4419
+                        },
+                        {
+                          "key.bodylength": 6,
+                          "key.bodyoffset": 4426,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 6,
+                          "key.offset": 4426
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 36,
+                      "key.offset": 4447
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 113,
+                  "key.offset": 4442,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 11,
+                      "key.bodyoffset": 4471,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 32,
+                      "key.name": ".reconnectSuggested",
+                      "key.namelength": 19,
+                      "key.nameoffset": 4451,
+                      "key.offset": 4451,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 11,
+                          "key.bodyoffset": 4471,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 11,
+                          "key.offset": 4471,
+                          "key.substructure": [
+                            {
+                              "key.kind": "source.lang.swift.decl.var.local",
+                              "key.length": 11,
+                              "key.name": "isSuggested",
+                              "key.namelength": 11,
+                              "key.nameoffset": 4471,
+                              "key.offset": 4471
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "key.bodylength": 44,
+                      "key.bodyoffset": 4510,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 58,
+                      "key.name": "HAGlobal.log",
+                      "key.namelength": 12,
+                      "key.nameoffset": 4497,
+                      "key.offset": 4497,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 5,
+                          "key.bodyoffset": 4510,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 5,
+                          "key.offset": 4510
+                        },
+                        {
+                          "key.bodylength": 37,
+                          "key.bodyoffset": 4517,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 37,
+                          "key.offset": 4517
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 31,
+                      "key.offset": 4569
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 103,
+                  "key.offset": 4564,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 8,
+                      "key.bodyoffset": 4591,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 27,
+                      "key.name": ".viabilityChanged",
+                      "key.namelength": 17,
+                      "key.nameoffset": 4573,
+                      "key.offset": 4573,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 8,
+                          "key.bodyoffset": 4591,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 8,
+                          "key.offset": 4591,
+                          "key.substructure": [
+                            {
+                              "key.kind": "source.lang.swift.decl.var.local",
+                              "key.length": 8,
+                              "key.name": "isViable",
+                              "key.namelength": 8,
+                              "key.nameoffset": 4591,
+                              "key.offset": 4591
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "key.bodylength": 39,
+                      "key.bodyoffset": 4627,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 53,
+                      "key.name": "HAGlobal.log",
+                      "key.namelength": 12,
+                      "key.nameoffset": 4614,
+                      "key.offset": 4614,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 5,
+                          "key.bodyoffset": 4627,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 5,
+                          "key.offset": 4627
+                        },
+                        {
+                          "key.bodylength": 32,
+                          "key.bodyoffset": 4634,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 32,
+                          "key.offset": 4634
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 10,
+                      "key.offset": 4681
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 124,
+                  "key.offset": 4676,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 18,
+                      "key.bodyoffset": 4718,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 32,
+                      "key.name": "HAGlobal.log",
+                      "key.namelength": 12,
+                      "key.nameoffset": 4705,
+                      "key.offset": 4705,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 5,
+                          "key.bodyoffset": 4718,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 5,
+                          "key.offset": 4718
+                        },
+                        {
+                          "key.bodylength": 11,
+                          "key.bodyoffset": 4725,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 11,
+                          "key.offset": 4725
+                        }
+                      ]
+                    },
+                    {
+                      "key.bodylength": 27,
+                      "key.bodyoffset": 4772,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 42,
+                      "key.name": ".disconnected",
+                      "key.namelength": 13,
+                      "key.nameoffset": 4758,
+                      "key.offset": 4758,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 3,
+                          "key.bodyoffset": 4779,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 10,
+                          "key.name": "error",
+                          "key.namelength": 5,
+                          "key.nameoffset": 4772,
+                          "key.offset": 4772
+                        },
+                        {
+                          "key.bodylength": 5,
+                          "key.bodyoffset": 4794,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 15,
+                          "key.name": "forReset",
+                          "key.namelength": 8,
+                          "key.nameoffset": 4784,
+                          "key.offset": 4784
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 17,
+                      "key.offset": 4814
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 160,
+                  "key.offset": 4809,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 5,
+                      "key.bodyoffset": 4825,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 13,
+                      "key.name": ".error",
+                      "key.namelength": 6,
+                      "key.nameoffset": 4818,
+                      "key.offset": 4818,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 5,
+                          "key.bodyoffset": 4825,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 5,
+                          "key.offset": 4825,
+                          "key.substructure": [
+                            {
+                              "key.kind": "source.lang.swift.decl.var.local",
+                              "key.length": 5,
+                              "key.name": "error",
+                              "key.namelength": 5,
+                              "key.nameoffset": 4825,
+                              "key.offset": 4825
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "key.bodylength": 45,
+                      "key.bodyoffset": 4858,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 59,
+                      "key.name": "HAGlobal.log",
+                      "key.namelength": 12,
+                      "key.nameoffset": 4845,
+                      "key.offset": 4845,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 6,
+                          "key.bodyoffset": 4858,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 6,
+                          "key.offset": 4858
+                        },
+                        {
+                          "key.bodylength": 37,
+                          "key.bodyoffset": 4866,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 37,
+                          "key.offset": 4866,
+                          "key.substructure": [
+                            {
+                              "key.bodylength": 17,
+                              "key.bodyoffset": 4883,
+                              "key.kind": "source.lang.swift.expr.call",
+                              "key.length": 25,
+                              "key.name": "String",
+                              "key.namelength": 6,
+                              "key.nameoffset": 4876,
+                              "key.offset": 4876,
+                              "key.substructure": [
+                                {
+                                  "key.bodylength": 5,
+                                  "key.bodyoffset": 4895,
+                                  "key.kind": "source.lang.swift.expr.argument",
+                                  "key.length": 17,
+                                  "key.name": "describing",
+                                  "key.namelength": 10,
+                                  "key.nameoffset": 4883,
+                                  "key.offset": 4883
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "key.bodylength": 29,
+                      "key.bodyoffset": 4939,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 44,
+                      "key.name": ".disconnected",
+                      "key.namelength": 13,
+                      "key.nameoffset": 4925,
+                      "key.offset": 4925,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 5,
+                          "key.bodyoffset": 4946,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 12,
+                          "key.name": "error",
+                          "key.namelength": 5,
+                          "key.nameoffset": 4939,
+                          "key.offset": 4939
+                        },
+                        {
+                          "key.bodylength": 5,
+                          "key.bodyoffset": 4963,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 15,
+                          "key.name": "forReset",
+                          "key.namelength": 8,
+                          "key.nameoffset": 4953,
+                          "key.offset": 4953
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 11,
+                      "key.offset": 4983
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 127,
+                  "key.offset": 4978,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 20,
+                      "key.bodyoffset": 5021,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 34,
+                      "key.name": "HAGlobal.log",
+                      "key.namelength": 12,
+                      "key.nameoffset": 5008,
+                      "key.offset": 5008,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 5,
+                          "key.bodyoffset": 5021,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 5,
+                          "key.offset": 5021
+                        },
+                        {
+                          "key.bodylength": 13,
+                          "key.bodyoffset": 5028,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 13,
+                          "key.offset": 5028
+                        }
+                      ]
+                    },
+                    {
+                      "key.bodylength": 27,
+                      "key.bodyoffset": 5077,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 42,
+                      "key.name": ".disconnected",
+                      "key.namelength": 13,
+                      "key.nameoffset": 5063,
+                      "key.offset": 5063,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 3,
+                          "key.bodyoffset": 5084,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 10,
+                          "key.name": "error",
+                          "key.namelength": 5,
+                          "key.nameoffset": 5077,
+                          "key.offset": 5077
+                        },
+                        {
+                          "key.bodylength": 5,
+                          "key.bodyoffset": 5099,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 15,
+                          "key.name": "forReset",
+                          "key.namelength": 8,
+                          "key.nameoffset": 5089,
+                          "key.offset": 5089
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.bodylength": 2217,
+          "key.bodyoffset": 5254,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 2345,
+          "key.name": "didReceive(for:response:)",
+          "key.namelength": 120,
+          "key.nameoffset": 5132,
+          "key.offset": 5127,
+          "key.substructure": [
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 35,
+              "key.name": "identifier",
+              "key.namelength": 3,
+              "key.nameoffset": 5152,
+              "key.offset": 5152,
+              "key.typename": "HARequestIdentifier"
+            },
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 49,
+              "key.name": "response",
+              "key.namelength": 8,
+              "key.nameoffset": 5197,
+              "key.offset": 5197,
+              "key.typename": "Result<(HTTPURLResponse, Data?), Error>"
+            },
+            {
+              "key.kind": "source.lang.swift.decl.var.local",
+              "key.length": 512,
+              "key.name": "didReceive",
+              "key.namelength": 10,
+              "key.nameoffset": 5267,
+              "key.offset": 5263
+            },
+            {
+              "key.bodylength": 481,
+              "key.bodyoffset": 5293,
+              "key.kind": "source.lang.swift.expr.call",
+              "key.length": 495,
+              "key.name": "HAResetLock",
+              "key.namelength": 11,
+              "key.nameoffset": 5280,
+              "key.offset": 5280,
+              "key.substructure": [
+                {
+                  "key.bodylength": 483,
+                  "key.bodyoffset": 5292,
+                  "key.kind": "source.lang.swift.expr.argument",
+                  "key.length": 483,
+                  "key.offset": 5292,
+                  "key.substructure": [
+                    {
+                      "key.kind": "source.lang.swift.decl.var.local",
+                      "key.length": 4,
+                      "key.name": "self",
+                      "key.namelength": 4,
+                      "key.nameoffset": 5295,
+                      "key.offset": 5295
+                    },
+                    {
+                      "key.bodylength": 481,
+                      "key.bodyoffset": 5293,
+                      "key.kind": "source.lang.swift.expr.closure",
+                      "key.length": 483,
+                      "key.offset": 5292,
+                      "key.substructure": [
+                        {
+                          "key.kind": "source.lang.swift.decl.var.parameter",
+                          "key.length": 31,
+                          "key.name": "result",
+                          "key.offset": 5302,
+                          "key.typename": "Result<HAData, HAError>"
+                        },
+                        {
+                          "key.bodylength": 481,
+                          "key.bodyoffset": 5293,
+                          "key.kind": "source.lang.swift.stmt.brace",
+                          "key.length": 483,
+                          "key.offset": 5292,
+                          "key.substructure": [
+                            {
+                              "key.elements": [
+                                {
+                                  "key.kind": "source.lang.swift.structure.elem.expr",
+                                  "key.length": 6,
+                                  "key.offset": 5357
+                                }
+                              ],
+                              "key.kind": "source.lang.swift.stmt.switch",
+                              "key.length": 260,
+                              "key.offset": 5350,
+                              "key.substructure": [
+                                {
+                                  "key.elements": [
+                                    {
+                                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                                      "key.length": 8,
+                                      "key.offset": 5383
+                                    }
+                                  ],
+                                  "key.kind": "source.lang.swift.stmt.case",
+                                  "key.length": 92,
+                                  "key.offset": 5378,
+                                  "key.substructure": [
+                                    {
+                                      "key.bodylength": 47,
+                                      "key.bodyoffset": 5422,
+                                      "key.kind": "source.lang.swift.expr.call",
+                                      "key.length": 61,
+                                      "key.name": "HAGlobal.log",
+                                      "key.namelength": 12,
+                                      "key.nameoffset": 5409,
+                                      "key.offset": 5409,
+                                      "key.substructure": [
+                                        {
+                                          "key.bodylength": 5,
+                                          "key.bodyoffset": 5422,
+                                          "key.kind": "source.lang.swift.expr.argument",
+                                          "key.length": 5,
+                                          "key.offset": 5422
+                                        },
+                                        {
+                                          "key.bodylength": 40,
+                                          "key.bodyoffset": 5429,
+                                          "key.kind": "source.lang.swift.expr.argument",
+                                          "key.length": 40,
+                                          "key.offset": 5429
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "key.elements": [
+                                    {
+                                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                                      "key.length": 19,
+                                      "key.offset": 5488
+                                    }
+                                  ],
+                                  "key.kind": "source.lang.swift.stmt.case",
+                                  "key.length": 113,
+                                  "key.offset": 5483,
+                                  "key.substructure": [
+                                    {
+                                      "key.bodylength": 5,
+                                      "key.bodyoffset": 5501,
+                                      "key.kind": "source.lang.swift.expr.call",
+                                      "key.length": 15,
+                                      "key.name": ".failure",
+                                      "key.namelength": 8,
+                                      "key.nameoffset": 5492,
+                                      "key.offset": 5492,
+                                      "key.substructure": [
+                                        {
+                                          "key.bodylength": 5,
+                                          "key.bodyoffset": 5501,
+                                          "key.kind": "source.lang.swift.expr.argument",
+                                          "key.length": 5,
+                                          "key.offset": 5501,
+                                          "key.substructure": [
+                                            {
+                                              "key.kind": "source.lang.swift.decl.var.local",
+                                              "key.length": 5,
+                                              "key.name": "error",
+                                              "key.namelength": 5,
+                                              "key.nameoffset": 5501,
+                                              "key.offset": 5501
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "key.bodylength": 57,
+                                      "key.bodyoffset": 5538,
+                                      "key.kind": "source.lang.swift.expr.call",
+                                      "key.length": 71,
+                                      "key.name": "HAGlobal.log",
+                                      "key.namelength": 12,
+                                      "key.nameoffset": 5525,
+                                      "key.offset": 5525,
+                                      "key.substructure": [
+                                        {
+                                          "key.bodylength": 5,
+                                          "key.bodyoffset": 5538,
+                                          "key.kind": "source.lang.swift.expr.argument",
+                                          "key.length": 5,
+                                          "key.offset": 5538
+                                        },
+                                        {
+                                          "key.bodylength": 50,
+                                          "key.bodyoffset": 5545,
+                                          "key.kind": "source.lang.swift.expr.argument",
+                                          "key.length": 50,
+                                          "key.offset": 5545
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "key.bodylength": 111,
+                              "key.bodyoffset": 5653,
+                              "key.kind": "source.lang.swift.expr.call",
+                              "key.length": 141,
+                              "key.name": "delegate?.responseController",
+                              "key.namelength": 28,
+                              "key.nameoffset": 5624,
+                              "key.offset": 5624,
+                              "key.substructure": [
+                                {
+                                  "key.bodylength": 4,
+                                  "key.bodyoffset": 5670,
+                                  "key.kind": "source.lang.swift.expr.argument",
+                                  "key.length": 4,
+                                  "key.offset": 5670
+                                },
+                                {
+                                  "key.bodylength": 47,
+                                  "key.bodyoffset": 5704,
+                                  "key.kind": "source.lang.swift.expr.argument",
+                                  "key.length": 59,
+                                  "key.name": "didReceive",
+                                  "key.namelength": 10,
+                                  "key.nameoffset": 5692,
+                                  "key.offset": 5692,
+                                  "key.substructure": [
+                                    {
+                                      "key.bodylength": 38,
+                                      "key.bodyoffset": 5712,
+                                      "key.kind": "source.lang.swift.expr.call",
+                                      "key.length": 47,
+                                      "key.name": ".result",
+                                      "key.namelength": 7,
+                                      "key.nameoffset": 5704,
+                                      "key.offset": 5704,
+                                      "key.substructure": [
+                                        {
+                                          "key.bodylength": 10,
+                                          "key.bodyoffset": 5724,
+                                          "key.kind": "source.lang.swift.expr.argument",
+                                          "key.length": 22,
+                                          "key.name": "identifier",
+                                          "key.namelength": 10,
+                                          "key.nameoffset": 5712,
+                                          "key.offset": 5712
+                                        },
+                                        {
+                                          "key.bodylength": 6,
+                                          "key.bodyoffset": 5744,
+                                          "key.kind": "source.lang.swift.expr.argument",
+                                          "key.length": 14,
+                                          "key.name": "result",
+                                          "key.namelength": 6,
+                                          "key.nameoffset": 5736,
+                                          "key.offset": 5736
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "key.elements": [
+                {
+                  "key.kind": "source.lang.swift.structure.elem.expr",
+                  "key.length": 8,
+                  "key.offset": 5792
+                }
+              ],
+              "key.kind": "source.lang.swift.stmt.switch",
+              "key.length": 1681,
+              "key.offset": 5785,
+              "key.substructure": [
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 19,
+                      "key.offset": 5816
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 96,
+                  "key.offset": 5811,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 5,
+                      "key.bodyoffset": 5829,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 15,
+                      "key.name": ".failure",
+                      "key.namelength": 8,
+                      "key.nameoffset": 5820,
+                      "key.offset": 5820,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 5,
+                          "key.bodyoffset": 5829,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 5,
+                          "key.offset": 5829,
+                          "key.substructure": [
+                            {
+                              "key.kind": "source.lang.swift.decl.var.local",
+                              "key.length": 5,
+                              "key.name": "error",
+                              "key.namelength": 5,
+                              "key.nameoffset": 5829,
+                              "key.offset": 5829
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "key.bodylength": 39,
+                      "key.bodyoffset": 5867,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 58,
+                      "key.name": "didReceive.pop()?",
+                      "key.namelength": 17,
+                      "key.nameoffset": 5849,
+                      "key.offset": 5849,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 0,
+                          "key.bodyoffset": 5864,
+                          "key.kind": "source.lang.swift.expr.call",
+                          "key.length": 16,
+                          "key.name": "didReceive.pop",
+                          "key.namelength": 14,
+                          "key.nameoffset": 5849,
+                          "key.offset": 5849
+                        },
+                        {
+                          "key.bodylength": 39,
+                          "key.bodyoffset": 5867,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 39,
+                          "key.offset": 5867,
+                          "key.substructure": [
+                            {
+                              "key.bodylength": 29,
+                              "key.bodyoffset": 5876,
+                              "key.kind": "source.lang.swift.expr.call",
+                              "key.length": 39,
+                              "key.name": ".failure",
+                              "key.namelength": 8,
+                              "key.nameoffset": 5867,
+                              "key.offset": 5867,
+                              "key.substructure": [
+                                {
+                                  "key.bodylength": 29,
+                                  "key.bodyoffset": 5876,
+                                  "key.kind": "source.lang.swift.expr.argument",
+                                  "key.length": 29,
+                                  "key.offset": 5876,
+                                  "key.substructure": [
+                                    {
+                                      "key.bodylength": 16,
+                                      "key.bodyoffset": 5888,
+                                      "key.kind": "source.lang.swift.expr.call",
+                                      "key.length": 29,
+                                      "key.name": ".underlying",
+                                      "key.namelength": 11,
+                                      "key.nameoffset": 5876,
+                                      "key.offset": 5876,
+                                      "key.substructure": [
+                                        {
+                                          "key.bodylength": 16,
+                                          "key.bodyoffset": 5888,
+                                          "key.kind": "source.lang.swift.expr.argument",
+                                          "key.length": 16,
+                                          "key.offset": 5888
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "key.elements": [
+                    {
+                      "key.kind": "source.lang.swift.structure.elem.pattern",
+                      "key.length": 33,
+                      "key.offset": 5921
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.stmt.case",
+                  "key.length": 1540,
+                  "key.offset": 5916,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 19,
+                      "key.bodyoffset": 5934,
+                      "key.kind": "source.lang.swift.expr.call",
+                      "key.length": 29,
+                      "key.name": ".success",
+                      "key.namelength": 8,
+                      "key.nameoffset": 5925,
+                      "key.offset": 5925,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 19,
+                          "key.bodyoffset": 5934,
+                          "key.kind": "source.lang.swift.expr.argument",
+                          "key.length": 19,
+                          "key.offset": 5934,
+                          "key.substructure": [
+                            {
+                              "key.bodylength": 17,
+                              "key.bodyoffset": 5935,
+                              "key.elements": [
+                                {
+                                  "key.kind": "source.lang.swift.structure.elem.expr",
+                                  "key.length": 11,
+                                  "key.offset": 5935
+                                },
+                                {
+                                  "key.kind": "source.lang.swift.structure.elem.expr",
+                                  "key.length": 4,
+                                  "key.offset": 5948
+                                }
+                              ],
+                              "key.kind": "source.lang.swift.expr.tuple",
+                              "key.length": 19,
+                              "key.offset": 5934,
+                              "key.substructure": [
+                                {
+                                  "key.kind": "source.lang.swift.decl.var.local",
+                                  "key.length": 11,
+                                  "key.name": "urlResponse",
+                                  "key.namelength": 11,
+                                  "key.nameoffset": 5935,
+                                  "key.offset": 5935
+                                },
+                                {
+                                  "key.kind": "source.lang.swift.decl.var.local",
+                                  "key.length": 4,
+                                  "key.name": "data",
+                                  "key.namelength": 4,
+                                  "key.nameoffset": 5948,
+                                  "key.offset": 5948
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "key.elements": [
+                        {
+                          "key.kind": "source.lang.swift.structure.elem.condition_expr",
+                          "key.length": 29,
+                          "key.offset": 5971
+                        }
+                      ],
+                      "key.kind": "source.lang.swift.stmt.if",
+                      "key.length": 1488,
+                      "key.offset": 5968,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 471,
+                          "key.bodyoffset": 6002,
+                          "key.kind": "source.lang.swift.stmt.brace",
+                          "key.length": 473,
+                          "key.offset": 6001,
+                          "key.substructure": [
+                            {
+                              "key.kind": "source.lang.swift.decl.var.local",
+                              "key.length": 24,
+                              "key.name": "errorMessage",
+                              "key.namelength": 12,
+                              "key.nameoffset": 6023,
+                              "key.offset": 6019,
+                              "key.typename": "String"
+                            },
+                            {
+                              "key.elements": [
+                                {
+                                  "key.kind": "source.lang.swift.structure.elem.condition_expr",
+                                  "key.length": 65,
+                                  "key.offset": 6064
+                                }
+                              ],
+                              "key.kind": "source.lang.swift.stmt.if",
+                              "key.length": 217,
+                              "key.offset": 6061,
+                              "key.substructure": [
+                                {
+                                  "key.kind": "source.lang.swift.decl.var.local",
+                                  "key.length": 4,
+                                  "key.name": "data",
+                                  "key.namelength": 4,
+                                  "key.nameoffset": 6068,
+                                  "key.offset": 6068
+                                },
+                                {
+                                  "key.kind": "source.lang.swift.decl.var.local",
+                                  "key.length": 6,
+                                  "key.name": "string",
+                                  "key.namelength": 6,
+                                  "key.nameoffset": 6085,
+                                  "key.offset": 6085
+                                },
+                                {
+                                  "key.bodylength": 27,
+                                  "key.bodyoffset": 6101,
+                                  "key.kind": "source.lang.swift.expr.call",
+                                  "key.length": 35,
+                                  "key.name": "String",
+                                  "key.namelength": 6,
+                                  "key.nameoffset": 6094,
+                                  "key.offset": 6094,
+                                  "key.substructure": [
+                                    {
+                                      "key.bodylength": 4,
+                                      "key.bodyoffset": 6107,
+                                      "key.kind": "source.lang.swift.expr.argument",
+                                      "key.length": 10,
+                                      "key.name": "data",
+                                      "key.namelength": 4,
+                                      "key.nameoffset": 6101,
+                                      "key.offset": 6101
+                                    },
+                                    {
+                                      "key.bodylength": 5,
+                                      "key.bodyoffset": 6123,
+                                      "key.kind": "source.lang.swift.expr.argument",
+                                      "key.length": 15,
+                                      "key.name": "encoding",
+                                      "key.namelength": 8,
+                                      "key.nameoffset": 6113,
+                                      "key.offset": 6113
+                                    }
+                                  ]
+                                },
+                                {
+                                  "key.bodylength": 59,
+                                  "key.bodyoffset": 6131,
+                                  "key.kind": "source.lang.swift.stmt.brace",
+                                  "key.length": 61,
+                                  "key.offset": 6130
+                                },
+                                {
+                                  "key.bodylength": 79,
+                                  "key.bodyoffset": 6198,
+                                  "key.kind": "source.lang.swift.stmt.brace",
+                                  "key.length": 81,
+                                  "key.offset": 6197
+                                }
+                              ]
+                            },
+                            {
+                              "key.bodylength": 145,
+                              "key.bodyoffset": 6314,
+                              "key.kind": "source.lang.swift.expr.call",
+                              "key.length": 164,
+                              "key.name": "didReceive.pop()?",
+                              "key.namelength": 17,
+                              "key.nameoffset": 6296,
+                              "key.offset": 6296,
+                              "key.substructure": [
+                                {
+                                  "key.bodylength": 0,
+                                  "key.bodyoffset": 6311,
+                                  "key.kind": "source.lang.swift.expr.call",
+                                  "key.length": 16,
+                                  "key.name": "didReceive.pop",
+                                  "key.namelength": 14,
+                                  "key.nameoffset": 6296,
+                                  "key.offset": 6296
+                                },
+                                {
+                                  "key.bodylength": 145,
+                                  "key.bodyoffset": 6314,
+                                  "key.kind": "source.lang.swift.expr.argument",
+                                  "key.length": 145,
+                                  "key.offset": 6314,
+                                  "key.substructure": [
+                                    {
+                                      "key.bodylength": 135,
+                                      "key.bodyoffset": 6323,
+                                      "key.kind": "source.lang.swift.expr.call",
+                                      "key.length": 145,
+                                      "key.name": ".failure",
+                                      "key.namelength": 8,
+                                      "key.nameoffset": 6314,
+                                      "key.offset": 6314,
+                                      "key.substructure": [
+                                        {
+                                          "key.bodylength": 135,
+                                          "key.bodyoffset": 6323,
+                                          "key.kind": "source.lang.swift.expr.argument",
+                                          "key.length": 135,
+                                          "key.offset": 6323,
+                                          "key.substructure": [
+                                            {
+                                              "key.bodylength": 124,
+                                              "key.bodyoffset": 6333,
+                                              "key.kind": "source.lang.swift.expr.call",
+                                              "key.length": 135,
+                                              "key.name": ".external",
+                                              "key.namelength": 9,
+                                              "key.nameoffset": 6323,
+                                              "key.offset": 6323,
+                                              "key.substructure": [
+                                                {
+                                                  "key.bodylength": 124,
+                                                  "key.bodyoffset": 6333,
+                                                  "key.kind": "source.lang.swift.expr.argument",
+                                                  "key.length": 124,
+                                                  "key.offset": 6333,
+                                                  "key.substructure": [
+                                                    {
+                                                      "key.bodylength": 117,
+                                                      "key.bodyoffset": 6339,
+                                                      "key.kind": "source.lang.swift.expr.call",
+                                                      "key.length": 124,
+                                                      "key.name": ".init",
+                                                      "key.namelength": 5,
+                                                      "key.nameoffset": 6333,
+                                                      "key.offset": 6333,
+                                                      "key.substructure": [
+                                                        {
+                                                          "key.bodylength": 30,
+                                                          "key.bodyoffset": 6366,
+                                                          "key.kind": "source.lang.swift.expr.argument",
+                                                          "key.length": 36,
+                                                          "key.name": "code",
+                                                          "key.namelength": 4,
+                                                          "key.nameoffset": 6360,
+                                                          "key.offset": 6360,
+                                                          "key.substructure": [
+                                                            {
+                                                              "key.bodylength": 22,
+                                                              "key.bodyoffset": 6373,
+                                                              "key.kind": "source.lang.swift.expr.call",
+                                                              "key.length": 30,
+                                                              "key.name": "String",
+                                                              "key.namelength": 6,
+                                                              "key.nameoffset": 6366,
+                                                              "key.offset": 6366,
+                                                              "key.substructure": [
+                                                                {
+                                                                  "key.bodylength": 22,
+                                                                  "key.bodyoffset": 6373,
+                                                                  "key.kind": "source.lang.swift.expr.argument",
+                                                                  "key.length": 22,
+                                                                  "key.offset": 6373
+                                                                }
+                                                              ]
+                                                            }
+                                                          ]
+                                                        },
+                                                        {
+                                                          "key.bodylength": 12,
+                                                          "key.bodyoffset": 6427,
+                                                          "key.kind": "source.lang.swift.expr.argument",
+                                                          "key.length": 21,
+                                                          "key.name": "message",
+                                                          "key.namelength": 7,
+                                                          "key.nameoffset": 6418,
+                                                          "key.offset": 6418
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "key.bodylength": 974,
+                          "key.bodyoffset": 6481,
+                          "key.kind": "source.lang.swift.stmt.brace",
+                          "key.length": 976,
+                          "key.offset": 6480,
+                          "key.substructure": [
+                            {
+                              "key.bodylength": 926,
+                              "key.bodyoffset": 6515,
+                              "key.kind": "source.lang.swift.expr.call",
+                              "key.length": 944,
+                              "key.name": "workQueue.async",
+                              "key.namelength": 15,
+                              "key.nameoffset": 6498,
+                              "key.offset": 6498,
+                              "key.substructure": [
+                                {
+                                  "key.bodylength": 928,
+                                  "key.bodyoffset": 6514,
+                                  "key.kind": "source.lang.swift.expr.argument",
+                                  "key.length": 928,
+                                  "key.offset": 6514,
+                                  "key.substructure": [
+                                    {
+                                      "key.bodylength": 926,
+                                      "key.bodyoffset": 6515,
+                                      "key.kind": "source.lang.swift.expr.closure",
+                                      "key.length": 928,
+                                      "key.offset": 6514,
+                                      "key.substructure": [
+                                        {
+                                          "key.bodylength": 926,
+                                          "key.bodyoffset": 6515,
+                                          "key.kind": "source.lang.swift.stmt.brace",
+                                          "key.length": 928,
+                                          "key.offset": 6514,
+                                          "key.substructure": [
+                                            {
+                                              "key.bodylength": 770,
+                                              "key.bodyoffset": 6540,
+                                              "key.kind": "source.lang.swift.stmt.brace",
+                                              "key.length": 772,
+                                              "key.offset": 6539,
+                                              "key.substructure": [
+                                                {
+                                                  "key.kind": "source.lang.swift.decl.var.local",
+                                                  "key.length": 18,
+                                                  "key.name": "result",
+                                                  "key.namelength": 6,
+                                                  "key.nameoffset": 6569,
+                                                  "key.offset": 6565,
+                                                  "key.typename": "HAData"
+                                                },
+                                                {
+                                                  "key.elements": [
+                                                    {
+                                                      "key.kind": "source.lang.swift.structure.elem.condition_expr",
+                                                      "key.length": 15,
+                                                      "key.offset": 6612
+                                                    }
+                                                  ],
+                                                  "key.kind": "source.lang.swift.stmt.if",
+                                                  "key.length": 619,
+                                                  "key.offset": 6609,
+                                                  "key.substructure": [
+                                                    {
+                                                      "key.kind": "source.lang.swift.decl.var.local",
+                                                      "key.length": 4,
+                                                      "key.name": "data",
+                                                      "key.namelength": 4,
+                                                      "key.nameoffset": 6616,
+                                                      "key.offset": 6616
+                                                    },
+                                                    {
+                                                      "key.bodylength": 515,
+                                                      "key.bodyoffset": 6629,
+                                                      "key.kind": "source.lang.swift.stmt.brace",
+                                                      "key.length": 517,
+                                                      "key.offset": 6628,
+                                                      "key.substructure": [
+                                                        {
+                                                          "key.elements": [
+                                                            {
+                                                              "key.kind": "source.lang.swift.structure.elem.expr",
+                                                              "key.length": 54,
+                                                              "key.offset": 6665
+                                                            }
+                                                          ],
+                                                          "key.kind": "source.lang.swift.stmt.switch",
+                                                          "key.length": 461,
+                                                          "key.offset": 6658,
+                                                          "key.substructure": [
+                                                            {
+                                                              "key.bodylength": 14,
+                                                              "key.bodyoffset": 6693,
+                                                              "key.kind": "source.lang.swift.expr.call",
+                                                              "key.length": 43,
+                                                              "key.name": "urlResponse.allHeaderFields",
+                                                              "key.namelength": 27,
+                                                              "key.nameoffset": 6665,
+                                                              "key.offset": 6665,
+                                                              "key.substructure": [
+                                                                {
+                                                                  "key.bodylength": 14,
+                                                                  "key.bodyoffset": 6693,
+                                                                  "key.kind": "source.lang.swift.expr.argument",
+                                                                  "key.length": 14,
+                                                                  "key.offset": 6693
+                                                                }
+                                                              ]
+                                                            },
+                                                            {
+                                                              "key.elements": [
+                                                                {
+                                                                  "key.kind": "source.lang.swift.structure.elem.pattern",
+                                                                  "key.length": 18,
+                                                                  "key.offset": 6755
+                                                                },
+                                                                {
+                                                                  "key.kind": "source.lang.swift.structure.elem.pattern",
+                                                                  "key.length": 5,
+                                                                  "key.offset": 6775
+                                                                }
+                                                              ],
+                                                              "key.kind": "source.lang.swift.stmt.case",
+                                                              "key.length": 210,
+                                                              "key.offset": 6750,
+                                                              "key.substructure": [
+                                                                {
+                                                                  "key.kind": "source.lang.swift.decl.var.local",
+                                                                  "key.length": 84,
+                                                                  "key.name": "value",
+                                                                  "key.namelength": 5,
+                                                                  "key.nameoffset": 6818,
+                                                                  "key.offset": 6814
+                                                                },
+                                                                {
+                                                                  "key.bodylength": 38,
+                                                                  "key.bodyoffset": 6859,
+                                                                  "key.kind": "source.lang.swift.expr.call",
+                                                                  "key.length": 68,
+                                                                  "key.name": "JSONSerialization.jsonObject",
+                                                                  "key.namelength": 28,
+                                                                  "key.nameoffset": 6830,
+                                                                  "key.offset": 6830,
+                                                                  "key.substructure": [
+                                                                    {
+                                                                      "key.bodylength": 4,
+                                                                      "key.bodyoffset": 6865,
+                                                                      "key.kind": "source.lang.swift.expr.argument",
+                                                                      "key.length": 10,
+                                                                      "key.name": "with",
+                                                                      "key.namelength": 4,
+                                                                      "key.nameoffset": 6859,
+                                                                      "key.offset": 6859
+                                                                    },
+                                                                    {
+                                                                      "key.bodylength": 17,
+                                                                      "key.bodyoffset": 6880,
+                                                                      "key.kind": "source.lang.swift.expr.argument",
+                                                                      "key.length": 26,
+                                                                      "key.name": "options",
+                                                                      "key.namelength": 7,
+                                                                      "key.nameoffset": 6871,
+                                                                      "key.offset": 6871,
+                                                                      "key.substructure": [
+                                                                        {
+                                                                          "key.bodylength": 15,
+                                                                          "key.bodyoffset": 6881,
+                                                                          "key.elements": [
+                                                                            {
+                                                                              "key.kind": "source.lang.swift.structure.elem.expr",
+                                                                              "key.length": 15,
+                                                                              "key.offset": 6881
+                                                                            }
+                                                                          ],
+                                                                          "key.kind": "source.lang.swift.expr.array",
+                                                                          "key.length": 17,
+                                                                          "key.offset": 6880
+                                                                        }
+                                                                      ]
+                                                                    }
+                                                                  ]
+                                                                },
+                                                                {
+                                                                  "key.bodylength": 12,
+                                                                  "key.bodyoffset": 6947,
+                                                                  "key.kind": "source.lang.swift.expr.call",
+                                                                  "key.length": 20,
+                                                                  "key.name": "HAData",
+                                                                  "key.namelength": 6,
+                                                                  "key.nameoffset": 6940,
+                                                                  "key.offset": 6940,
+                                                                  "key.substructure": [
+                                                                    {
+                                                                      "key.bodylength": 5,
+                                                                      "key.bodyoffset": 6954,
+                                                                      "key.kind": "source.lang.swift.expr.argument",
+                                                                      "key.length": 12,
+                                                                      "key.name": "value",
+                                                                      "key.namelength": 5,
+                                                                      "key.nameoffset": 6947,
+                                                                      "key.offset": 6947
+                                                                    }
+                                                                  ]
+                                                                }
+                                                              ]
+                                                            },
+                                                            {
+                                                              "key.elements": [
+                                                                {
+                                                                  "key.kind": "source.lang.swift.structure.elem.pattern",
+                                                                  "key.length": 7,
+                                                                  "key.offset": 6989
+                                                                }
+                                                              ],
+                                                              "key.kind": "source.lang.swift.stmt.case",
+                                                              "key.length": 100,
+                                                              "key.offset": 6989,
+                                                              "key.substructure": [
+                                                                {
+                                                                  "key.bodylength": 42,
+                                                                  "key.bodyoffset": 7046,
+                                                                  "key.kind": "source.lang.swift.expr.call",
+                                                                  "key.length": 50,
+                                                                  "key.name": "HAData",
+                                                                  "key.namelength": 6,
+                                                                  "key.nameoffset": 7039,
+                                                                  "key.offset": 7039,
+                                                                  "key.substructure": [
+                                                                    {
+                                                                      "key.bodylength": 35,
+                                                                      "key.bodyoffset": 7053,
+                                                                      "key.kind": "source.lang.swift.expr.argument",
+                                                                      "key.length": 42,
+                                                                      "key.name": "value",
+                                                                      "key.namelength": 5,
+                                                                      "key.nameoffset": 7046,
+                                                                      "key.offset": 7046,
+                                                                      "key.substructure": [
+                                                                        {
+                                                                          "key.bodylength": 27,
+                                                                          "key.bodyoffset": 7060,
+                                                                          "key.kind": "source.lang.swift.expr.call",
+                                                                          "key.length": 35,
+                                                                          "key.name": "String",
+                                                                          "key.namelength": 6,
+                                                                          "key.nameoffset": 7053,
+                                                                          "key.offset": 7053,
+                                                                          "key.substructure": [
+                                                                            {
+                                                                              "key.bodylength": 4,
+                                                                              "key.bodyoffset": 7066,
+                                                                              "key.kind": "source.lang.swift.expr.argument",
+                                                                              "key.length": 10,
+                                                                              "key.name": "data",
+                                                                              "key.namelength": 4,
+                                                                              "key.nameoffset": 7060,
+                                                                              "key.offset": 7060
+                                                                            },
+                                                                            {
+                                                                              "key.bodylength": 5,
+                                                                              "key.bodyoffset": 7082,
+                                                                              "key.kind": "source.lang.swift.expr.argument",
+                                                                              "key.length": 15,
+                                                                              "key.name": "encoding",
+                                                                              "key.namelength": 8,
+                                                                              "key.nameoffset": 7072,
+                                                                              "key.offset": 7072
+                                                                            }
+                                                                          ]
+                                                                        }
+                                                                      ]
+                                                                    }
+                                                                  ]
+                                                                }
+                                                              ]
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "key.bodylength": 75,
+                                                      "key.bodyoffset": 7152,
+                                                      "key.kind": "source.lang.swift.stmt.brace",
+                                                      "key.length": 77,
+                                                      "key.offset": 7151
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "key.bodylength": 16,
+                                                  "key.bodyoffset": 7272,
+                                                  "key.kind": "source.lang.swift.expr.call",
+                                                  "key.length": 35,
+                                                  "key.name": "didReceive.pop()?",
+                                                  "key.namelength": 17,
+                                                  "key.nameoffset": 7254,
+                                                  "key.offset": 7254,
+                                                  "key.substructure": [
+                                                    {
+                                                      "key.bodylength": 0,
+                                                      "key.bodyoffset": 7269,
+                                                      "key.kind": "source.lang.swift.expr.call",
+                                                      "key.length": 16,
+                                                      "key.name": "didReceive.pop",
+                                                      "key.namelength": 14,
+                                                      "key.nameoffset": 7254,
+                                                      "key.offset": 7254
+                                                    },
+                                                    {
+                                                      "key.bodylength": 16,
+                                                      "key.bodyoffset": 7272,
+                                                      "key.kind": "source.lang.swift.expr.argument",
+                                                      "key.length": 16,
+                                                      "key.offset": 7272,
+                                                      "key.substructure": [
+                                                        {
+                                                          "key.bodylength": 6,
+                                                          "key.bodyoffset": 7281,
+                                                          "key.kind": "source.lang.swift.expr.call",
+                                                          "key.length": 16,
+                                                          "key.name": ".success",
+                                                          "key.namelength": 8,
+                                                          "key.nameoffset": 7272,
+                                                          "key.offset": 7272,
+                                                          "key.substructure": [
+                                                            {
+                                                              "key.bodylength": 6,
+                                                              "key.bodyoffset": 7281,
+                                                              "key.kind": "source.lang.swift.expr.argument",
+                                                              "key.length": 6,
+                                                              "key.offset": 7281
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "key.elements": [
+                                                {
+                                                  "key.kind": "source.lang.swift.structure.elem.pattern",
+                                                  "key.length": 1,
+                                                  "key.offset": 7318
+                                                }
+                                              ],
+                                              "key.kind": "source.lang.swift.stmt.case",
+                                              "key.length": 112,
+                                              "key.offset": 7312,
+                                              "key.substructure": [
+                                                {
+                                                  "key.bodylength": 39,
+                                                  "key.bodyoffset": 7362,
+                                                  "key.kind": "source.lang.swift.expr.call",
+                                                  "key.length": 58,
+                                                  "key.name": "didReceive.pop()?",
+                                                  "key.namelength": 17,
+                                                  "key.nameoffset": 7344,
+                                                  "key.offset": 7344,
+                                                  "key.substructure": [
+                                                    {
+                                                      "key.bodylength": 0,
+                                                      "key.bodyoffset": 7359,
+                                                      "key.kind": "source.lang.swift.expr.call",
+                                                      "key.length": 16,
+                                                      "key.name": "didReceive.pop",
+                                                      "key.namelength": 14,
+                                                      "key.nameoffset": 7344,
+                                                      "key.offset": 7344
+                                                    },
+                                                    {
+                                                      "key.bodylength": 39,
+                                                      "key.bodyoffset": 7362,
+                                                      "key.kind": "source.lang.swift.expr.argument",
+                                                      "key.length": 39,
+                                                      "key.offset": 7362,
+                                                      "key.substructure": [
+                                                        {
+                                                          "key.bodylength": 29,
+                                                          "key.bodyoffset": 7371,
+                                                          "key.kind": "source.lang.swift.expr.call",
+                                                          "key.length": 39,
+                                                          "key.name": ".failure",
+                                                          "key.namelength": 8,
+                                                          "key.nameoffset": 7362,
+                                                          "key.offset": 7362,
+                                                          "key.substructure": [
+                                                            {
+                                                              "key.bodylength": 29,
+                                                              "key.bodyoffset": 7371,
+                                                              "key.kind": "source.lang.swift.expr.argument",
+                                                              "key.length": 29,
+                                                              "key.offset": 7371,
+                                                              "key.substructure": [
+                                                                {
+                                                                  "key.bodylength": 16,
+                                                                  "key.bodyoffset": 7383,
+                                                                  "key.kind": "source.lang.swift.expr.call",
+                                                                  "key.length": 29,
+                                                                  "key.name": ".underlying",
+                                                                  "key.namelength": 11,
+                                                                  "key.nameoffset": 7371,
+                                                                  "key.offset": 7371,
+                                                                  "key.substructure": [
+                                                                    {
+                                                                      "key.bodylength": 16,
+                                                                      "key.bodyoffset": 7383,
+                                                                      "key.kind": "source.lang.swift.expr.argument",
+                                                                      "key.length": 16,
+                                                                      "key.offset": 7383
+                                                                    }
+                                                                  ]
+                                                                }
+                                                              ]
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.bodylength": 49,
+          "key.bodyoffset": 7495,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 67,
+          "key.name": "didWrite()",
+          "key.namelength": 10,
+          "key.nameoffset": 7483,
+          "key.offset": 7478,
+          "key.substructure": [
+            {
+              "key.bodylength": 21,
+              "key.bodyoffset": 7517,
+              "key.kind": "source.lang.swift.expr.call",
+              "key.length": 35,
+              "key.name": "HAGlobal.log",
+              "key.namelength": 12,
+              "key.nameoffset": 7504,
+              "key.offset": 7504,
+              "key.substructure": [
+                {
+                  "key.bodylength": 5,
+                  "key.bodyoffset": 7517,
+                  "key.kind": "source.lang.swift.expr.argument",
+                  "key.length": 5,
+                  "key.offset": 7517
+                },
+                {
+                  "key.bodylength": 14,
+                  "key.bodyoffset": 7524,
+                  "key.kind": "source.lang.swift.expr.argument",
+                  "key.length": 14,
+                  "key.offset": 7524
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

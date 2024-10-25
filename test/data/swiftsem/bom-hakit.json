@@ -1,0 +1,124 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:9883e244-f757-4645-9025-6773922a7833",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2024-10-30T18:10:27Z",
+    "tools": {
+      "components": [
+        {
+          "group": "@cyclonedx",
+          "name": "cdxgen",
+          "version": "10.11.0",
+          "purl": "pkg:npm/%40cyclonedx/cdxgen@10.11.0",
+          "type": "application",
+          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@10.11.0",
+          "publisher": "OWASP Foundation",
+          "authors": [{ "name": "OWASP Foundation" }]
+        }
+      ]
+    },
+    "authors": [{ "name": "OWASP Foundation" }],
+    "lifecycles": [{ "phase": "build" }],
+    "component": {
+      "name": "HAKit",
+      "group": "",
+      "version": "unspecified",
+      "purl": "pkg:swift/HAKit@unspecified",
+      "bom-ref": "pkg:swift/HAKit@unspecified",
+      "properties": [
+        { "name": "SrcPath", "value": "/Volumes/Work/sandbox/HAKit" },
+        {
+          "name": "SrcFile",
+          "value": "/Volumes/Work/sandbox/HAKit/Package.swift"
+        }
+      ],
+      "type": "application"
+    },
+    "properties": [
+      { "name": "cdx:bom:componentTypes", "value": "swift" },
+      {
+        "name": "cdx:bom:componentNamespaces",
+        "value": "github.com/bgoncal\\ngithub.com/mxcl"
+      }
+    ]
+  },
+  "components": [
+    {
+      "group": "github.com/mxcl",
+      "name": "PromiseKit",
+      "version": "6.13.3",
+      "purl": "pkg:swift/github.com/mxcl/PromiseKit@6.13.3",
+      "externalReferences": [
+        { "type": "vcs", "url": "https://github.com/mxcl/PromiseKit" }
+      ],
+      "type": "library",
+      "bom-ref": "pkg:swift/github.com/mxcl/PromiseKit@6.13.3",
+      "evidence": {
+        "identity": [
+          {
+            "field": "purl",
+            "confidence": 1,
+            "methods": [
+              {
+                "technique": "manifest-analysis",
+                "confidence": 1,
+                "value": "/Volumes/Work/sandbox/HAKit/Package.resolved"
+              }
+            ]
+          }
+        ]
+      },
+      "properties": [
+        {
+          "name": "SrcFile",
+          "value": "/Volumes/Work/sandbox/HAKit/Package.resolved"
+        }
+      ]
+    },
+    {
+      "group": "github.com/bgoncal",
+      "name": "Starscream",
+      "version": "4.0.8",
+      "purl": "pkg:swift/github.com/bgoncal/Starscream@4.0.8",
+      "externalReferences": [
+        { "type": "vcs", "url": "https://github.com/bgoncal/Starscream" }
+      ],
+      "type": "library",
+      "bom-ref": "pkg:swift/github.com/bgoncal/Starscream@4.0.8",
+      "evidence": {
+        "identity": [
+          {
+            "field": "purl",
+            "confidence": 1,
+            "methods": [
+              {
+                "technique": "manifest-analysis",
+                "confidence": 1,
+                "value": "/Volumes/Work/sandbox/HAKit/Package.resolved"
+              }
+            ]
+          }
+        ]
+      },
+      "properties": [
+        {
+          "name": "SrcFile",
+          "value": "/Volumes/Work/sandbox/HAKit/Package.resolved"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    { "ref": "pkg:swift/github.com/bgoncal/Starscream@4.0.8", "dependsOn": [] },
+    { "ref": "pkg:swift/github.com/mxcl/PromiseKit@6.13.3", "dependsOn": [] },
+    {
+      "ref": "pkg:swift/HAKit@unspecified",
+      "dependsOn": [
+        "pkg:swift/github.com/bgoncal/Starscream@4.0.8",
+        "pkg:swift/github.com/mxcl/PromiseKit@6.13.3"
+      ]
+    }
+  ]
+}
