@@ -19,6 +19,7 @@ env:
 
 jobs:
   sle-lang-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -56,6 +57,7 @@ jobs:
           labels: ${{ steps.meta-bci-lang.outputs.labels }}
 
   sle-dotnet-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -93,6 +95,7 @@ jobs:
           labels: ${{ steps.meta-bci-dotnet.outputs.labels }}
 
   cdxgen-dotnet-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     needs: sle-dotnet-image
     permissions:
@@ -143,6 +146,7 @@ jobs:
           labels: ${{ steps.meta-cdxgen-dotnet.outputs.labels }}
 
   sle-dotnet7-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -180,6 +184,7 @@ jobs:
           labels: ${{ steps.meta-bci-dotnet7.outputs.labels }}
 
   cdxgen-dotnet7-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     needs: sle-dotnet7-image
     permissions:
@@ -229,6 +234,7 @@ jobs:
           labels: ${{ steps.meta-cdxgen-dotnet7.outputs.labels }}
 
   sle-dotnet8-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -266,6 +272,7 @@ jobs:
           labels: ${{ steps.meta-bci-dotnet8.outputs.labels }}
 
   cdxgen-dotnet8-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     needs: sle-dotnet8-image
     permissions:
@@ -315,6 +322,7 @@ jobs:
           labels: ${{ steps.meta-cdxgen-dotnet8.outputs.labels }}
 
   sle-java-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -352,6 +360,7 @@ jobs:
           labels: ${{ steps.meta-bci-java.outputs.labels }}
 
   sle-java-slim-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -389,6 +398,7 @@ jobs:
           labels: ${{ steps.meta-bci-java-slim.outputs.labels }}
 
   cdxgen-java-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     needs: sle-java-image
     permissions:
@@ -439,6 +449,7 @@ jobs:
           labels: ${{ steps.meta-cdxgen-java.outputs.labels }}
 
   cdxgen-java-slim-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     needs: sle-java-slim-image
     permissions:
@@ -489,6 +500,7 @@ jobs:
           labels: ${{ steps.meta-cdxgen-java-slim.outputs.labels }}
 
   sle-node20-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -526,6 +538,7 @@ jobs:
           labels: ${{ steps.meta-bci-node20.outputs.labels }}
 
   cdxgen-node20-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     needs: sle-node20-image
     permissions:
@@ -576,6 +589,7 @@ jobs:
           labels: ${{ steps.meta-cdxgen-node20.outputs.labels }}
 
   sle-java17-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -613,6 +627,7 @@ jobs:
           labels: ${{ steps.meta-bci-java17.outputs.labels }}
 
   sle-java17-slim-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -650,6 +665,7 @@ jobs:
           labels: ${{ steps.meta-bci-java17-slim.outputs.labels }}
 
   cdxgen-java17-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     needs: sle-java17-image
     permissions:
@@ -699,6 +715,7 @@ jobs:
           labels: ${{ steps.meta-cdxgen-java17.outputs.labels }}
 
   cdxgen-java17-slim-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     needs: sle-java17-slim-image
     permissions:
@@ -748,6 +765,7 @@ jobs:
           labels: ${{ steps.meta-cdxgen-java17-slim.outputs.labels }}
 
   cdxgen-python-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     needs: sle-lang-image
     permissions:
@@ -798,6 +816,7 @@ jobs:
           labels: ${{ steps.meta-cdxgen-python.outputs.labels }}
 
   sle-python311-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -835,6 +854,7 @@ jobs:
           labels: ${{ steps.meta-bci-python311.outputs.labels }}
 
   cdxgen-python311-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     needs: sle-python311-image
     permissions:
@@ -884,6 +904,7 @@ jobs:
           labels: ${{ steps.meta-cdxgen-python311.outputs.labels }}
 
   sle-python36-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -921,6 +942,7 @@ jobs:
           labels: ${{ steps.meta-bci-python36.outputs.labels }}
 
   cdxgen-python36-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     needs: sle-python36-image
     permissions:
@@ -970,6 +992,7 @@ jobs:
           labels: ${{ steps.meta-cdxgen-python36.outputs.labels }}
 
   opensuse-lang-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -1007,6 +1030,7 @@ jobs:
           labels: ${{ steps.meta-opensuse-lang.outputs.labels }}
 
   cdxgen-rolling-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     needs: opensuse-lang-image
     permissions:
@@ -1045,6 +1069,7 @@ jobs:
           labels: ${{ steps.meta-cdxgen-rolling.outputs.labels }}
 
   opensuse-python310-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -1082,6 +1107,7 @@ jobs:
           labels: ${{ steps.meta-opensuse-python310.outputs.labels }}
 
   cdxgen-python310-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     needs: opensuse-python310-image
     permissions:
@@ -1131,6 +1157,7 @@ jobs:
           labels: ${{ steps.meta-cdxgen-python310.outputs.labels }}
 
   opensuse-python39-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -1168,6 +1195,7 @@ jobs:
           labels: ${{ steps.meta-opensuse-python39.outputs.labels }}
 
   cdxgen-python39-image:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     needs: opensuse-python39-image
     permissions:
