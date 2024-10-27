@@ -7,6 +7,7 @@ on:
 
 jobs:
   pkg:
+    if: github.repository == 'CycloneDX/cdxgen'
     # use ubuntu-20.04 due to avoid glic errors
     runs-on: ubuntu-20.04
     steps:

@@ -15,6 +15,7 @@ concurrency:
 
 jobs:
   sae-builds:
+    if: github.repository == 'CycloneDX/cdxgen'
     strategy:
       matrix:
         os: [windows-latest]
