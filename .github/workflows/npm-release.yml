@@ -14,6 +14,7 @@ env:
 
 jobs:
   pkg:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -51,6 +52,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   containers:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -124,6 +126,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   containers-deno:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -175,6 +178,7 @@ jobs:
         cache-from: type=gha,scope=cdxgen-deno
         cache-to: type=gha,mode=max,scope=cdxgen-deno
   containers-ppc64:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -226,6 +230,7 @@ jobs:
         cache-from: type=gha,scope=cdxgen-ppc64
         cache-to: type=gha,mode=max,scope=cdxgen-ppc64
   containers-bun:
+    if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
       contents: read
