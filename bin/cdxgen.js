@@ -736,7 +736,7 @@ const checkPermissions = (filePath) => {
     printTable(bomNSData.bomJson);
     // CBOM related print
     if (options.includeCrypto) {
-      console.log("*** Cryptography BOM ***");
+      console.log("\n*** Cryptography BOM ***");
       printTable(bomNSData.bomJson, ["cryptographic-asset"]);
       printDependencyTree(bomNSData.bomJson, "provides");
     }
