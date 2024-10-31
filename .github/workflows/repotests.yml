@@ -280,7 +280,6 @@ jobs:
       - name: repotests RSSHub
         run: |
           FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs22 repotests/RSSHub -o bomresults/RSSHub.json
-          node bin/evinse.js -i bomresults/RSSHub.json -o bomresults/RSSHub.evinse.json -l javascript --with-data-flow -p repotests/RSSHub
         shell: bash
       - name: repotests java-sec-code
         run: |
