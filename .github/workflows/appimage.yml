@@ -7,6 +7,9 @@ jobs:
     if: github.repository == 'CycloneDX/cdxgen'
     # use ubuntu-20.04 due to avoid glic errors
     runs-on: ubuntu-20.04
+    permissions:
+      contents: write
+      packages: write
     steps:
     - uses: actions/checkout@v4
     - name: Install dependencies
