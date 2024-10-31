@@ -1,5 +1,12 @@
 export function getGoBuildInfo(src: any): string;
 export function getCargoAuditableInfo(src: any): string;
+/**
+ * Execute sourcekitten plugin with the given arguments
+ *
+ * @param args {Array} Arguments
+ * @returns {undefined|Object} Command output
+ */
+export function executeSourcekitten(args: any[]): undefined | any;
 export function getOSPackages(src: any): {
     osPackages: any[];
     dependenciesList: {

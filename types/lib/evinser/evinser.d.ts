@@ -1,3 +1,11 @@
+/**
+ * Method to parse semantic slice data
+ *
+ * @param {Array} components Components from the input SBOM
+ * @param {Object} semanticsSlice Semantic slice data
+ * @returns {Object} Parsed metadata
+ */
+export function parseSemanticSlices(components: any[], semanticsSlice: any): any;
 export function prepareDB(options: any): Promise<{
     sequelize: import("sequelize").Sequelize;
     Namespaces: {
@@ -556,6 +564,10 @@ export function createAndStoreSlice(purl: any, purlsJars: any, Usages: any, opti
 export function createSlice(purlOrLanguages: any, filePath: any, sliceType?: string, options?: {}): {
     tempDir: any;
     slicesFile: any;
+    atomFile?: undefined;
+} | {
+    tempDir: any;
+    slicesFile: any;
     atomFile: any;
 };
 export function purlToLanguage(purl: any, filePath: any): string;
@@ -568,6 +580,7 @@ export function analyzeProject(dbObjMap: any, options: any): Promise<{
     usagesSlicesFile: any;
     dataFlowSlicesFile: any;
     reachablesSlicesFile: any;
+    semanticsSlicesFile: any;
     purlLocationMap: {};
     servicesMap: {};
     dataFlowFrames: {};
@@ -577,15 +590,15 @@ export function analyzeProject(dbObjMap: any, options: any): Promise<{
     cryptoGeneratePurls: {};
 }>;
 export function parseObjectSlices(language: any, usageSlice: any, dbObjMap: any, servicesMap?: {}, purlLocationMap?: {}, purlImportsMap?: {}): Promise<{}>;
-export function parseSliceUsages(language: string, userDefinedTypesMap: any, slice: any, dbObjMap: any, purlLocationMap: any, purlImportsMap: any): Promise<void>;
+export function parseSliceUsages(language: string, userDefinedTypesMap: any, slice: any[], dbObjMap: any, purlLocationMap: any, purlImportsMap: any): Promise<void>;
 export function isFilterableType(language: any, userDefinedTypesMap: any, typeFullName: any): boolean;
-export function detectServicesFromUsages(language: string, slice: any, servicesMap?: any): any[];
+export function detectServicesFromUsages(language: string, slice: any[], servicesMap?: any): any[];
 export function detectServicesFromUDT(language: string, userDefinedTypes: any[], servicesMap: any): void;
 export function constructServiceName(_language: any, slice: any): string;
 export function extractEndpoints(language: any, code: any): any;
 export function createEvinseFile(sliceArtefacts: any, options: any): any;
 export function collectDataFlowFrames(language: string, userDefinedTypesMap: any, dataFlowSlice: any, dbObjMap: any, _purlLocationMap: any, purlImportsMap: any): Promise<{}>;
-export function collectReachableFrames(_language: any, reachablesSlice: any): {
+export function collectReachableFrames(_language: string, reachablesSlice: any): {
     dataFlowFrames: {};
     cryptoComponents: {
         type: string;

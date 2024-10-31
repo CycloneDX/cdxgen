@@ -403,7 +403,8 @@ jobs:
         shell: bash
       - name: repotests swift-markdown
         run: |
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json --validate
+          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json
+          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json --profile research
         shell: bash
       - name: repotests microservices-demo
         if: matrix.os == 'windows-latest'

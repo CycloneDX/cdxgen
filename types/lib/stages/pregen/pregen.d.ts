@@ -14,10 +14,10 @@ export function prepareSdkmanBuild(projectType: string): boolean;
 /**
  * Method to check and prepare the environment for python
  *
- * @param {String} filePath Path
+ * @param {String} _filePath Path
  * @param {Object} options CLI Options
  */
-export function preparePythonEnv(_filePath: any, options: any): void;
+export function preparePythonEnv(_filePath: string, options: any): void;
 /**
  * Method to check and prepare the environment for node
  *

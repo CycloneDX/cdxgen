@@ -63,12 +63,15 @@ const args = yargs(hideBin(process.argv))
       "js",
       "ts",
       "javascript",
+      "nodejs",
       "py",
       "python",
       "android",
       "c",
       "cpp",
       "php",
+      "swift",
+      "ios",
     ],
   })
   .option("db-path", {
@@ -120,6 +123,11 @@ const args = yargs(hideBin(process.argv))
     description: "Use an existing reachables slices file.",
     default: "reachables.slices.json",
   })
+  .option("semantics-slices-file", {
+    description: "Use an existing semantics slices file.",
+    default: "semantics.slices.json",
+    hidden: true,
+  })
   .option("print", {
     alias: "p",
     type: "boolean",
@@ -141,6 +149,7 @@ const args = yargs(hideBin(process.argv))
   .scriptName("evinse")
   .version()
   .help("h")
+  .alias("h", "help")
   .wrap(Math.min(120, yargs().terminalWidth())).argv;
 
 const evinseArt = `

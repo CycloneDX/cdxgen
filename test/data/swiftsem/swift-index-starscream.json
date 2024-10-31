@@ -1,0 +1,2229 @@
+{
+  "key.dependencies": [
+    {
+      "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+      "key.is_system": true,
+      "key.kind": "source.lang.swift.import.module.swift",
+      "key.name": "Swift"
+    },
+    {
+      "key.dependencies": [
+        {
+          "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.swift",
+          "key.name": "Swift"
+        }
+      ],
+      "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_StringProcessing.swiftmodule/x86_64-apple-macos.swiftinterface",
+      "key.is_system": true,
+      "key.kind": "source.lang.swift.import.module.swift",
+      "key.name": "_StringProcessing"
+    },
+    {
+      "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/_SwiftConcurrencyShims-39ZO3A1THQ3HL.pcm",
+      "key.is_system": true,
+      "key.kind": "source.lang.swift.import.module.clang",
+      "key.name": "_SwiftConcurrencyShims"
+    },
+    {
+      "key.dependencies": [
+        {
+          "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.swift",
+          "key.name": "Swift"
+        },
+        {
+          "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/SwiftShims-39ZO3A1THQ3HL.pcm",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.clang",
+          "key.name": "SwiftShims"
+        }
+      ],
+      "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_Concurrency.swiftmodule/x86_64-apple-macos.swiftinterface",
+      "key.is_system": true,
+      "key.kind": "source.lang.swift.import.module.swift",
+      "key.name": "_Concurrency"
+    },
+    {
+      "key.dependencies": [
+        {
+          "key.dependencies": [
+            {
+              "key.dependencies": [
+                {
+                  "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/Darwin-2MKSMTP29KE2D.pcm",
+                  "key.is_system": true,
+                  "key.kind": "source.lang.swift.import.module.clang",
+                  "key.name": "Darwin"
+                },
+                {
+                  "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+                  "key.is_system": true,
+                  "key.kind": "source.lang.swift.import.module.swift",
+                  "key.name": "Swift"
+                },
+                {
+                  "key.dependencies": [
+                    {
+                      "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.swift",
+                      "key.name": "Swift"
+                    },
+                    {
+                      "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/_Builtin_float-9VMJEIX0S9SE.pcm",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.clang",
+                      "key.name": "_Builtin_float"
+                    }
+                  ],
+                  "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_Builtin_float.swiftmodule/x86_64-apple-macos.swiftinterface",
+                  "key.is_system": true,
+                  "key.kind": "source.lang.swift.import.module.swift",
+                  "key.name": "_Builtin_float"
+                },
+                {
+                  "key.dependencies": [
+                    {
+                      "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.swift",
+                      "key.name": "Swift"
+                    },
+                    {
+                      "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/_errno-104I7O8W7MEVW.pcm",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.clang",
+                      "key.name": "_errno"
+                    }
+                  ],
+                  "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_errno.swiftmodule/x86_64-apple-macos.swiftinterface",
+                  "key.is_system": true,
+                  "key.kind": "source.lang.swift.import.module.swift",
+                  "key.name": "_errno"
+                },
+                {
+                  "key.dependencies": [
+                    {
+                      "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.swift",
+                      "key.name": "Swift"
+                    },
+                    {
+                      "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/_math-104I7O8W7MEVW.pcm",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.clang",
+                      "key.name": "_math"
+                    }
+                  ],
+                  "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_math.swiftmodule/x86_64-apple-macos.swiftinterface",
+                  "key.is_system": true,
+                  "key.kind": "source.lang.swift.import.module.swift",
+                  "key.name": "_math"
+                },
+                {
+                  "key.dependencies": [
+                    {
+                      "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.swift",
+                      "key.name": "Swift"
+                    },
+                    {
+                      "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/_signal-104I7O8W7MEVW.pcm",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.clang",
+                      "key.name": "_signal"
+                    }
+                  ],
+                  "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_signal.swiftmodule/x86_64-apple-macos.swiftinterface",
+                  "key.is_system": true,
+                  "key.kind": "source.lang.swift.import.module.swift",
+                  "key.name": "_signal"
+                },
+                {
+                  "key.dependencies": [
+                    {
+                      "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.swift",
+                      "key.name": "Swift"
+                    },
+                    {
+                      "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/_stdio-104I7O8W7MEVW.pcm",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.clang",
+                      "key.name": "_stdio"
+                    }
+                  ],
+                  "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_stdio.swiftmodule/x86_64-apple-macos.swiftinterface",
+                  "key.is_system": true,
+                  "key.kind": "source.lang.swift.import.module.swift",
+                  "key.name": "_stdio"
+                },
+                {
+                  "key.dependencies": [
+                    {
+                      "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.swift",
+                      "key.name": "Swift"
+                    },
+                    {
+                      "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/_time-104I7O8W7MEVW.pcm",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.clang",
+                      "key.name": "_time"
+                    }
+                  ],
+                  "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_time.swiftmodule/x86_64-apple-macos.swiftinterface",
+                  "key.is_system": true,
+                  "key.kind": "source.lang.swift.import.module.swift",
+                  "key.name": "_time"
+                },
+                {
+                  "key.dependencies": [
+                    {
+                      "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.swift",
+                      "key.name": "Swift"
+                    },
+                    {
+                      "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/sys_time-134SGFEPXAZL0.pcm",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.clang",
+                      "key.name": "sys_time"
+                    },
+                    {
+                      "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/sys_time-134SGFEPXAZL0.pcm",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.clang",
+                      "key.name": "timeval"
+                    }
+                  ],
+                  "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/sys_time.swiftmodule/x86_64-apple-macos.swiftinterface",
+                  "key.is_system": true,
+                  "key.kind": "source.lang.swift.import.module.swift",
+                  "key.name": "sys_time"
+                },
+                {
+                  "key.dependencies": [
+                    {
+                      "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.swift",
+                      "key.name": "Swift"
+                    },
+                    {
+                      "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/unistd-3U812Q2WJSMHS.pcm",
+                      "key.is_system": true,
+                      "key.kind": "source.lang.swift.import.module.clang",
+                      "key.name": "unistd"
+                    }
+                  ],
+                  "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/unistd.swiftmodule/x86_64-apple-macos.swiftinterface",
+                  "key.is_system": true,
+                  "key.kind": "source.lang.swift.import.module.swift",
+                  "key.name": "unistd"
+                }
+              ],
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Darwin.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "Darwin"
+            },
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "Swift"
+            },
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_Concurrency.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "_Concurrency"
+            },
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_StringProcessing.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "_StringProcessing"
+            },
+            {
+              "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/_SwiftConcurrencyShims-39ZO3A1THQ3HL.pcm",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.clang",
+              "key.name": "_SwiftConcurrencyShims"
+            }
+          ],
+          "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Combine.framework/Modules/Combine.swiftmodule/x86_64-apple-macos.swiftinterface",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.swift",
+          "key.name": "Combine"
+        },
+        {
+          "key.dependencies": [
+            {
+              "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/CoreFoundation-XRVNUAOWDGXL.pcm",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.clang",
+              "key.name": "CoreFoundation"
+            },
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "Swift"
+            },
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_Concurrency.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "_Concurrency"
+            },
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_StringProcessing.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "_StringProcessing"
+            },
+            {
+              "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/_SwiftConcurrencyShims-39ZO3A1THQ3HL.pcm",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.clang",
+              "key.name": "_SwiftConcurrencyShims"
+            }
+          ],
+          "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/CoreFoundation.swiftmodule/x86_64-apple-macos.swiftinterface",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.swift",
+          "key.name": "CoreFoundation"
+        },
+        {
+          "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Darwin.swiftmodule/x86_64-apple-macos.swiftinterface",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.swift",
+          "key.name": "Darwin"
+        },
+        {
+          "key.dependencies": [
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Combine.framework/Modules/Combine.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "Combine"
+            },
+            {
+              "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/Dispatch-Y4ZZ1HR72FEI.pcm",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.clang",
+              "key.name": "Dispatch"
+            },
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "Swift"
+            },
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_Concurrency.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "_Concurrency"
+            },
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_StringProcessing.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "_StringProcessing"
+            },
+            {
+              "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/_SwiftConcurrencyShims-39ZO3A1THQ3HL.pcm",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.clang",
+              "key.name": "_SwiftConcurrencyShims"
+            }
+          ],
+          "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Dispatch.swiftmodule/x86_64-apple-macos.swiftinterface",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.swift",
+          "key.name": "Dispatch"
+        },
+        {
+          "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/Foundation-2M8Y3D1H909LB.pcm",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.clang",
+          "key.name": "Foundation"
+        },
+        {
+          "key.dependencies": [
+            {
+              "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/ObjectiveC-1S4XUWQXUMNGK.pcm",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.clang",
+              "key.name": "ObjectiveC"
+            },
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "Swift"
+            },
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_Concurrency.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "_Concurrency"
+            },
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_StringProcessing.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "_StringProcessing"
+            },
+            {
+              "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/_SwiftConcurrencyShims-39ZO3A1THQ3HL.pcm",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.clang",
+              "key.name": "_SwiftConcurrencyShims"
+            }
+          ],
+          "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/ObjectiveC.swiftmodule/x86_64-apple-macos.swiftinterface",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.swift",
+          "key.name": "ObjectiveC"
+        },
+        {
+          "key.dependencies": [
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "Swift"
+            }
+          ],
+          "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Observation.swiftmodule/x86_64-apple-macos.swiftinterface",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.swift",
+          "key.name": "Observation"
+        },
+        {
+          "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.swift",
+          "key.name": "Swift"
+        },
+        {
+          "key.dependencies": [
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Darwin.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "Darwin"
+            },
+            {
+              "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/Darwin-2MKSMTP29KE2D.pcm",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.clang",
+              "key.name": "Mach"
+            },
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "Swift"
+            },
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_Concurrency.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "_Concurrency"
+            },
+            {
+              "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_StringProcessing.swiftmodule/x86_64-apple-macos.swiftinterface",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.swift",
+              "key.name": "_StringProcessing"
+            },
+            {
+              "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/_SwiftConcurrencyShims-39ZO3A1THQ3HL.pcm",
+              "key.is_system": true,
+              "key.kind": "source.lang.swift.import.module.clang",
+              "key.name": "_SwiftConcurrencyShims"
+            }
+          ],
+          "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/System.swiftmodule/x86_64-apple-macos.swiftinterface",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.swift",
+          "key.name": "System"
+        },
+        {
+          "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_Concurrency.swiftmodule/x86_64-apple-macos.swiftinterface",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.swift",
+          "key.name": "_Concurrency"
+        },
+        {
+          "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_StringProcessing.swiftmodule/x86_64-apple-macos.swiftinterface",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.swift",
+          "key.name": "_StringProcessing"
+        },
+        {
+          "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/_SwiftConcurrencyShims-39ZO3A1THQ3HL.pcm",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.clang",
+          "key.name": "_SwiftConcurrencyShims"
+        },
+        {
+          "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/Darwin-2MKSMTP29KE2D.pcm",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.clang",
+          "key.name": "sysdir"
+        },
+        {
+          "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/Darwin-2MKSMTP29KE2D.pcm",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.clang",
+          "key.name": "uuid"
+        }
+      ],
+      "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Foundation.framework/Modules/Foundation.swiftmodule/x86_64-apple-macos.swiftinterface",
+      "key.is_system": true,
+      "key.kind": "source.lang.swift.import.module.swift",
+      "key.name": "Foundation"
+    }
+  ],
+  "key.entities": [
+    {
+      "key.column": 8,
+      "key.kind": "source.lang.swift.ref.module",
+      "key.line": 1,
+      "key.name": "Foundation",
+      "key.usr": "c:@M@Foundation"
+    },
+    {
+      "key.attributes": [
+        {
+          "key.attribute": "source.decl.attribute.internal"
+        }
+      ],
+      "key.column": 16,
+      "key.effective_access": "source.decl.effective_access.internal",
+      "key.entities": [
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.weak"
+            },
+            {
+              "key.attribute": "source.decl.attribute.public"
+            }
+          ],
+          "key.column": 21,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.weak"
+                },
+                {
+                  "key.attribute": "source.decl.attribute.public"
+                }
+              ],
+              "key.column": 21,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.getter",
+              "key.line": 7,
+              "key.usr": "s:16HAConnectionImplAAC8delegateXevg"
+            },
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.weak"
+                },
+                {
+                  "key.attribute": "source.decl.attribute.public"
+                }
+              ],
+              "key.column": 21,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.setter",
+              "key.line": 7,
+              "key.usr": "s:16HAConnectionImplAAC8delegateXevs"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 7,
+          "key.name": "delegate",
+          "key.usr": "s:16HAConnectionImplAAC8delegateXevp"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public"
+            }
+          ],
+          "key.column": 16,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.public"
+                }
+              ],
+              "key.column": 16,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.getter",
+              "key.line": 8,
+              "key.usr": "s:16HAConnectionImplAAC13configurationXevg"
+            },
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.public"
+                }
+              ],
+              "key.column": 16,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.setter",
+              "key.line": 8,
+              "key.usr": "s:16HAConnectionImplAAC13configurationXevs"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 8,
+          "key.name": "configuration",
+          "key.usr": "s:16HAConnectionImplAAC13configurationXevp"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public"
+            }
+          ],
+          "key.column": 16,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.public"
+                }
+              ],
+              "key.column": 16,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.getter",
+              "key.line": 10,
+              "key.usr": "s:16HAConnectionImplAAC13callbackQueueSo17OS_dispatch_queueCvg"
+            },
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.public"
+                }
+              ],
+              "key.column": 16,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.setter",
+              "key.line": 10,
+              "key.usr": "s:16HAConnectionImplAAC13callbackQueueSo17OS_dispatch_queueCvs"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 10,
+          "key.name": "callbackQueue",
+          "key.usr": "s:16HAConnectionImplAAC13callbackQueueSo17OS_dispatch_queueCvp"
+        },
+        {
+          "key.column": 31,
+          "key.kind": "source.lang.swift.ref.class",
+          "key.line": 10,
+          "key.name": "DispatchQueue",
+          "key.usr": "c:objc(cs)OS_dispatch_queue"
+        },
+        {
+          "key.column": 48,
+          "key.entities": [
+            {
+              "key.column": 48,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.ref.function.accessor.getter",
+              "key.line": 10,
+              "key.usr": "s:So17OS_dispatch_queueC8DispatchE4mainABvgZ"
+            }
+          ],
+          "key.kind": "source.lang.swift.ref.var.class",
+          "key.line": 10,
+          "key.name": "main",
+          "key.usr": "s:So17OS_dispatch_queueC8DispatchE4mainABvpZ"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.internal"
+            }
+          ],
+          "key.column": 18,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.internal"
+                }
+              ],
+              "key.column": 18,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.getter",
+              "key.line": 11,
+              "key.usr": "s:16HAConnectionImplAAC9workQueueSo17OS_dispatch_queueCvg"
+            },
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.internal"
+                }
+              ],
+              "key.column": 18,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.setter",
+              "key.line": 11,
+              "key.usr": "s:16HAConnectionImplAAC9workQueueSo17OS_dispatch_queueCvs"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 11,
+          "key.name": "workQueue",
+          "key.usr": "s:16HAConnectionImplAAC9workQueueSo17OS_dispatch_queueCvp"
+        },
+        {
+          "key.column": 30,
+          "key.kind": "source.lang.swift.ref.class",
+          "key.line": 11,
+          "key.name": "DispatchQueue",
+          "key.usr": "c:objc(cs)OS_dispatch_queue"
+        },
+        {
+          "key.column": 30,
+          "key.kind": "source.lang.swift.ref.function.constructor",
+          "key.line": 11,
+          "key.name": "init(label:qos:attributes:autoreleaseFrequency:target:)",
+          "key.usr": "s:So17OS_dispatch_queueC8DispatchE5label3qos10attributes20autoreleaseFrequency6targetABSS_AC0D3QoSVAbCE10AttributesVAbCE011AutoreleaseI0OABSgtcfc"
+        },
+        {
+          "key.column": 32,
+          "key.kind": "source.lang.swift.ref.enumelement",
+          "key.line": 13,
+          "key.name": "workItem",
+          "key.usr": "s:So17OS_dispatch_queueC8DispatchE20AutoreleaseFrequencyO8workItemyA2EmF"
+        },
+        {
+          "key.column": 18,
+          "key.kind": "source.lang.swift.ref.function.method.class",
+          "key.line": 14,
+          "key.name": "global(qos:)",
+          "key.usr": "s:So17OS_dispatch_queueC8DispatchE6global3qosAbC0D3QoSV0G6SClassO_tFZ"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public"
+            }
+          ],
+          "key.column": 16,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 41,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.getter",
+              "key.line": 17,
+              "key.name": "getter:state",
+              "key.usr": "s:16HAConnectionImplAAC5stateXevg"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 17,
+          "key.name": "state",
+          "key.usr": "s:16HAConnectionImplAAC5stateXevp"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.internal"
+            }
+          ],
+          "key.column": 19,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 13,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 35,
+              "key.name": "NotificationCenter",
+              "key.usr": "c:objc(cs)NSNotificationCenter"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 32,
+          "key.name": "notifyState()",
+          "key.usr": "s:16HAConnectionImplAAC11notifyStateyyF"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.setter_access.private"
+            },
+            {
+              "key.attribute": "source.decl.attribute.internal"
+            }
+          ],
+          "key.column": 31,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.setter_access.private"
+                },
+                {
+                  "key.attribute": "source.decl.attribute.internal"
+                }
+              ],
+              "key.column": 31,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.getter",
+              "key.line": 42,
+              "key.usr": "s:16HAConnectionImplAAC10connectionXevg"
+            },
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.setter_access.private"
+                },
+                {
+                  "key.attribute": "source.decl.attribute.internal"
+                }
+              ],
+              "key.column": 31,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.setter",
+              "key.line": 42,
+              "key.usr": "s:16HAConnectionImplAAC10connectionXevs"
+            },
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.final"
+                }
+              ],
+              "key.column": 9,
+              "key.entities": [
+                {
+                  "key.column": 25,
+                  "key.kind": "source.lang.swift.ref.function.operator.infix",
+                  "key.line": 46,
+                  "key.name": "!==(_:_:)",
+                  "key.usr": "s:s3neeoiySbyXlSg_ABtF"
+                }
+              ],
+              "key.kind": "source.lang.swift.decl.function.accessor.didset",
+              "key.line": 43,
+              "key.name": "didSet:connection",
+              "key.usr": "s:16HAConnectionImplAAC10connectionXevW"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 42,
+          "key.name": "connection",
+          "key.usr": "s:16HAConnectionImplAAC10connectionXevp"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.internal"
+            }
+          ],
+          "key.column": 19,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 33,
+              "key.kind": "source.lang.swift.ref.protocol",
+              "key.line": 54,
+              "key.name": "Error",
+              "key.usr": "s:s5ErrorP"
+            },
+            {
+              "key.column": 14,
+              "key.effective_access": "source.decl.effective_access.internal",
+              "key.kind": "source.lang.swift.decl.enumelement",
+              "key.line": 55,
+              "key.name": "noConnectionInfo",
+              "key.usr": "s:16HAConnectionImplAAC12ConnectErrorO16noConnectionInfoyA2DmF"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.enum",
+          "key.line": 54,
+          "key.name": "ConnectError",
+          "key.related": [
+            {
+              "key.column": 33,
+              "key.kind": "source.lang.swift.ref.protocol",
+              "key.line": 54,
+              "key.name": "Error",
+              "key.usr": "s:s5ErrorP"
+            }
+          ],
+          "key.usr": "s:16HAConnectionImplAAC12ConnectErrorO"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.final"
+            }
+          ],
+          "key.column": 9,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.final"
+                }
+              ],
+              "key.column": 9,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.getter",
+              "key.line": 58,
+              "key.usr": "s:16HAConnectionImplAAC17requestControllerXevg"
+            },
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.final"
+                }
+              ],
+              "key.column": 9,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.setter",
+              "key.line": 58,
+              "key.usr": "s:16HAConnectionImplAAC17requestControllerXevs"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 58,
+          "key.name": "requestController",
+          "key.usr": "s:16HAConnectionImplAAC17requestControllerXevp"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.final"
+            }
+          ],
+          "key.column": 9,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.final"
+                }
+              ],
+              "key.column": 9,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.getter",
+              "key.line": 59,
+              "key.usr": "s:16HAConnectionImplAAC18responseControllerXevg"
+            },
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.final"
+                }
+              ],
+              "key.column": 9,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.setter",
+              "key.line": 59,
+              "key.usr": "s:16HAConnectionImplAAC18responseControllerXevs"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 59,
+          "key.name": "responseController",
+          "key.usr": "s:16HAConnectionImplAAC18responseControllerXevp"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.final"
+            }
+          ],
+          "key.column": 9,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.final"
+                }
+              ],
+              "key.column": 9,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.getter",
+              "key.line": 60,
+              "key.usr": "s:16HAConnectionImplAAC16reconnectManagerXevg"
+            },
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.final"
+                }
+              ],
+              "key.column": 9,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.setter",
+              "key.line": 60,
+              "key.usr": "s:16HAConnectionImplAAC16reconnectManagerXevs"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 60,
+          "key.name": "reconnectManager",
+          "key.usr": "s:16HAConnectionImplAAC16reconnectManagerXevp"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.final"
+            }
+          ],
+          "key.column": 9,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.final"
+                }
+              ],
+              "key.column": 9,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.getter",
+              "key.line": 61,
+              "key.usr": "s:16HAConnectionImplAAC10urlSessionSo12NSURLSessionCvg"
+            },
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.final"
+                }
+              ],
+              "key.column": 9,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.setter",
+              "key.line": 61,
+              "key.usr": "s:16HAConnectionImplAAC10urlSessionSo12NSURLSessionCvs"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 61,
+          "key.name": "urlSession",
+          "key.usr": "s:16HAConnectionImplAAC10urlSessionSo12NSURLSessionCvp"
+        },
+        {
+          "key.column": 21,
+          "key.kind": "source.lang.swift.ref.class",
+          "key.line": 61,
+          "key.name": "URLSession",
+          "key.usr": "c:objc(cs)NSURLSession"
+        },
+        {
+          "key.column": 9,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 9,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.getter",
+              "key.line": 62,
+              "key.usr": "s:16HAConnectionImplAAC20connectAutomaticallySbvg"
+            },
+            {
+              "key.column": 9,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.setter",
+              "key.line": 62,
+              "key.usr": "s:16HAConnectionImplAAC20connectAutomaticallySbvs"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 62,
+          "key.name": "connectAutomatically",
+          "key.usr": "s:16HAConnectionImplAAC20connectAutomaticallySbvp"
+        },
+        {
+          "key.column": 31,
+          "key.kind": "source.lang.swift.ref.struct",
+          "key.line": 62,
+          "key.name": "Bool",
+          "key.usr": "s:Sb"
+        },
+        {
+          "key.column": 9,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 9,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.getter",
+              "key.line": 63,
+              "key.usr": "s:16HAConnectionImplAAC25hasSetupResubscribeEventsXevg"
+            },
+            {
+              "key.column": 9,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.setter",
+              "key.line": 63,
+              "key.usr": "s:16HAConnectionImplAAC25hasSetupResubscribeEventsXevs"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 63,
+          "key.name": "hasSetupResubscribeEvents",
+          "key.usr": "s:16HAConnectionImplAAC25hasSetupResubscribeEventsXevp"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.lazy"
+            },
+            {
+              "key.attribute": "source.decl.attribute.setter_access.private"
+            }
+          ],
+          "key.column": 27,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.lazy"
+                },
+                {
+                  "key.attribute": "source.decl.attribute.setter_access.private"
+                }
+              ],
+              "key.column": 27,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.getter",
+              "key.line": 64,
+              "key.usr": "s:16HAConnectionImplAAC6cachesXevg"
+            },
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.lazy"
+                },
+                {
+                  "key.attribute": "source.decl.attribute.setter_access.private"
+                }
+              ],
+              "key.column": 27,
+              "key.is_dynamic": true,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.setter",
+              "key.line": 64,
+              "key.usr": "s:16HAConnectionImplAAC6cachesXevs"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 64,
+          "key.name": "caches",
+          "key.usr": "s:16HAConnectionImplAAC6cachesXevp"
+        },
+        {
+          "key.column": 5,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 21,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 71,
+              "key.name": "URLSession",
+              "key.usr": "c:objc(cs)NSURLSession"
+            },
+            {
+              "key.column": 35,
+              "key.kind": "source.lang.swift.ref.function.constructor",
+              "key.line": 71,
+              "key.name": "init(configuration:)",
+              "key.usr": "c:objc(cs)NSURLSession(cm)sessionWithConfiguration:"
+            },
+            {
+              "key.column": 56,
+              "key.entities": [
+                {
+                  "key.column": 56,
+                  "key.is_dynamic": true,
+                  "key.is_implicit": true,
+                  "key.kind": "source.lang.swift.ref.function.accessor.getter",
+                  "key.line": 71,
+                  "key.usr": "c:objc(cs)NSURLSessionConfiguration(cm)ephemeralSessionConfiguration"
+                }
+              ],
+              "key.kind": "source.lang.swift.ref.var.class",
+              "key.line": 71,
+              "key.name": "ephemeral",
+              "key.usr": "c:objc(cs)NSURLSessionConfiguration(cpy)ephemeralSessionConfiguration"
+            },
+            {
+              "key.column": 31,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 72,
+              "key.name": "Bool",
+              "key.usr": "s:Sb"
+            },
+            {
+              "key.column": 14,
+              "key.entities": [
+                {
+                  "key.column": 14,
+                  "key.is_implicit": true,
+                  "key.kind": "source.lang.swift.ref.function.accessor.setter",
+                  "key.line": 78,
+                  "key.usr": "s:16HAConnectionImplAAC10urlSessionSo12NSURLSessionCvs"
+                }
+              ],
+              "key.kind": "source.lang.swift.ref.var.instance",
+              "key.line": 78,
+              "key.name": "urlSession",
+              "key.usr": "s:16HAConnectionImplAAC10urlSessionSo12NSURLSessionCvp"
+            },
+            {
+              "key.column": 14,
+              "key.entities": [
+                {
+                  "key.column": 14,
+                  "key.is_dynamic": true,
+                  "key.is_implicit": true,
+                  "key.kind": "source.lang.swift.ref.function.accessor.setter",
+                  "key.line": 79,
+                  "key.receiver_usr": "s:16HAConnectionImplAAC",
+                  "key.usr": "s:16HAConnectionImplAAC20connectAutomaticallySbvs"
+                }
+              ],
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.var.instance",
+              "key.line": 79,
+              "key.name": "connectAutomatically",
+              "key.receiver_usr": "s:16HAConnectionImplAAC",
+              "key.usr": "s:16HAConnectionImplAAC20connectAutomaticallySbvp"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.function.constructor",
+          "key.line": 66,
+          "key.name": "init(configuration:requestController:responseController:reconnectManager:urlSession:connectAutomatically:)",
+          "key.usr": "s:16HAConnectionImplAACyXeXecfc"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.private"
+            }
+          ],
+          "key.column": 18,
+          "key.effective_access": "source.decl.effective_access.less_than_fileprivate",
+          "key.entities": [
+            {
+              "key.column": 19,
+              "key.kind": "source.lang.swift.ref.function.operator.prefix",
+              "key.line": 90,
+              "key.name": "!(_:)",
+              "key.usr": "s:Sb1nopyS2bFZ"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 88,
+          "key.name": "setupResubscribeEvents()",
+          "key.usr": "s:16HAConnectionImplAAC22setupResubscribeEvents33_8F755BA2CAAA06ADC4330E58D7B78511LLyyF"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public"
+            }
+          ],
+          "key.column": 17,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 9,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 109,
+              "key.name": "performConnectionChange(_:)",
+              "key.receiver_usr": "s:16HAConnectionImplAAC",
+              "key.usr": "s:16HAConnectionImplAAC23performConnectionChangeyyyycF"
+            },
+            {
+              "key.column": 13,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 110,
+              "key.name": "connect(resettingState:)",
+              "key.receiver_usr": "s:16HAConnectionImplAAC",
+              "key.usr": "s:16HAConnectionImplAAC7connect14resettingStateySb_tF"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 108,
+          "key.name": "connect()",
+          "key.usr": "s:16HAConnectionImplAAC7connectyyF"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public"
+            }
+          ],
+          "key.column": 17,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 9,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 115,
+              "key.name": "performConnectionChange(_:)",
+              "key.receiver_usr": "s:16HAConnectionImplAAC",
+              "key.usr": "s:16HAConnectionImplAAC23performConnectionChangeyyyycF"
+            },
+            {
+              "key.column": 13,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 116,
+              "key.name": "disconnect(permanently:error:)",
+              "key.receiver_usr": "s:16HAConnectionImplAAC",
+              "key.usr": "s:16HAConnectionImplAAC10disconnect11permanently5errorySb_s5Error_pSgtF"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 114,
+          "key.name": "disconnect()",
+          "key.usr": "s:16HAConnectionImplAAC10disconnectyyF"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.private"
+            }
+          ],
+          "key.column": 18,
+          "key.effective_access": "source.decl.effective_access.less_than_fileprivate",
+          "key.entities": [
+            {
+              "key.column": 15,
+              "key.entities": [
+                {
+                  "key.column": 15,
+                  "key.is_dynamic": true,
+                  "key.is_implicit": true,
+                  "key.kind": "source.lang.swift.ref.function.accessor.getter",
+                  "key.line": 121,
+                  "key.receiver_usr": "s:16HAConnectionImplAAC",
+                  "key.usr": "s:16HAConnectionImplAAC20connectAutomaticallySbvg"
+                }
+              ],
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.var.instance",
+              "key.line": 121,
+              "key.name": "connectAutomatically",
+              "key.receiver_usr": "s:16HAConnectionImplAAC",
+              "key.usr": "s:16HAConnectionImplAAC20connectAutomaticallySbvp"
+            },
+            {
+              "key.column": 9,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 122,
+              "key.name": "connect()",
+              "key.receiver_usr": "s:16HAConnectionImplAAC",
+              "key.usr": "s:16HAConnectionImplAAC7connectyyF"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 120,
+          "key.name": "connectAutomaticallyIfNeeded()",
+          "key.usr": "s:16HAConnectionImplAAC28connectAutomaticallyIfNeeded33_8F755BA2CAAA06ADC4330E58D7B78511LLyyF"
+        },
+        {
+          "key.column": 10,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 59,
+              "key.kind": "source.lang.swift.ref.typealias",
+              "key.line": 125,
+              "key.name": "Void",
+              "key.usr": "s:s4Voida"
+            },
+            {
+              "key.column": 12,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 126,
+              "key.name": "Thread",
+              "key.usr": "c:objc(cs)NSThread"
+            },
+            {
+              "key.column": 19,
+              "key.entities": [
+                {
+                  "key.column": 19,
+                  "key.is_dynamic": true,
+                  "key.is_implicit": true,
+                  "key.kind": "source.lang.swift.ref.function.accessor.getter",
+                  "key.line": 126,
+                  "key.usr": "c:objc(cs)NSThread(cm)isMainThread"
+                }
+              ],
+              "key.kind": "source.lang.swift.ref.var.class",
+              "key.line": 126,
+              "key.name": "isMainThread",
+              "key.usr": "c:objc(cs)NSThread(cpy)isMainThread"
+            },
+            {
+              "key.column": 13,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 129,
+              "key.name": "DispatchQueue",
+              "key.usr": "c:objc(cs)OS_dispatch_queue"
+            },
+            {
+              "key.column": 27,
+              "key.entities": [
+                {
+                  "key.column": 27,
+                  "key.is_dynamic": true,
+                  "key.is_implicit": true,
+                  "key.kind": "source.lang.swift.ref.function.accessor.getter",
+                  "key.line": 129,
+                  "key.usr": "s:So17OS_dispatch_queueC8DispatchE4mainABvgZ"
+                }
+              ],
+              "key.kind": "source.lang.swift.ref.var.class",
+              "key.line": 129,
+              "key.name": "main",
+              "key.usr": "s:So17OS_dispatch_queueC8DispatchE4mainABvpZ"
+            },
+            {
+              "key.column": 32,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 129,
+              "key.name": "async(group:qos:flags:execute:)",
+              "key.receiver_usr": "c:objc(cs)OS_dispatch_queue",
+              "key.usr": "s:So17OS_dispatch_queueC8DispatchE5async5group3qos5flags7executeySo0a1_b1_F0CSg_AC0D3QoSVAC0D13WorkItemFlagsVyyXLtF"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 125,
+          "key.name": "performConnectionChange(_:)",
+          "key.usr": "s:16HAConnectionImplAAC23performConnectionChangeyyyycF"
+        },
+        {
+          "key.column": 10,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 34,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 133,
+              "key.name": "Bool",
+              "key.usr": "s:Sb"
+            },
+            {
+              "key.column": 9,
+              "key.kind": "source.lang.swift.ref.function.free",
+              "key.line": 134,
+              "key.name": "precondition(_:_:file:line:)",
+              "key.usr": "s:s12precondition__4file4lineySbyXK_SSyXKs12StaticStringVSutF"
+            },
+            {
+              "key.column": 22,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 134,
+              "key.name": "Thread",
+              "key.usr": "c:objc(cs)NSThread"
+            },
+            {
+              "key.column": 29,
+              "key.entities": [
+                {
+                  "key.column": 29,
+                  "key.is_dynamic": true,
+                  "key.is_implicit": true,
+                  "key.kind": "source.lang.swift.ref.function.accessor.getter",
+                  "key.line": 134,
+                  "key.usr": "c:objc(cs)NSThread(cm)isMainThread"
+                }
+              ],
+              "key.kind": "source.lang.swift.ref.var.class",
+              "key.line": 134,
+              "key.name": "isMainThread",
+              "key.usr": "c:objc(cs)NSThread(cpy)isMainThread"
+            },
+            {
+              "key.column": 13,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 137,
+              "key.name": "disconnect(permanently:error:)",
+              "key.receiver_usr": "s:16HAConnectionImplAAC",
+              "key.usr": "s:16HAConnectionImplAAC10disconnect11permanently5errorySb_s5Error_pSgtF"
+            },
+            {
+              "key.column": 51,
+              "key.kind": "source.lang.swift.ref.enum",
+              "key.line": 137,
+              "key.name": "ConnectError",
+              "key.usr": "s:16HAConnectionImplAAC12ConnectErrorO"
+            },
+            {
+              "key.column": 64,
+              "key.kind": "source.lang.swift.ref.enumelement",
+              "key.line": 137,
+              "key.name": "noConnectionInfo",
+              "key.usr": "s:16HAConnectionImplAAC12ConnectErrorO16noConnectionInfoyA2DmF"
+            },
+            {
+              "key.column": 9,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 141,
+              "key.name": "setupResubscribeEvents()",
+              "key.receiver_usr": "s:16HAConnectionImplAAC",
+              "key.usr": "s:16HAConnectionImplAAC22setupResubscribeEvents33_8F755BA2CAAA06ADC4330E58D7B78511LLyyF"
+            },
+            {
+              "key.column": 26,
+              "key.kind": "source.lang.swift.ref.function.operator.infix",
+              "key.line": 155,
+              "key.name": "!==(_:_:)",
+              "key.usr": "s:s3neeoiySbyXlSg_ABtF"
+            },
+            {
+              "key.column": 13,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 167,
+              "key.name": "notifyState()",
+              "key.receiver_usr": "s:16HAConnectionImplAAC",
+              "key.usr": "s:16HAConnectionImplAAC11notifyStateyyF"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 133,
+          "key.name": "connect(resettingState:)",
+          "key.usr": "s:16HAConnectionImplAAC7connect14resettingStateySb_tF"
+        },
+        {
+          "key.column": 10,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 34,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 171,
+              "key.name": "Bool",
+              "key.usr": "s:Sb"
+            },
+            {
+              "key.column": 47,
+              "key.kind": "source.lang.swift.ref.protocol",
+              "key.line": 171,
+              "key.name": "Error",
+              "key.usr": "s:s5ErrorP"
+            },
+            {
+              "key.column": 9,
+              "key.kind": "source.lang.swift.ref.function.free",
+              "key.line": 172,
+              "key.name": "precondition(_:_:file:line:)",
+              "key.usr": "s:s12precondition__4file4lineySbyXK_SSyXKs12StaticStringVSutF"
+            },
+            {
+              "key.column": 22,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 172,
+              "key.name": "Thread",
+              "key.usr": "c:objc(cs)NSThread"
+            },
+            {
+              "key.column": 29,
+              "key.entities": [
+                {
+                  "key.column": 29,
+                  "key.is_dynamic": true,
+                  "key.is_implicit": true,
+                  "key.kind": "source.lang.swift.ref.function.accessor.getter",
+                  "key.line": 172,
+                  "key.usr": "c:objc(cs)NSThread(cm)isMainThread"
+                }
+              ],
+              "key.kind": "source.lang.swift.ref.var.class",
+              "key.line": 172,
+              "key.name": "isMainThread",
+              "key.usr": "c:objc(cs)NSThread(cpy)isMainThread"
+            },
+            {
+              "key.column": 83,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 174,
+              "key.name": "String",
+              "key.usr": "s:SS"
+            },
+            {
+              "key.column": 9,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 186,
+              "key.name": "notifyState()",
+              "key.receiver_usr": "s:16HAConnectionImplAAC",
+              "key.usr": "s:16HAConnectionImplAAC11notifyStateyyF"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 171,
+          "key.name": "disconnect(permanently:error:)",
+          "key.usr": "s:16HAConnectionImplAAC10disconnect11permanently5errorySb_s5Error_pSgtF"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public"
+            },
+            {
+              "key.attribute": "source.decl.attribute.discardableResult"
+            }
+          ],
+          "key.column": 17,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 17,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 198,
+              "key.name": "connectAutomaticallyIfNeeded()",
+              "key.receiver_usr": "s:16HAConnectionImplAAC",
+              "key.usr": "s:16HAConnectionImplAAC28connectAutomaticallyIfNeeded33_8F755BA2CAAA06ADC4330E58D7B78511LLyyF"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 192,
+          "key.name": "send(_:completion:)",
+          "key.usr": "s:16HAConnectionImplAAC4sendyXeXeF"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public"
+            },
+            {
+              "key.attribute": "source.decl.attribute.discardableResult"
+            }
+          ],
+          "key.column": 17,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 55,
+              "key.kind": "source.lang.swift.ref.typealias",
+              "key.line": 207,
+              "key.name": "Void",
+              "key.usr": "s:s4Voida"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 205,
+          "key.name": "send(_:completion:)",
+          "key.usr": "s:16HAConnectionImplAAC4sendyXeXeF"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.private"
+            }
+          ],
+          "key.column": 18,
+          "key.effective_access": "source.decl.effective_access.less_than_fileprivate",
+          "key.entities": [
+            {
+              "key.column": 26,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 231,
+              "key.name": "Bool",
+              "key.usr": "s:Sb"
+            },
+            {
+              "key.column": 17,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 239,
+              "key.name": "connectAutomaticallyIfNeeded()",
+              "key.receiver_usr": "s:16HAConnectionImplAAC",
+              "key.usr": "s:16HAConnectionImplAAC28connectAutomaticallyIfNeeded33_8F755BA2CAAA06ADC4330E58D7B78511LLyyF"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 229,
+          "key.name": "commonSubscribe(to:allowConnecting:initiated:handler:)",
+          "key.usr": "s:16HAConnectionImplAAC15commonSubscribe33_8F755BA2CAAA06ADC4330E58D7B78511LLyXeXeF"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.private"
+            }
+          ],
+          "key.column": 18,
+          "key.effective_access": "source.decl.effective_access.less_than_fileprivate",
+          "key.entities": [
+            {
+              "key.column": 26,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 249,
+              "key.name": "Bool",
+              "key.usr": "s:Sb"
+            },
+            {
+              "key.column": 50,
+              "key.kind": "source.lang.swift.ref.typealias",
+              "key.line": 251,
+              "key.name": "Void",
+              "key.usr": "s:s4Voida"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 247,
+          "key.name": "commonSubscribe(to:allowConnecting:initiated:handler:)",
+          "key.usr": "s:16HAConnectionImplAAC15commonSubscribe33_8F755BA2CAAA06ADC4330E58D7B78511LLyXeXeF"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public"
+            },
+            {
+              "key.attribute": "source.decl.attribute.discardableResult"
+            }
+          ],
+          "key.column": 17,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 273,
+          "key.name": "subscribe(to:handler:)",
+          "key.usr": "s:16HAConnectionImplAAC9subscribeyXeXeF"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public"
+            },
+            {
+              "key.attribute": "source.decl.attribute.discardableResult"
+            }
+          ],
+          "key.column": 17,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 281,
+          "key.name": "subscribe(to:initiated:handler:)",
+          "key.usr": "s:16HAConnectionImplAAC9subscribeyXeXeF"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public"
+            },
+            {
+              "key.attribute": "source.decl.attribute.discardableResult"
+            }
+          ],
+          "key.column": 17,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 50,
+              "key.kind": "source.lang.swift.ref.typealias",
+              "key.line": 292,
+              "key.name": "Void",
+              "key.usr": "s:s4Voida"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 290,
+          "key.name": "subscribe(to:handler:)",
+          "key.usr": "s:16HAConnectionImplAAC9subscribeyXeXeF"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public"
+            },
+            {
+              "key.attribute": "source.decl.attribute.discardableResult"
+            }
+          ],
+          "key.column": 17,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 50,
+              "key.kind": "source.lang.swift.ref.typealias",
+              "key.line": 301,
+              "key.name": "Void",
+              "key.usr": "s:s4Voida"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 298,
+          "key.name": "subscribe(to:initiated:handler:)",
+          "key.usr": "s:16HAConnectionImplAAC9subscribeyXeXeF"
+        }
+      ],
+      "key.kind": "source.lang.swift.decl.class",
+      "key.line": 6,
+      "key.name": "HAConnectionImpl",
+      "key.usr": "s:16HAConnectionImplAAC"
+    },
+    {
+      "key.attributes": [
+        {
+          "key.attribute": "source.decl.attribute.internal"
+        }
+      ],
+      "key.column": 11,
+      "key.entities": [
+        {
+          "key.column": 11,
+          "key.kind": "source.lang.swift.ref.class",
+          "key.line": 309,
+          "key.name": "HAConnectionImpl",
+          "key.usr": "s:16HAConnectionImplAAC"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.final"
+            },
+            {
+              "key.attribute": "source.decl.attribute.private"
+            }
+          ],
+          "key.column": 25,
+          "key.effective_access": "source.decl.effective_access.less_than_fileprivate",
+          "key.entities": [
+            {
+              "key.column": 48,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 310,
+              "key.name": "String",
+              "key.usr": "s:SS"
+            },
+            {
+              "key.column": 65,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 310,
+              "key.name": "Data",
+              "key.usr": "s:10Foundation4DataV"
+            },
+            {
+              "key.column": 14,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 315,
+              "key.name": "JSONSerialization",
+              "key.usr": "c:objc(cs)NSJSONSerialization"
+            },
+            {
+              "key.column": 32,
+              "key.kind": "source.lang.swift.ref.function.method.class",
+              "key.line": 315,
+              "key.name": "data(withJSONObject:options:)",
+              "key.usr": "c:objc(cs)NSJSONSerialization(cm)dataWithJSONObject:options:error:"
+            },
+            {
+              "key.column": 74,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.ref.function.constructor",
+              "key.line": 315,
+              "key.usr": "s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc"
+            },
+            {
+              "key.column": 76,
+              "key.entities": [
+                {
+                  "key.column": 76,
+                  "key.is_implicit": true,
+                  "key.kind": "source.lang.swift.ref.function.accessor.getter",
+                  "key.line": 315,
+                  "key.usr": "s:So20NSJSONWritingOptionsV10sortedKeysABvgZ"
+                }
+              ],
+              "key.kind": "source.lang.swift.ref.var.static",
+              "key.line": 315,
+              "key.name": "sortedKeys",
+              "key.usr": "c:@E@NSJSONWritingOptions@NSJSONWritingSortedKeys"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.function.method.static",
+          "key.line": 310,
+          "key.name": "data(from:)",
+          "key.usr": "s:16HAConnectionImplAAC4data33_8F755BA2CAAA06ADC4330E58D7B78511LL4from10Foundation4DataVSDySSypG_tFZ"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.private"
+            }
+          ],
+          "key.column": 18,
+          "key.effective_access": "source.decl.effective_access.less_than_fileprivate",
+          "key.entities": [
+            {
+              "key.column": 18,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 321,
+              "key.name": "String",
+              "key.usr": "s:SS"
+            },
+            {
+              "key.column": 26,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 330,
+              "key.name": "String",
+              "key.usr": "s:SS"
+            },
+            {
+              "key.column": 39,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 330,
+              "key.name": "HAConnectionImpl",
+              "key.usr": "s:16HAConnectionImplAAC"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 318,
+          "key.name": "sendWebSocket(identifier:request:command:)",
+          "key.usr": "s:16HAConnectionImplAAC13sendWebSocket33_8F755BA2CAAA06ADC4330E58D7B78511LLyXeXeF"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.private"
+            }
+          ],
+          "key.column": 18,
+          "key.effective_access": "source.decl.effective_access.less_than_fileprivate",
+          "key.entities": [
+            {
+              "key.column": 18,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 346,
+              "key.name": "String",
+              "key.usr": "s:SS"
+            },
+            {
+              "key.column": 79,
+              "key.kind": "source.lang.swift.ref.enum",
+              "key.line": 349,
+              "key.name": "ConnectError",
+              "key.usr": "s:16HAConnectionImplAAC12ConnectErrorO"
+            },
+            {
+              "key.column": 36,
+              "key.kind": "source.lang.swift.ref.function.operator.prefix",
+              "key.line": 361,
+              "key.name": "!(_:)",
+              "key.usr": "s:Sb1nopyS2bFZ"
+            },
+            {
+              "key.column": 44,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 362,
+              "key.name": "HAConnectionImpl",
+              "key.usr": "s:16HAConnectionImplAAC"
+            },
+            {
+              "key.column": 36,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 381,
+              "key.name": "String",
+              "key.usr": "s:SS"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 342,
+          "key.name": "sendRest(identifier:request:method:command:)",
+          "key.usr": "s:16HAConnectionImplAAC8sendRest33_8F755BA2CAAA06ADC4330E58D7B78511LLyXeXeF"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.private"
+            }
+          ],
+          "key.column": 18,
+          "key.effective_access": "source.decl.effective_access.less_than_fileprivate",
+          "key.entities": [
+            {
+              "key.column": 82,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 395,
+              "key.name": "UInt8",
+              "key.usr": "s:s5UInt8V"
+            },
+            {
+              "key.column": 106,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 395,
+              "key.name": "String",
+              "key.usr": "s:SS"
+            },
+            {
+              "key.column": 25,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 397,
+              "key.name": "Data",
+              "key.usr": "s:10Foundation4DataV"
+            },
+            {
+              "key.column": 25,
+              "key.kind": "source.lang.swift.ref.function.constructor",
+              "key.line": 397,
+              "key.name": "init(base64Encoded:options:)",
+              "key.usr": "s:10Foundation4DataV13base64Encoded7optionsACSgSSh_So27NSDataBase64DecodingOptionsVtcfc"
+            },
+            {
+              "key.column": 61,
+              "key.kind": "source.lang.swift.ref.function.operator.infix",
+              "key.line": 397,
+              "key.name": "??(_:_:)",
+              "key.usr": "s:s2qqoiyxxSgn_xyKXKtKRi_zlF"
+            },
+            {
+              "key.column": 68,
+              "key.kind": "source.lang.swift.ref.function.operator.infix",
+              "key.line": 397,
+              "key.name": "??(_:_:)",
+              "key.usr": "s:s2qqoiyxxSgn_xyKXKtKRi_zlF"
+            },
+            {
+              "key.column": 71,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 397,
+              "key.name": "Data",
+              "key.usr": "s:10Foundation4DataV"
+            },
+            {
+              "key.column": 71,
+              "key.kind": "source.lang.swift.ref.function.constructor",
+              "key.line": 397,
+              "key.name": "init()",
+              "key.usr": "s:10Foundation4DataVACycfc"
+            },
+            {
+              "key.column": 19,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 400,
+              "key.name": "insert(_:at:)",
+              "key.receiver_usr": "s:10Foundation4DataV",
+              "key.usr": "s:SmsE6insert_2aty7ElementQzn_5IndexQztF"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 395,
+          "key.name": "sendWrite(identifier:sttBinaryHandlerId:audioDataString:)",
+          "key.usr": "s:16HAConnectionImplAAC9sendWrite33_8F755BA2CAAA06ADC4330E58D7B78511LLyXeXeF"
+        },
+        {
+          "key.column": 10,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 64,
+              "key.kind": "source.lang.swift.ref.struct",
+              "key.line": 428,
+              "key.name": "String",
+              "key.usr": "s:SS"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 415,
+          "key.name": "sendRaw(identifier:request:)",
+          "key.usr": "s:16HAConnectionImplAAC7sendRawyXeXeF"
+        }
+      ],
+      "key.kind": "source.lang.swift.decl.extension.class",
+      "key.line": 309,
+      "key.name": "HAConnectionImpl",
+      "key.usr": "s:e:s:16HAConnectionImplAAC4data33_8F755BA2CAAA06ADC4330E58D7B78511LL4from10Foundation4DataVSDySSypG_tFZ"
+    },
+    {
+      "key.attributes": [
+        {
+          "key.attribute": "source.decl.attribute.internal"
+        }
+      ],
+      "key.column": 11,
+      "key.entities": [
+        {
+          "key.column": 11,
+          "key.kind": "source.lang.swift.ref.class",
+          "key.line": 434,
+          "key.name": "HAConnectionImpl",
+          "key.usr": "s:16HAConnectionImplAAC"
+        },
+        {
+          "key.column": 10,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 9,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 436,
+              "key.name": "connect(resettingState:)",
+              "key.receiver_usr": "s:16HAConnectionImplAAC",
+              "key.usr": "s:16HAConnectionImplAAC7connect14resettingStateySb_tF"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 435,
+          "key.name": "reconnectManagerWantsReconnection(_:)",
+          "key.usr": "s:16HAConnectionImplAAC33reconnectManagerWantsReconnectionyXeXeF"
+        },
+        {
+          "key.column": 10,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 77,
+              "key.kind": "source.lang.swift.ref.protocol",
+              "key.line": 439,
+              "key.name": "Error",
+              "key.usr": "s:s5ErrorP"
+            },
+            {
+              "key.column": 9,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 440,
+              "key.name": "disconnect(permanently:error:)",
+              "key.receiver_usr": "s:16HAConnectionImplAAC",
+              "key.usr": "s:16HAConnectionImplAAC10disconnect11permanently5errorySb_s5Error_pSgtF"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 439,
+          "key.name": "reconnect(_:wantsDisconnectFor:)",
+          "key.usr": "s:16HAConnectionImplAAC9reconnectyXeXeF"
+        },
+        {
+          "key.column": 10,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 48,
+              "key.kind": "source.lang.swift.ref.enum",
+              "key.line": 445,
+              "key.name": "Result",
+              "key.usr": "s:s6ResultO"
+            },
+            {
+              "key.column": 55,
+              "key.kind": "source.lang.swift.ref.typealias",
+              "key.line": 445,
+              "key.name": "Void",
+              "key.usr": "s:s4Voida"
+            },
+            {
+              "key.column": 61,
+              "key.kind": "source.lang.swift.ref.protocol",
+              "key.line": 445,
+              "key.name": "Error",
+              "key.usr": "s:s5ErrorP"
+            },
+            {
+              "key.column": 72,
+              "key.kind": "source.lang.swift.ref.typealias",
+              "key.line": 445,
+              "key.name": "Void",
+              "key.usr": "s:s4Voida"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 443,
+          "key.name": "reconnectManager(_:pingWithCompletion:)",
+          "key.usr": "s:16HAConnectionImplAAC16reconnectManageryXeXeF"
+        }
+      ],
+      "key.kind": "source.lang.swift.decl.extension.class",
+      "key.line": 434,
+      "key.name": "HAConnectionImpl",
+      "key.usr": "s:e:s:16HAConnectionImplAAC33reconnectManagerWantsReconnectionyXeXeF"
+    }
+  ]
+}
