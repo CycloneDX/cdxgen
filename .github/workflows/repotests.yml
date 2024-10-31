@@ -58,6 +58,7 @@ jobs:
           CI: true
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+        if: matrix.os != 'self-hosted'
       - uses: swift-actions/setup-swift@v2
         if: matrix.os == 'ubuntu-latest'
       - name: Set up Python
