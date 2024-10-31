@@ -12,7 +12,7 @@ concurrency:
 jobs:
   build:
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         node-version: ['21.x', '22.x', '23.x']
         os: ['ubuntu-latest', 'windows-latest', 'self-hosted']
