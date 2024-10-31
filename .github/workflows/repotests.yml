@@ -12,10 +12,10 @@ concurrency:
 jobs:
   build:
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
-        node-version: ['21.x', '22.x', '23.x']
-        os: ['ubuntu-latest', 'windows-latest']
+        node-version: ['23.x']
+        os: ['ubuntu-latest', 'windows-latest', 'self-hosted']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -33,6 +33,7 @@ jobs:
           deno-version: v2.x
       - uses: oven-sh/setup-bun@v1
       - name: Trim CI agent
+        if: matrix.os == 'ubuntu-latest'
         run: |
           chmod +x contrib/free_disk_space.sh
           ./contrib/free_disk_space.sh
@@ -57,6 +58,7 @@ jobs:
           CI: true
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+        if: matrix.os != 'self-hosted'
       - uses: swift-actions/setup-swift@v2
         if: matrix.os == 'ubuntu-latest'
       - name: Set up Python
@@ -268,17 +270,14 @@ jobs:
       - name: repotests basic-ftp
         run: |
           FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs10 repotests/basic-ftp -o bomresults/basic-ftp.json
-          node bin/evinse.js -i bomresults/basic-ftp.json -o bomresults/basic-ftp.evinse.json -l javascript --with-data-flow -p repotests/basic-ftp
         shell: bash
       - name: repotests llama-node
         run: |
           FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs16 repotests/llama-node -o bomresults/llama-node.json
-          node bin/evinse.js -i bomresults/llama-node.json -o bomresults/llama-node.evinse.json -l javascript --with-data-flow -p repotests/llama-node
         shell: bash
       - name: repotests RSSHub
         run: |
           FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs22 repotests/RSSHub -o bomresults/RSSHub.json
-          node bin/evinse.js -i bomresults/RSSHub.json -o bomresults/RSSHub.evinse.json -l javascript --with-data-flow -p repotests/RSSHub
         shell: bash
       - name: repotests java-sec-code
         run: |

@@ -1,0 +1,605 @@
+{
+  "key.diagnostic_stage": "source.diagnostic.stage.swift.parse",
+  "key.length": 1756,
+  "key.offset": 0,
+  "key.substructure": [
+    {
+      "key.accessibility": "source.lang.swift.accessibility.public",
+      "key.attributes": [
+        {
+          "key.attribute": "source.decl.attribute.public",
+          "key.length": 6,
+          "key.offset": 137
+        }
+      ],
+      "key.bodylength": 1550,
+      "key.bodyoffset": 204,
+      "key.elements": [
+        {
+          "key.kind": "source.lang.swift.structure.elem.typeref",
+          "key.length": 8,
+          "key.offset": 165
+        },
+        {
+          "key.kind": "source.lang.swift.structure.elem.typeref",
+          "key.length": 27,
+          "key.offset": 175
+        }
+      ],
+      "key.inheritedtypes": [
+        {
+          "key.name": "NSObject"
+        },
+        {
+          "key.name": "AVSpeechSynthesizerDelegate"
+        }
+      ],
+      "key.kind": "source.lang.swift.decl.class",
+      "key.length": 1611,
+      "key.name": "SpeechManager",
+      "key.namelength": 13,
+      "key.nameoffset": 150,
+      "key.offset": 144,
+      "key.substructure": [
+        {
+          "key.accessibility": "source.lang.swift.accessibility.private",
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.private",
+              "key.length": 7,
+              "key.offset": 229
+            },
+            {
+              "key.attribute": "source.decl.attribute.nonisolated",
+              "key.length": 19,
+              "key.offset": 209
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.length": 45,
+          "key.name": "speechSynthesizer",
+          "key.namelength": 17,
+          "key.nameoffset": 241,
+          "key.offset": 237
+        },
+        {
+          "key.bodylength": 0,
+          "key.bodyoffset": 281,
+          "key.kind": "source.lang.swift.expr.call",
+          "key.length": 21,
+          "key.name": "AVSpeechSynthesizer",
+          "key.namelength": 19,
+          "key.nameoffset": 261,
+          "key.offset": 261
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.internal",
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.override",
+              "key.length": 8,
+              "key.offset": 288
+            }
+          ],
+          "key.bodylength": 107,
+          "key.bodyoffset": 305,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 116,
+          "key.name": "init()",
+          "key.namelength": 6,
+          "key.nameoffset": 297,
+          "key.offset": 297,
+          "key.substructure": [
+            {
+              "key.bodylength": 0,
+              "key.bodyoffset": 325,
+              "key.kind": "source.lang.swift.expr.call",
+              "key.length": 12,
+              "key.name": "super.init",
+              "key.namelength": 10,
+              "key.nameoffset": 314,
+              "key.offset": 314
+            },
+            {
+              "key.bodylength": 4,
+              "key.bodyoffset": 402,
+              "key.kind": "source.lang.swift.expr.call",
+              "key.length": 30,
+              "key.name": "SwiftSingletons.register",
+              "key.namelength": 24,
+              "key.nameoffset": 377,
+              "key.offset": 377,
+              "key.substructure": [
+                {
+                  "key.bodylength": 4,
+                  "key.bodyoffset": 402,
+                  "key.kind": "source.lang.swift.expr.argument",
+                  "key.length": 4,
+                  "key.offset": 402
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.public",
+          "key.bodylength": 37,
+          "key.bodyoffset": 427,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 46,
+          "key.name": "deinit",
+          "key.namelength": 6,
+          "key.nameoffset": 419,
+          "key.offset": 419,
+          "key.substructure": [
+            {
+              "key.bodylength": 0,
+              "key.bodyoffset": 458,
+              "key.kind": "source.lang.swift.expr.call",
+              "key.length": 23,
+              "key.name": "stopListeningToEvents",
+              "key.namelength": 21,
+              "key.nameoffset": 436,
+              "key.offset": 436
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.public",
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public",
+              "key.length": 6,
+              "key.offset": 471
+            }
+          ],
+          "key.bodylength": 42,
+          "key.bodyoffset": 500,
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.length": 65,
+          "key.name": "isSpeaking",
+          "key.namelength": 10,
+          "key.nameoffset": 482,
+          "key.offset": 478,
+          "key.typename": "Bool"
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.public",
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public",
+              "key.length": 6,
+              "key.offset": 549
+            }
+          ],
+          "key.bodylength": 63,
+          "key.bodyoffset": 600,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 108,
+          "key.name": "speak(_:)",
+          "key.namelength": 37,
+          "key.nameoffset": 561,
+          "key.offset": 556,
+          "key.substructure": [
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 30,
+              "key.name": "utterance",
+              "key.offset": 567,
+              "key.typename": "AVSpeechUtterance"
+            },
+            {
+              "key.bodylength": 0,
+              "key.bodyoffset": 614,
+              "key.kind": "source.lang.swift.expr.call",
+              "key.length": 6,
+              "key.name": "stop",
+              "key.namelength": 4,
+              "key.nameoffset": 609,
+              "key.offset": 609
+            },
+            {
+              "key.bodylength": 9,
+              "key.bodyoffset": 648,
+              "key.kind": "source.lang.swift.expr.call",
+              "key.length": 34,
+              "key.name": "speechSynthesizer.speak",
+              "key.namelength": 23,
+              "key.nameoffset": 624,
+              "key.offset": 624,
+              "key.substructure": [
+                {
+                  "key.bodylength": 9,
+                  "key.bodyoffset": 648,
+                  "key.kind": "source.lang.swift.expr.argument",
+                  "key.length": 9,
+                  "key.offset": 648
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.public",
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public",
+              "key.length": 6,
+              "key.offset": 680
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc",
+              "key.length": 5,
+              "key.offset": 670
+            }
+          ],
+          "key.bodylength": 60,
+          "key.bodyoffset": 700,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 74,
+          "key.name": "stop()",
+          "key.namelength": 6,
+          "key.nameoffset": 692,
+          "key.offset": 687,
+          "key.substructure": [
+            {
+              "key.bodylength": 14,
+              "key.bodyoffset": 740,
+              "key.kind": "source.lang.swift.expr.call",
+              "key.length": 46,
+              "key.name": "speechSynthesizer.stopSpeaking",
+              "key.namelength": 30,
+              "key.nameoffset": 709,
+              "key.offset": 709,
+              "key.substructure": [
+                {
+                  "key.bodylength": 10,
+                  "key.bodyoffset": 744,
+                  "key.kind": "source.lang.swift.expr.argument",
+                  "key.length": 14,
+                  "key.name": "at",
+                  "key.namelength": 2,
+                  "key.nameoffset": 740,
+                  "key.offset": 740
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.public",
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public",
+              "key.length": 6,
+              "key.offset": 767
+            }
+          ],
+          "key.bodylength": 46,
+          "key.bodyoffset": 851,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 124,
+          "key.name": "speechSynthesizer(_:didStart:)",
+          "key.namelength": 70,
+          "key.nameoffset": 779,
+          "key.offset": 774,
+          "key.substructure": [
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 22,
+              "key.offset": 797,
+              "key.typename": "AVSpeechSynthesizer"
+            },
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 27,
+              "key.name": "didStart",
+              "key.namelength": 8,
+              "key.nameoffset": 821,
+              "key.offset": 821,
+              "key.typename": "AVSpeechUtterance"
+            },
+            {
+              "key.bodylength": 0,
+              "key.bodyoffset": 895,
+              "key.kind": "source.lang.swift.expr.call",
+              "key.length": 44,
+              "key.name": "listenToApplicationDidEnterBackgroundEvent",
+              "key.namelength": 42,
+              "key.nameoffset": 852,
+              "key.offset": 852
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.public",
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public",
+              "key.length": 6,
+              "key.offset": 903
+            }
+          ],
+          "key.bodylength": 25,
+          "key.bodyoffset": 987,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 103,
+          "key.name": "speechSynthesizer(_:didPause:)",
+          "key.namelength": 70,
+          "key.nameoffset": 915,
+          "key.offset": 910,
+          "key.substructure": [
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 22,
+              "key.offset": 933,
+              "key.typename": "AVSpeechSynthesizer"
+            },
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 27,
+              "key.name": "didPause",
+              "key.namelength": 8,
+              "key.nameoffset": 957,
+              "key.offset": 957,
+              "key.typename": "AVSpeechUtterance"
+            },
+            {
+              "key.bodylength": 0,
+              "key.bodyoffset": 1010,
+              "key.kind": "source.lang.swift.expr.call",
+              "key.length": 23,
+              "key.name": "stopListeningToEvents",
+              "key.namelength": 21,
+              "key.nameoffset": 988,
+              "key.offset": 988
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.public",
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public",
+              "key.length": 6,
+              "key.offset": 1018
+            }
+          ],
+          "key.bodylength": 46,
+          "key.bodyoffset": 1105,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 127,
+          "key.name": "speechSynthesizer(_:didContinue:)",
+          "key.namelength": 73,
+          "key.nameoffset": 1030,
+          "key.offset": 1025,
+          "key.substructure": [
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 22,
+              "key.offset": 1048,
+              "key.typename": "AVSpeechSynthesizer"
+            },
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 30,
+              "key.name": "didContinue",
+              "key.namelength": 11,
+              "key.nameoffset": 1072,
+              "key.offset": 1072,
+              "key.typename": "AVSpeechUtterance"
+            },
+            {
+              "key.bodylength": 0,
+              "key.bodyoffset": 1149,
+              "key.kind": "source.lang.swift.expr.call",
+              "key.length": 44,
+              "key.name": "listenToApplicationDidEnterBackgroundEvent",
+              "key.namelength": 42,
+              "key.nameoffset": 1106,
+              "key.offset": 1106
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.public",
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public",
+              "key.length": 6,
+              "key.offset": 1157
+            }
+          ],
+          "key.bodylength": 25,
+          "key.bodyoffset": 1242,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 104,
+          "key.name": "speechSynthesizer(_:didFinish:)",
+          "key.namelength": 71,
+          "key.nameoffset": 1169,
+          "key.offset": 1164,
+          "key.substructure": [
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 22,
+              "key.offset": 1187,
+              "key.typename": "AVSpeechSynthesizer"
+            },
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 28,
+              "key.name": "didFinish",
+              "key.namelength": 9,
+              "key.nameoffset": 1211,
+              "key.offset": 1211,
+              "key.typename": "AVSpeechUtterance"
+            },
+            {
+              "key.bodylength": 0,
+              "key.bodyoffset": 1265,
+              "key.kind": "source.lang.swift.expr.call",
+              "key.length": 23,
+              "key.name": "stopListeningToEvents",
+              "key.namelength": 21,
+              "key.nameoffset": 1243,
+              "key.offset": 1243
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.public",
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public",
+              "key.length": 6,
+              "key.offset": 1273
+            }
+          ],
+          "key.bodylength": 25,
+          "key.bodyoffset": 1358,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 104,
+          "key.name": "speechSynthesizer(_:didCancel:)",
+          "key.namelength": 71,
+          "key.nameoffset": 1285,
+          "key.offset": 1280,
+          "key.substructure": [
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 22,
+              "key.offset": 1303,
+              "key.typename": "AVSpeechSynthesizer"
+            },
+            {
+              "key.kind": "source.lang.swift.decl.var.parameter",
+              "key.length": 28,
+              "key.name": "didCancel",
+              "key.namelength": 9,
+              "key.nameoffset": 1327,
+              "key.offset": 1327,
+              "key.typename": "AVSpeechUtterance"
+            },
+            {
+              "key.bodylength": 0,
+              "key.bodyoffset": 1381,
+              "key.kind": "source.lang.swift.expr.call",
+              "key.length": 23,
+              "key.name": "stopListeningToEvents",
+              "key.namelength": 21,
+              "key.nameoffset": 1359,
+              "key.offset": 1359
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.private",
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.private",
+              "key.length": 7,
+              "key.offset": 1390
+            }
+          ],
+          "key.bodylength": 197,
+          "key.bodyoffset": 1449,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 249,
+          "key.name": "listenToApplicationDidEnterBackgroundEvent()",
+          "key.namelength": 44,
+          "key.nameoffset": 1403,
+          "key.offset": 1398,
+          "key.substructure": [
+            {
+              "key.bodylength": 143,
+              "key.bodyoffset": 1497,
+              "key.kind": "source.lang.swift.expr.call",
+              "key.length": 183,
+              "key.name": "NotificationCenter.default.addObserver",
+              "key.namelength": 38,
+              "key.nameoffset": 1458,
+              "key.offset": 1458,
+              "key.substructure": [
+                {
+                  "key.bodylength": 4,
+                  "key.bodyoffset": 1510,
+                  "key.kind": "source.lang.swift.expr.argument",
+                  "key.length": 4,
+                  "key.offset": 1510
+                },
+                {
+                  "key.bodylength": 15,
+                  "key.bodyoffset": 1538,
+                  "key.kind": "source.lang.swift.expr.argument",
+                  "key.length": 25,
+                  "key.name": "selector",
+                  "key.namelength": 8,
+                  "key.nameoffset": 1528,
+                  "key.offset": 1528
+                },
+                {
+                  "key.bodylength": 33,
+                  "key.bodyoffset": 1573,
+                  "key.kind": "source.lang.swift.expr.argument",
+                  "key.length": 39,
+                  "key.name": "name",
+                  "key.namelength": 4,
+                  "key.nameoffset": 1567,
+                  "key.offset": 1567
+                },
+                {
+                  "key.bodylength": 3,
+                  "key.bodyoffset": 1628,
+                  "key.kind": "source.lang.swift.expr.argument",
+                  "key.length": 11,
+                  "key.name": "object",
+                  "key.namelength": 6,
+                  "key.nameoffset": 1620,
+                  "key.offset": 1620
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key.accessibility": "source.lang.swift.accessibility.private",
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.private",
+              "key.length": 7,
+              "key.offset": 1653
+            }
+          ],
+          "key.bodylength": 61,
+          "key.bodyoffset": 1691,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.length": 92,
+          "key.name": "stopListeningToEvents()",
+          "key.namelength": 23,
+          "key.nameoffset": 1666,
+          "key.offset": 1661,
+          "key.substructure": [
+            {
+              "key.bodylength": 4,
+              "key.bodyoffset": 1742,
+              "key.kind": "source.lang.swift.expr.call",
+              "key.length": 47,
+              "key.name": "NotificationCenter.default.removeObserver",
+              "key.namelength": 41,
+              "key.nameoffset": 1700,
+              "key.offset": 1700,
+              "key.substructure": [
+                {
+                  "key.bodylength": 4,
+                  "key.bodyoffset": 1742,
+                  "key.kind": "source.lang.swift.expr.argument",
+                  "key.length": 4,
+                  "key.offset": 1742
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

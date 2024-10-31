@@ -138,10 +138,10 @@ export function createCloudBuildBom(path: string, options: any): any;
 /**
  * Function to create obom string for the current OS using osquery
  *
- * @param {string} path to the project
+ * @param {string} _path to the project
  * @param {Object} options Parse options from the cli
  */
-export function createOSBom(_path: any, options: any): Promise<any>;
+export function createOSBom(_path: string, options: any): Promise<any>;
 /**
  * Function to create bom string for Jenkins plugins
  *
