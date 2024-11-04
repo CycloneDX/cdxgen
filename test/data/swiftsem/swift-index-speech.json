@@ -1,0 +1,1289 @@
+{
+  "key.dependencies": [
+    {
+      "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+      "key.is_system": true,
+      "key.kind": "source.lang.swift.import.module.swift",
+      "key.name": "Swift"
+    },
+    {
+      "key.dependencies": [
+        {
+          "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.swift",
+          "key.name": "Swift"
+        }
+      ],
+      "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_StringProcessing.swiftmodule/x86_64-apple-macos.swiftinterface",
+      "key.is_system": true,
+      "key.kind": "source.lang.swift.import.module.swift",
+      "key.name": "_StringProcessing"
+    },
+    {
+      "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/_SwiftConcurrencyShims-39ZO3A1THQ3HL.pcm",
+      "key.is_system": true,
+      "key.kind": "source.lang.swift.import.module.clang",
+      "key.name": "_SwiftConcurrencyShims"
+    },
+    {
+      "key.dependencies": [
+        {
+          "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.swift",
+          "key.name": "Swift"
+        },
+        {
+          "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/SwiftShims-39ZO3A1THQ3HL.pcm",
+          "key.is_system": true,
+          "key.kind": "source.lang.swift.import.module.clang",
+          "key.name": "SwiftShims"
+        }
+      ],
+      "key.filepath": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift/_Concurrency.swiftmodule/x86_64-apple-macos.swiftinterface",
+      "key.is_system": true,
+      "key.kind": "source.lang.swift.import.module.swift",
+      "key.name": "_Concurrency"
+    },
+    {
+      "key.filepath": "/var/folders/tj/qpj19ty13n193twz68w6phj80000gn/C/clang/ModuleCache/7FZRET3P0A80/AVFAudio-143MBGYOZE99N.pcm",
+      "key.is_system": true,
+      "key.kind": "source.lang.swift.import.module.clang",
+      "key.name": "AVFAudio"
+    }
+  ],
+  "key.entities": [
+    {
+      "key.column": 15,
+      "key.kind": "source.lang.swift.ref.module",
+      "key.line": 6,
+      "key.name": "AVFAudio",
+      "key.usr": "c:@M@AVFAudio"
+    },
+    {
+      "key.attributes": [
+        {
+          "key.attribute": "source.decl.attribute.public"
+        },
+        {
+          "key.attribute": "source.decl.attribute.objc"
+        }
+      ],
+      "key.column": 14,
+      "key.effective_access": "source.decl.effective_access.public",
+      "key.entities": [
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.discardableResult"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "isEqual(_:)",
+              "key.usr": "c:objc(pl)NSObject(im)isEqual:"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(im)isEqual:"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.var.instance",
+              "key.name": "hash",
+              "key.usr": "c:objc(pl)NSObject(py)hash"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(py)hash"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.var.instance",
+              "key.name": "superclass",
+              "key.usr": "c:objc(pl)NSObject(py)superclass"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(py)superclass"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.available"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "class()",
+              "key.usr": "c:objc(pl)NSObject(im)class"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(im)class"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.discardableResult"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "self()",
+              "key.usr": "c:objc(pl)NSObject(im)self"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(im)self"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.available"
+            },
+            {
+              "key.attribute": "source.decl.attribute.discardableResult"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "perform(_:)",
+              "key.usr": "c:objc(pl)NSObject(im)performSelector:"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(im)performSelector:"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.available"
+            },
+            {
+              "key.attribute": "source.decl.attribute.discardableResult"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "perform(_:with:)",
+              "key.usr": "c:objc(pl)NSObject(im)performSelector:withObject:"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(im)performSelector:withObject:"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.available"
+            },
+            {
+              "key.attribute": "source.decl.attribute.discardableResult"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "perform(_:with:with:)",
+              "key.usr": "c:objc(pl)NSObject(im)performSelector:withObject:withObject:"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(im)performSelector:withObject:withObject:"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.discardableResult"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "isProxy()",
+              "key.usr": "c:objc(pl)NSObject(im)isProxy"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(im)isProxy"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.discardableResult"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "isKind(of:)",
+              "key.usr": "c:objc(pl)NSObject(im)isKindOfClass:"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(im)isKindOfClass:"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.discardableResult"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "isMember(of:)",
+              "key.usr": "c:objc(pl)NSObject(im)isMemberOfClass:"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(im)isMemberOfClass:"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.discardableResult"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "conforms(to:)",
+              "key.usr": "c:objc(pl)NSObject(im)conformsToProtocol:"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(im)conformsToProtocol:"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.available"
+            },
+            {
+              "key.attribute": "source.decl.attribute.discardableResult"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "responds(to:)",
+              "key.usr": "c:objc(pl)NSObject(im)respondsToSelector:"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(im)respondsToSelector:"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.available"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "retain()",
+              "key.usr": "c:objc(pl)NSObject(im)retain"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(im)retain"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.available"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "release()",
+              "key.usr": "c:objc(pl)NSObject(im)release"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(im)release"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.available"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "autorelease()",
+              "key.usr": "c:objc(pl)NSObject(im)autorelease"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(im)autorelease"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.available"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "retainCount()",
+              "key.usr": "c:objc(pl)NSObject(im)retainCount"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(im)retainCount"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.available"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "zone()",
+              "key.usr": "c:objc(pl)NSObject(im)zone"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(im)zone"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.var.instance",
+              "key.name": "description",
+              "key.usr": "c:objc(pl)NSObject(py)description"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(py)description"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.optional"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.var.instance",
+              "key.name": "debugDescription",
+              "key.usr": "c:objc(pl)NSObject(py)debugDescription"
+            }
+          ],
+          "key.usr": "c:objc(pl)NSObject(py)debugDescription"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.final"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.operator.infix",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.operator.infix",
+              "key.name": "==(_:_:)",
+              "key.usr": "s:SQ2eeoiySbx_xtFZ"
+            }
+          ],
+          "key.usr": "s:So8NSObjectC10ObjectiveCE2eeoiySbAB_ABtFZ"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.nonobjc"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.var.instance",
+              "key.name": "hashValue",
+              "key.usr": "s:SH9hashValueSivp"
+            }
+          ],
+          "key.usr": "s:So8NSObjectC10ObjectiveCE9hashValueSivp"
+        },
+        {
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.is_implicit": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 9,
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "hash(into:)",
+              "key.usr": "s:SH4hash4intoys6HasherVz_tF"
+            }
+          ],
+          "key.usr": "s:So8NSObjectC10ObjectiveCE4hash4intoys6HasherVz_tF"
+        },
+        {
+          "key.column": 29,
+          "key.kind": "source.lang.swift.ref.class",
+          "key.line": 9,
+          "key.name": "NSObject",
+          "key.usr": "c:objc(cs)NSObject"
+        },
+        {
+          "key.column": 39,
+          "key.kind": "source.lang.swift.ref.protocol",
+          "key.line": 9,
+          "key.name": "AVSpeechSynthesizerDelegate",
+          "key.usr": "c:objc(pl)AVSpeechSynthesizerDelegate"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.final"
+            },
+            {
+              "key.attribute": "source.decl.attribute.private"
+            },
+            {
+              "key.attribute": "source.decl.attribute.nonisolated"
+            }
+          ],
+          "key.column": 37,
+          "key.effective_access": "source.decl.effective_access.less_than_fileprivate",
+          "key.entities": [
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.final"
+                },
+                {
+                  "key.attribute": "source.decl.attribute.private"
+                },
+                {
+                  "key.attribute": "source.decl.attribute.nonisolated"
+                }
+              ],
+              "key.column": 37,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.getter",
+              "key.line": 10,
+              "key.usr": "s:13SpeechManagerAAC17speechSynthesizer33_76BE98EA4609C3E4F149422757BB6C96LLSo08AVSpeechD0Cvg"
+            },
+            {
+              "key.attributes": [
+                {
+                  "key.attribute": "source.decl.attribute.final"
+                },
+                {
+                  "key.attribute": "source.decl.attribute.private"
+                },
+                {
+                  "key.attribute": "source.decl.attribute.nonisolated"
+                }
+              ],
+              "key.column": 37,
+              "key.is_implicit": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.setter",
+              "key.line": 10,
+              "key.usr": "s:13SpeechManagerAAC17speechSynthesizer33_76BE98EA4609C3E4F149422757BB6C96LLSo08AVSpeechD0Cvs"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 10,
+          "key.name": "speechSynthesizer",
+          "key.usr": "s:13SpeechManagerAAC17speechSynthesizer33_76BE98EA4609C3E4F149422757BB6C96LLSo08AVSpeechD0Cvp"
+        },
+        {
+          "key.column": 57,
+          "key.kind": "source.lang.swift.ref.class",
+          "key.line": 10,
+          "key.name": "AVSpeechSynthesizer",
+          "key.usr": "c:objc(cs)AVSpeechSynthesizer"
+        },
+        {
+          "key.column": 57,
+          "key.kind": "source.lang.swift.ref.function.constructor",
+          "key.line": 10,
+          "key.name": "init()",
+          "key.usr": "c:objc(cs)NSObject(im)init"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.dynamic"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            },
+            {
+              "key.attribute": "source.decl.attribute.override"
+            }
+          ],
+          "key.column": 14,
+          "key.effective_access": "source.decl.effective_access.internal",
+          "key.entities": [
+            {
+              "key.column": 15,
+              "key.kind": "source.lang.swift.ref.function.constructor",
+              "key.line": 13,
+              "key.name": "init()",
+              "key.usr": "c:objc(cs)NSObject(im)init"
+            },
+            {
+              "key.column": 9,
+              "key.entities": [
+                {
+                  "key.column": 9,
+                  "key.is_implicit": true,
+                  "key.kind": "source.lang.swift.ref.function.accessor.getter",
+                  "key.line": 14,
+                  "key.usr": "s:13SpeechManagerAAC17speechSynthesizer33_76BE98EA4609C3E4F149422757BB6C96LLSo08AVSpeechD0Cvg"
+                }
+              ],
+              "key.kind": "source.lang.swift.ref.var.instance",
+              "key.line": 14,
+              "key.name": "speechSynthesizer",
+              "key.usr": "s:13SpeechManagerAAC17speechSynthesizer33_76BE98EA4609C3E4F149422757BB6C96LLSo08AVSpeechD0Cvp"
+            },
+            {
+              "key.column": 27,
+              "key.entities": [
+                {
+                  "key.column": 27,
+                  "key.is_dynamic": true,
+                  "key.is_implicit": true,
+                  "key.kind": "source.lang.swift.ref.function.accessor.setter",
+                  "key.line": 14,
+                  "key.receiver_usr": "c:objc(cs)AVSpeechSynthesizer",
+                  "key.usr": "c:objc(cs)AVSpeechSynthesizer(im)setDelegate:"
+                }
+              ],
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.var.instance",
+              "key.line": 14,
+              "key.name": "delegate",
+              "key.receiver_usr": "c:objc(cs)AVSpeechSynthesizer",
+              "key.usr": "c:objc(cs)AVSpeechSynthesizer(py)delegate"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.function.constructor",
+          "key.line": 12,
+          "key.name": "init()",
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.constructor",
+              "key.name": "init()",
+              "key.usr": "c:objc(cs)NSObject(im)init"
+            }
+          ],
+          "key.usr": "c:@M@SpeechManager@objc(cs)SpeechManager(im)init"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.objc"
+            }
+          ],
+          "key.column": 5,
+          "key.entities": [
+            {
+              "key.column": 9,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 19,
+              "key.name": "stopListeningToEvents()",
+              "key.receiver_usr": "c:@M@SpeechManager@objc(cs)SpeechManager",
+              "key.usr": "s:13SpeechManagerAAC21stopListeningToEvents33_76BE98EA4609C3E4F149422757BB6C96LLyyF"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.function.destructor",
+          "key.line": 18,
+          "key.name": "deinit",
+          "key.usr": "c:@M@SpeechManager@objc(cs)SpeechManager(im)dealloc"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public"
+            }
+          ],
+          "key.column": 16,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.entities": [
+            {
+              "key.column": 33,
+              "key.entities": [
+                {
+                  "key.column": 9,
+                  "key.entities": [
+                    {
+                      "key.column": 9,
+                      "key.is_implicit": true,
+                      "key.kind": "source.lang.swift.ref.function.accessor.getter",
+                      "key.line": 23,
+                      "key.usr": "s:13SpeechManagerAAC17speechSynthesizer33_76BE98EA4609C3E4F149422757BB6C96LLSo08AVSpeechD0Cvg"
+                    }
+                  ],
+                  "key.kind": "source.lang.swift.ref.var.instance",
+                  "key.line": 23,
+                  "key.name": "speechSynthesizer",
+                  "key.usr": "s:13SpeechManagerAAC17speechSynthesizer33_76BE98EA4609C3E4F149422757BB6C96LLSo08AVSpeechD0Cvp"
+                },
+                {
+                  "key.column": 27,
+                  "key.entities": [
+                    {
+                      "key.column": 27,
+                      "key.is_dynamic": true,
+                      "key.is_implicit": true,
+                      "key.kind": "source.lang.swift.ref.function.accessor.getter",
+                      "key.line": 23,
+                      "key.receiver_usr": "c:objc(cs)AVSpeechSynthesizer",
+                      "key.usr": "c:objc(cs)AVSpeechSynthesizer(im)isSpeaking"
+                    }
+                  ],
+                  "key.is_dynamic": true,
+                  "key.kind": "source.lang.swift.ref.var.instance",
+                  "key.line": 23,
+                  "key.name": "isSpeaking",
+                  "key.receiver_usr": "c:objc(cs)AVSpeechSynthesizer",
+                  "key.usr": "c:objc(cs)AVSpeechSynthesizer(py)speaking"
+                }
+              ],
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.decl.function.accessor.getter",
+              "key.line": 22,
+              "key.name": "getter:isSpeaking",
+              "key.usr": "s:13SpeechManagerAAC10isSpeakingSbvg"
+            }
+          ],
+          "key.kind": "source.lang.swift.decl.var.instance",
+          "key.line": 22,
+          "key.name": "isSpeaking",
+          "key.usr": "s:13SpeechManagerAAC10isSpeakingSbvp"
+        },
+        {
+          "key.column": 28,
+          "key.kind": "source.lang.swift.ref.struct",
+          "key.line": 22,
+          "key.name": "Bool",
+          "key.usr": "s:Sb"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public"
+            }
+          ],
+          "key.column": 17,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.entities": [
+            {
+              "key.column": 36,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 26,
+              "key.name": "AVSpeechUtterance",
+              "key.usr": "c:objc(cs)AVSpeechUtterance"
+            },
+            {
+              "key.column": 9,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 27,
+              "key.name": "stop()",
+              "key.receiver_usr": "c:@M@SpeechManager@objc(cs)SpeechManager",
+              "key.usr": "c:@M@SpeechManager@objc(cs)SpeechManager(im)stop"
+            },
+            {
+              "key.column": 9,
+              "key.entities": [
+                {
+                  "key.column": 9,
+                  "key.is_implicit": true,
+                  "key.kind": "source.lang.swift.ref.function.accessor.getter",
+                  "key.line": 28,
+                  "key.usr": "s:13SpeechManagerAAC17speechSynthesizer33_76BE98EA4609C3E4F149422757BB6C96LLSo08AVSpeechD0Cvg"
+                }
+              ],
+              "key.kind": "source.lang.swift.ref.var.instance",
+              "key.line": 28,
+              "key.name": "speechSynthesizer",
+              "key.usr": "s:13SpeechManagerAAC17speechSynthesizer33_76BE98EA4609C3E4F149422757BB6C96LLSo08AVSpeechD0Cvp"
+            },
+            {
+              "key.column": 27,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 28,
+              "key.name": "speak(_:)",
+              "key.receiver_usr": "c:objc(cs)AVSpeechSynthesizer",
+              "key.usr": "c:objc(cs)AVSpeechSynthesizer(im)speakUtterance:"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 26,
+          "key.name": "speak(_:)",
+          "key.usr": "s:13SpeechManagerAAC5speakyySo17AVSpeechUtteranceCF"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.public"
+            },
+            {
+              "key.attribute": "source.decl.attribute.objc"
+            }
+          ],
+          "key.column": 17,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.entities": [
+            {
+              "key.column": 9,
+              "key.entities": [
+                {
+                  "key.column": 9,
+                  "key.is_implicit": true,
+                  "key.kind": "source.lang.swift.ref.function.accessor.getter",
+                  "key.line": 33,
+                  "key.usr": "s:13SpeechManagerAAC17speechSynthesizer33_76BE98EA4609C3E4F149422757BB6C96LLSo08AVSpeechD0Cvg"
+                }
+              ],
+              "key.kind": "source.lang.swift.ref.var.instance",
+              "key.line": 33,
+              "key.name": "speechSynthesizer",
+              "key.usr": "s:13SpeechManagerAAC17speechSynthesizer33_76BE98EA4609C3E4F149422757BB6C96LLSo08AVSpeechD0Cvp"
+            },
+            {
+              "key.column": 27,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 33,
+              "key.name": "stopSpeaking(at:)",
+              "key.receiver_usr": "c:objc(cs)AVSpeechSynthesizer",
+              "key.usr": "c:objc(cs)AVSpeechSynthesizer(im)stopSpeakingAtBoundary:"
+            },
+            {
+              "key.column": 45,
+              "key.kind": "source.lang.swift.ref.enumelement",
+              "key.line": 33,
+              "key.name": "immediate",
+              "key.usr": "c:@E@AVSpeechBoundary@AVSpeechBoundaryImmediate"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 32,
+          "key.name": "stop()",
+          "key.usr": "c:@M@SpeechManager@objc(cs)SpeechManager(im)stop"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            },
+            {
+              "key.attribute": "source.decl.attribute.public"
+            }
+          ],
+          "key.column": 17,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.entities": [
+            {
+              "key.column": 38,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 36,
+              "key.name": "AVSpeechSynthesizer",
+              "key.usr": "c:objc(cs)AVSpeechSynthesizer"
+            },
+            {
+              "key.column": 69,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 36,
+              "key.name": "AVSpeechUtterance",
+              "key.usr": "c:objc(cs)AVSpeechUtterance"
+            },
+            {
+              "key.column": 90,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 36,
+              "key.name": "listenToApplicationDidEnterBackgroundEvent()",
+              "key.receiver_usr": "c:@M@SpeechManager@objc(cs)SpeechManager",
+              "key.usr": "s:13SpeechManagerAAC42listenToApplicationDidEnterBackgroundEvent33_76BE98EA4609C3E4F149422757BB6C96LLyyF"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 36,
+          "key.name": "speechSynthesizer(_:didStart:)",
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "speechSynthesizer(_:didStart:)",
+              "key.usr": "c:objc(pl)AVSpeechSynthesizerDelegate(im)speechSynthesizer:didStartSpeechUtterance:"
+            }
+          ],
+          "key.usr": "c:@M@SpeechManager@objc(cs)SpeechManager(im)speechSynthesizer:didStartSpeechUtterance:"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            },
+            {
+              "key.attribute": "source.decl.attribute.public"
+            }
+          ],
+          "key.column": 17,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.entities": [
+            {
+              "key.column": 38,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 37,
+              "key.name": "AVSpeechSynthesizer",
+              "key.usr": "c:objc(cs)AVSpeechSynthesizer"
+            },
+            {
+              "key.column": 69,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 37,
+              "key.name": "AVSpeechUtterance",
+              "key.usr": "c:objc(cs)AVSpeechUtterance"
+            },
+            {
+              "key.column": 90,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 37,
+              "key.name": "stopListeningToEvents()",
+              "key.receiver_usr": "c:@M@SpeechManager@objc(cs)SpeechManager",
+              "key.usr": "s:13SpeechManagerAAC21stopListeningToEvents33_76BE98EA4609C3E4F149422757BB6C96LLyyF"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 37,
+          "key.name": "speechSynthesizer(_:didPause:)",
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "speechSynthesizer(_:didPause:)",
+              "key.usr": "c:objc(pl)AVSpeechSynthesizerDelegate(im)speechSynthesizer:didPauseSpeechUtterance:"
+            }
+          ],
+          "key.usr": "c:@M@SpeechManager@objc(cs)SpeechManager(im)speechSynthesizer:didPauseSpeechUtterance:"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            },
+            {
+              "key.attribute": "source.decl.attribute.public"
+            }
+          ],
+          "key.column": 17,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.entities": [
+            {
+              "key.column": 38,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 38,
+              "key.name": "AVSpeechSynthesizer",
+              "key.usr": "c:objc(cs)AVSpeechSynthesizer"
+            },
+            {
+              "key.column": 72,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 38,
+              "key.name": "AVSpeechUtterance",
+              "key.usr": "c:objc(cs)AVSpeechUtterance"
+            },
+            {
+              "key.column": 93,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 38,
+              "key.name": "listenToApplicationDidEnterBackgroundEvent()",
+              "key.receiver_usr": "c:@M@SpeechManager@objc(cs)SpeechManager",
+              "key.usr": "s:13SpeechManagerAAC42listenToApplicationDidEnterBackgroundEvent33_76BE98EA4609C3E4F149422757BB6C96LLyyF"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 38,
+          "key.name": "speechSynthesizer(_:didContinue:)",
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "speechSynthesizer(_:didContinue:)",
+              "key.usr": "c:objc(pl)AVSpeechSynthesizerDelegate(im)speechSynthesizer:didContinueSpeechUtterance:"
+            }
+          ],
+          "key.usr": "c:@M@SpeechManager@objc(cs)SpeechManager(im)speechSynthesizer:didContinueSpeechUtterance:"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            },
+            {
+              "key.attribute": "source.decl.attribute.public"
+            }
+          ],
+          "key.column": 17,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.entities": [
+            {
+              "key.column": 38,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 39,
+              "key.name": "AVSpeechSynthesizer",
+              "key.usr": "c:objc(cs)AVSpeechSynthesizer"
+            },
+            {
+              "key.column": 70,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 39,
+              "key.name": "AVSpeechUtterance",
+              "key.usr": "c:objc(cs)AVSpeechUtterance"
+            },
+            {
+              "key.column": 91,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 39,
+              "key.name": "stopListeningToEvents()",
+              "key.receiver_usr": "c:@M@SpeechManager@objc(cs)SpeechManager",
+              "key.usr": "s:13SpeechManagerAAC21stopListeningToEvents33_76BE98EA4609C3E4F149422757BB6C96LLyyF"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 39,
+          "key.name": "speechSynthesizer(_:didFinish:)",
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "speechSynthesizer(_:didFinish:)",
+              "key.usr": "c:objc(pl)AVSpeechSynthesizerDelegate(im)speechSynthesizer:didFinishSpeechUtterance:"
+            }
+          ],
+          "key.usr": "c:@M@SpeechManager@objc(cs)SpeechManager(im)speechSynthesizer:didFinishSpeechUtterance:"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.objc.name"
+            },
+            {
+              "key.attribute": "source.decl.attribute.public"
+            }
+          ],
+          "key.column": 17,
+          "key.effective_access": "source.decl.effective_access.public",
+          "key.entities": [
+            {
+              "key.column": 38,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 40,
+              "key.name": "AVSpeechSynthesizer",
+              "key.usr": "c:objc(cs)AVSpeechSynthesizer"
+            },
+            {
+              "key.column": 70,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 40,
+              "key.name": "AVSpeechUtterance",
+              "key.usr": "c:objc(cs)AVSpeechUtterance"
+            },
+            {
+              "key.column": 91,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 40,
+              "key.name": "stopListeningToEvents()",
+              "key.receiver_usr": "c:@M@SpeechManager@objc(cs)SpeechManager",
+              "key.usr": "s:13SpeechManagerAAC21stopListeningToEvents33_76BE98EA4609C3E4F149422757BB6C96LLyyF"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 40,
+          "key.name": "speechSynthesizer(_:didCancel:)",
+          "key.related": [
+            {
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.name": "speechSynthesizer(_:didCancel:)",
+              "key.usr": "c:objc(pl)AVSpeechSynthesizerDelegate(im)speechSynthesizer:didCancelSpeechUtterance:"
+            }
+          ],
+          "key.usr": "c:@M@SpeechManager@objc(cs)SpeechManager(im)speechSynthesizer:didCancelSpeechUtterance:"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.private"
+            }
+          ],
+          "key.column": 18,
+          "key.effective_access": "source.decl.effective_access.less_than_fileprivate",
+          "key.entities": [
+            {
+              "key.column": 9,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 43,
+              "key.name": "NotificationCenter",
+              "key.usr": "c:objc(cs)NSNotificationCenter"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 42,
+          "key.name": "listenToApplicationDidEnterBackgroundEvent()",
+          "key.usr": "s:13SpeechManagerAAC42listenToApplicationDidEnterBackgroundEvent33_76BE98EA4609C3E4F149422757BB6C96LLyyF"
+        },
+        {
+          "key.attributes": [
+            {
+              "key.attribute": "source.decl.attribute.private"
+            }
+          ],
+          "key.column": 18,
+          "key.effective_access": "source.decl.effective_access.less_than_fileprivate",
+          "key.entities": [
+            {
+              "key.column": 9,
+              "key.kind": "source.lang.swift.ref.class",
+              "key.line": 52,
+              "key.name": "NotificationCenter",
+              "key.usr": "c:objc(cs)NSNotificationCenter"
+            },
+            {
+              "key.column": 28,
+              "key.entities": [
+                {
+                  "key.column": 28,
+                  "key.is_dynamic": true,
+                  "key.is_implicit": true,
+                  "key.kind": "source.lang.swift.ref.function.accessor.getter",
+                  "key.line": 52,
+                  "key.usr": "c:objc(cs)NSNotificationCenter(cm)defaultCenter"
+                }
+              ],
+              "key.kind": "source.lang.swift.ref.var.class",
+              "key.line": 52,
+              "key.name": "default",
+              "key.usr": "c:objc(cs)NSNotificationCenter(cpy)defaultCenter"
+            },
+            {
+              "key.column": 36,
+              "key.is_dynamic": true,
+              "key.kind": "source.lang.swift.ref.function.method.instance",
+              "key.line": 52,
+              "key.name": "removeObserver(_:)",
+              "key.receiver_usr": "c:objc(cs)NSNotificationCenter",
+              "key.usr": "c:objc(cs)NSNotificationCenter(im)removeObserver:"
+            }
+          ],
+          "key.is_dynamic": true,
+          "key.kind": "source.lang.swift.decl.function.method.instance",
+          "key.line": 51,
+          "key.name": "stopListeningToEvents()",
+          "key.usr": "s:13SpeechManagerAAC21stopListeningToEvents33_76BE98EA4609C3E4F149422757BB6C96LLyyF"
+        }
+      ],
+      "key.kind": "source.lang.swift.decl.class",
+      "key.line": 9,
+      "key.name": "SpeechManager",
+      "key.related": [
+        {
+          "key.column": 29,
+          "key.kind": "source.lang.swift.ref.class",
+          "key.line": 9,
+          "key.name": "NSObject",
+          "key.usr": "c:objc(cs)NSObject"
+        },
+        {
+          "key.column": 39,
+          "key.kind": "source.lang.swift.ref.protocol",
+          "key.line": 9,
+          "key.name": "AVSpeechSynthesizerDelegate",
+          "key.usr": "c:objc(pl)AVSpeechSynthesizerDelegate"
+        }
+      ],
+      "key.usr": "c:@M@SpeechManager@objc(cs)SpeechManager"
+    }
+  ]
+}

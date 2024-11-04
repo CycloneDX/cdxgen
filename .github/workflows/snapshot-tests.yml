@@ -79,7 +79,7 @@ jobs:
 
       - name: Test BOMs
         run: |
-          python test/diff/diff_tests.py
+          python test/diff/diff_tests.py --migrate-legacy
           if test -f /home/runner/work/new_snapshots/diffs.json; then
             echo "status=FAILED" >> "$GITHUB_ENV"
           fi

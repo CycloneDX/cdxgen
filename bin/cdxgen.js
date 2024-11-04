@@ -202,9 +202,14 @@ const args = yargs(hideBin(process.argv))
     default: "reachables.slices.json",
     hidden: true,
   })
+  .option("semantics-slices-file", {
+    description: "Path for the semantics slices file.",
+    default: "semantics.slices.json",
+    hidden: true,
+  })
   .option("spec-version", {
-    description: "CycloneDX Specification version to use. Defaults to 1.5",
-    default: 1.5,
+    description: "CycloneDX Specification version to use. Defaults to 1.6",
+    default: 1.6,
     type: "number",
   })
   .option("filter", {
@@ -380,7 +385,7 @@ if (options.includeFormulation) {
 /**
  * Method to apply advanced options such as profile and lifecycles
  *
- * @param {object} CLI options
+ * @param {object} options CLI options
  */
 const applyAdvancedOptions = (options) => {
   switch (options.profile) {
@@ -731,7 +736,7 @@ const checkPermissions = (filePath) => {
     printTable(bomNSData.bomJson);
     // CBOM related print
     if (options.includeCrypto) {
-      console.log("*** Cryptography BOM ***");
+      console.log("\n*** Cryptography BOM ***");
       printTable(bomNSData.bomJson, ["cryptographic-asset"]);
       printDependencyTree(bomNSData.bomJson, "provides");
     }

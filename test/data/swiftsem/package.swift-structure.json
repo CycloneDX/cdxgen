@@ -1,0 +1,791 @@
+{
+  "key.diagnostic_stage": "source.diagnostic.stage.swift.parse",
+  "key.length": 1469,
+  "key.offset": 0,
+  "key.substructure": [
+    {
+      "key.accessibility": "source.lang.swift.accessibility.public",
+      "key.attributes": [
+        {
+          "key.attribute": "source.decl.attribute.public",
+          "key.length": 6,
+          "key.offset": 71
+        }
+      ],
+      "key.doclength": 16,
+      "key.docoffset": 55,
+      "key.kind": "source.lang.swift.decl.var.global",
+      "key.length": 1390,
+      "key.name": "package",
+      "key.namelength": 7,
+      "key.nameoffset": 82,
+      "key.offset": 78
+    },
+    {
+      "key.bodylength": 1367,
+      "key.bodyoffset": 100,
+      "key.kind": "source.lang.swift.expr.call",
+      "key.length": 1376,
+      "key.name": "Package",
+      "key.namelength": 7,
+      "key.nameoffset": 92,
+      "key.offset": 92,
+      "key.substructure": [
+        {
+          "key.bodylength": 7,
+          "key.bodyoffset": 111,
+          "key.kind": "source.lang.swift.expr.argument",
+          "key.length": 13,
+          "key.name": "name",
+          "key.namelength": 4,
+          "key.nameoffset": 105,
+          "key.offset": 105
+        },
+        {
+          "key.bodylength": 96,
+          "key.bodyoffset": 135,
+          "key.kind": "source.lang.swift.expr.argument",
+          "key.length": 107,
+          "key.name": "platforms",
+          "key.namelength": 9,
+          "key.nameoffset": 124,
+          "key.offset": 124,
+          "key.substructure": [
+            {
+              "key.bodylength": 94,
+              "key.bodyoffset": 136,
+              "key.elements": [
+                {
+                  "key.kind": "source.lang.swift.structure.elem.expr",
+                  "key.length": 10,
+                  "key.offset": 145
+                },
+                {
+                  "key.kind": "source.lang.swift.structure.elem.expr",
+                  "key.length": 15,
+                  "key.offset": 165
+                },
+                {
+                  "key.kind": "source.lang.swift.structure.elem.expr",
+                  "key.length": 11,
+                  "key.offset": 190
+                },
+                {
+                  "key.kind": "source.lang.swift.structure.elem.expr",
+                  "key.length": 13,
+                  "key.offset": 211
+                }
+              ],
+              "key.kind": "source.lang.swift.expr.array",
+              "key.length": 96,
+              "key.offset": 135,
+              "key.substructure": [
+                {
+                  "key.bodylength": 4,
+                  "key.bodyoffset": 150,
+                  "key.kind": "source.lang.swift.expr.call",
+                  "key.length": 10,
+                  "key.name": ".iOS",
+                  "key.namelength": 4,
+                  "key.nameoffset": 145,
+                  "key.offset": 145,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 4,
+                      "key.bodyoffset": 150,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 4,
+                      "key.offset": 150
+                    }
+                  ]
+                },
+                {
+                  "key.bodylength": 7,
+                  "key.bodyoffset": 172,
+                  "key.kind": "source.lang.swift.expr.call",
+                  "key.length": 15,
+                  "key.name": ".macOS",
+                  "key.namelength": 6,
+                  "key.nameoffset": 165,
+                  "key.offset": 165,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 7,
+                      "key.bodyoffset": 172,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 7,
+                      "key.offset": 172
+                    }
+                  ]
+                },
+                {
+                  "key.bodylength": 4,
+                  "key.bodyoffset": 196,
+                  "key.kind": "source.lang.swift.expr.call",
+                  "key.length": 11,
+                  "key.name": ".tvOS",
+                  "key.namelength": 5,
+                  "key.nameoffset": 190,
+                  "key.offset": 190,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 4,
+                      "key.bodyoffset": 196,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 4,
+                      "key.offset": 196
+                    }
+                  ]
+                },
+                {
+                  "key.bodylength": 3,
+                  "key.bodyoffset": 220,
+                  "key.kind": "source.lang.swift.expr.call",
+                  "key.length": 13,
+                  "key.name": ".watchOS",
+                  "key.namelength": 8,
+                  "key.nameoffset": 211,
+                  "key.offset": 211,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 3,
+                      "key.bodyoffset": 220,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 3,
+                      "key.offset": 220
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key.bodylength": 94,
+          "key.bodyoffset": 247,
+          "key.kind": "source.lang.swift.expr.argument",
+          "key.length": 104,
+          "key.name": "products",
+          "key.namelength": 8,
+          "key.nameoffset": 237,
+          "key.offset": 237,
+          "key.substructure": [
+            {
+              "key.bodylength": 92,
+              "key.bodyoffset": 248,
+              "key.elements": [
+                {
+                  "key.kind": "source.lang.swift.structure.elem.expr",
+                  "key.length": 77,
+                  "key.offset": 257
+                }
+              ],
+              "key.kind": "source.lang.swift.expr.array",
+              "key.length": 94,
+              "key.offset": 247,
+              "key.substructure": [
+                {
+                  "key.bodylength": 67,
+                  "key.bodyoffset": 266,
+                  "key.kind": "source.lang.swift.expr.call",
+                  "key.length": 77,
+                  "key.name": ".library",
+                  "key.namelength": 8,
+                  "key.nameoffset": 257,
+                  "key.offset": 257,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 7,
+                      "key.bodyoffset": 285,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 13,
+                      "key.name": "name",
+                      "key.namelength": 4,
+                      "key.nameoffset": 279,
+                      "key.offset": 279
+                    },
+                    {
+                      "key.bodylength": 9,
+                      "key.bodyoffset": 315,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 18,
+                      "key.name": "targets",
+                      "key.namelength": 7,
+                      "key.nameoffset": 306,
+                      "key.offset": 306,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 7,
+                          "key.bodyoffset": 316,
+                          "key.elements": [
+                            {
+                              "key.kind": "source.lang.swift.structure.elem.expr",
+                              "key.length": 7,
+                              "key.offset": 316
+                            }
+                          ],
+                          "key.kind": "source.lang.swift.expr.array",
+                          "key.length": 9,
+                          "key.offset": 315
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key.bodylength": 231,
+          "key.bodyoffset": 361,
+          "key.kind": "source.lang.swift.expr.argument",
+          "key.length": 245,
+          "key.name": "dependencies",
+          "key.namelength": 12,
+          "key.nameoffset": 347,
+          "key.offset": 347,
+          "key.substructure": [
+            {
+              "key.bodylength": 229,
+              "key.bodyoffset": 362,
+              "key.elements": [
+                {
+                  "key.kind": "source.lang.swift.structure.elem.expr",
+                  "key.length": 103,
+                  "key.offset": 371
+                },
+                {
+                  "key.kind": "source.lang.swift.structure.elem.expr",
+                  "key.length": 101,
+                  "key.offset": 484
+                }
+              ],
+              "key.kind": "source.lang.swift.expr.array",
+              "key.length": 231,
+              "key.offset": 361,
+              "key.substructure": [
+                {
+                  "key.bodylength": 93,
+                  "key.bodyoffset": 380,
+                  "key.kind": "source.lang.swift.expr.call",
+                  "key.length": 103,
+                  "key.name": ".package",
+                  "key.namelength": 8,
+                  "key.nameoffset": 371,
+                  "key.offset": 371,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 39,
+                      "key.bodyoffset": 398,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 44,
+                      "key.name": "url",
+                      "key.namelength": 3,
+                      "key.nameoffset": 393,
+                      "key.offset": 393
+                    },
+                    {
+                      "key.bodylength": 7,
+                      "key.bodyoffset": 457,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 13,
+                      "key.name": "from",
+                      "key.namelength": 4,
+                      "key.nameoffset": 451,
+                      "key.offset": 451
+                    }
+                  ]
+                },
+                {
+                  "key.bodylength": 91,
+                  "key.bodyoffset": 493,
+                  "key.kind": "source.lang.swift.expr.call",
+                  "key.length": 101,
+                  "key.name": ".package",
+                  "key.namelength": 8,
+                  "key.nameoffset": 484,
+                  "key.offset": 484,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 36,
+                      "key.bodyoffset": 511,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 41,
+                      "key.name": "url",
+                      "key.namelength": 3,
+                      "key.nameoffset": 506,
+                      "key.offset": 506
+                    },
+                    {
+                      "key.bodylength": 8,
+                      "key.bodyoffset": 567,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 14,
+                      "key.name": "from",
+                      "key.namelength": 4,
+                      "key.nameoffset": 561,
+                      "key.offset": 561
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key.bodylength": 859,
+          "key.bodyoffset": 607,
+          "key.kind": "source.lang.swift.expr.argument",
+          "key.length": 868,
+          "key.name": "targets",
+          "key.namelength": 7,
+          "key.nameoffset": 598,
+          "key.offset": 598,
+          "key.substructure": [
+            {
+              "key.bodylength": 857,
+              "key.bodyoffset": 608,
+              "key.elements": [
+                {
+                  "key.kind": "source.lang.swift.structure.elem.expr",
+                  "key.length": 160,
+                  "key.offset": 617
+                },
+                {
+                  "key.kind": "source.lang.swift.structure.elem.expr",
+                  "key.length": 226,
+                  "key.offset": 787
+                },
+                {
+                  "key.kind": "source.lang.swift.structure.elem.expr",
+                  "key.length": 171,
+                  "key.offset": 1023
+                },
+                {
+                  "key.kind": "source.lang.swift.structure.elem.expr",
+                  "key.length": 255,
+                  "key.offset": 1204
+                }
+              ],
+              "key.kind": "source.lang.swift.expr.array",
+              "key.length": 859,
+              "key.offset": 607,
+              "key.substructure": [
+                {
+                  "key.bodylength": 151,
+                  "key.bodyoffset": 625,
+                  "key.kind": "source.lang.swift.expr.call",
+                  "key.length": 160,
+                  "key.name": ".target",
+                  "key.namelength": 7,
+                  "key.nameoffset": 617,
+                  "key.offset": 617,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 7,
+                      "key.bodyoffset": 644,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 13,
+                      "key.name": "name",
+                      "key.namelength": 4,
+                      "key.nameoffset": 638,
+                      "key.offset": 638
+                    },
+                    {
+                      "key.bodylength": 60,
+                      "key.bodyoffset": 679,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 74,
+                      "key.name": "dependencies",
+                      "key.namelength": 12,
+                      "key.nameoffset": 665,
+                      "key.offset": 665,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 58,
+                          "key.bodyoffset": 680,
+                          "key.elements": [
+                            {
+                              "key.kind": "source.lang.swift.structure.elem.expr",
+                              "key.length": 27,
+                              "key.offset": 697
+                            }
+                          ],
+                          "key.kind": "source.lang.swift.expr.array",
+                          "key.length": 60,
+                          "key.offset": 679,
+                          "key.substructure": [
+                            {
+                              "key.bodylength": 18,
+                              "key.bodyoffset": 705,
+                              "key.kind": "source.lang.swift.expr.call",
+                              "key.length": 27,
+                              "key.name": ".byName",
+                              "key.namelength": 7,
+                              "key.nameoffset": 697,
+                              "key.offset": 697,
+                              "key.substructure": [
+                                {
+                                  "key.bodylength": 12,
+                                  "key.bodyoffset": 711,
+                                  "key.kind": "source.lang.swift.expr.argument",
+                                  "key.length": 18,
+                                  "key.name": "name",
+                                  "key.namelength": 4,
+                                  "key.nameoffset": 705,
+                                  "key.offset": 705
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "key.bodylength": 8,
+                      "key.bodyoffset": 759,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 14,
+                      "key.name": "path",
+                      "key.namelength": 4,
+                      "key.nameoffset": 753,
+                      "key.offset": 753
+                    }
+                  ]
+                },
+                {
+                  "key.bodylength": 217,
+                  "key.bodyoffset": 795,
+                  "key.kind": "source.lang.swift.expr.call",
+                  "key.length": 226,
+                  "key.name": ".target",
+                  "key.namelength": 7,
+                  "key.nameoffset": 787,
+                  "key.offset": 787,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 18,
+                      "key.bodyoffset": 814,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 24,
+                      "key.name": "name",
+                      "key.namelength": 4,
+                      "key.nameoffset": 808,
+                      "key.offset": 808
+                    },
+                    {
+                      "key.bodylength": 100,
+                      "key.bodyoffset": 860,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 114,
+                      "key.name": "dependencies",
+                      "key.namelength": 12,
+                      "key.nameoffset": 846,
+                      "key.offset": 846,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 98,
+                          "key.bodyoffset": 861,
+                          "key.elements": [
+                            {
+                              "key.kind": "source.lang.swift.structure.elem.expr",
+                              "key.length": 22,
+                              "key.offset": 878
+                            },
+                            {
+                              "key.kind": "source.lang.swift.structure.elem.expr",
+                              "key.length": 27,
+                              "key.offset": 918
+                            }
+                          ],
+                          "key.kind": "source.lang.swift.expr.array",
+                          "key.length": 100,
+                          "key.offset": 860,
+                          "key.substructure": [
+                            {
+                              "key.bodylength": 13,
+                              "key.bodyoffset": 886,
+                              "key.kind": "source.lang.swift.expr.call",
+                              "key.length": 22,
+                              "key.name": ".byName",
+                              "key.namelength": 7,
+                              "key.nameoffset": 878,
+                              "key.offset": 878,
+                              "key.substructure": [
+                                {
+                                  "key.bodylength": 7,
+                                  "key.bodyoffset": 892,
+                                  "key.kind": "source.lang.swift.expr.argument",
+                                  "key.length": 13,
+                                  "key.name": "name",
+                                  "key.namelength": 4,
+                                  "key.nameoffset": 886,
+                                  "key.offset": 886
+                                }
+                              ]
+                            },
+                            {
+                              "key.bodylength": 18,
+                              "key.bodyoffset": 926,
+                              "key.kind": "source.lang.swift.expr.call",
+                              "key.length": 27,
+                              "key.name": ".byName",
+                              "key.namelength": 7,
+                              "key.nameoffset": 918,
+                              "key.offset": 918,
+                              "key.substructure": [
+                                {
+                                  "key.bodylength": 12,
+                                  "key.bodyoffset": 932,
+                                  "key.kind": "source.lang.swift.expr.argument",
+                                  "key.length": 18,
+                                  "key.name": "name",
+                                  "key.namelength": 4,
+                                  "key.nameoffset": 926,
+                                  "key.offset": 926
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "key.bodylength": 23,
+                      "key.bodyoffset": 980,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 29,
+                      "key.name": "path",
+                      "key.namelength": 4,
+                      "key.nameoffset": 974,
+                      "key.offset": 974
+                    }
+                  ]
+                },
+                {
+                  "key.bodylength": 162,
+                  "key.bodyoffset": 1031,
+                  "key.kind": "source.lang.swift.expr.call",
+                  "key.length": 171,
+                  "key.name": ".target",
+                  "key.namelength": 7,
+                  "key.nameoffset": 1023,
+                  "key.offset": 1023,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 13,
+                      "key.bodyoffset": 1050,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 19,
+                      "key.name": "name",
+                      "key.namelength": 4,
+                      "key.nameoffset": 1044,
+                      "key.offset": 1044
+                    },
+                    {
+                      "key.bodylength": 55,
+                      "key.bodyoffset": 1091,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 69,
+                      "key.name": "dependencies",
+                      "key.namelength": 12,
+                      "key.nameoffset": 1077,
+                      "key.offset": 1077,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 53,
+                          "key.bodyoffset": 1092,
+                          "key.elements": [
+                            {
+                              "key.kind": "source.lang.swift.structure.elem.expr",
+                              "key.length": 22,
+                              "key.offset": 1109
+                            }
+                          ],
+                          "key.kind": "source.lang.swift.expr.array",
+                          "key.length": 55,
+                          "key.offset": 1091,
+                          "key.substructure": [
+                            {
+                              "key.bodylength": 13,
+                              "key.bodyoffset": 1117,
+                              "key.kind": "source.lang.swift.expr.call",
+                              "key.length": 22,
+                              "key.name": ".byName",
+                              "key.namelength": 7,
+                              "key.nameoffset": 1109,
+                              "key.offset": 1109,
+                              "key.substructure": [
+                                {
+                                  "key.bodylength": 7,
+                                  "key.bodyoffset": 1123,
+                                  "key.kind": "source.lang.swift.expr.argument",
+                                  "key.length": 13,
+                                  "key.name": "name",
+                                  "key.namelength": 4,
+                                  "key.nameoffset": 1117,
+                                  "key.offset": 1117
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "key.bodylength": 18,
+                      "key.bodyoffset": 1166,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 24,
+                      "key.name": "path",
+                      "key.namelength": 4,
+                      "key.nameoffset": 1160,
+                      "key.offset": 1160
+                    }
+                  ]
+                },
+                {
+                  "key.bodylength": 242,
+                  "key.bodyoffset": 1216,
+                  "key.kind": "source.lang.swift.expr.call",
+                  "key.length": 255,
+                  "key.name": ".testTarget",
+                  "key.namelength": 11,
+                  "key.nameoffset": 1204,
+                  "key.offset": 1204,
+                  "key.substructure": [
+                    {
+                      "key.bodylength": 7,
+                      "key.bodyoffset": 1235,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 13,
+                      "key.name": "name",
+                      "key.namelength": 4,
+                      "key.nameoffset": 1229,
+                      "key.offset": 1229
+                    },
+                    {
+                      "key.bodylength": 152,
+                      "key.bodyoffset": 1270,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 166,
+                      "key.name": "dependencies",
+                      "key.namelength": 12,
+                      "key.nameoffset": 1256,
+                      "key.offset": 1256,
+                      "key.substructure": [
+                        {
+                          "key.bodylength": 150,
+                          "key.bodyoffset": 1271,
+                          "key.elements": [
+                            {
+                              "key.kind": "source.lang.swift.structure.elem.expr",
+                              "key.length": 22,
+                              "key.offset": 1288
+                            },
+                            {
+                              "key.kind": "source.lang.swift.structure.elem.expr",
+                              "key.length": 33,
+                              "key.offset": 1328
+                            },
+                            {
+                              "key.kind": "source.lang.swift.structure.elem.expr",
+                              "key.length": 28,
+                              "key.offset": 1379
+                            }
+                          ],
+                          "key.kind": "source.lang.swift.expr.array",
+                          "key.length": 152,
+                          "key.offset": 1270,
+                          "key.substructure": [
+                            {
+                              "key.bodylength": 13,
+                              "key.bodyoffset": 1296,
+                              "key.kind": "source.lang.swift.expr.call",
+                              "key.length": 22,
+                              "key.name": ".byName",
+                              "key.namelength": 7,
+                              "key.nameoffset": 1288,
+                              "key.offset": 1288,
+                              "key.substructure": [
+                                {
+                                  "key.bodylength": 7,
+                                  "key.bodyoffset": 1302,
+                                  "key.kind": "source.lang.swift.expr.argument",
+                                  "key.length": 13,
+                                  "key.name": "name",
+                                  "key.namelength": 4,
+                                  "key.nameoffset": 1296,
+                                  "key.offset": 1296
+                                }
+                              ]
+                            },
+                            {
+                              "key.bodylength": 24,
+                              "key.bodyoffset": 1336,
+                              "key.kind": "source.lang.swift.expr.call",
+                              "key.length": 33,
+                              "key.name": ".byName",
+                              "key.namelength": 7,
+                              "key.nameoffset": 1328,
+                              "key.offset": 1328,
+                              "key.substructure": [
+                                {
+                                  "key.bodylength": 18,
+                                  "key.bodyoffset": 1342,
+                                  "key.kind": "source.lang.swift.expr.argument",
+                                  "key.length": 24,
+                                  "key.name": "name",
+                                  "key.namelength": 4,
+                                  "key.nameoffset": 1336,
+                                  "key.offset": 1336
+                                }
+                              ]
+                            },
+                            {
+                              "key.bodylength": 19,
+                              "key.bodyoffset": 1387,
+                              "key.kind": "source.lang.swift.expr.call",
+                              "key.length": 28,
+                              "key.name": ".byName",
+                              "key.namelength": 7,
+                              "key.nameoffset": 1379,
+                              "key.offset": 1379,
+                              "key.substructure": [
+                                {
+                                  "key.bodylength": 13,
+                                  "key.bodyoffset": 1393,
+                                  "key.kind": "source.lang.swift.expr.argument",
+                                  "key.length": 19,
+                                  "key.name": "name",
+                                  "key.namelength": 4,
+                                  "key.nameoffset": 1387,
+                                  "key.offset": 1387
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "key.bodylength": 7,
+                      "key.bodyoffset": 1442,
+                      "key.kind": "source.lang.swift.expr.argument",
+                      "key.length": 13,
+                      "key.name": "path",
+                      "key.namelength": 4,
+                      "key.nameoffset": 1436,
+                      "key.offset": 1436
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

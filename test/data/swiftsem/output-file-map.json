@@ -1,0 +1,131 @@
+{
+  "": {
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/master.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Compression/Compression.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Compression.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Compression.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Compression~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Compression.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Compression/WSCompression.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/WSCompression.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/WSCompression.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/WSCompression~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/WSCompression.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/DataBytes/Data+Extensions.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Data+Extensions.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Data+Extensions.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Data+Extensions~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Data+Extensions.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Engine/Engine.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Engine.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Engine.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Engine~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Engine.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Engine/NativeEngine.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/NativeEngine.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/NativeEngine.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/NativeEngine~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/NativeEngine.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Engine/WSEngine.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/WSEngine.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/WSEngine.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/WSEngine~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/WSEngine.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Framer/FoundationHTTPHandler.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FoundationHTTPHandler.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FoundationHTTPHandler.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FoundationHTTPHandler~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FoundationHTTPHandler.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Framer/FoundationHTTPServerHandler.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FoundationHTTPServerHandler.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FoundationHTTPServerHandler.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FoundationHTTPServerHandler~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FoundationHTTPServerHandler.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Framer/FrameCollector.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FrameCollector.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FrameCollector.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FrameCollector~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FrameCollector.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Framer/Framer.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Framer.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Framer.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Framer~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Framer.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Framer/HTTPHandler.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/HTTPHandler.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/HTTPHandler.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/HTTPHandler~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/HTTPHandler.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Framer/StringHTTPHandler.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/StringHTTPHandler.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/StringHTTPHandler.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/StringHTTPHandler~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/StringHTTPHandler.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Security/FoundationSecurity.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FoundationSecurity.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FoundationSecurity.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FoundationSecurity~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FoundationSecurity.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Security/Security.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Security.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Security.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Security~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Security.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Server/Server.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Server.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Server.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Server~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Server.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Server/WebSocketServer.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/WebSocketServer.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/WebSocketServer.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/WebSocketServer~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/WebSocketServer.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Starscream/WebSocket.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/WebSocket.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/WebSocket.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/WebSocket~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/WebSocket.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Transport/FoundationTransport.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FoundationTransport.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FoundationTransport.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FoundationTransport~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/FoundationTransport.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Transport/TCPTransport.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/TCPTransport.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/TCPTransport.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/TCPTransport~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/TCPTransport.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/checkouts/Starscream/Sources/Transport/Transport.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Transport.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Transport.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Transport~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/Transport.swiftdeps"
+  },
+  "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/DerivedSources/resource_bundle_accessor.swift": {
+    "dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/resource_bundle_accessor.d",
+    "object": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/resource_bundle_accessor.swift.o",
+    "swiftmodule": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/resource_bundle_accessor~partial.swiftmodule",
+    "swift-dependencies": "/Volumes/Work/sandbox/HAKit/.build/x86_64-apple-macosx/debug/Starscream.build/resource_bundle_accessor.swiftdeps"
+  }
+}

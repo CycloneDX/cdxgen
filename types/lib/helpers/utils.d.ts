@@ -32,8 +32,9 @@ export function isPackageManagerAllowed(name: string, conflictingManagers: any[]
  *
  * @param {string} dirPath Root directory for search
  * @param {string} pattern Glob pattern (eg: *.gradle)
+ * @param {Object} options CLI options
  */
-export function getAllFiles(dirPath: string, pattern: string, options?: {}): string[];
+export function getAllFiles(dirPath: string, pattern: string, options?: any): string[];
 /**
  * Method to get files matching a pattern
  *
@@ -61,7 +62,7 @@ export function isSpdxLicenseExpression(license: string): boolean;
  * This should return an array containing:
  * - one or more SPDX license if no expression is present
  * - the license of the expression if one expression is present
- * - a unified conditional 'OR' license expression if more then one expression is present
+ * - a unified conditional 'OR' license expression if more than one expression is present
  *
  * @param {Array} licenses Array of licenses
  * @returns {Array} CycloneDX 1.5 compliant license array
@@ -183,9 +184,9 @@ export function parseMinJs(minJsFile: string): Promise<any[]>;
 /**
  * Parse pom file
  *
- * @param {string} pom file to parse
+ * @param {string} pomFile pom file to parse
  */
-export function parsePom(pomFile: any): {
+export function parsePom(pomFile: string): {
     group: any;
     name: any;
     version: any;
@@ -194,7 +195,7 @@ export function parsePom(pomFile: any): {
     };
     properties: {
         name: string;
-        value: any;
+        value: string;
     }[];
     evidence: {
         identity: {
@@ -203,7 +204,7 @@ export function parsePom(pomFile: any): {
             methods: {
                 technique: string;
                 confidence: number;
-                value: any;
+                value: string;
             }[];
         };
     };
@@ -305,9 +306,9 @@ export function findLicenseId(name: string): any;
 /**
  * Method to guess the spdx license id from license contents
  *
- * @param {string} name License file contents
+ * @param {string} content License file contents
  */
-export function guessLicenseId(content: any): any;
+export function guessLicenseId(content: string): any;
 /**
  * Method to retrieve metadata for maven packages by querying maven central
  *
@@ -368,9 +369,9 @@ export function extractLicenseCommentFromPomXml({ urlPrefix, group, name, versio
 /**
  * Method to parse python requires_dist attribute found in pypi setup.py
  *
- * @param requires_dist string
+ * @param {String} dist_string string
  */
-export function parsePyRequiresDist(dist_string: any): {
+export function parsePyRequiresDist(dist_string: string): {
     name: string;
     version: string;
 };
@@ -437,6 +438,7 @@ export function parseReqFile(reqData: any, fetchDepsInfo: boolean): Promise<any[
  *
  * @param {string} src directory
  * @param {Array} epkgList Existing package list
+ * @param {Object} options CLI options
  * @returns List of packages
  */
 export function getPyModules(src: string, epkgList: any[], options: any): Promise<{
@@ -457,9 +459,10 @@ export function parseSetupPyFile(setupPyData: any): Promise<any[]>;
 /**
  * Method to parse pixi.lock data
  *
- * @param {Object} pixiData Contents of pixi.lock file
+ * @param {String} pixiLockFileName  pixi.lock file name
+ * @param {String} path File path
  */
-export function parsePixiLockFile(pixiLockFileName: any, path: any): {
+export function parsePixiLockFile(pixiLockFileName: string, path: string): {
     pkgList: any;
     formulationList: any[];
     rootList: any[];
@@ -534,6 +537,7 @@ export function parseGoModData(goModData: string, gosumMap: any): any;
  * Parse go list output
  *
  * @param {string} rawOutput Output from go list invocation
+ * @param {Object} gosumMap go.sum data
  * @returns Object with parent component and List of packages
  */
 export function parseGoListDep(rawOutput: string, gosumMap: any): Promise<{
@@ -545,7 +549,7 @@ export function parseGoListDep(rawOutput: string, gosumMap: any): Promise<{
  *
  * @param {string} rawOutput Output from go mod graph invocation
  * @param {string} goModFile go.mod file
- * @param {Object} goSumMap Hashes from gosum for lookups
+ * @param {Object} gosumMap Hashes from gosum for lookups
  * @param {Array} epkgList Existing package list
  * @param {Object} parentComponent Current parent component
  *
@@ -844,12 +848,12 @@ export function executeEqueryList(pkgName: string): string[];
 /**
  * Convert OS query results
  *
- * @param {string} Query category
+ * @param {string} queryCategory Query category
  * @param {Object} queryObj Query Object from the queries.json configuration
  * @param {Array} results Query Results
  * @param {Boolean} enhance Optionally enhance results by invoking additional package manager commands
  */
-export function convertOSQueryResults(queryCategory: any, queryObj: any, results: any[], enhance?: boolean): {
+export function convertOSQueryResults(queryCategory: string, queryObj: any, results: any[], enhance?: boolean): {
     name: any;
     group: string;
     version: any;
@@ -862,10 +866,13 @@ export function convertOSQueryResults(queryCategory: any, queryObj: any, results
 }[];
 /**
  * Parse swift dependency tree output json object
+ *
+ * @param {Array} pkgList Package list
+ * @param {Array} dependenciesList Dependencies
  * @param {string} jsonObject Swift dependencies json object
  * @param {string} pkgFile Package.swift file
  */
-export function parseSwiftJsonTreeObject(pkgList: any, dependenciesList: any, jsonObject: string, pkgFile: string): string;
+export function parseSwiftJsonTreeObject(pkgList: any[], dependenciesList: any[], jsonObject: string, pkgFile: string): string;
 /**
  * Parse swift dependency tree output
  * @param {string} rawOutput Swift dependencies json output
@@ -1041,9 +1048,9 @@ export function getJarClasses(jarFile: string): Promise<any[]>;
  * Method to return the gradle command to use.
  *
  * @param {string} srcPath Path to look for gradlew wrapper
- * @param {string} rootPath Root directory to look for gradlew wrapper
+ * @param {string|null} rootPath Root directory to look for gradlew wrapper
  */
-export function getGradleCommand(srcPath: string, rootPath: string): string;
+export function getGradleCommand(srcPath: string, rootPath: string | null): string;
 /**
  * Method to combine the general gradle arguments, the sub-commands and the sub-commands' arguments in the correct way
  *
@@ -1202,8 +1209,9 @@ export function parsePackageJsonName(name: any): {
  * @param {array} pkgList List of package
  * @param {object} allImports Import statements object with package name as key and an object with file and location details
  * @param {object} allExports Exported modules if available from node_modules
+ * @param {Boolean} deep Deep mode
  */
-export function addEvidenceForImports(pkgList: any[], allImports: object, allExports: object, deep: any): Promise<any[]>;
+export function addEvidenceForImports(pkgList: any[], allImports: object, allExports: object, deep: boolean): Promise<any[]>;
 export function componentSorter(a: any, b: any): any;
 export function parseCmakeDotFile(dotFile: any, pkgType: any, options?: {}): {
     parentComponent: {};
@@ -1247,8 +1255,9 @@ export function parseCUsageSlice(sliceData: any): {};
  * Method to retrieve metadata for nuget packages
  *
  * @param {Array} pkgList Package list
+ * @param {Array} dependencies Dependencies
  */
-export function getNugetMetadata(pkgList: any[], dependencies?: any): Promise<{
+export function getNugetMetadata(pkgList: any[], dependencies?: any[]): Promise<{
     pkgList: any[];
     dependencies: any[];
 }>;

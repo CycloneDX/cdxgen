@@ -1,0 +1,161 @@
+{
+  "cLanguageStandard": null,
+  "cxxLanguageStandard": null,
+  "dependencies": [
+    {
+      "sourceControl": [
+        {
+          "identity": "starscream",
+          "location": {
+            "remote": [
+              {
+                "urlString": "https://github.com/bgoncal/Starscream"
+              }
+            ]
+          },
+          "productFilter": null,
+          "requirement": {
+            "range": [
+              {
+                "lowerBound": "4.0.8",
+                "upperBound": "5.0.0"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "sourceControl": [
+        {
+          "identity": "promisekit",
+          "location": {
+            "remote": [
+              {
+                "urlString": "https://github.com/mxcl/PromiseKit"
+              }
+            ]
+          },
+          "productFilter": null,
+          "requirement": {
+            "range": [
+              {
+                "lowerBound": "6.13.2",
+                "upperBound": "7.0.0"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "name": "HAKit",
+  "packageKind": {
+    "root": ["/Volumes/Work/sandbox/HAKit"]
+  },
+  "pkgConfig": null,
+  "platforms": [
+    {
+      "options": [],
+      "platformName": "ios",
+      "version": "12.0"
+    },
+    {
+      "options": [],
+      "platformName": "macos",
+      "version": "10.14"
+    },
+    {
+      "options": [],
+      "platformName": "tvos",
+      "version": "12.0"
+    },
+    {
+      "options": [],
+      "platformName": "watchos",
+      "version": "5.0"
+    }
+  ],
+  "products": [
+    {
+      "name": "HAKit",
+      "settings": [],
+      "targets": ["HAKit"],
+      "type": {
+        "library": ["automatic"]
+      }
+    }
+  ],
+  "providers": null,
+  "swiftLanguageVersions": null,
+  "targets": [
+    {
+      "dependencies": [
+        {
+          "byName": ["Starscream", null]
+        }
+      ],
+      "exclude": [],
+      "name": "HAKit",
+      "packageAccess": false,
+      "path": "Source",
+      "resources": [],
+      "settings": [],
+      "type": "regular"
+    },
+    {
+      "dependencies": [
+        {
+          "byName": ["HAKit", null]
+        },
+        {
+          "byName": ["PromiseKit", null]
+        }
+      ],
+      "exclude": [],
+      "name": "HAKit+PromiseKit",
+      "packageAccess": false,
+      "path": "Extensions/PromiseKit",
+      "resources": [],
+      "settings": [],
+      "type": "regular"
+    },
+    {
+      "dependencies": [
+        {
+          "byName": ["HAKit", null]
+        }
+      ],
+      "exclude": [],
+      "name": "HAKit+Mocks",
+      "packageAccess": false,
+      "path": "Extensions/Mocks",
+      "resources": [],
+      "settings": [],
+      "type": "regular"
+    },
+    {
+      "dependencies": [
+        {
+          "byName": ["HAKit", null]
+        },
+        {
+          "byName": ["HAKit+PromiseKit", null]
+        },
+        {
+          "byName": ["HAKit+Mocks", null]
+        }
+      ],
+      "exclude": [],
+      "name": "Tests",
+      "packageAccess": false,
+      "path": "Tests",
+      "resources": [],
+      "settings": [],
+      "type": "test"
+    }
+  ],
+  "toolsVersion": {
+    "_version": "5.3.0"
+  }
+}
