@@ -60,7 +60,7 @@
     "find-up": "npm:find-up@7.0.0",
     "glob": "npm:glob@^11.0.0",
     "global-agent": "npm:global-agent@^3.0.0",
-    "got": "npm:got@^14.4.3",
+    "got": "npm:got@^14.4.4",
     "iconv-lite": "npm:iconv-lite@^0.6.3",
     "js-yaml": "npm:js-yaml@^4.1.0",
     "jws": "npm:jws@^4.0.0",
@@ -80,7 +80,7 @@
     "sequelize": "npm:sequelize@^6.37.3",
     "sqlite3": "npm:sqlite3@^5.1.7",
     "body-parser": "npm:body-parser@^2.0.1",
-    "compression": "npm:compression@^1.7.4",
+    "compression": "npm:compression@^1.7.5",
     "connect": "npm:connect@^3.7.0",
     "jsonata": "npm:jsonata@^2.0.5"
   }
