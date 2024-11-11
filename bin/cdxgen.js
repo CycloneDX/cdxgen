@@ -235,6 +235,8 @@ const args = yargs(hideBin(process.argv))
       "threat-modeling",
       "license-compliance",
       "generic",
+      "machine-learning",
+      "ml",
     ],
   })
   .option("lifecycle", {
@@ -413,6 +415,14 @@ const applyAdvancedOptions = (options) => {
       break;
     case "license-compliance":
       process.env.FETCH_LICENSE = "true";
+      break;
+    case "machine-learning":
+    case "ml":
+      process.env.FETCH_LICENSE = "true";
+      options.deep = true;
+      options.evidence = false;
+      options.includeCrypto = false;
+      options.installDeps = true;
       break;
     default:
       break;

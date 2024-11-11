@@ -56,6 +56,7 @@ def perform_snapshot_tests(dir1, dir2, migrate_legacy):
         allow_new_data=True,
         preconfig_type="bom",
         include=["properties", "evidence", "licenses"],
+        exclude=["annotations"]
     )
 
     failed_diffs = {}

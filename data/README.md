@@ -22,4 +22,5 @@ Contents of data directory and their purpose.
 | wrapdb-releases.json  | Database of all available meson wraps. Generated using contrib/wrapdb.py.                                |
 | frameworks-list.json  | List of string fragments to categorize components into frameworks                                        |
 | crypto-oid.json       | Peter Gutmann's crypto oid [mapping](https://www.cs.auckland.ac.nz/~pgut001). GPL, BSD, or CC BY license |
-| glibc-stdlib.json     | Standard libraries that can be filtered out in C++ |
+| glibc-stdlib.json     | Standard libraries that can be filtered out in C++                                                       |
+| component-tags.json   | List of tags to extract from component description text for easy classification.                         |
