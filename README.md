@@ -33,6 +33,7 @@ Our philosophy:
 - Precision: Try using multiple techniques to improve precision, even if it takes extra time.
 - Personas: Cater to the needs of a range of personas such as security researchers, compliance auditors, developers, and SOC.
 - Lifecycle: Support BOM generation for various product lifecycles.
+- Machine Learning: Optimize the generated data for Machine Learning (ML) purposes by considering the various model properties.
 
 ## Documentation
 
@@ -147,7 +148,7 @@ Options:
                                and claim authorship.                               [array] [default: "OWASP Foundation"]
       --profile                BOM profile to use for generation. Default generic.
   [choices: "appsec", "research", "operational", "threat-modeling", "license-compliance", "generic", "machine-learning",
-                                                                                              "ml"] [default: "generic"]
+                                                                  "ml", "deep-learning", "ml-deep"] [default: "generic"]
       --exclude                Additional glob pattern(s) to ignore                                              [array]
       --include-formulation    Generate formulation section with git metadata and build tools. Defaults to false.
                                                                                               [boolean] [default: false]
