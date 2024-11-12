@@ -235,6 +235,10 @@ const args = yargs(hideBin(process.argv))
       "threat-modeling",
       "license-compliance",
       "generic",
+      "machine-learning",
+      "ml",
+      "deep-learning",
+      "ml-deep",
     ],
   })
   .option("lifecycle", {
@@ -413,6 +417,22 @@ const applyAdvancedOptions = (options) => {
       break;
     case "license-compliance":
       process.env.FETCH_LICENSE = "true";
+      break;
+    case "machine-learning":
+    case "ml":
+      process.env.FETCH_LICENSE = "true";
+      options.deep = true;
+      options.evidence = false;
+      options.includeCrypto = false;
+      options.installDeps = true;
+      break;
+    case "deep-learning":
+    case "ml-deep":
+      process.env.FETCH_LICENSE = "true";
+      options.deep = true;
+      options.evidence = true;
+      options.includeCrypto = true;
+      options.installDeps = true;
       break;
     default:
       break;
@@ -699,6 +719,8 @@ const checkPermissions = (filePath) => {
         evinseOptions,
       );
       bomNSData.bomJson = evinseJson;
+      // Redo post processing with evinse data
+      bomNSData = postProcess(bomNSData, options);
       if (options.print && evinseJson) {
         printOccurrences(evinseJson);
         printCallStack(evinseJson);

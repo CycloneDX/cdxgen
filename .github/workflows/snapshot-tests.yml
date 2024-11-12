@@ -58,6 +58,7 @@ jobs:
           SDKMAN_DIR: /home/runner/.sdkman
           CDXGEN_DEBUG_MODE: debug
           CDXGEN_LOG: /home/runner/work/new_snapshots/generate.log
+          PREFER_MAVEN_DEPS_TREE: false
         run: |
           mkdir /home/runner/work/new_snapshots
           python test/diff/generate.py

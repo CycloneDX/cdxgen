@@ -41,7 +41,6 @@ Some package managers support filtering dependencies. For example, maven `depend
 Java maven example:
 
 ```shell
-export PREFER_MAVEN_DEPS_TREE=true
 export MVN_ARGS="-Dexcludes=:::*-SNAPSHOT"
 ```
 

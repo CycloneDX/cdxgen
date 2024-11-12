@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "10.11.0",
+  "version": "11.0.0",
   "exports": "./lib/cli/index.js",
   "compilerOptions": {
     "lib": ["deno.window"],
@@ -20,7 +20,7 @@
     "include": ["bin/", "*.js", "lib/**"],
     "exclude": ["test/", "data/", "contrib/"],
     "rules": {
-      "tags": ["recommended", "no-self-compare"],
+      "tags": ["recommended"],
       "exclude": ["no-unused-vars", "no-invalid-regexp"]
     }
   },
