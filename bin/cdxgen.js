@@ -721,8 +721,10 @@ const checkPermissions = (filePath) => {
       usagesSlicesFile: options.usagesSlicesFile,
       dataFlowSlicesFile: options.dataFlowSlicesFile,
       reachablesSlicesFile: options.reachablesSlicesFile,
+      semanticsSlicesFile: options.semanticsSlicesFile,
       includeCrypto: options.includeCrypto,
       specVersion: options.specVersion,
+      profile: options.profile,
     };
     const dbObjMap = await evinserModule.prepareDB(evinseOptions);
     if (dbObjMap) {
@@ -735,8 +737,6 @@ const checkPermissions = (filePath) => {
         evinseOptions,
       );
       bomNSData.bomJson = evinseJson;
-      // Redo post processing with evinse data
-      bomNSData = postProcess(bomNSData, options);
       if (options.print && evinseJson) {
         printOccurrences(evinseJson);
         printCallStack(evinseJson);
