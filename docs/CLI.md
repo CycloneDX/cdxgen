@@ -78,6 +78,7 @@ Options:
       --deep                   Perform deep searches for components. Useful while scanning C/C++ apps, live OS and oci i
                                mages.                                                                          [boolean]
       --server-url             Dependency track url. Eg: https://deptrack.cyclonedx.io
+      --skip-dt-tls-check      Skip TLS certificate check when calling Dependency-Track.      [boolean] [default: false]
       --api-key                Dependency track api key
       --project-group          Dependency track project group
       --project-name           Dependency track project name. Default use the directory name
@@ -99,7 +100,7 @@ Options:
       --validate               Validate the generated SBOM using json schema. Defaults to true. Pass --no-validate to di
                                sable.                                                          [boolean] [default: true]
       --evidence               Generate SBOM with evidence for supported languages.           [boolean] [default: false]
-      --spec-version           CycloneDX Specification version to use. Defaults to 1.5           [number] [default: 1.5]
+      --spec-version           CycloneDX Specification version to use. Defaults to 1.6           [number] [default: 1.6]
       --filter                 Filter components containing this word in purl or component.properties.value. Multiple va
                                lues allowed.                                                                     [array]
       --only                   Include components only containing this word in purl. Useful to generate BOM with first p
@@ -107,11 +108,11 @@ Options:
       --author                 The person(s) who created the BOM. Set this value if you're intending the modify the BOM
                                and claim authorship.                               [array] [default: "OWASP Foundation"]
       --profile                BOM profile to use for generation. Default generic.
-  [choices: "appsec", "research", "operational", "threat-modeling", "license-compliance", "generic"] [default: "generic"
-                                                                                                                       ]
+  [choices: "appsec", "research", "operational", "threat-modeling", "license-compliance", "generic", "machine-learning",
+                                                       "ml", "deep-learning", "ml-deep", "ml-tiny"] [default: "generic"]
       --exclude                Additional glob pattern(s) to ignore                                              [array]
-      --include-formulation    Generate formulation section with git metadata and build tools. Defaults to true. Invoke
-                               with --no-include-formulation to disable.                       [boolean] [default: true]
+      --include-formulation    Generate formulation section with git metadata and build tools. Defaults to false.
+                                                                                              [boolean] [default: false]
       --include-crypto         Include crypto libraries as components.                        [boolean] [default: false]
       --standard               The list of standards which may consist of regulations, industry or organizational-specif
                                ic standards, maturity models, best practices, or any other requirements which can be eva
@@ -124,9 +125,11 @@ Options:
   -v, --version                Show version number                                                             [boolean]
 
 Examples:
-  cdxgen -t java .        Generate a Java SBOM for the current directory
-  cdxgen -t java -t js .  Generate a SBOM for Java and JavaScript in the current directory
-  cdxgen --server         Run cdxgen as a server
+  cdxgen -t java .                       Generate a Java SBOM for the current directory
+  cdxgen -t java -t js .                 Generate a SBOM for Java and JavaScript in the current directory
+  cdxgen -t java --profile ml .          Generate a Java SBOM for machine learning purposes.
+  cdxgen -t python --profile research .  Generate a Python SBOM for appsec research.
+  cdxgen --server                        Run cdxgen as a server
 
 for documentation, visit https://cyclonedx.github.io/cdxgen
 ```

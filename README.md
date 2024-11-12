@@ -93,7 +93,7 @@ docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghc
 In deno applications, cdxgen could be directly imported without any conversion. Please see the section on [integration as a library](#integration-as-library)
 
 ```ts
-import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^10.9.6";
+import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^11.0.0";
 ```
 
 ## Getting Help
@@ -148,7 +148,7 @@ Options:
                                and claim authorship.                               [array] [default: "OWASP Foundation"]
       --profile                BOM profile to use for generation. Default generic.
   [choices: "appsec", "research", "operational", "threat-modeling", "license-compliance", "generic", "machine-learning",
-                                                                  "ml", "deep-learning", "ml-deep"] [default: "generic"]
+                                                       "ml", "deep-learning", "ml-deep", "ml-tiny"] [default: "generic"]
       --exclude                Additional glob pattern(s) to ignore                                              [array]
       --include-formulation    Generate formulation section with git metadata and build tools. Defaults to false.
                                                                                               [boolean] [default: false]

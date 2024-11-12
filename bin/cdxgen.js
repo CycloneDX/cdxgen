@@ -239,6 +239,7 @@ const args = yargs(hideBin(process.argv))
       "ml",
       "deep-learning",
       "ml-deep",
+      "ml-tiny",
     ],
   })
   .option("lifecycle", {
@@ -317,6 +318,8 @@ const args = yargs(hideBin(process.argv))
       "$0 -t java -t js .",
       "Generate a SBOM for Java and JavaScript in the current directory",
     ],
+    ["$0 -t java --profile ml .", "Generate a Java SBOM for machine learning purposes."],
+    ["$0 -t python --profile research .", "Generate a Python SBOM for appsec research."],
     ["$0 --server", "Run cdxgen as a server"],
   ])
   .epilogue("for documentation, visit https://cyclonedx.github.io/cdxgen")
@@ -417,6 +420,13 @@ const applyAdvancedOptions = (options) => {
       break;
     case "license-compliance":
       process.env.FETCH_LICENSE = "true";
+      break;
+    case "ml-tiny":
+      process.env.FETCH_LICENSE = "true";
+      options.deep = false;
+      options.evidence = false;
+      options.includeCrypto = false;
+      options.installDeps = false;
       break;
     case "machine-learning":
     case "ml":
