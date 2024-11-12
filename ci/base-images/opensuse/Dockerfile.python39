@@ -23,7 +23,7 @@ RUN set -e; \
     esac \
     && zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends gcc12 gcc12-c++ gcc12-fortran \
         python39 python39-devel python39-pip findutils java-23-openjdk-devel \
-        bzip2 git-core wget zip unzip make gawk nodejs20 npm20 nodejs20-devel gdal-devel libxml2-devel libxslt-devel \
+        bzip2 git-core wget zip unzip make gawk nodejs22 npm22 nodejs22-devel gdal-devel libxml2-devel libxslt-devel \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 10 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 10 \
     && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-12 10 \
