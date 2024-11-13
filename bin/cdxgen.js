@@ -239,6 +239,7 @@ const args = yargs(hideBin(process.argv))
       "ml",
       "deep-learning",
       "ml-deep",
+      "ml-tiny",
     ],
   })
   .option("lifecycle", {
@@ -316,6 +317,14 @@ const args = yargs(hideBin(process.argv))
     [
       "$0 -t java -t js .",
       "Generate a SBOM for Java and JavaScript in the current directory",
+    ],
+    [
+      "$0 -t java --profile ml .",
+      "Generate a Java SBOM for machine learning purposes.",
+    ],
+    [
+      "$0 -t python --profile research .",
+      "Generate a Python SBOM for appsec research.",
     ],
     ["$0 --server", "Run cdxgen as a server"],
   ])
@@ -417,6 +426,13 @@ const applyAdvancedOptions = (options) => {
       break;
     case "license-compliance":
       process.env.FETCH_LICENSE = "true";
+      break;
+    case "ml-tiny":
+      process.env.FETCH_LICENSE = "true";
+      options.deep = false;
+      options.evidence = false;
+      options.includeCrypto = false;
+      options.installDeps = false;
       break;
     case "machine-learning":
     case "ml":
@@ -705,8 +721,10 @@ const checkPermissions = (filePath) => {
       usagesSlicesFile: options.usagesSlicesFile,
       dataFlowSlicesFile: options.dataFlowSlicesFile,
       reachablesSlicesFile: options.reachablesSlicesFile,
+      semanticsSlicesFile: options.semanticsSlicesFile,
       includeCrypto: options.includeCrypto,
       specVersion: options.specVersion,
+      profile: options.profile,
     };
     const dbObjMap = await evinserModule.prepareDB(evinseOptions);
     if (dbObjMap) {
@@ -719,8 +737,6 @@ const checkPermissions = (filePath) => {
         evinseOptions,
       );
       bomNSData.bomJson = evinseJson;
-      // Redo post processing with evinse data
-      bomNSData = postProcess(bomNSData, options);
       if (options.print && evinseJson) {
         printOccurrences(evinseJson);
         printCallStack(evinseJson);
