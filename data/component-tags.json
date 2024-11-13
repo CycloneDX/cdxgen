@@ -21,7 +21,6 @@
       "socket",
       "proto",
       "resource",
-      "data",
       "sensitive",
       "template",
       "log",
@@ -150,7 +149,6 @@
       "encrypt",
       "decrypt",
       "registry",
-      "maps",
       "payment",
       "stripe",
       "apple-pay",
@@ -232,6 +230,13 @@
     ]
   },
   "name": {
+    "sbom": [
+      { "test": ["(junit|xmlunit|testng|chai|mocha|jest)"] },
+      { "security": ["(boringssl|openssl|libressl|gnutls|jose|keyutils)"] },
+      { "native": ["(ffi|native)"] },
+      { "parse": ["(parser)"] },
+      { "transform": ["(transformer)"] }
+    ],
     "obom": [
       {
         "devel": [
@@ -248,7 +253,7 @@
       { "kernel": ["^(linux|kernel|os-image)"] },
       {
         "security": [
-          "(selinux|apparmor|security|openssl|libressl|gnutls|jose|keyutils|passwd)"
+          "(selinux|apparmor|security|boringssl|openssl|libressl|gnutls|jose|keyutils|passwd)"
         ]
       },
       {
