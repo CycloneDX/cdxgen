@@ -1,5 +1,13 @@
 /**
- * Create the textual representation of the metadata section
+ * Method to determine the type of the BOM.
+ *
+ * @param {Object} bomJson BOM JSON Object
+ *
+ * @returns {String} Type of the bom such as sbom, cbom, obom, ml-bom etc
+ */
+export function findBomType(bomJson: any): string;
+/**
+ * Create the textual representation of the metadata section.
  *
  * @param {Object} bomJson BOM JSON Object
  *
@@ -10,7 +18,8 @@ export function textualMetadata(bomJson: any): string | undefined;
  * Extract interesting tags from the component attribute
  *
  * @param {Object} component CycloneDX component
+ * @param {String} bomType BOM type
  * @returns {Array | undefined} Array of string tags
  */
-export function extractTags(component: any): any[] | undefined;
+export function extractTags(component: any, bomType?: string): any[] | undefined;
 //# sourceMappingURL=annotator.d.ts.map
