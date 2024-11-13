@@ -187,7 +187,7 @@
       { "shell": ["(bash|zsh|csh|fish)"] },
       { "bluetooth": ["(bluez|bluetooth)"] },
       { "sound": ["(alsa|pulseaudio|wireplumber|flac|codecs|ldac|sound)"] },
-      { "compression": ["(tar|zip|brotli|xz-utils|webp|zstd|lz4)"] },
+      { "compression": ["(brotli|xz-utils|zstd|lz4)", "(tar|zip|webp)$"] },
       {
         "runtime": [
           "(perl|lua|php|python|ruby|dotnet|java|swift|runtime|glibc|musl|wasm)"
@@ -197,7 +197,7 @@
       { "xml": ["(xml|expat)"] },
       { "boot": ["(grub|systemd-boot|syslinux)"] },
       { "gui": ["(wayland|xorg|X11|mesa|vulkan|tk|wkhtmltox)"] },
-      { "package": ["(rpm|dnf|yum|apt|zypper|apk)"] }
+      { "package": ["(rpm|dnf|yum|apt|zypper|apk)$"] }
     ]
   }
 }
