@@ -161,7 +161,7 @@ cdxgenRepl.defineCommand("search", {
           let dependenciesSearchStr = searchStr;
           if (!searchStr.includes("~>")) {
             dependenciesSearchStr = `dependencies[ref ~> /${searchStr}/i or dependsOn ~> /${searchStr}/i or provides ~> /${searchStr}/i]`;
-            searchStr = `components[group ~> /${searchStr}/i or name ~> /${searchStr}/i or description ~> /${searchStr}/i or publisher ~> /${searchStr}/i or purl ~> /${searchStr}/i]`;
+            searchStr = `components[group ~> /${searchStr}/i or name ~> /${searchStr}/i or description ~> /${searchStr}/i or publisher ~> /${searchStr}/i or purl ~> /${searchStr}/i or tags ~> /${searchStr}/i]`;
           }
           const expression = jsonata(searchStr);
           let components = await expression.evaluate(sbom);
