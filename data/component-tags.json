@@ -280,7 +280,12 @@
       { "xml": ["(xml|expat)"] },
       { "boot": ["(grub|systemd-boot|syslinux)"] },
       { "gui": ["(wayland|xorg|X11|mesa|vulkan|tk|wkhtmltox|electron)"] },
-      { "package": ["(rpm|dnf|yum|apt|zypper|apk)$"] },
+      {
+        "package": [
+          "(rpm|dnf|yum|apt|zypper|apk|conda)$",
+          "^(conda_package_|conda-package-)"
+        ]
+      },
       {
         "browser": [
           "^(edge)",
