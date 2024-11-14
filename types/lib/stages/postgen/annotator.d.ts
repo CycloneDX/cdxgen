@@ -19,7 +19,9 @@ export function textualMetadata(bomJson: any): string | undefined;
  *
  * @param {Object} component CycloneDX component
  * @param {String} bomType BOM type
+ * @param {String} parentComponentType Parent component type
+ *
  * @returns {Array | undefined} Array of string tags
  */
-export function extractTags(component: any, bomType?: string): any[] | undefined;
+export function extractTags(component: any, bomType?: string, parentComponentType?: string): any[] | undefined;
 //# sourceMappingURL=annotator.d.ts.map

@@ -231,8 +231,10 @@
   },
   "name": {
     "sbom": [
-      { "test": ["(junit|xmlunit|testng|chai|mocha|jest)"] },
-      { "security": ["(boringssl|openssl|libressl|gnutls|jose|keyutils)"] },
+      { "test": ["(junit|xmlunit|testng|chai|mocha|jest|test4j)"] },
+      {
+        "security": ["(boringssl|openssl|libressl|libssl|gnutls|jose|keyutils)"]
+      },
       { "native": ["(ffi|native)"] },
       { "parse": ["(parser)"] },
       { "transform": ["(transformer)"] }
@@ -241,7 +243,7 @@
       {
         "devel": [
           "-(dev|devel|headers|sdk|libs|extension|headers+x86|headers+x64|headers+arm64)$",
-          "^(git)-",
+          "^(git)[-]?",
           "^(sdk|windows+sdk)"
         ]
       },
@@ -253,7 +255,7 @@
       { "kernel": ["^(linux|kernel|os-image)"] },
       {
         "security": [
-          "(selinux|apparmor|security|boringssl|openssl|libressl|gnutls|jose|keyutils|passwd)"
+          "(selinux|apparmor|security|boringssl|openssl|libressl|gnutls|jose|keyutils|passwd|libssl|libaudit|gcrypt|libpam|libseccomp)"
         ]
       },
       {
@@ -262,33 +264,48 @@
         ]
       },
       {
-        "build": ["(cpp|fortran|gcc|make|meson|bazel|maven|gradle|sbt|ant|gdb)"]
+        "build": [
+          "(cpp|fortran|gcc|make|meson|bazel|maven|gradle|sbt|ant|gdb|boost|compiler|kotlin|cargo|rustc|llvm|libstdc)"
+        ]
       },
       {
         "network": [
-          "(tailscale|wireguard|openvpn|dns|cockpit|cups|dhcp|network|iproute|iptables|mosh|netavark|openssh|rsync|tcpdump)"
+          "(tailscale|wireguard|openvpn|dns|cockpit|cups|dhcp|network|iproute|iptables|mosh|netavark|openssh|rsync|tcpdump|libssh)"
         ]
       },
-      { "webserver": ["(httpd|http2)"] },
-      { "crypto": ["(crypt|gpg|keys|certificates|gnupg|certifi)"] },
+      { "webserver": ["(httpd|http2|tomcat|jboss)"] },
+      {
+        "crypto": [
+          "(crypt|gpg|keys|certificates|gnupg|certifi|pubkey|keyutils|nss|keyring)"
+        ]
+      },
       { "repository": ["(-repos|-release|ostree|appstream)"] },
-      { "shell": ["(bash|zsh|csh|fish)"] },
+      { "shell": ["(bash|zsh|csh|fish|binsh|dash|oilsh)"] },
       { "bluetooth": ["(bluez|bluetooth)"] },
       { "sound": ["(alsa|pulseaudio|wireplumber|flac|codecs|ldac|sound)"] },
-      { "compression": ["(brotli|xz-utils|zstd|lz4)", "(tar|zip|webp)$"] },
+      {
+        "compression": [
+          "(brotli|xz-utils|zstd|lz4|zlib|bz2|lzma5|bzip2|libarchive)",
+          "(tar|zip|webp|zchunk)$"
+        ]
+      },
       {
         "runtime": [
-          "(perl|lua|php|python|ruby|dotnet|java|swift|runtime|glibc|musl|wasm|.net|asp.net|node.js|node)"
+          "(perl|lua|php|python|ruby|dotnet|java|swift|runtime|glibc|libc6|musl|wasm|\\.net|asp\\.net|node.js|node|groovy)"
         ]
       },
       { "editor": ["(vim|emacs|nano|hexedit)"] },
       { "xml": ["(xml|expat)"] },
-      { "boot": ["(grub|systemd-boot|syslinux)"] },
-      { "gui": ["(wayland|xorg|X11|mesa|vulkan|tk|wkhtmltox|electron)"] },
+      { "boot": ["(grub|systemd-boot|syslinux|init-system|sysvinit)"] },
+      {
+        "gui": [
+          "(wayland|xorg|X11|mesa|vulkan|tk|wkhtmltox|electron|Xrender|glib2)"
+        ]
+      },
       {
         "package": [
-          "(rpm|dnf|yum|apt|zypper|apk|conda)$",
-          "^(conda_package_|conda-package-)"
+          "(rpm|dnf|yum|apt|zypper|apk|conda|dpkg|dnf5)$",
+          "^(conda_package_|conda-package-|libapt|dnf5-|libdnf5)"
         ]
       },
       {
@@ -298,7 +315,11 @@
           "(microsoft+edge|microsoft+edge+webview2|microsoft+html)"
         ]
       },
-      { "chat": ["(webex|teams|slack|discord|vesktop|matrix|signal|whatsapp)"] }
+      {
+        "chat": ["(webex|teams|slack|discord|vesktop|matrix|signal|whatsapp)"]
+      },
+      { "logging": ["(log4j|logging|slf4j)"] },
+      { "root": ["^(sudo|systemd|pam|shadow)$"] }
     ]
   }
 }
