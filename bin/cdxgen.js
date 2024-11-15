@@ -297,6 +297,25 @@ const args = yargs(hideBin(process.argv))
     hidden: true,
     choices: ["safe-pip-install", "suggest-build-tools"],
   })
+  .option("min-confidence", {
+    description:
+      "Minimum confidence needed for the identity of a component from 0 - 1, where 1 is 100% confidence.",
+    default: 0,
+    type: "number",
+  })
+  .option("technique", {
+    description: "Analysis technique to use",
+    choices: [
+      "auto",
+      "source-code-analysis",
+      "binary-analysis",
+      "manifest-analysis",
+      "hash-comparison",
+      "instrumentation",
+      "filename",
+    ],
+    hidden: true,
+  })
   .completion("completion", "Generate bash/zsh completion")
   .array("type")
   .array("excludeType")
@@ -306,6 +325,7 @@ const args = yargs(hideBin(process.argv))
   .array("exclude")
   .array("standard")
   .array("feature-flags")
+  .array("technique")
   .option("auto-compositions", {
     type: "boolean",
     default: true,

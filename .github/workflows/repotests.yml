@@ -415,6 +415,7 @@ jobs:
       - name: repotests openpbs
         run: |
           bin/cdxgen.js -p -r -t c repotests/openpbs -o bomresults/bom-openpbs.json
+          bin/cdxgen.js -p -r -t c repotests/openpbs -o bomresults/bom-openpbs.json --min-confidence 0.4
         shell: bash
       - name: repotests Jackalope
         run: |
