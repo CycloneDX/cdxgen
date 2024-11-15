@@ -37,7 +37,7 @@ jobs:
       run: |
         zip --junk-paths -r cdxgen-dist.zip cdxgen-latest-x86_64.AppImage
     - name: Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       if: startsWith(github.ref, 'refs/tags/')
       with:
         files: |
