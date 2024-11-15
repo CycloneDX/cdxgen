@@ -93,6 +93,44 @@ Use `--only` to include only those components containing the string in the purl.
 cdxgen -t java -o /tmp/bom.json -p --only org.springframework
 ```
 
+### Minimum confidence filter
+
+Use `--min-confidence` with a value between 0 and 1 to filter components based on the confidence of their purl [identify](https://cyclonedx.org/docs/1.6/json/#components_items_evidence_identity_oneOf_i0_items_field). The logic involves looking for `field=purl` in `evidence.identity` and collecting the maximum `confidence` value. This is then compared against the minimum confidence passed as an argument.
+
+```shell
+cdxgen -t c . --min-confidence 0.1
+```
+
+The above would filter out all the zero confidence components in c/c++, so use it with caution.
+
+### Analysis technique filter
+
+Use `--technique` to list the techniques that cdxgen is allowed to use for the xBOM generation. Leaving this argument or using the value `auto` enables default behaviour.
+
+Example 1 - only allow manifest-analysis:
+
+```shell
+cdxgen -t c . --technique manifest-analysis
+```
+
+Example 2 - allow manifest-analysis and source-code-analysis:
+
+```shell
+cdxgen -t c . --technique manifest-analysis --technique source-code-analysis
+```
+
+List of supported techniques:
+
+- auto (default)
+- source-code-analysis
+- binary-analysis
+- manifest-analysis
+- hash-comparison
+- instrumentation
+- filename
+
+Currently, this capability is implemented as a filter during post-processing, so unlikely to yield any performance benefits.
+
 ## Automatic compositions
 
 When using any filters, cdxgen would automatically set the [compositions.aggregate](https://cyclonedx.org/docs/1.5/json/#compositions_items_aggregate) property to "incomplete" or "incomplete_first_party_only".

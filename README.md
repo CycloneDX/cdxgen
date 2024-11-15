@@ -158,6 +158,11 @@ Options:
                                luated against or attested to.
   [array] [choices: "asvs-4.0.3", "bsimm-v13", "masvs-2.0.0", "nist_ssdf-1.1", "pcissc-secure-slc-1.1", "scvs-1.0.0", "s
                                                                                                      saf-DRAFT-2023-11"]
+      --min-confidence         Minimum confidence needed for the identity of a component from 0 - 1, where 1 is 100% con
+                               fidence.                                                            [number] [default: 0]
+      --technique              Analysis technique to use
+  [array] [choices: "auto", "source-code-analysis", "binary-analysis", "manifest-analysis", "hash-comparison", "instrume
+                                                                                                   ntation", "filename"]
       --auto-compositions      Automatically set compositions when the BOM was filtered. Defaults to true
                                                                                                [boolean] [default: true]
   -h, --help                   Show help                                                                       [boolean]
