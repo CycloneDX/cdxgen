@@ -103,6 +103,34 @@ cdxgen -t c . --min-confidence 0.1
 
 The above would filter out all the zero confidence components in c/c++, so use it with caution.
 
+### Analysis technique filter
+
+Use `--technique` to list the techniques that cdxgen is allowed to use for the xBOM generation. Leaving this argument or using the value `auto` enables default behaviour.
+
+Example 1 - only allow manifest-analysis:
+
+```shell
+cdxgen -t c . --technique manifest-analysis
+```
+
+Example 2 - allow manifest-analysis and source-code-analysis:
+
+```shell
+cdxgen -t c . --technique manifest-analysis --technique source-code-analysis
+```
+
+List of supported techniques:
+
+- auto (default)
+- source-code-analysis
+- binary-analysis
+- manifest-analysis
+- hash-comparison
+- instrumentation
+- filename
+
+Currently, this capability is implemented as a filter during post-processing, so unlikely to yield any performance benefits.
+
 ## Automatic compositions
 
 When using any filters, cdxgen would automatically set the [compositions.aggregate](https://cyclonedx.org/docs/1.5/json/#compositions_items_aggregate) property to "incomplete" or "incomplete_first_party_only".

@@ -314,7 +314,6 @@ const args = yargs(hideBin(process.argv))
       "instrumentation",
       "filename",
     ],
-    hidden: true,
   })
   .completion("completion", "Generate bash/zsh completion")
   .array("type")
