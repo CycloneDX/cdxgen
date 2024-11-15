@@ -14,8 +14,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: ['22.x']
-        java-version: ['21']
+        node-version: ['23.x']
+        java-version: ['23']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -80,8 +80,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: ['22.x']
-        java-version: ['21']
+        node-version: ['23.x']
+        java-version: ['23']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -127,8 +127,8 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['22.x']
-        java-version: ['21']
+        node-version: ['23.x']
+        java-version: ['23']
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
@@ -170,8 +170,8 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['22.x']
-        java-version: ['21']
+        node-version: ['23.x']
+        java-version: ['23']
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}

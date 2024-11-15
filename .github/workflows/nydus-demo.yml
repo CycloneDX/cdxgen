@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['22.x']
+        node-version: ['23.x']
         os: ['ubuntu-latest']
     runs-on: ${{ matrix.os }}
     steps:
@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'
+          java-version: '23'
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:

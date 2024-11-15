@@ -16,10 +16,10 @@ ARG SWIFT_PLATFORM=ubi9
 ARG SWIFT_BRANCH=swift-6.0.1-release
 ARG SWIFT_VERSION=swift-6.0.1-RELEASE
 ARG SWIFT_WEBROOT=https://download.swift.org
-ARG JAVA_VERSION=23-tem
+ARG JAVA_VERSION=23.0.1-tem
 ARG SBT_VERSION=1.10.2
 ARG MAVEN_VERSION=3.9.9
-ARG GRADLE_VERSION=8.10
+ARG GRADLE_VERSION=8.11
 ARG GO_VERSION=1.23.1
 ARG NODE_VERSION=23.2.0
 ARG PYTHON_VERSION=3.12
@@ -77,7 +77,7 @@ RUN set -e; \
     esac \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
     python${PYTHON_VERSION} python${PYTHON_VERSION}-devel python${PYTHON_VERSION}-pip ruby ruby-devel glibc-common glibc-all-langpacks \
-        pcre2 which tar gzip zip unzip bzip2 sudo ncurses sqlite-devel dotnet-sdk-8.0 \
+        pcre2 which tar gzip zip unzip bzip2 sudo ncurses sqlite-devel dotnet-sdk-9.0 \
     && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 10 \
     && alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYTHON_VERSION} 10 \
     && /usr/bin/python${PYTHON_VERSION} --version \
