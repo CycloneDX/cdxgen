@@ -50,7 +50,7 @@ jobs:
               ./cdxgen-arm64 --version
               sha256sum cdxgen-arm64 > cdxgen-arm64.sha256
               rm -rf node_modules
-              npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund --no-progress --loglevel verbose
+              npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund --no-progress
               npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen-arm64-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen-arm64-slim
               ./cdxgen-arm64-slim --version
@@ -98,7 +98,7 @@ jobs:
       - name: Produce sae
         run: |
           npm install -g npm@10.3.0
-          npm install --omit=dev --no-package-lock --no-audit --no-fund --no-progress --loglevel verbose
+          npm install --omit=dev --no-package-lock --no-audit --no-fund --no-progress
           ${{ matrix.build }}
       - uses: actions/upload-artifact@v4
         with:
