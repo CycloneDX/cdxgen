@@ -94,7 +94,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '23.x'
+          node-version: '22.x'
       - name: Produce sae
         run: |
           npm install --omit=dev --no-package-lock --no-audit --no-fund --no-progress --loglevel verbose
