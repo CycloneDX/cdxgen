@@ -1,4 +1,4 @@
-FROM almalinux:9.4-minimal
+FROM almalinux:10-kitten-minimal
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
