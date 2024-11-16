@@ -97,6 +97,7 @@ jobs:
           node-version: '22.x'
       - name: Produce sae
         run: |
+          npm install -g npm@10.3.0
           npm install --omit=dev --no-package-lock --no-audit --no-fund --no-progress --loglevel verbose
           ${{ matrix.build }}
       - uses: actions/upload-artifact@v4
