@@ -72,7 +72,7 @@ RUN set -e; \
     esac \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
         python${PYTHON_VERSION} python${PYTHON_VERSION}-devel python${PYTHON_VERSION}-pip ruby ruby-devel glibc-common glibc-all-langpacks \
-        pcre2 which tar gzip zip unzip bzip2 sudo ncurses sqlite-devel dotnet-sdk-9.0 \
+        pcre2 which tar gzip zip unzip bzip2 sudo ncurses sqlite-devel gnupg2 dotnet-sdk-9.0 \
     && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 10 \
     && alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYTHON_VERSION} 10 \
     && python${PYTHON_VERSION} --version \
