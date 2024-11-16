@@ -357,7 +357,7 @@ def run_pre_builds(repo_data, output_dir, debug_cmds):
     cmds = set(cmds)
 
     commands = [c.replace('use', 'install') for c in cmds]
-    commands.append('sdk install java 23-tem')
+    commands.append('sdk install java 23.0.1-tem')
     commands = '\n'.join(commands)
     sh_path = Path.joinpath(output_dir, 'sdkman_installs.sh')
     write_script_file(sh_path, commands, debug_cmds)

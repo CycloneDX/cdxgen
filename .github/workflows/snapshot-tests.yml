@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4.0.1
         with:
-          node-version: '22.x'
+          node-version: '23.x'
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -90,7 +90,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: diffs
-          path: | 
+          path: |
             /home/runner/work/new_snapshots/diffs.json
             /home/runner/work/new_snapshots/*.html
 

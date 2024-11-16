@@ -18,8 +18,52 @@ jobs:
     if: github.repository == 'CycloneDX/cdxgen'
     strategy:
       matrix:
-        os: [windows-latest]
+        os: ['ubuntu-latest', 'windows-latest', 'arm64']
         include:
+          - os: ubuntu-latest
+            build: |
+              rm -rf ci contrib tools_config
+              npx --yes @appthreat/caxa --input . --output "cdxgen" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              chmod +x cdxgen
+              ./cdxgen --version
+              sha256sum cdxgen > cdxgen.sha256
+              rm -rf node_modules
+              npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund --no-progress
+              npx --yes @appthreat/caxa --input . --output "cdxgen-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              chmod +x cdxgen-slim
+              ./cdxgen-slim --version
+              sha256sum cdxgen-slim > cdxgen-slim.sha256
+              npx --yes @appthreat/caxa --input . --output "cdx-verify" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
+              chmod +x cdx-verify
+              ./cdx-verify --version
+              sha256sum cdx-verify > cdx-verify.sha256
+              ./cdxgen --help
+              ./cdxgen-slim --help
+            artifact: cdxgen
+            sartifact: cdxgen-slim
+            vartifact: cdx-verify
+          - os: arm64
+            build: |
+              rm -rf ci contrib tools_config
+              npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen-arm64" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              chmod +x cdxgen-arm64
+              ./cdxgen-arm64 --version
+              sha256sum cdxgen-arm64 > cdxgen-arm64.sha256
+              rm -rf node_modules
+              npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund --no-progress
+              npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen-arm64-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              chmod +x cdxgen-arm64-slim
+              ./cdxgen-arm64-slim --version
+              sha256sum cdxgen-arm64-slim > cdxgen-arm64-slim.sha256
+              npx --no-progress --yes @appthreat/caxa --input . --output "cdx-arm64-verify" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
+              chmod +x cdx-arm64-verify
+              ./cdx-arm64-verify --version
+              sha256sum cdx-arm64-verify > cdx-arm64-verify.sha256
+              ./cdxgen-arm64 --help
+              ./cdxgen-arm64-slim --help
+            artifact: cdxgen-arm64
+            sartifact: cdxgen-arm64-slim
+            vartifact: cdx-arm64-verify
           - os: windows-latest
             build: |
               Remove-Item ci -Recurse -Force
@@ -53,7 +97,8 @@ jobs:
           node-version: '22.x'
       - name: Produce sae
         run: |
-          npm install --omit=dev --no-package-lock --no-audit --no-fund
+          npm install -g npm@10.3.0
+          npm install --omit=dev --no-package-lock --no-audit --no-fund --no-progress
           ${{ matrix.build }}
       - uses: actions/upload-artifact@v4
         with:
