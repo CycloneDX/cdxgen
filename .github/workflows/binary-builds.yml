@@ -28,7 +28,7 @@ jobs:
               ./cdxgen --version
               sha256sum cdxgen > cdxgen.sha256
               rm -rf node_modules
-              npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund
+              npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund --no-progress
               npx --yes @appthreat/caxa --input . --output "cdxgen-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen-slim
               ./cdxgen-slim --version
@@ -50,7 +50,7 @@ jobs:
               ./cdxgen-arm64 --version
               sha256sum cdxgen-arm64 > cdxgen-arm64.sha256
               rm -rf node_modules
-              npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund
+              npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund --no-progress
               npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen-arm64-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen-arm64-slim
               ./cdxgen-arm64-slim --version
