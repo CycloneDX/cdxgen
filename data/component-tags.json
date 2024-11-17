@@ -119,8 +119,7 @@
       "projections",
       "performance",
       "plugins",
-      "non-block",
-      "microsoft"
+      "non-block"
     ]
   },
   "properties": {
@@ -237,11 +236,15 @@
         ]
       },
       {
-        "security": ["(boringssl|openssl|libressl|libssl|gnutls|jose|keyutils)"]
+        "security": [
+          "(boringssl|openssl|libressl|libssl|gnutls|jose|keyutils|Azure\\.Security|System\\.Security)"
+        ]
       },
       { "native": ["(ffi|native)"] },
       { "parse": ["(parser)"] },
-      { "transform": ["(transformer)"] }
+      { "transform": ["(transformer)"] },
+      { "telemetry": ["(OpenTelemetry)"] },
+      { "logging": ["(Microsoft\\.Extensions\\.Logging|Log4net)"] }
     ],
     "obom": [
       {
