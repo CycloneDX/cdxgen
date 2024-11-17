@@ -156,8 +156,8 @@ Options:
       --standard               The list of standards which may consist of regulations, industry or organizational-specif
                                ic standards, maturity models, best practices, or any other requirements which can be eva
                                luated against or attested to.
-  [array] [choices: "asvs-4.0.3", "bsimm-v13", "masvs-2.0.0", "nist_ssdf-1.1", "pcissc-secure-slc-1.1", "scvs-1.0.0", "s
-                                                                                                     saf-DRAFT-2023-11"]
+  [array] [choices: "asvs-5.0", "asvs-4.0.3", "bsimm-v13", "masvs-2.0.0", "nist_ssdf-1.1", "pcissc-secure-slc-1.1", "scv
+                                                                                         s-1.0.0", "ssaf-DRAFT-2023-11"]
       --min-confidence         Minimum confidence needed for the identity of a component from 0 - 1, where 1 is 100% con
                                fidence.                                                            [number] [default: 0]
       --technique              Analysis technique to use
