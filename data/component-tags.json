@@ -119,8 +119,7 @@
       "projections",
       "performance",
       "plugins",
-      "non-block",
-      "microsoft"
+      "non-block"
     ]
   },
   "properties": {
@@ -231,13 +230,21 @@
   },
   "name": {
     "sbom": [
-      { "test": ["(junit|xmlunit|testng|chai|mocha|jest|test4j)"] },
       {
-        "security": ["(boringssl|openssl|libressl|libssl|gnutls|jose|keyutils)"]
+        "test": [
+          "(junit|xmlunit|testng|chai|mocha|jest|test4j|xunit|coverlet|Test\\.Sdk)"
+        ]
+      },
+      {
+        "security": [
+          "(boringssl|openssl|libressl|libssl|gnutls|jose|keyutils|Azure\\.Security|System\\.Security)"
+        ]
       },
       { "native": ["(ffi|native)"] },
       { "parse": ["(parser)"] },
-      { "transform": ["(transformer)"] }
+      { "transform": ["(transformer)"] },
+      { "telemetry": ["(OpenTelemetry)"] },
+      { "logging": ["(Microsoft\\.Extensions\\.Logging|Log4net)"] }
     ],
     "obom": [
       {

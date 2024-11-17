@@ -1,3 +1,4 @@
+export function shouldFetchLicense(): boolean;
 export function getJavaCommand(): string;
 export function getPythonCommand(): string;
 /**
