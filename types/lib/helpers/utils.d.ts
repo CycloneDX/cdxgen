@@ -315,8 +315,11 @@ export function guessLicenseId(content: string): any;
  *
  * @param {Array} pkgList Package list
  * @param {Object} jarNSMapping Jar Namespace mapping object
+ * @param {Boolean} force Force fetching of license
+ *
+ * @returns {Array} Updated package list
  */
-export function getMvnMetadata(pkgList: any[], jarNSMapping?: any): Promise<any[]>;
+export function getMvnMetadata(pkgList: any[], jarNSMapping?: any, force?: boolean): any[];
 /**
  * Method to compose URL of pom.xml
  *
