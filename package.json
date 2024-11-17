@@ -99,7 +99,7 @@
     "yargs": "^17.7.2"
   },
   "optionalDependencies": {
-    "@appthreat/atom": "2.0.23",
+    "@appthreat/atom": "2.0.24",
     "@appthreat/cdx-proto": "1.0.1",
     "@cyclonedx/cdxgen-plugins-bin": "1.6.9",
     "@cyclonedx/cdxgen-plugins-bin-arm": "1.6.9",
