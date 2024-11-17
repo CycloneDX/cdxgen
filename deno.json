@@ -48,7 +48,7 @@
     "gen-types": "npx -p typescript tsc"
   },
   "imports": {
-    "@appthreat/atom": "npm:@appthreat/atom@2.0.22",
+    "@appthreat/atom": "npm:@appthreat/atom@2.0.24",
     "@appthreat/cdx-proto": "npm:@appthreat/cdx-proto@1.0.1",
     "@babel/parser": "npm:@babel/parser@^7.26.2",
     "@babel/traverse": "npm:@babel/traverse@^7.25.7",
