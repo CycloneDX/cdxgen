@@ -231,7 +231,11 @@
   },
   "name": {
     "sbom": [
-      { "test": ["(junit|xmlunit|testng|chai|mocha|jest|test4j)"] },
+      {
+        "test": [
+          "(junit|xmlunit|testng|chai|mocha|jest|test4j|xunit|coverlet|Test\\.Sdk)"
+        ]
+      },
       {
         "security": ["(boringssl|openssl|libressl|libssl|gnutls|jose|keyutils)"]
       },
