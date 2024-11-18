@@ -5,6 +5,9 @@ on:
   pull_request:
     branches:
       - master
+  push:
+    branches:
+      - master
 
 
 concurrency:
@@ -14,74 +17,70 @@ concurrency:
 
 jobs:
 
-  generate:
-    runs-on: ubuntu-latest
+  test_non_dotnet:
+    runs-on: ["snapshot-test"]
     steps:
 
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v4.0.1
-        with:
-          node-version: '23.x'
+      - name: Install uv versions
+        env:
+          UV_PYTHON_INSTALL_DIR: $GITHUB_WORKSPACE/pythons
+        run: |
+          uv python install 3.9.20 3.10.11 3.11.4 3.12.1
+          uv python list
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.12
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
 
-      - uses: pnpm/action-setup@v4
-
-      -  name: cdxgen, sdkman, custom-json-diff installs
+      -  name: cdxgen, custom-json-diff installs
          shell: bash
          env:
            SHELL: bash
          run: |
            cdxgen_tarball=$(pnpm pack | tail -1)
            npm install -g "$cdxgen_tarball"
-           python -m pip install --upgrade pip
-           python -m pip install pytest
-           git clone https://github.com/appthreat/cdxgen-samples.git /home/runner/work/original_snapshots
-           python -m pip install -r test/diff/requirements.txt
-           curl -s "https://get.sdkman.io" | bash
-           source "/home/runner/.sdkman/bin/sdkman-init.sh"
+           git clone https://github.com/appthreat/cdxgen-samples.git $GITHUB_WORKSPACE/original_snapshots
+           python3.12 -m venv .venv
+           source .venv/bin/activate && pip install -r test/diff/requirements.txt
+           cd $GITHUB_WORKSPACE/original_snapshots
+           git checkout feature/expand-snapshots
 
-      - name: sdkman install cache
-        uses: actions/cache@v4
-        id: sdkman-cache
-        with:
-          path: /home/runner/.sdkman/candidates
-          key: "${{ runner.os }}-sdkman-${{ hashFiles('test/diff/repos.csv') }}"
-
-      - name: Generate and run scripts
+      - name: Generate scripts
         env:
-          SDKMAN_DIR: /home/runner/.sdkman
           CDXGEN_DEBUG_MODE: debug
-          CDXGEN_LOG: /home/runner/work/new_snapshots/generate.log
-          PREFER_MAVEN_DEPS_TREE: false
+          CDXGEN_LOG: $GITHUB_WORKSPACE/new_snapshots/generate.log
         run: |
-          mkdir /home/runner/work/new_snapshots
-          python test/diff/generate.py
-          bash /home/runner/work/new_snapshots/sdkman_installs.sh
-          bash /home/runner/work/new_snapshots/cdxgen_commands.sh
+          mkdir $GITHUB_WORKSPACE/new_snapshots
+          source .venv/bin/activate
+          python test/diff/generate.py -t python,java8,java17,javascript
 
       - name: Upload shell scripts generated as artifact
         uses: actions/upload-artifact@v4
         with:
           name: scripts
-          path: /home/runner/work/new_snapshots/*.sh
+          path: $GITHUB_WORKSPACE/new_snapshots/*.sh
+
+      - name: Run script
+        env:
+          CDXGEN_DEBUG_MODE: debug
+          CDXGEN_LOG: $GITHUB_WORKSPACE/new_snapshots/generate.log
+        run: |
+          cd $GITHUB_WORKSPACE/new_snapshots
+          bash cdxgen_commands.sh
 
       - name: Upload cdxgen boms
         uses: actions/upload-artifact@v4
         with:
           name: cdxgen_boms
           path: |
-            /home/runner/work/new_snapshots
+            $GITHUB_WORKSPACE/new_snapshots
 
       - name: Test BOMs
         run: |
-          python test/diff/diff_tests.py --migrate-legacy
-          if test -f /home/runner/work/new_snapshots/diffs.json; then
+          source .venv/bin/activate
+          python test/diff/diff_tests.py -t python,java8,java17,javascript
+          if test -f $GITHUB_WORKSPACE/new_snapshots/diffs.json; then
             echo "status=FAILED" >> "$GITHUB_ENV"
           fi
 
@@ -90,9 +89,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: diffs
-          path: |
-            /home/runner/work/new_snapshots/diffs.json
-            /home/runner/work/new_snapshots/*.html
+          path: | 
+            $GITHUB_WORKSPACE/new_snapshots/diffs.json
+            $GITHUB_WORKSPACE/new_snapshots/*.html
 
       - name: Exit with error
         if: ${{ env.status == 'FAILED' }}
