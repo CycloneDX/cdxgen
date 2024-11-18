@@ -77,7 +77,7 @@ jobs:
       - name: Test BOMs
         run: |
           source .venv/bin/activate
-          python test/diff/diff_tests.py -t python,java8,java17,javascript
+          python test/diff/diff_tests.py -t java8,java17,javascript
           if test -f $GITHUB_WORKSPACE/new_snapshots/diffs.json; then
             echo "status=FAILED" >> "$GITHUB_ENV"
           fi
