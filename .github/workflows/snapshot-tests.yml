@@ -23,13 +23,6 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - name: Install uv versions
-        env:
-          UV_PYTHON_INSTALL_DIR: $GITHUB_WORKSPACE/pythons
-        run: |
-          uv python install 3.9.20 3.10.11 3.11.4 3.12.1
-          uv python list
-
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
 
@@ -40,45 +33,45 @@ jobs:
          run: |
            cdxgen_tarball=$(pnpm pack | tail -1)
            npm install -g "$cdxgen_tarball"
-           git clone https://github.com/appthreat/cdxgen-samples.git $GITHUB_WORKSPACE/original_snapshots
+           git clone https://github.com/appthreat/cdxgen-samples.git original_snapshots
            python3.12 -m venv .venv
            source .venv/bin/activate && pip install -r test/diff/requirements.txt
-           cd $GITHUB_WORKSPACE/original_snapshots
+           cd original_snapshots
            git checkout feature/expand-snapshots
 
       - name: Generate scripts
         env:
           CDXGEN_DEBUG_MODE: debug
-          CDXGEN_LOG: $GITHUB_WORKSPACE/new_snapshots/generate.log
+          CDXGEN_LOG: new_snapshots/generate.log
         run: |
           source .venv/bin/activate
-          python test/diff/generate.py -t python,java8,java17,javascript
+          python test/diff/generate.py -t java8,java17,javascript
 
       - name: Upload shell scripts generated as artifact
         uses: actions/upload-artifact@v4
         with:
           name: scripts
-          path: $GITHUB_WORKSPACE/new_snapshots/*.sh
+          path: new_snapshots/*.sh
 
       - name: Run scripts
         env:
           CDXGEN_DEBUG_MODE: debug
-          CDXGEN_LOG: $GITHUB_WORKSPACE/new_snapshots/generate.log
+          CDXGEN_LOG: new_snapshots/generate.log
         run: |
-          bash $GITHUB_WORKSPACE/new_snapshots/cdxgen_commands.sh
+          bash new_snapshots/cdxgen_commands.sh
 
       - name: Upload cdxgen boms
         uses: actions/upload-artifact@v4
         with:
           name: cdxgen_boms
           path: |
-            $GITHUB_WORKSPACE/new_snapshots
+            new_snapshots
 
       - name: Test BOMs
         run: |
           source .venv/bin/activate
           python test/diff/diff_tests.py -t java8,java17,javascript
-          if test -f $GITHUB_WORKSPACE/new_snapshots/diffs.json; then
+          if test -f new_snapshots/diffs.json; then
             echo "status=FAILED" >> "$GITHUB_ENV"
           fi
 
@@ -88,8 +81,8 @@ jobs:
         with:
           name: diffs
           path: | 
-            $GITHUB_WORKSPACE/new_snapshots/diffs.json
-            $GITHUB_WORKSPACE/new_snapshots/*.html
+            new_snapshots/diffs.json
+            new_snapshots/*.html
 
       - name: Exit with error
         if: ${{ env.status == 'FAILED' }}
