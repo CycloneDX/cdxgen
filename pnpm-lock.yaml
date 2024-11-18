@@ -98,8 +98,8 @@ importers:
         version: 17.7.2
     optionalDependencies:
       '@appthreat/atom':
-        specifier: 2.0.24
-        version: 2.0.24
+        specifier: 2.0.25
+        version: 2.0.25
       '@appthreat/cdx-proto':
         specifier: 1.0.1
         version: 1.0.1
@@ -162,8 +162,8 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@appthreat/atom@2.0.24':
-    resolution: {integrity: sha512-TuogC36SuQ4gkSQ3FBcs0zOqUD36uLdKoC5GiykQoy/C6hsVZH6l38UM0x2dQXsoBRjlEkmFKvT/L3o6cc87og==}
+  '@appthreat/atom@2.0.25':
+    resolution: {integrity: sha512-JrqAtI7iDOixEDr4hqMQRjWujD6y8HQqI5LgsCX3QNyDuS2aSscYJUoHRRQKWmhjjaS77mFhH+aV8KfvAXVU5Q==}
     engines: {node: '>=16.0.0'}
     hasBin: true
 
@@ -964,8 +964,8 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     hasBin: true
 
-  cross-spawn@7.0.5:
-    resolution: {integrity: sha512-ZVJrKKYunU38/76t0RMOulHOnUcbU9GbpWKAOZ0mhjr7CX6FVrH+4FrAapSOekrgFQ3f/8gwMEuIft0aKq6Hug==}
+  cross-spawn@7.0.6:
+    resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
 
   css-select@5.1.0:
@@ -2645,7 +2645,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@appthreat/atom@2.0.24':
+  '@appthreat/atom@2.0.25':
     dependencies:
       '@babel/parser': 7.26.2
       typescript: 5.6.3
@@ -3735,7 +3735,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  cross-spawn@7.0.5:
+  cross-spawn@7.0.6:
     dependencies:
       path-key: 3.1.1
       shebang-command: 2.0.0
@@ -3896,7 +3896,7 @@ snapshots:
 
   execa@5.1.1:
     dependencies:
-      cross-spawn: 7.0.5
+      cross-spawn: 7.0.6
       get-stream: 6.0.1
       human-signals: 2.1.0
       is-stream: 2.0.1
@@ -3964,7 +3964,7 @@ snapshots:
 
   foreground-child@3.3.0:
     dependencies:
-      cross-spawn: 7.0.5
+      cross-spawn: 7.0.6
       signal-exit: 4.1.0
 
   form-data-encoder@4.0.2: {}
