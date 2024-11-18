@@ -51,7 +51,6 @@ jobs:
           CDXGEN_DEBUG_MODE: debug
           CDXGEN_LOG: $GITHUB_WORKSPACE/new_snapshots/generate.log
         run: |
-          mkdir $GITHUB_WORKSPACE/new_snapshots
           source .venv/bin/activate
           python test/diff/generate.py -t python,java8,java17,javascript
 
@@ -61,13 +60,12 @@ jobs:
           name: scripts
           path: $GITHUB_WORKSPACE/new_snapshots/*.sh
 
-      - name: Run script
+      - name: Run scripts
         env:
           CDXGEN_DEBUG_MODE: debug
           CDXGEN_LOG: $GITHUB_WORKSPACE/new_snapshots/generate.log
         run: |
-          cd $GITHUB_WORKSPACE/new_snapshots
-          bash cdxgen_commands.sh
+          bash $GITHUB_WORKSPACE/new_snapshots/cdxgen_commands.sh
 
       - name: Upload cdxgen boms
         uses: actions/upload-artifact@v4
