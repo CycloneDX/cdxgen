@@ -6,6 +6,7 @@
     "Microsoft.AspNetCore",
     "Microsoft.NETCore",
     "springframework",
+    "pkg:maven/us.springett/alpine",
     "pkg:pypi/flask",
     "pkg:pypi/django",
     "beego",
