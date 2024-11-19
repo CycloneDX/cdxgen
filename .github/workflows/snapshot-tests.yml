@@ -44,7 +44,7 @@ jobs:
           CDXGEN_DEBUG_MODE: debug
         run: |
           source .venv/bin/activate
-          python test/diff/generate.py -t java8,java17,javascript
+          python test/diff/generate.py -t java8,java17,javascript -s jazzer
 
       - name: Upload shell scripts generated as artifact
         uses: actions/upload-artifact@v4
@@ -68,7 +68,7 @@ jobs:
       - name: Test BOMs
         run: |
           source .venv/bin/activate
-          python test/diff/diff_tests.py -t java8,java17,javascript
+          python test/diff/diff_tests.py -t java8,java17,javascript -s jazzer
           if test -f new_snapshots/diffs.json; then
             echo "status=FAILED" >> "$GITHUB_ENV"
           fi
