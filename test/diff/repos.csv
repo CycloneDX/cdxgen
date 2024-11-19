@@ -8,7 +8,7 @@ tinydb,,https://github.com/msiemens/tinydb.git,python,"3.9,3.10,3.11,3.12",pypro
 numba,with native c lib,https://github.com/numba/numba.git,python,"3.9,3.10,3.11,3.12","setup.py,requirements.txt",pip,,,python setup.py install,53e976f1b0c6683933fa0a93738362914bffc1cd
 funcy,,https://github.com/Suor/funcy.git,python,"3.9,3.10",setup.py,pip,,,python setup.py install,859056d039adea75c1c3550286437ce0b612fe92
 github_readme_stats,,https://github.com/anuraghazra/github-readme-stats.git,javascript,>=18,package-lock.json,npm,,,npm install .,9a0d9ae2c17e007cbb8e9f32654941e1f0a8268e
-prettier,,https://github.com/prettier/prettier.git,javascript,>=18,"package.json,yarn.lock",yarn,4.5.0,,yarn install,9cf9079f75a30f1088529e0cae6296aeb71205ba
+prettier,,https://github.com/prettier/prettier.git,javascript,>=18,"package.json,yarn.lock",yarn,4.5.0,,corepack enable;yarn install,9cf9079f75a30f1088529e0cae6296aeb71205ba
 astro,,https://github.com/withastro/astro.git,javascript,>=18.17.1,"package.json,pnpm-lock.yaml",pnpm,9.12.1,,pnpm install,9d6bcdb88fcb9df0c5c70e2b591bcf962ce55f63
 plantuml,,https://github.com/plantuml/plantuml.git,java8,8,,gradle,,,gradle clean build -x javaDoc -PjavacRelease=8,8eb791f39478778788fd47a9195dc1b2feb3eade
 plantuml_17,,https://github.com/plantuml/plantuml.git,java17,17,,gradle,,,gradle clean build -x javaDoc -PjavacRelease=17,8eb791f39478778788fd47a9195dc1b2feb3eade
