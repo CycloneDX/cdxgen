@@ -12,5 +12,5 @@ prettier,,https://github.com/prettier/prettier.git,javascript,>=18,"package.json
 astro,,https://github.com/withastro/astro.git,javascript,>=18.17.1,"package.json,pnpm-lock.yaml",pnpm,9.12.1,,pnpm install,9d6bcdb88fcb9df0c5c70e2b591bcf962ce55f63
 plantuml,,https://github.com/plantuml/plantuml.git,java8,8,,gradle,,,gradle clean build -x javaDoc -PjavacRelease=8,8eb791f39478778788fd47a9195dc1b2feb3eade
 plantuml_17,,https://github.com/plantuml/plantuml.git,java17,17,,gradle,,,gradle clean build -x javaDoc -PjavacRelease=17,8eb791f39478778788fd47a9195dc1b2feb3eade
-jazzer,,https://github.com/CodeIntelligenceTesting/jazzer.git,java8,8,,bazelisk,7.3.0,,bazel build,3947707d7db7e5cae0c8cfaeb10bdfeb06fc32bb
+jazzer,,https://github.com/CodeIntelligenceTesting/jazzer.git,java8,8,,bazelisk,7.3.0,,bazelisk build,3947707d7db7e5cae0c8cfaeb10bdfeb06fc32bb
 stripe_dotnet,,https://github.com/stripe/stripe-dotnet.git,dotnet,,,,,,"dotnet build src -c Release",e1641fed1e90d40b10ff9250e2a75baec88f0a8c
