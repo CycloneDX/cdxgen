@@ -267,7 +267,7 @@ def generate(args):
     #     run_pre_builds(repo_data, args.output_dir, args.debug_cmds)
 
     commands = ""
-    cdxgen_log = os.getenv("CDXGEN_LOG")
+    cdxgen_log = args.output_dir.joinpath("cdxgen.log")
     for repo in processed_repos:
         # commands += f"\necho {repo['project']} started at $(time) >> $CDXGEN_LOG\n"
         commands += exec_on_repo(args.skip_clone, args.output_dir, args.skip_build, repo, cdxgen_log)
