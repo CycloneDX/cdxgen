@@ -69,6 +69,11 @@ def build_args():
         default=False,
         help='Skip building the samples and just run cdxgen. Should be used with --skip-clone'
     )
+    parser.add_argument(
+        '--skip-projects',
+        '-s',
+        help='Skip these projects',
+    )
     return parser.parse_args()
 
 
@@ -227,8 +232,10 @@ def expand_multi_versions(repo_data):
     return create_python_venvs(new_data)
 
 
-def filter_repos(repo_data, projects, project_types):
-    if projects:
+def filter_repos(repo_data, projects, project_types, skipped_projects):
+    if skipped_projects:
+        repo_data = [repo for repo in repo_data if repo["project"] not in skipped_projects]
+    elif projects:
         if project_types:
             return [repo for repo in repo_data if repo["project"] in projects or repo["language"] in project_types]
         return [repo for repo in repo_data if repo["project"] in projects]
@@ -257,7 +264,7 @@ def generate(args):
         else:
             project_types = {args.project_types}
 
-    repo_data = read_csv(args.repo_csv, args.projects, project_types)
+    repo_data = read_csv(args.repo_csv, args.projects, project_types, args.skip_projects)
     processed_repos = add_repo_dirs(args.clone_dir, expand_multi_versions(repo_data))
 
     if not args.debug_cmds:
@@ -267,7 +274,7 @@ def generate(args):
     #     run_pre_builds(repo_data, args.output_dir, args.debug_cmds)
 
     commands = ""
-    cdxgen_log = args.output_dir.joinpath("cdxgen.log")
+    cdxgen_log = args.output_dir.joinpath("generate.log")
     for repo in processed_repos:
         # commands += f"\necho {repo['project']} started at $(time) >> $CDXGEN_LOG\n"
         commands += exec_on_repo(args.skip_clone, args.output_dir, args.skip_build, repo, cdxgen_log)
@@ -367,7 +374,7 @@ def process_repo_data(repo_data, clone_dir):
     return new_data
 
 
-def read_csv(csv_file, projects, project_types):
+def read_csv(csv_file, projects, project_types, skipped_projects):
     """
     Reads a CSV file and filters the data based on a list of languages.
 
@@ -381,7 +388,7 @@ def read_csv(csv_file, projects, project_types):
     with open(csv_file, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         repo_data = list(reader)
-    return filter_repos(repo_data, projects, project_types)
+    return filter_repos(repo_data, projects, project_types, skipped_projects)
 
 
 def run_cdxgen(repo, output_dir):

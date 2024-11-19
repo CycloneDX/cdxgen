@@ -40,6 +40,11 @@ def build_args():
         help='Filter to these project types.',
         dest='project_types',
     )
+    parser.add_argument(
+        '--skip-projects',
+        '-s',
+        help='Skip these projects'
+    )
     return parser.parse_args()
 
 
@@ -63,8 +68,8 @@ def compare_snapshot(dir1: str, dir2: str, options: Options, repo: Dict, migrate
     return status, f"{repo['project']} succeeded.", {}
 
 
-def perform_snapshot_tests(dir1: str, dir2: str, projects: List, project_types: Set, migrate_legacy: bool):
-    repo_data = read_csv(projects, project_types)
+def perform_snapshot_tests(dir1: str, dir2: str, projects: List, project_types: Set, migrate_legacy: bool, skipped_projects):
+    repo_data = read_csv(projects, project_types, skipped_projects)
     options = Options(
         allow_new_versions=True,
         allow_new_data=True,
@@ -106,12 +111,12 @@ def migrate_to_1_6(bom_file):
     return bom_data
 
 
-def read_csv(projects, project_types):
+def read_csv(projects, project_types, skipped_projects):
     csv_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "repos.csv")
     with open(csv_file, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         repo_data = list(reader)
-    return filter_repos(repo_data, projects, project_types)
+    return filter_repos(repo_data, projects, project_types, skipped_projects)
 
 
 if __name__ == '__main__':
@@ -123,4 +128,4 @@ if __name__ == '__main__':
             project_types = {args.project_types}
     else:
         project_types = set()
-    perform_snapshot_tests(args.directories[0], args.directories[1], args.projects, project_types, args.migrate_legacy)
+    perform_snapshot_tests(args.directories[0], args.directories[1], args.projects, project_types, args.migrate_legacy, args.skip_projects)
