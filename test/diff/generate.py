@@ -74,6 +74,11 @@ def build_args():
         '-s',
         help='Skip these projects',
     )
+    parser.add_argument(
+        '--sdkman-sh',
+        help='Location to activate sdkman.',
+        default='~/.sdkman/bin/sdkman-init.sh'
+    )
     return parser.parse_args()
 
 
@@ -165,7 +170,7 @@ def create_python_venvs(repo_data):
     return repo_data
 
 
-def exec_on_repo(clone, output_dir, skip_build, repo, cdxgen_log):
+def exec_on_repo(clone, output_dir, skip_build, repo):
     """
     Determines a sequence of commands on a repository.
 
@@ -270,19 +275,19 @@ def generate(args):
     if not args.debug_cmds:
         check_dirs(args.skip_clone, args.clone_dir, args.output_dir)
 
-    # if not args.skip_build:
-    #     run_pre_builds(repo_data, args.output_dir, args.debug_cmds)
+    if not args.skip_build:
+        run_pre_builds(repo_data, args.output_dir, args.debug_cmds)
 
     commands = ""
     cdxgen_log = args.output_dir.joinpath("generate.log")
     for repo in processed_repos:
-        commands += f"\necho {repo['project']} started: $(date) >> /home/snapshot1/actions-runner/_work/cdxgen/cdxgen/new_snapshots/generate.log\n"
-        commands += exec_on_repo(args.skip_clone, args.output_dir, args.skip_build, repo, cdxgen_log)
-        commands += f"\necho {repo['project']} finished: $(date) >> /home/snapshot1/actions-runner/_work/cdxgen/cdxgen/new_snapshots/generate.log\n\n"
+        commands += f"\necho {repo['project']} started: $(date) >> {cdxgen_log}\n"
+        commands += exec_on_repo(args.skip_clone, args.output_dir, args.skip_build, repo)
+        commands += f"\necho {repo['project']} finished: $(date) >> {cdxgen_log}\n\n"
 
     commands = "".join(commands)
     sh_path = Path.joinpath(args.output_dir, 'cdxgen_commands.sh')
-    write_script_file(sh_path, commands, args.debug_cmds)
+    write_script_file(sh_path, commands, args.debug_cmds, args.sdkman_sh)
 
 
 def list2cmdline(seq):
@@ -442,7 +447,7 @@ def run_pre_builds(repo_data, output_dir, debug_cmds):
     write_script_file(sh_path, commands, debug_cmds)
 
 
-def write_script_file(file_path, commands, debug_cmds):
+def write_script_file(file_path, commands, debug_cmds, sdkman_path):
     """
     Write a script to execute a series of commands in a file.
 
@@ -454,9 +459,7 @@ def write_script_file(file_path, commands, debug_cmds):
     Returns:
         None
     """
-    sdkman_path = Path.joinpath(Path("/home/snapshot1/.sdkman"), "bin", "sdkman-init.sh")
     cmds = f'#!/usr/bin/bash\nsource {sdkman_path}\n\n{commands}'
-    # cmds = f'#!/usr/bin/bash\n\n{commands}'
     file_write(str(file_path), cmds, success_msg=f"Wrote script to {file_path}.")
     if debug_cmds:
         print(commands)
