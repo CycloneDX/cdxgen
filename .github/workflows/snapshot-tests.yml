@@ -42,7 +42,7 @@ jobs:
       - name: Generate scripts
         run: |
           source .venv/bin/activate
-          python test/diff/generate.py -t java8,java17,javascript -s jazzer
+          python test/diff/generate.py
 
       - name: Upload shell scripts generated as artifact
         uses: actions/upload-artifact@v4
@@ -52,7 +52,6 @@ jobs:
 
       - name: Run scripts
         env:
-          CDXGEN_LOG: $GITHUB_WORKSPACE/new_snapshots/generate.log
           PREFER_MAVEN_DEPS_TREE: false
         run: |
           bash new_snapshots/cdxgen_commands.sh
@@ -67,7 +66,7 @@ jobs:
       - name: Test BOMs
         run: |
           source .venv/bin/activate
-          python test/diff/diff_tests.py -t java8,java17,javascript -s jazzer
+          python test/diff/diff_tests.py
           if test -f new_snapshots/diffs.json; then
             echo "status=FAILED" >> "$GITHUB_ENV"
           fi
