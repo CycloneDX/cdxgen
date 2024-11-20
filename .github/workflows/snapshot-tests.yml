@@ -66,7 +66,7 @@ jobs:
       - name: Test BOMs
         run: |
           source .venv/bin/activate
-          python test/diff/diff_tests.py
+          python test/diff/diff_tests.py --migrate-legacy
           if test -f new_snapshots/diffs.json; then
             echo "status=FAILED" >> "$GITHUB_ENV"
           fi
