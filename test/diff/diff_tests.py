@@ -55,6 +55,9 @@ def compare_snapshot(dir1: str, dir2: str, options: Options, repo: Dict, migrate
         bom_data = migrate_to_1_6(bom_1)
         bom_1 = bom_1.replace("bom.json", "bom.migrated.json")
         json_dump(bom_1, bom_data)
+        bom_data = migrate_to_1_6(bom_1)
+        bom_2 = bom_2.replace("bom.json", "bom.migrated.json")
+        json_dump(bom_2, bom_data)
     options.file_1 = bom_1
     options.file_2 = bom_2
     options.output = f'{dir2}/{repo["project"]}-diff.json'
