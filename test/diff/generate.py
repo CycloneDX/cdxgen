@@ -203,7 +203,7 @@ def exec_on_repo(clone, output_dir, skip_build, repo, cdxgen_log):
         #         cdxgen_cmd = f"source .venv/bin/activate && {cdxgen_cmd}"
         #     else:
         #         cdxgen_cmd = f"poetry env use {repo['language_range']} && {cdxgen_cmd}"
-    commands.append(f"$(time TIMEFORMAT='{repo['project']}: %E' {run_cdxgen(repo, output_dir)}) >> {cdxgen_log}\n\n")
+    commands.append(run_cdxgen(repo, output_dir))
     commands = "\n".join(commands)
     return commands
 
@@ -276,9 +276,9 @@ def generate(args):
     commands = ""
     cdxgen_log = args.output_dir.joinpath("generate.log")
     for repo in processed_repos:
-        # commands += f"\necho {repo['project']} started at $(time) >> $CDXGEN_LOG\n"
+        commands += f"\necho {repo['project']} started: $(date) >> /home/snapshot1/actions-runner/_work/cdxgen/cdxgen/new_snapshots/generate.log\n"
         commands += exec_on_repo(args.skip_clone, args.output_dir, args.skip_build, repo, cdxgen_log)
-        # commands += f"\necho {repo['project']} finished at $(time) >> $CDXGEN_LOG\n\n"
+        commands += f"\necho {repo['project']} finished: $(date) >> /home/snapshot1/actions-runner/_work/cdxgen/cdxgen/new_snapshots/generate.log\n\n"
 
     commands = "".join(commands)
     sh_path = Path.joinpath(args.output_dir, 'cdxgen_commands.sh')
