@@ -42,6 +42,7 @@ jobs:
       - name: Generate scripts
         env:
           CDXGEN_DEBUG_MODE: debug
+          SDKMAN_DIR: "/home/snapshot1/.sdkman"
         run: |
           source .venv/bin/activate
           python test/diff/generate.py -t java8,java17,javascript -s jazzer
@@ -55,6 +56,7 @@ jobs:
       - name: Run scripts
         env:
           CDXGEN_DEBUG_MODE: debug
+          SDKMAN_DIR: "/home/snapshot1/.sdkman"
         run: |
           bash new_snapshots/cdxgen_commands.sh
 
