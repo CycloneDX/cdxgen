@@ -276,7 +276,7 @@ def generate(args):
         check_dirs(args.skip_clone, args.clone_dir, args.output_dir)
 
     if not args.skip_build:
-        run_pre_builds(repo_data, args.output_dir, args.debug_cmds)
+        run_pre_builds(repo_data, args.output_dir, args.debug_cmds, args.sdkman_sh)
 
     commands = ""
     cdxgen_log = args.output_dir.joinpath("generate.log")
@@ -419,7 +419,7 @@ def run_cdxgen(repo, output_dir):
     return list2cmdline(cdxgen_cmd)
 
 
-def run_pre_builds(repo_data, output_dir, debug_cmds):
+def run_pre_builds(repo_data, output_dir, debug_cmds, sdkman_sh):
     """
     Generates a list of commands to be executed before the build process.
 
@@ -444,7 +444,7 @@ def run_pre_builds(repo_data, output_dir, debug_cmds):
     commands.append('sdk install java 23-tem')
     commands = '\n'.join(commands)
     sh_path = Path.joinpath(output_dir, 'sdkman_installs.sh')
-    write_script_file(sh_path, commands, debug_cmds)
+    write_script_file(sh_path, commands, debug_cmds, sdkman_sh)
 
 
 def write_script_file(file_path, commands, debug_cmds, sdkman_path):
