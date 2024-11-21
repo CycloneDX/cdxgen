@@ -1,5 +1,8 @@
 blank_issues_enabled: true
 contact_links:
+  - name: cdxgen GPT
+    url: https://chatgpt.com/g/g-673bfeb4037481919be8a2cd1bf868d2-cyclonedx-generator-cdxgen
+    about: Use cdxgen GPT specially trained with cdxgen documentation and tutorials.
   - name: Discussions
     url: https://github.com/CycloneDX/cdxgen/discussions
     about: Please ask and answer questions here.
