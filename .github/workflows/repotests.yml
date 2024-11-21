@@ -15,7 +15,7 @@ jobs:
       fail-fast: true
       matrix:
         node-version: ['23.x']
-        os: ['ubuntu-latest', 'windows-latest', 'self-hosted']
+        os: ['ubuntu-latest', 'windows-latest']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
