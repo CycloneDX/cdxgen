@@ -232,7 +232,8 @@
     "sbom": [
       {
         "test": [
-          "(junit|xmlunit|testng|chai|mocha|jest|test4j|xunit|coverlet|Test\\.Sdk)"
+          "(junit|xmlunit|testng|mocha|jest|test4j|xunit|coverlet|Test\\.Sdk)",
+          "^(chai)$"
         ]
       },
       {
@@ -244,7 +245,9 @@
       { "parse": ["(parser)"] },
       { "transform": ["(transformer)"] },
       { "telemetry": ["(OpenTelemetry)"] },
-      { "logging": ["(Microsoft\\.Extensions\\.Logging|Log4net)"] }
+      { "logging": ["(Microsoft\\.Extensions\\.Logging|Log4net)"] },
+      { "ml": ["^(llama|langchain|openai)", "(generativeai)"] },
+      { "devel": ["^(types-|typing-|virtualenv|ruff|poetry)"] }
     ],
     "obom": [
       {
