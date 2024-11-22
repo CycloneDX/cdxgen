@@ -424,6 +424,8 @@ def run_cdxgen(repo, output_dir, uv_location):
         repo['repo_dir']
     ]
     return list2cmdline(cdxgen_cmd)
+    if repo["cdxgen_vars"]:
+        cmd = f"{repo['cdxgen_vars']} {cmd}"
 
 
 def run_pre_builds(repo_data, output_dir, debug_cmds, sdkman_sh):
