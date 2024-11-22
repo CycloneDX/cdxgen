@@ -278,7 +278,7 @@ def generate(args):
     processed_repos = add_repo_dirs(args.clone_dir, expand_multi_versions(repo_data))
 
     if not args.debug_cmds:
-        check_dirs(args.skip_clone, args.clone_dir, args.output_dir)
+        check_dirs(args.clone, args.clone_dir, args.output_dir)
 
     if args.prebuild:
         run_pre_builds(repo_data, args.output_dir, args.debug_cmds, args.sdkman_sh)
