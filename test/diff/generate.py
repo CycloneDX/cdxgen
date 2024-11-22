@@ -421,7 +421,7 @@ def run_cdxgen(repo, output_dir, uv_location):
         Path.joinpath(output_dir, f'{repo["project"]}-bom.json'),
         repo['repo_dir']
     ]
-    cmd = list2cmdline(cdxgen_cmd)
+    cmd = f"CDXGEN_DEBUG_MODE=debug {list2cmdline(cdxgen_cmd)}"
     if repo["cdxgen_vars"]:
         cmd = f"{repo['cdxgen_vars']} {cmd}"
     if repo["language"] == "python":
