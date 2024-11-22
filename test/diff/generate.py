@@ -275,7 +275,7 @@ def generate(args):
             project_types = {args.project_types}
 
     repo_data = read_csv(args.repo_csv, args.projects, project_types, args.skip_projects)
-    processed_repos = add_repo_dirs(args.clone_dir, expand_multi_versions(repo_data))
+    processed_repos = add_repo_dirs(args.clone_dir, repo_data)
 
     if not args.debug_cmds:
         check_dirs(args.clone, args.clone_dir, args.output_dir)
@@ -389,7 +389,7 @@ def read_csv(csv_file, projects, project_types, skipped_projects):
     Reads a CSV file and filters the data based on a list of languages.
 
     Parameters:
-        csv_file (pathlib.Path): The path to the CSV file.
+        csv_file (pathlib.Path| str): The path to the CSV file.
         projects (list): A list of projects names to filter on.
         project_types (set): A set of project types to filter on.
     Returns:
@@ -398,7 +398,7 @@ def read_csv(csv_file, projects, project_types, skipped_projects):
     with open(csv_file, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         repo_data = list(reader)
-    return filter_repos(repo_data, projects, project_types, skipped_projects)
+    return expand_multi_versions(filter_repos(repo_data, projects, project_types, skipped_projects))
 
 
 def run_cdxgen(repo, output_dir, uv_location):
