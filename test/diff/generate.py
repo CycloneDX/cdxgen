@@ -140,7 +140,7 @@ def checkout_commit(commit):
     Returns:
         str: The command to check out the commit.
     """
-    checkout_cmd = ['git', 'checkout', commit]
+    checkout_cmd = ['git', '-c', 'advice.detachedHead=false', 'checkout', commit]
     return list2cmdline(checkout_cmd)
 
 
