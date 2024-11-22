@@ -8,7 +8,7 @@ from custom_json_diff.lib.custom_diff import compare_dicts, perform_bom_diff, re
 from custom_json_diff.lib.custom_diff_classes import Options
 from custom_json_diff.lib.utils import json_dump,json_load
 
-from generate import filter_repos
+from generate import filter_repos, read_csv
 
 logging.disable(logging.INFO)
 
@@ -72,7 +72,8 @@ def compare_snapshot(dir1: str, dir2: str, options: Options, repo: Dict, migrate
 
 
 def perform_snapshot_tests(dir1: str, dir2: str, projects: List, project_types: Set, migrate_legacy: bool, skipped_projects):
-    repo_data = read_csv(projects, project_types, skipped_projects)
+    csv_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "repos.csv")
+    repo_data = read_csv(csv_file, projects, project_types, skipped_projects)
     options = Options(
         allow_new_versions=True,
         allow_new_data=True,
@@ -80,7 +81,6 @@ def perform_snapshot_tests(dir1: str, dir2: str, projects: List, project_types: 
         include=["properties", "evidence", "licenses"],
         exclude=["annotations"]
     )
-
     failed_diffs = {}
     for repo in repo_data:
         status, result, summary = compare_snapshot(dir1, dir2, options, repo, migrate_legacy)
@@ -112,14 +112,6 @@ def migrate_to_1_6(bom_file):
     bom_data["metadata"]["tools"]["components"] = metadata_components
     bom_data["specVersion"] = "1.6"
     return bom_data
-
-
-def read_csv(projects, project_types, skipped_projects):
-    csv_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "repos.csv")
-    with open(csv_file, 'r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        repo_data = list(reader)
-    return filter_repos(repo_data, projects, project_types, skipped_projects)
 
 
 if __name__ == '__main__':
