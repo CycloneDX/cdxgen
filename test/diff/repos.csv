@@ -1,7 +1,13 @@
-project,link,language,pre_build_cmd,build_cmd,commit
-"django-goat","https://github.com/red-and-black/DjangoGoat.git","python","","python -m venv venv; source venv/bin/activate && pip install -r requirements_app.txt","5e6aaa6d0497bf24abd179304e6ca51295a8091d"
-"java-sec-code","https://github.com/JoyChou93/java-sec-code.git","java8","","mvn -B clean compile -DskipTests=true","457d703e8f89bff657c6c51151ada71ebd09a1c6"
-"rasa","https://github.com/RasaHQ/rasa.git","python","pipx install poetry","","7807b19ad5fffab73ca1a04dc710f812115a9288"
-"restic","https://github.com/restic/restic.git","go","","go run build.go","3786536dc18ef27aedcfa8e4c6953b48353eee79"
-"syncthing","https://github.com/syncthing/syncthing.git","go","","go run build.go","ba6ac2f604eb1cd27764460b687537c5e40aaaf8"
-"tinydb","https://github.com/msiemens/tinydb.git","python","","python -m venv venv; source venv/bin/activate && pip install .","3dc6a952ef8700706909bf60a1b15cf21af47608"
+project,link,language,language_range,config_files,package_manager,pm_version,pre_build_cmd,build_cmd,commit
+django-goat,https://github.com/red-and-black/DjangoGoat.git,python,,,,,,python -m venv venv; source venv/bin/activate && pip install -r requirements_app.txt,5e6aaa6d0497bf24abd179304e6ca51295a8091d
+java-sec-code,https://github.com/JoyChou93/java-sec-code.git,java8,8,,,,sdk use java 8.0.432-tem,mvn -B clean compile -DskipTests=true,457d703e8f89bff657c6c51151ada71ebd09a1c6
+rasa,https://github.com/RasaHQ/rasa.git,python,,,,,pipx install poetry,,7807b19ad5fffab73ca1a04dc710f812115a9288
+restic,https://github.com/restic/restic.git,go,,,,,,go run build.go,3786536dc18ef27aedcfa8e4c6953b48353eee79
+syncthing,https://github.com/syncthing/syncthing.git,go,,,,,,go run build.go,ba6ac2f604eb1cd27764460b687537c5e40aaaf8
+github-readme-stats,https://github.com/anuraghazra/github-readme-stats.git,javascript,>=18,package-lock.json,npm,,,npm install .,9a0d9ae2c17e007cbb8e9f32654941e1f0a8268e
+prettier,https://github.com/prettier/prettier.git,javascript,>=18,"package.json,yarn.lock",yarn,4.5.0,,corepack enable yarn;yarn install,9cf9079f75a30f1088529e0cae6296aeb71205ba
+astro,https://github.com/withastro/astro.git,javascript,>=18.17.1,"package.json,pnpm-lock.yaml",pnpm,9.12.1,,pnpm install,9d6bcdb88fcb9df0c5c70e2b591bcf962ce55f63
+plantuml,https://github.com/plantuml/plantuml.git,java8,8,,gradle,,sdk use java 8.0.432-tem,gradle clean build -x javaDoc -PjavacRelease=8,8eb791f39478778788fd47a9195dc1b2feb3eade
+plantuml_17,https://github.com/plantuml/plantuml.git,java17,17,,gradle,,,gradle clean build -x javaDoc -PjavacRelease=17,8eb791f39478778788fd47a9195dc1b2feb3eade
+jazzer,https://github.com/CodeIntelligenceTesting/jazzer.git,java8,8,,bazelisk,7.3.0,sdk use java 8.0.432-tem;export BAZEL_CMD='bazelisk';export BAZEL_TARGET='//:jazzer_release',bazelisk build //:jazzer_release,3947707d7db7e5cae0c8cfaeb10bdfeb06fc32bb
+tinydb,https://github.com/msiemens/tinydb.git,python,,,,,,python -m venv venv; source venv/bin/activate && pip install .,3dc6a952ef8700706909bf60a1b15cf21af47608
