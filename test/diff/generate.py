@@ -88,7 +88,7 @@ def build_args():
         '--uv-location'
         '-uv',
         help='Location of uv Python installations.',
-        default='.local/share/uv/python/',
+        default='.local/share/uv/python',
         dest='uv_location'
     )
     return parser.parse_args()
@@ -182,14 +182,12 @@ def create_python_venvs(repo_data):
     return repo_data
 
 
-def exec_on_repo(clone, output_dir, skip_build, repo):
+def exec_on_repo(args, repo):
     """
     Determines a sequence of commands on a repository.
 
     Args:
-        clone (bool): Indicates whether to clone the repository.
-        output_dir (pathlib.Path): The directory to output the slices.
-        skip_build (bool): Indicates whether to skip the build phase.
+        args (argparse.Namespace): The parsed arguments
         repo (dict): The repository information.
 
 
@@ -241,7 +239,7 @@ def expand_multi_versions(repo_data):
                 new_data.append(new_repo)
         else:
             new_data.append(r)
-    return create_python_venvs(new_data)
+    return new_data
 
 
 def filter_repos(repo_data, projects, project_types, skipped_projects):
@@ -423,9 +421,13 @@ def run_cdxgen(repo, output_dir, uv_location):
         Path.joinpath(output_dir, f'{repo["project"]}-bom.json'),
         repo['repo_dir']
     ]
-    return list2cmdline(cdxgen_cmd)
+    cmd = list2cmdline(cdxgen_cmd)
     if repo["cdxgen_vars"]:
         cmd = f"{repo['cdxgen_vars']} {cmd}"
+    if repo["language"] == "python":
+        vers = repo["language_range"].split(".")
+        cmd = f"PYTHON_CMD=python{vers[0]}.{vers[1]} PYTHON_HOME={uv_location}/cpython-{repo['language_range']}-linux-x86_64-gnu/bin {cmd}"
+    return cmd
 
 
 def run_pre_builds(repo_data, output_dir, debug_cmds, sdkman_sh):

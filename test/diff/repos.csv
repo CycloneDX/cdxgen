@@ -1,5 +1,5 @@
 project,link,language,language_range,config_files,package_manager,pm_version,pre_build_cmd,build_cmd,cdxgen_vars,commit
-django-goat,https://github.com/red-and-black/DjangoGoat.git,python,,,,,,python -m venv venv; source venv/bin/activate && pip install -r requirements_app.txt,,5e6aaa6d0497bf24abd179304e6ca51295a8091d
+django-goat,https://github.com/red-and-black/DjangoGoat.git,python,3.10.15,requirements_app.txt,pip,,,pip install -r requirements_app.txt,PIP_INSTALL_ARGS='-r requirements_app.txt',5e6aaa6d0497bf24abd179304e6ca51295a8091d
 java-sec-code,https://github.com/JoyChou93/java-sec-code.git,java8,8,,,,sdk use java 8.0.432-tem,mvn -B clean compile -DskipTests=true,,457d703e8f89bff657c6c51151ada71ebd09a1c6
 restic,https://github.com/restic/restic.git,go,,,,,,go run build.go,,3786536dc18ef27aedcfa8e4c6953b48353eee79
 syncthing,https://github.com/syncthing/syncthing.git,go,,,,,,go run build.go,,ba6ac2f604eb1cd27764460b687537c5e40aaaf8
@@ -9,4 +9,7 @@ astro,https://github.com/withastro/astro.git,javascript,>=18.17.1,"package.json,
 plantuml,https://github.com/plantuml/plantuml.git,java8,8,,gradle,,sdk use java 8.0.432-tem,gradle clean build -x javaDoc -PjavacRelease=8,GRADLE_ARGS='clean build -x javaDoc -PjavacRelease=8',8eb791f39478778788fd47a9195dc1b2feb3eade
 plantuml_17,https://github.com/plantuml/plantuml.git,java17,17,,gradle,,,gradle clean build -x javaDoc -PjavacRelease=17,GRADLE_ARGS='clean build -x javaDoc -PjavacRelease=17',8eb791f39478778788fd47a9195dc1b2feb3eade
 jazzer,https://github.com/CodeIntelligenceTesting/jazzer.git,java8,8,,bazelisk,7.3.0,sdk use java 8.0.432-tem',bazelisk build //:jazzer_release,BAZEL_CMD='bazelisk' BAZEL_TARGET=//:jazzer_release,3947707d7db7e5cae0c8cfaeb10bdfeb06fc32bb
-tinydb,https://github.com/msiemens/tinydb.git,python,,,,,,python -m venv venv; source venv/bin/activate && pip install .,,3dc6a952ef8700706909bf60a1b15cf21af47608
+tinydb,https://github.com/msiemens/tinydb.git,python,"3.9.20,3.10.15,3.11.10,3.12.7",pyproject.toml,pip,,rm poetry.lock,pip install .,,10644a0e07ad180c5b756aba272ee6b0dbd12df8
+tinydb_poetry,https://github.com/msiemens/tinydb.git,python,"3.9.20,3.10.15,3.11.10,3.12.7","pyproject.toml,poetry.lock",poetry,,,poetry install,,10644a0e07ad180c5b756aba272ee6b0dbd12df8
+funcy,https://github.com/Suor/funcy.git,python,"3.9.20,3.10.15",setup.py,pip,,,python setup.py install,,859056d039adea75c1c3550286437ce0b612fe92
+numba,https://github.com/numba/numba.git,python,"3.9.20,3.10.15,3.11.10,3.12.7","setup.py,requirements.txt",pip,,,python setup.py install,,53e976f1b0c6683933fa0a93738362914bffc1cd
