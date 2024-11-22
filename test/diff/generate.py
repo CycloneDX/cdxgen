@@ -52,22 +52,27 @@ def build_args():
     parser.add_argument(
         '--skip-clone',
         action='store_false',
-        dest='skip_clone',
         default=True,
-        help='Skip cloning the repositories (must be used with the --repo-dir argument)'
+        dest='clone',
+        help='Skip cloning the repositories.)'
     )
     parser.add_argument(
         '--debug-cmds',
         action='store_true',
-        dest='debug_cmds',
-        help='For use in workflow'
+        help='Prints the commands out in the console.'
     )
     parser.add_argument(
-        '--skip-build',
+        '--build',
         action='store_true',
-        dest='skip_build',
         default=False,
-        help='Skip building the samples and just run cdxgen. Should be used with --skip-clone'
+        help='Build the samples before invoking cdxgen.'
+    )
+    parser.add_argument(
+        '--skip-prebuild',
+        action='store_false',
+        default=True,
+        dest='prebuild',
+        help='Build the samples before invoking cdxgen.'
     )
     parser.add_argument(
         '--skip-projects',
@@ -78,6 +83,13 @@ def build_args():
         '--sdkman-sh',
         help='Location to activate sdkman.',
         default='~/.sdkman/bin/sdkman-init.sh'
+    )
+    parser.add_argument(
+        '--uv-location'
+        '-uv',
+        help='Location of uv Python installations.',
+        default='.local/share/uv/python/',
+        dest='uv_location'
     )
     return parser.parse_args()
 
@@ -185,17 +197,17 @@ def exec_on_repo(clone, output_dir, skip_build, repo):
         str: The sequence of commands to be executed.
     """
     commands = []
-    if clone:
+    if args.clone:
         commands.append(f'{clone_repo(repo["link"], repo["repo_dir"])}')
         commands.append(f'{list2cmdline(["cd", repo["repo_dir"]])}')
         commands.append(f'{checkout_commit(repo["commit"])}')
-    if not skip_build and repo["pre_build_cmd"]:
+    if args.prebuild and repo["pre_build_cmd"]:
         cmds = repo["pre_build_cmd"].split(';')
         cmds = [cmd.lstrip().rstrip() for cmd in cmds]
         for cmd in cmds:
             new_cmd = list(cmd.split(" "))
             commands.append(f"{list2cmdline(new_cmd)}")
-    if not skip_build and repo["build_cmd"]:
+    if args.build and repo["build_cmd"]:
         cmds = repo["build_cmd"].split(";")
         cmds = [cmd.lstrip().rstrip() for cmd in cmds]
         for cmd in cmds:
@@ -203,12 +215,7 @@ def exec_on_repo(clone, output_dir, skip_build, repo):
             # if repo["language"] == "dotnet":
             #     new_cmd.extend(["-r", f"{repo['language_range']}"])
             commands.append(f"{list2cmdline(new_cmd)}")
-        # if repo["language"] == "python":
-        #     if repo["package_manager"] == "pip":
-        #         cdxgen_cmd = f"source .venv/bin/activate && {cdxgen_cmd}"
-        #     else:
-        #         cdxgen_cmd = f"poetry env use {repo['language_range']} && {cdxgen_cmd}"
-    commands.append(run_cdxgen(repo, output_dir))
+    commands.append(run_cdxgen(repo, args.output_dir, args.uv_location))
     commands = "\n".join(commands)
     return commands
 
@@ -275,14 +282,14 @@ def generate(args):
     if not args.debug_cmds:
         check_dirs(args.skip_clone, args.clone_dir, args.output_dir)
 
-    if not args.skip_build:
+    if args.prebuild:
         run_pre_builds(repo_data, args.output_dir, args.debug_cmds, args.sdkman_sh)
 
     commands = ""
     cdxgen_log = args.output_dir.joinpath("generate.log")
     for repo in processed_repos:
         commands += f"\necho {repo['project']} started: $(date) >> {cdxgen_log}\n"
-        commands += exec_on_repo(args.skip_clone, args.output_dir, args.skip_build, repo)
+        commands += exec_on_repo(args, repo)
         commands += f"\necho {repo['project']} finished: $(date) >> {cdxgen_log}\n\n"
 
     commands = "".join(commands)
@@ -396,7 +403,7 @@ def read_csv(csv_file, projects, project_types, skipped_projects):
     return filter_repos(repo_data, projects, project_types, skipped_projects)
 
 
-def run_cdxgen(repo, output_dir):
+def run_cdxgen(repo, output_dir, uv_location):
     """
     Generates cdxgen commands.
 
