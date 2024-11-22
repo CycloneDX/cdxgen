@@ -51,6 +51,8 @@ def build_args():
 def compare_snapshot(dir1: str, dir2: str, options: Options, repo: Dict, migrate_legacy: bool):
     bom_1 = f"{dir1}/{repo['project']}-bom.json"
     bom_2 = f"{dir2}/{repo['project']}-bom.json"
+    if not (b1 := os.path.exists(bom_1)) or not os.path.exists(bom_2):
+        return 1, "" if b1 else f"{bom_1} not found.", "" if os.path.exists(bom_2) else f"{bom_2} not found."
     if migrate_legacy:
         bom_data = migrate_to_1_6(bom_1)
         bom_1 = bom_1.replace("bom.json", "bom.migrated.json")
@@ -61,8 +63,6 @@ def compare_snapshot(dir1: str, dir2: str, options: Options, repo: Dict, migrate
     options.file_1 = bom_1
     options.file_2 = bom_2
     options.output = f'{dir2}/{repo["project"]}-diff.json'
-    if not (b1 := os.path.exists(bom_1)) or not os.path.exists(bom_2):
-        return 1, "" if b1 else f"{bom_1} not found.", "" if os.path.exists(bom_2) else f"{bom_2} not found."
     status, j1, j2 = compare_dicts(options)
     if status:
         status, result_summary = perform_bom_diff(j1, j2)
