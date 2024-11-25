@@ -163,23 +163,22 @@ def clone_repo(url, repo_dir):
     return list2cmdline(clone_cmd)
 
 
-def create_python_venvs(repo_data):
+def create_python_venvs(repo, uv_location):
     """
     Sets the Python version for each Python repository
 
     Args:
-        repo_data (list[dict]): Contains the sample repository data
+        repo (dict): Contains the sample repository data
 
     Returns:
-        list[dict]: The updated repository data
+        cmd (str): The command to create the Python virtual environment and install
     """
-    for r in repo_data:
-        if r["language"] == "python":
-            if r["package_manager"] == "poetry":
-                r["build_cmd"] = f"poetry env use python{r['language_range']} && {r['build_cmd']}"
-            else:
-                r["build_cmd"] = f"python{r['language_range']} -m venv .venv; source .venv/bin/activate && {r['build_cmd']}"
-    return repo_data
+    vers = repo["language_range"].split(".")
+    py_cmd = f"{uv_location}/cpython-{repo['language_range']}-linux-x86_64-gnu/bin/python{vers[0]}.{vers[1]}"
+    if repo["package_manager"] == "poetry":
+        return f"poetry env use {py_cmd} && {repo['build_cmd']}"
+    else:
+        return f"{py_cmd} -m venv .venv;source .venv/bin/activate && {repo['build_cmd']}"
 
 
 def exec_on_repo(args, repo):
@@ -205,15 +204,15 @@ def exec_on_repo(args, repo):
         for cmd in cmds:
             new_cmd = list(cmd.split(" "))
             commands.append(f"{list2cmdline(new_cmd)}")
-    if args.build and repo["build_cmd"]:
+    if repo["language"] == "python":
+        commands.append(create_python_venvs(repo, args.uv_location))
+    elif args.build and repo["build_cmd"]:
         cmds = repo["build_cmd"].split(";")
         cmds = [cmd.lstrip().rstrip() for cmd in cmds]
         for cmd in cmds:
             new_cmd = list(cmd.split(" "))
-            # if repo["language"] == "dotnet":
-            #     new_cmd.extend(["-r", f"{repo['language_range']}"])
             commands.append(f"{list2cmdline(new_cmd)}")
-    commands.append(run_cdxgen(repo, args.output_dir, args.uv_location))
+    commands.append(run_cdxgen(repo, args.output_dir))
     commands = "\n".join(commands)
     return commands
 
@@ -401,7 +400,7 @@ def read_csv(csv_file, projects, project_types, skipped_projects):
     return expand_multi_versions(filter_repos(repo_data, projects, project_types, skipped_projects))
 
 
-def run_cdxgen(repo, output_dir, uv_location):
+def run_cdxgen(repo, output_dir):
     """
     Generates cdxgen commands.
 
@@ -425,8 +424,10 @@ def run_cdxgen(repo, output_dir, uv_location):
     if repo["cdxgen_vars"]:
         cmd = f"{repo['cdxgen_vars']} {cmd}"
     if repo["language"] == "python":
-        vers = repo["language_range"].split(".")
-        cmd = f"PYTHON_CMD=python{vers[0]}.{vers[1]} PYTHON_HOME={uv_location}/cpython-{repo['language_range']}-linux-x86_64-gnu/bin {cmd}"
+        if repo["package_manager"] == "poetry":
+            cmd = f"VIRTUAL_ENV=$(poetry env list --full-path | grep -E -o '(/\S+)+/pypoetry/virtualenvs/\S+') {cmd}"
+        else:
+            cmd = f"VIRTUAL_ENV={repo['repo_dir']}/.venv {cmd}"
     return cmd
 
 
