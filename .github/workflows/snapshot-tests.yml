@@ -52,6 +52,7 @@ jobs:
         env:
           PREFER_MAVEN_DEPS_TREE: false
         run: |
+          rm -rf src_repos
           bash new_snapshots/cdxgen_commands.sh
 
       - name: Upload cdxgen boms
