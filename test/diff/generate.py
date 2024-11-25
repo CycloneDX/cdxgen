@@ -88,7 +88,7 @@ def build_args():
         '--uv-location'
         '-uv',
         help='Location of uv Python installations.',
-        default='.local/share/uv/python',
+        default='~/.local/share/uv/python',
         dest='uv_location'
     )
     return parser.parse_args()
