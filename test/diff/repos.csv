@@ -11,5 +11,5 @@ plantuml_17,https://github.com/plantuml/plantuml.git,java17,17,,gradle,,,gradle 
 jazzer,https://github.com/CodeIntelligenceTesting/jazzer.git,java8,8,,bazelisk,7.3.0,sdk use java 8.0.432-tem,bazelisk build //:jazzer_release,BAZEL_CMD='bazelisk' BAZEL_TARGET=//:jazzer_release,3947707d7db7e5cae0c8cfaeb10bdfeb06fc32bb
 tinydb,https://github.com/msiemens/tinydb.git,python,"3.9.20,3.10.15,3.11.10,3.12.7","pyproject.toml,poetry.lock",poetry,,,poetry install,,10644a0e07ad180c5b756aba272ee6b0dbd12df8
 funcy,https://github.com/Suor/funcy.git,python,"3.9.20,3.10.15",setup.py,pip,,rm test_requirements.txt,python setup.py install,,859056d039adea75c1c3550286437ce0b612fe92
-numpy,https://github.com/numpy/numpy.git,"python,c","3.9.20,3.10.15,3.11.10,3.12.7","setup.py,pyproject.toml",pip,,git submodule update --init,pip install .,,93fdebfcb4bc4cd53c959ccd0117a612d5f13f1a
+numpy,https://github.com/numpy/numpy.git,python-c,"3.9.20,3.10.15,3.11.10,3.12.7","setup.py,pyproject.toml",pip,,git submodule update --init,pip install .,,93fdebfcb4bc4cd53c959ccd0117a612d5f13f1a
 requests,https://github.com/psf/requests.git,python,"3.9.20,3.10.15,3.11.10,3.12.7","setup.py",,,,pip install .,,23540c93cac97c763fe59e843a08fa2825aa80fd

@@ -204,7 +204,7 @@ def exec_on_repo(args, repo):
         for cmd in cmds:
             new_cmd = list(cmd.split(" "))
             commands.append(f"{list2cmdline(new_cmd)}")
-    if repo["language"] == "python":
+    if "python" in repo["language"]:
         commands.append(create_python_venvs(repo, args.uv_location))
     elif args.build and repo["build_cmd"]:
         cmds = repo["build_cmd"].split(";")
@@ -411,19 +411,32 @@ def run_cdxgen(repo, output_dir):
     Returns:
         str: The repository data with cdxgen commands
     """
-    cdxgen_cmd = [
-        'cdxgen',
-        "--no-include-formulation",
-        '-t',
-        repo['language'],
-        '-o',
-        Path.joinpath(output_dir, f'{repo["project"]}-bom.json'),
-        repo['repo_dir']
-    ]
+    if repo["language"] == "python-c":
+        cdxgen_cmd = [
+            "cdxgen",
+            "--no-include-formulation",
+            "-t",
+            "python",
+            "-t",
+            "c",
+            "-o",
+            Path.joinpath(output_dir, f"{repo['project']}-bom.json"),
+            repo["repo_dir"]
+        ]
+    else:
+        cdxgen_cmd = [
+            "cdxgen",
+            "--no-include-formulation",
+            "-t",
+            repo['language'],
+            "-o",
+            Path.joinpath(output_dir, f"{repo['project']}-bom.json"),
+            repo["repo_dir"]
+        ]
     cmd = f"CDXGEN_DEBUG_MODE=debug {list2cmdline(cdxgen_cmd)}"
     if repo["cdxgen_vars"]:
         cmd = f"{repo['cdxgen_vars']} {cmd}"
-    if repo["language"] == "python":
+    if "python" in repo["language"]:
         if repo["package_manager"] == "poetry":
             cmd = f"VIRTUAL_ENV=$(poetry env list --full-path | grep -E -o '(/\S+)+/pypoetry/virtualenvs/\S+') {cmd}"
         else:
