@@ -31,6 +31,7 @@ jobs:
          env:
            SHELL: bash
          run: |
+           rm -rf original_snapshots new_snapshots src_repos
            cdxgen_tarball=$(pnpm pack | tail -1)
            npm install -g "$cdxgen_tarball"
            git clone https://github.com/appthreat/cdxgen-samples.git original_snapshots

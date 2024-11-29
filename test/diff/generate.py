@@ -52,22 +52,27 @@ def build_args():
     parser.add_argument(
         '--skip-clone',
         action='store_false',
-        dest='skip_clone',
         default=True,
-        help='Skip cloning the repositories (must be used with the --repo-dir argument)'
+        dest='clone',
+        help='Skip cloning the repositories.)'
     )
     parser.add_argument(
         '--debug-cmds',
         action='store_true',
-        dest='debug_cmds',
-        help='For use in workflow'
+        help='Prints the commands out in the console.'
     )
     parser.add_argument(
-        '--skip-build',
+        '--build',
         action='store_true',
-        dest='skip_build',
         default=False,
-        help='Skip building the samples and just run cdxgen. Should be used with --skip-clone'
+        help='Build the samples before invoking cdxgen.'
+    )
+    parser.add_argument(
+        '--skip-prebuild',
+        action='store_false',
+        default=True,
+        dest='prebuild',
+        help='Build the samples before invoking cdxgen.'
     )
     parser.add_argument(
         '--skip-projects',
@@ -78,6 +83,13 @@ def build_args():
         '--sdkman-sh',
         help='Location to activate sdkman.',
         default='~/.sdkman/bin/sdkman-init.sh'
+    )
+    parser.add_argument(
+        '--uv-location'
+        '-uv',
+        help='Location of uv Python installations.',
+        default='~/.local/share/uv/python',
+        dest='uv_location'
     )
     return parser.parse_args()
 
@@ -128,7 +140,7 @@ def checkout_commit(commit):
     Returns:
         str: The command to check out the commit.
     """
-    checkout_cmd = ['git', 'checkout', commit]
+    checkout_cmd = ['git', '-c', 'advice.detachedHead=false', 'checkout', commit]
     return list2cmdline(checkout_cmd)
 
 
@@ -151,33 +163,30 @@ def clone_repo(url, repo_dir):
     return list2cmdline(clone_cmd)
 
 
-def create_python_venvs(repo_data):
+def create_python_venvs(repo, uv_location):
     """
     Sets the Python version for each Python repository
 
     Args:
-        repo_data (list[dict]): Contains the sample repository data
+        repo (dict): Contains the sample repository data
 
     Returns:
-        list[dict]: The updated repository data
+        cmd (str): The command to create the Python virtual environment and install
     """
-    for r in repo_data:
-        if r["language"] == "python":
-            if r["package_manager"] == "poetry":
-                r["build_cmd"] = f"poetry env use python{r['language_range']} && {r['build_cmd']}"
-            else:
-                r["build_cmd"] = f"python{r['language_range']} -m venv .venv; source .venv/bin/activate && {r['build_cmd']}"
-    return repo_data
+    vers = repo["language_range"].split(".")
+    py_cmd = f"{uv_location}/cpython-{repo['language_range']}-linux-x86_64-gnu/bin/python{vers[0]}.{vers[1]}"
+    if repo["package_manager"] == "poetry":
+        return f"poetry env use {py_cmd} && {repo['build_cmd']}"
+    else:
+        return f"{py_cmd} -m venv .venv;source .venv/bin/activate && {repo['build_cmd']}"
 
 
-def exec_on_repo(clone, output_dir, skip_build, repo):
+def exec_on_repo(args, repo):
     """
     Determines a sequence of commands on a repository.
 
     Args:
-        clone (bool): Indicates whether to clone the repository.
-        output_dir (pathlib.Path): The directory to output the slices.
-        skip_build (bool): Indicates whether to skip the build phase.
+        args (argparse.Namespace): The parsed arguments
         repo (dict): The repository information.
 
 
@@ -185,30 +194,25 @@ def exec_on_repo(clone, output_dir, skip_build, repo):
         str: The sequence of commands to be executed.
     """
     commands = []
-    if clone:
+    if args.clone:
         commands.append(f'{clone_repo(repo["link"], repo["repo_dir"])}')
         commands.append(f'{list2cmdline(["cd", repo["repo_dir"]])}')
         commands.append(f'{checkout_commit(repo["commit"])}')
-    if not skip_build and repo["pre_build_cmd"]:
+    if args.prebuild and repo["pre_build_cmd"]:
         cmds = repo["pre_build_cmd"].split(';')
         cmds = [cmd.lstrip().rstrip() for cmd in cmds]
         for cmd in cmds:
             new_cmd = list(cmd.split(" "))
             commands.append(f"{list2cmdline(new_cmd)}")
-    if not skip_build and repo["build_cmd"]:
+    if "python" in repo["language"]:
+        commands.append(create_python_venvs(repo, args.uv_location))
+    elif args.build and repo["build_cmd"]:
         cmds = repo["build_cmd"].split(";")
         cmds = [cmd.lstrip().rstrip() for cmd in cmds]
         for cmd in cmds:
             new_cmd = list(cmd.split(" "))
-            # if repo["language"] == "dotnet":
-            #     new_cmd.extend(["-r", f"{repo['language_range']}"])
             commands.append(f"{list2cmdline(new_cmd)}")
-        # if repo["language"] == "python":
-        #     if repo["package_manager"] == "pip":
-        #         cdxgen_cmd = f"source .venv/bin/activate && {cdxgen_cmd}"
-        #     else:
-        #         cdxgen_cmd = f"poetry env use {repo['language_range']} && {cdxgen_cmd}"
-    commands.append(run_cdxgen(repo, output_dir))
+    commands.append(run_cdxgen(repo, args.output_dir))
     commands = "\n".join(commands)
     return commands
 
@@ -234,7 +238,7 @@ def expand_multi_versions(repo_data):
                 new_data.append(new_repo)
         else:
             new_data.append(r)
-    return create_python_venvs(new_data)
+    return new_data
 
 
 def filter_repos(repo_data, projects, project_types, skipped_projects):
@@ -270,19 +274,19 @@ def generate(args):
             project_types = {args.project_types}
 
     repo_data = read_csv(args.repo_csv, args.projects, project_types, args.skip_projects)
-    processed_repos = add_repo_dirs(args.clone_dir, expand_multi_versions(repo_data))
+    processed_repos = add_repo_dirs(args.clone_dir, repo_data)
 
     if not args.debug_cmds:
-        check_dirs(args.skip_clone, args.clone_dir, args.output_dir)
+        check_dirs(args.clone, args.clone_dir, args.output_dir)
 
-    if not args.skip_build:
+    if args.prebuild:
         run_pre_builds(repo_data, args.output_dir, args.debug_cmds, args.sdkman_sh)
 
     commands = ""
     cdxgen_log = args.output_dir.joinpath("generate.log")
     for repo in processed_repos:
         commands += f"\necho {repo['project']} started: $(date) >> {cdxgen_log}\n"
-        commands += exec_on_repo(args.skip_clone, args.output_dir, args.skip_build, repo)
+        commands += exec_on_repo(args, repo)
         commands += f"\necho {repo['project']} finished: $(date) >> {cdxgen_log}\n\n"
 
     commands = "".join(commands)
@@ -384,7 +388,7 @@ def read_csv(csv_file, projects, project_types, skipped_projects):
     Reads a CSV file and filters the data based on a list of languages.
 
     Parameters:
-        csv_file (pathlib.Path): The path to the CSV file.
+        csv_file (pathlib.Path| str): The path to the CSV file.
         projects (list): A list of projects names to filter on.
         project_types (set): A set of project types to filter on.
     Returns:
@@ -393,7 +397,7 @@ def read_csv(csv_file, projects, project_types, skipped_projects):
     with open(csv_file, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         repo_data = list(reader)
-    return filter_repos(repo_data, projects, project_types, skipped_projects)
+    return expand_multi_versions(filter_repos(repo_data, projects, project_types, skipped_projects))
 
 
 def run_cdxgen(repo, output_dir):
@@ -407,16 +411,37 @@ def run_cdxgen(repo, output_dir):
     Returns:
         str: The repository data with cdxgen commands
     """
-    cdxgen_cmd = [
-        'cdxgen',
-        "--no-include-formulation",
-        '-t',
-        repo['language'],
-        '-o',
-        Path.joinpath(output_dir, f'{repo["project"]}-bom.json'),
-        repo['repo_dir']
-    ]
-    return list2cmdline(cdxgen_cmd)
+    if repo["language"] == "python-c":
+        cdxgen_cmd = [
+            "cdxgen",
+            "--no-include-formulation",
+            "-t",
+            "python",
+            "-t",
+            "c",
+            "-o",
+            Path.joinpath(output_dir, f"{repo['project']}-bom.json"),
+            repo["repo_dir"]
+        ]
+    else:
+        cdxgen_cmd = [
+            "cdxgen",
+            "--no-include-formulation",
+            "-t",
+            repo['language'],
+            "-o",
+            Path.joinpath(output_dir, f"{repo['project']}-bom.json"),
+            repo["repo_dir"]
+        ]
+    cmd = f"CDXGEN_DEBUG_MODE=debug {list2cmdline(cdxgen_cmd)}"
+    if repo["cdxgen_vars"]:
+        cmd = f"{repo['cdxgen_vars']} {cmd}"
+    if "python" in repo["language"]:
+        if repo["package_manager"] == "poetry":
+            cmd = f"VIRTUAL_ENV=$(poetry env list --full-path | grep -E -o '(/\S+)+/pypoetry/virtualenvs/\S+') {cmd}"
+        else:
+            cmd = f"VIRTUAL_ENV={repo['repo_dir']}/.venv {cmd}"
+    return cmd
 
 
 def run_pre_builds(repo_data, output_dir, debug_cmds, sdkman_sh):
