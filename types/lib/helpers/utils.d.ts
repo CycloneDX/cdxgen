@@ -717,6 +717,14 @@ export function parsePaketLockData(paketLockData: any, pkgLockFile: any): {
     dependenciesList: any[];
 };
 /**
+ * Parse composer.json file
+ *
+ * @param {string} composerJsonFile composer.json file
+ *
+ * @returns {Object} Object with rootRequires and parent component
+ */
+export function parseComposerJson(composerJsonFile: string): any;
+/**
  * Parse composer lock file
  *
  * @param {string} pkgLockFile composer.lock file
