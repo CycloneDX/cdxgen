@@ -1,83 +1,67 @@
 # Machine Learning (ML) Profiles in CycloneDX (`cdxgen`)
 
-CycloneDX's `cdxgen` tool offers customizable profiles tailored for different levels of analysis in Machine Learning (ML) projects. These profiles adjust the depth, evidence collection, and inclusion of cryptographic details during dependency analysis.
+CycloneDX's `cdxgen` tool offers customizable profiles tailored for different levels of dependency analysis in Machine Learning (ML) projects. These profiles adjust the depth, evidence collection, and inclusion of cryptographic details during dependency analysis, allowing users to generate datasets optimized for specific ML tasks.
+
+The primary purpose of these ML profiles is to facilitate machine learning workflows. AI startups and ML teams can generate datasets of BOM (Bill of Materials) files using these profiles for tasks such as:
+- Training models.
+- Fine-tuning.
+- Retrieval-augmented generation (RAG).
+
+Developers and researchers who work with AI agents like cdxgenGPT for question-answering and reasoning purposes will benefit from the optimizations these profiles provide.
 
 ---
 
 ## Overview of ML Profiles
 
-The following ML profiles are available in `cdxgen`:
-
-| **Profile**          | **Deep Analysis** | **Evidence Collection** | **Include Crypto** | **Install Dependencies** | **Trimming Behavior**        | **Use Case**                     |
-|-----------------------|-------------------|--------------------------|---------------------|---------------------------|------------------------------|-----------------------------------|
-| `ml-tiny`            | ❌                | ❌                       | ❌                  | ❌                        | `requiresContextTrimming`    | Lightweight, minimal scans for quick analysis. |
-| `machine-learning` / `ml` | ✅           | ❌                       | ❌                  | ✅                        | None                         | Standard scans for ML projects. |
-| `deep-learning` / `ml-deep` | ✅        | ✅                       | ✅                  | ✅                        | None                         | Comprehensive scans for detailed ML audits. |
+| **Profile**     | **Purpose**                                          | **Deep Analysis** | **Evidence Collection** | **Cryptographic Data** | **Install Dependencies** | **Ideal For**                            |
+|------------------|------------------------------------------------------|--------------------|--------------------------|-------------------------|---------------------------|-------------------------------------------|
+| **`ml-tiny`**    | Lightweight dependency analysis for small ML models  | No                 | No                       | No                      | No                        | Small models (~3b params), CI pipelines   |
+| **`ml`**         | Optimized analysis for medium-sized ML pipelines     | Yes                | No                       | No                      | Yes                       | Medium models (7b-32b params), RAG tasks  |
+| **`ml-deep`**    | Comprehensive analysis for large ML models (>32b)    | Yes                | Yes                      | Yes                     | Yes                       | Large models, advanced cryptographic needs|
 
 ---
 
-## Detailed Descriptions of Profiles
+## Profiles and Their Use Cases
 
-### 1. **`ml-tiny`**
-- **Purpose**: Focused on minimal scans, providing only essential information for lightweight use cases.
-- **Settings**:
+### **`ml-tiny`**
+- **Purpose**: Lightweight dependency analysis for smaller ML models and pipelines with minimal context windows (~1024 tokens).
+- **Use Case**: Designed for quick CI/CD pipelines or bots using smaller models (~3 billion parameters).
+- **Configuration**:
   - **Deep Analysis**: Disabled.
   - **Evidence Collection**: Disabled.
-  - **Cryptographic Dependency Inclusion**: Disabled.
-  - **Install Dependencies**: Disabled.
-- **Post-Generation Behavior**:
-  - Applies `requiresContextTrimming` to minimize the BOM by removing:
-    - `authors`
-    - `supplier`
-    - `publisher`
-    - `dependencies`
-    - `externalReferences`
-    - Other detailed fields.
-  - If generating a SaaSBOM, component details are removed, and service names are anonymized (e.g., `service-0`, `service-1`).
-- **Use Case**: Ideal for quick scans in CI/CD pipelines or scenarios where minimal information is sufficient.
+  - **Cryptographic Data**: Excluded.
+  - **Dependency Installation**: Not performed.
+- **Ideal For**:
+  - Applications requiring minimal compute resources.
+  - Rapid prototyping for small-scale models.
 
 ---
 
-### 2. **`machine-learning` / `ml`**
-- **Purpose**: The default profile for most ML projects, offering a balance between performance and depth.
-- **Settings**:
+### **`ml` (Alias: `machine-learning`)**
+- **Purpose**: Dependency analysis for medium-sized ML models (7b to 32b parameters).
+- **Use Case**: Supports model fine-tuning and RAG workflows for more complex tasks requiring a balance between efficiency and detail.
+- **Configuration**:
   - **Deep Analysis**: Enabled.
   - **Evidence Collection**: Disabled.
-  - **Cryptographic Dependency Inclusion**: Disabled.
-  - **Install Dependencies**: Enabled.
-- **Post-Generation Behavior**: No additional trimming or tuning applied.
-- **Use Case**: Suitable for general-purpose ML projects requiring a deeper analysis without unnecessary details.
+  - **Cryptographic Data**: Excluded.
+  - **Dependency Installation**: Performed.
+- **Ideal For**:
+  - Medium-sized ML pipelines with additional complexity.
+  - Scenarios requiring partial cryptographic or evidence details.
 
 ---
 
-### 3. **`deep-learning` / `ml-deep`**
-- **Purpose**: Designed for in-depth analysis of complex ML projects, capturing detailed evidence and cryptographic dependencies.
-- **Settings**:
+### **`ml-deep` (Alias: `deep-learning`)**
+- **Purpose**: Comprehensive dependency analysis for large-scale deep learning models (>32b parameters).
+- **Use Case**: Designed for highly complex workflows requiring in-depth evidence collection and cryptographic analysis.
+- **Configuration**:
   - **Deep Analysis**: Enabled.
   - **Evidence Collection**: Enabled.
-  - **Cryptographic Dependency Inclusion**: Enabled.
-  - **Install Dependencies**: Enabled.
-- **Post-Generation Behavior**: No trimming or tuning applied.
-- **Use Case**: Best for detailed audits or when cryptographic and evidence data are required.
-
----
-
-## Post-Generation Behaviors
-
-Depending on the ML profile, `cdxgen` applies the following behaviors after generating the Bill of Materials (BOM):
-
-### 1. **`requiresContextTuning`**
-- Modifies the BOM to streamline the output:
-  - Removes fields such as `description`, `properties`, and `evidence`.
-  - Updates the BOM reference format using `bomLinkPrefix`.
-- **Applicable Profiles**: Not directly tied to any of the ML profiles but can be extended as needed.
-
-### 2. **`requiresContextTrimming`**
-- Minimizes the BOM to include only essential information:
-  - Strips fields such as `authors`, `supplier`, `publisher`, `bom-ref`, `externalReferences`, etc.
-  - Removes the `dependencies` section for "tiny" models.
-  - Anonymizes service names for SaaSBOMs.
-- **Applicable Profiles**: Applied to the `ml-tiny` profile for lightweight scenarios.
+  - **Cryptographic Data**: Included.
+  - **Dependency Installation**: Performed.
+- **Ideal For**:
+  - Large transformer models with extensive context windows.
+  - Scenarios requiring detailed security analysis or cryptographic validation.
 
 ---
 
@@ -97,5 +81,23 @@ Depending on the ML profile, `cdxgen` applies the following behaviors after gene
 - **Profile**: `deep-learning` (`ml-deep`)
 - **Why**: Includes all evidence and cryptographic dependencies for detailed audits.
 - **Result**: A full BOM with evidence and cryptographic data included.
+---
+
+## Post-Generation Behaviors
+
+Depending on the ML profile, `cdxgen` applies the following behaviors after generating the Bill of Materials (BOM):
+
+### 1. **`requiresContextTuning`**
+- Modifies the BOM to streamline the output:
+  - Removes fields such as `description`, `properties`, and `evidence`.
+  - Updates the BOM reference format using `bomLinkPrefix`.
+- **Applicable Profiles**: Not directly tied to any of the ML profiles but can be extended as needed.
+
+### 2. **`requiresContextTrimming`**
+- Minimizes the BOM to include only essential information:
+  - Strips fields such as `authors`, `supplier`, `publisher`, `bom-ref`, `externalReferences`, etc.
+  - Removes the `dependencies` section for "tiny" models.
+  - Anonymizes service names for SaaSBOMs.
+- **Applicable Profiles**: Applied to the `ml-tiny` profile for lightweight scenarios.
 
 ---
