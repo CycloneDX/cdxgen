@@ -4,6 +4,7 @@
 - [Supported Project Types](PROJECT_TYPES.md)
 - [Environment Variables](ENV.md)
 - [Advanced Usage](ADVANCED.md)
+- [AI/ML Usage](ml_profiles.md)
 - [Permissions](PERMISSIONS.md)
 - [Tutorials - Java](LESSON1.md)
 - [Tutorials - JavaScript](LESSON2.md)
