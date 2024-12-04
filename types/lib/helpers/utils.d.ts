@@ -186,30 +186,9 @@ export function parseMinJs(minJsFile: string): Promise<any[]>;
  * Parse pom file
  *
  * @param {string} pomFile pom file to parse
+ * @returns {Object} Object containing pom properties and an array of dependencies
  */
-export function parsePom(pomFile: string): {
-    group: any;
-    name: any;
-    version: any;
-    qualifiers: {
-        type: string;
-    };
-    properties: {
-        name: string;
-        value: string;
-    }[];
-    evidence: {
-        identity: {
-            field: string;
-            confidence: number;
-            methods: {
-                technique: string;
-                confidence: number;
-                value: string;
-            }[];
-        };
-    };
-}[];
+export function parsePom(pomFile: string): any;
 /**
  * Parse maven tree output
  * @param {string} rawOutput Raw string output
