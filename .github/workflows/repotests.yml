@@ -257,6 +257,11 @@ jobs:
         with:
           repository: 'elastic/elasticsearch'
           path: 'repotests/elasticsearch'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'quarkusio/quarkus-quickstarts'
+          path: 'repotests/quarkus-quickstarts'
+          ref: '3.17.3'
       - uses: dtolnay/rust-toolchain@stable
       - name: setup sdkman
         run: |
@@ -300,6 +305,11 @@ jobs:
         shell: bash
         env:
           JAVA_HOME: ""
+      - name: repotests quarkus-quickstarts
+        run: |
+          bin/cdxgen.js -p -r -t quarkus repotests/quarkus-quickstarts -o bomresults/bom-quarkus-quickstarts-quarkus.json --no-recurse
+          bin/cdxgen.js -p -r -t quarkus repotests/quarkus-quickstarts -o bomresults/bom-quarkus-quickstarts-quarkus.json --no-recurse --spec-version 1.5
+        shell: bash
       - name: repotests evidence
         run: |
           bin/cdxgen.js -p -t js --no-recurse -o bomresults/bom.json --evidence .
