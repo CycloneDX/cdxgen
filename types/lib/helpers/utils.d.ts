@@ -186,7 +186,7 @@ export function parseMinJs(minJsFile: string): Promise<any[]>;
  * Parse pom file
  *
  * @param {string} pomFile pom file to parse
- * @returns {Object} Object containing pom properties and an array of dependencies
+ * @returns {Object} Object containing pom properties, modules, and array of dependencies
  */
 export function parsePom(pomFile: string): any;
 /**
@@ -506,7 +506,15 @@ export function getRepoLicense(repoUrl: string, repoMetadata: any): Promise<stri
  * @param {Object} repoMetadata Repo metadata
  */
 export function getGoPkgLicense(repoMetadata: any): Promise<any>;
-export function getGoPkgComponent(group: any, name: any, version: any, hash: any): Promise<{}>;
+export function getGoPkgComponent(group: any, name: any, version: any, hash: any): Promise<{
+    group: any;
+    name: any;
+    version: any;
+    _integrity: any;
+    license: any;
+    purl: string;
+    "bom-ref": string;
+}>;
 /**
  * Method to parse go.mod files
  *
@@ -525,7 +533,15 @@ export function parseGoModData(goModData: string, gosumMap: any): any;
  */
 export function parseGoListDep(rawOutput: string, gosumMap: any): Promise<{
     parentComponent: {};
-    pkgList: {}[];
+    pkgList: {
+        group: any;
+        name: any;
+        version: any;
+        _integrity: any;
+        license: any;
+        purl: string;
+        "bom-ref": string;
+    }[];
 }>;
 /**
  * Parse go mod graph
@@ -944,14 +960,14 @@ export function convertJarNSToPackages(jarNSMapping: any): {
         value: any;
     }[];
 }[];
-export function parsePomXml(pomXmlData: any): {
-    artifactId: any;
-    groupId: any;
-    version: any;
-    description: any;
-    url: any;
-    scm: any;
-};
+/**
+ * Deprecated function to parse pom.xml. Use parsePom instead.
+ *
+ * @deprecated
+ * @param pomXmlData XML contents
+ * @returns {Object} Parent component data
+ */
+export function parsePomXml(pomXmlData: any): any;
 export function parseJarManifest(jarMetadata: any): {};
 export function parsePomProperties(pomProperties: any): {};
 export function encodeForPurl(s: any): any;
