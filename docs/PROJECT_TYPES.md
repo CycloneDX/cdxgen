@@ -50,7 +50,7 @@ _*NOTE:*_
 
 > - Apache maven 3.x is required for parsing pom.xml.
 > - gradle or gradlew is required to parse gradle projects.
-> - quarkus plugin is automatically detected and used by parsing pom.xml files. To force this type, use `-t quarkus`. This is especially needed when cdxgen is invoked with `--no-recurse` argument for performance.
+> - quarkus plugin is automatically detected and used by parsing pom.xml files (since cdxgen version 11.0.5) for java types. To explicitly specify this type, use `-t quarkus`. This is especially needed when cdxgen is invoked with `--no-recurse` argument for performance reasons.
 > - sbt is required for parsing scala sbt projects. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ are currently supported.
 >   - Alternatively, create a lock file using sbt-dependency-lock [plugin](https://github.com/stringbean/sbt-dependency-lock)
 > - sdkman must be installed and setup to use the new Java with version types such as java8, java11.
