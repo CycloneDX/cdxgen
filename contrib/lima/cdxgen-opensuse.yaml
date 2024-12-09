@@ -63,6 +63,7 @@ provision:
     sdk install gradle $GRADLE_VERSION || true
     sdk install sbt $SBT_VERSION || true
     mkdir -p /opt
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
     npm install -g node-gyp @cyclonedx/cdxgen --omit=dev
     npx node-gyp install
     node -v
@@ -70,4 +71,3 @@ provision:
     gcc --version
     zypper clean -a
     cdxgen --version
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash

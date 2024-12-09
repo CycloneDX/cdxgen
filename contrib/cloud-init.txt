@@ -1,0 +1,86 @@
+#cloud-config
+users:
+  - name: builder
+    groups: users, admin
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-rsa <public key>
+packages:
+  - fail2ban
+  - ufw
+  - zip
+  - unzip
+  - wget
+  - binutils
+  - git
+  - gnupg2
+  - curl
+  - tar
+  - libc6-dev
+  - libcurl4-openssl-dev
+  - libedit2
+  - libgcc-13-dev
+  - libpython3-dev
+  - libsqlite3-0
+  - libstdc++-13-dev
+  - libxml2-dev
+  - libncurses-dev
+  - libz3-dev
+  - pkg-config
+  - tzdata
+  - zlib1g-dev
+  - python3.12
+  - python3.12-venv
+  - python3.12-dev
+  - openjdk-21-jdk-headless
+  - gcc-13
+  - build-essential
+  - cargo-1.81
+  - rust-1.81-all
+  - golang-1.23
+  - software-properties-common
+  - ruby-full
+  - ruby-bundler
+  - docker.io
+  - docker-buildx
+  - docker-compose-v2
+  - podman
+  - android-sdk
+  - android-sdk-build-tools
+  - android-sdk-platform-23
+  - android-sdk-platform-tools
+  - maven
+package_update: true
+package_upgrade: true
+runcmd:
+  - printf "[sshd]\nenabled = true\nbanaction = iptables-multiport" > /etc/fail2ban/jail.local
+  - systemctl enable fail2ban
+  - ufw allow OpenSSH
+  - ufw enable
+  - sed -i -e '/^\(#\|\)PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)PasswordAuthentication/s/^.*$/PasswordAuthentication no/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)KbdInteractiveAuthentication/s/^.*$/KbdInteractiveAuthentication no/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)ChallengeResponseAuthentication/s/^.*$/ChallengeResponseAuthentication no/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)MaxAuthTries/s/^.*$/MaxAuthTries 3/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)AllowTcpForwarding/s/^.*$/AllowTcpForwarding no/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)X11Forwarding/s/^.*$/X11Forwarding no/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)AllowAgentForwarding/s/^.*$/AllowAgentForwarding no/' /etc/ssh/sshd_config
+  - sed -i -e '/^\(#\|\)AuthorizedKeysFile/s/^.*$/AuthorizedKeysFile .ssh\/authorized_keys/' /etc/ssh/sshd_config
+  - sed -i '$a AllowUsers builder' /etc/ssh/sshd_config
+  - export SWIFT_SIGNING_KEY=52BB7E3DE28A71BE22EC05FFEF80A866B47A981F
+  - export SWIFT_PLATFORM=ubuntu24.04
+  - export SWIFT_BRANCH=swift-6.0.1-release
+  - export SWIFT_VERSION=swift-6.0.1-RELEASE
+  - export SWIFT_WEBROOT=https://download.swift.org
+  - export OS_ARCH_SUFFIX='-aarch64'
+  - export SWIFT_WEBDIR="$SWIFT_WEBROOT/$SWIFT_BRANCH/$(echo $SWIFT_PLATFORM | tr -d .)$OS_ARCH_SUFFIX"
+  - SWIFT_BIN_URL="$SWIFT_WEBDIR/$SWIFT_VERSION/$SWIFT_VERSION-$SWIFT_PLATFORM$OS_ARCH_SUFFIX.tar.gz"
+  - SWIFT_SIG_URL="$SWIFT_BIN_URL.sig"
+  - GNUPGHOME="$(mktemp -d)"
+  - curl -fsSL "$SWIFT_BIN_URL" -o swift.tar.gz "$SWIFT_SIG_URL" -o swift.tar.gz.sig
+  - gpg --batch --quiet --keyserver keyserver.ubuntu.com --recv-keys "$SWIFT_SIGNING_KEY"
+  - gpg --batch --verify swift.tar.gz.sig swift.tar.gz
+  - tar -xzf swift.tar.gz --directory / --strip-components=1
+  - chmod -R o+r /usr/lib/swift
+  - reboot

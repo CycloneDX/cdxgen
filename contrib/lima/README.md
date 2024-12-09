@@ -28,6 +28,12 @@ cd cdxgen
 limactl start --name=cdxgen contrib/lima/cdxgen-opensuse.yaml --tty=false
 ```
 
+For ubuntu, use the below command.
+
+```
+limactl start --name=cdxgen contrib/lima/cdxgen-ubuntu.yaml --tty=false
+```
+
 Sample output
 
 ```shell
@@ -76,6 +82,10 @@ alias cdxgen="limactl shell cdxgen cdxgen"
 ## Troubleshooting
 
 Monitor the installation by tailing the `/var/log/cloud-init-output.log` file.
+
+```shell
+limactl shell cdxgen sudo tail -f /var/log/cloud-init-output.log
+```
 
 ```shell
 limactl shell cdxgen-aarch64 sudo tail -f /var/log/cloud-init-output.log
