@@ -13,3 +13,4 @@ tinydb,https://github.com/msiemens/tinydb.git,python,"3.9.20,3.10.15,3.11.10,3.1
 funcy,https://github.com/Suor/funcy.git,python,"3.9.20,3.10.15",setup.py,pip,,rm test_requirements.txt,python setup.py install,,859056d039adea75c1c3550286437ce0b612fe92
 numpy,https://github.com/numpy/numpy.git,python-c,"3.9.20,3.10.15,3.11.10,3.12.7","setup.py,pyproject.toml",pip,,git submodule update --init,,,93fdebfcb4bc4cd53c959ccd0117a612d5f13f1a
 requests,https://github.com/psf/requests.git,python,"3.9.20,3.10.15,3.11.10,3.12.7","setup.py",,,,pip install .,,23540c93cac97c763fe59e843a08fa2825aa80fd
+libretube,https://github.com/libre-tube/LibreTube.git,java17,,gradle.kts,gradle,,,,GRADLE_ARGS='clean assembleDebug -PjavacRelease=17' ANDROID_HOME=~/.android/android_sdk,bd855037be3127ba908a8e0f7763d6196961b7c4
