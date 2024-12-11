@@ -15,3 +15,4 @@ numpy,https://github.com/numpy/numpy.git,python-c,"3.9.20,3.10.15,3.11.10,3.12.7
 requests,https://github.com/psf/requests.git,python,"3.9.20,3.10.15,3.11.10,3.12.7","setup.py",,,,pip install .,,23540c93cac97c763fe59e843a08fa2825aa80fd
 libretube,https://github.com/libre-tube/LibreTube.git,java17,,gradle.kts,gradle,,,,GRADLE_ARGS='clean assembleDebug -PjavacRelease=17' ANDROID_HOME=~/.android/android_sdk,bd855037be3127ba908a8e0f7763d6196961b7c4
 itflow,https://github.com/itflow-org/itflow.git,php,,,,,"wget https://raw.githubusercontent.com/composer/getcomposer.org/4a4a3856e3a706f3e4fed7f1ae6f84681c29ef69/web/installer -O - -q | php -- --quiet",,,e24c79fbaf16ee274d205c1b31758d07ace31c47
+dependabot,https://github.com/dependabot/dependabot-core.git,ruby,,,,,,,,e1024fb85f0d9e3396feaab33ee44941bb6cc68a
