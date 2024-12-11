@@ -41,7 +41,7 @@ jobs:
       - name: Generate scripts
         run: |
           source .venv/bin/activate
-          python test/diff/generate.py
+          python test/diff/generate.py -p dependabot
 
       - name: Upload shell scripts generated as artifact
         uses: actions/upload-artifact@v4
@@ -65,7 +65,7 @@ jobs:
       - name: Test BOMs
         run: |
           source .venv/bin/activate
-          python test/diff/diff_tests.py --migrate-legacy
+          python test/diff/diff_tests.py --migrate-legacy -p dependabot
           if test -f new_snapshots/diffs.json; then
             echo "status=FAILED" >> "$GITHUB_ENV"
           fi
