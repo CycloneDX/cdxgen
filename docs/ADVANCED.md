@@ -71,9 +71,9 @@ Languages supported:
 
 ### Purl and properties filter
 
-Use `--filter` to filter components containing the string in the purl or components.properties.value. Filters are case-insensitive.
+Use `--filter` to filter components containing the string in the purl or components.properties.value. Since the purl string includes the namespace (group), you can use this argument as a namespace filter too. Filters are case-insensitive.
 
-Example 1: Filter all "springframework" packages
+Example 1: Filter all "springframework" packages (purl or namespace)
 
 ```shell
 cdxgen -t java -o /tmp/bom.json -p --filter org.springframework

@@ -10,4 +10,5 @@
 - [Tutorials - JavaScript](LESSON2.md)
 - [Tutorials - Sign & Attach](LESSON3.md)
 - [Tutorials - Standards & Attestations](LESSON4.md)
+- [Tutorials - OWASP juice-shop](LESSON5.md)
 - [Support (Enterprise & Community)](SUPPORT.md)
