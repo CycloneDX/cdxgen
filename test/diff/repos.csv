@@ -17,6 +17,7 @@ libretube,https://github.com/libre-tube/LibreTube.git,java17,,gradle.kts,gradle,
 symfony,https://github.com/symfony/symfony.git,php,,,,,,,,95c43e38811a159c82112a13e631ee7121b83e54
 dependabot,https://github.com/dependabot/dependabot-core.git,ruby,,,,,,,,e1024fb85f0d9e3396feaab33ee44941bb6cc68a
 ng-select,https://github.com/ng-select/ng-select.git,typescript,,,yarn,,,corepack enable yarn;yarn install,,ba14f813135e6f910e2c39114e53ba291b943742
-ngx-bootstrap,https://github.com/valor-software/ngx-bootstrap.git,typescript,,,npm,,,npm install.,,c31c3caf63011743d4ce1adb185cf319a37fcc79
 ngx-bootstrap,https://github.com/valor-software/ngx-bootstrap.git,typescript,,,npm,,,npm install .,,c31c3caf63011743d4ce1adb185cf319a37fcc79
+plate,https://github.com/udecode/plate.git,typescript,,,yarn,,rm -rf templates,corepack enable yarn;yarn install,,24a683100edb6357fc45f043b29533e579ad1e19
+chartdb,https://github.com/chartdb/chartdb.git,typescript,,,npm,,,npm install .,,2b6b73326155f18d6d56779c0657a3506e2d2cde
 
