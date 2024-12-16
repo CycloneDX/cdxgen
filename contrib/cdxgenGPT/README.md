@@ -117,15 +117,20 @@ The ML model must be trained on clustering - components and dependencies that ty
 
 Currently, no established ML benchmarks exist for evaluating xBOM analysis and reasoning. However, we have some success from the following models:
 
+- x-ai/grok-2-1212
 - qwen/qwq-32b-preview
 - llama3.3-70b
 - CohereForAI/c4ai-command-r7b-12-2024
 
 ### Testing on OpenRouter.ai
 
-We use openrouter.ai for testing various models. Start with the slim prompt with one of the suggested models.
+We use openrouter.ai for testing various models. Start with the slim prompt with one of the suggested models. Example: `x-ai/grok-2-1212`
 
 ![OpenRouter chat configuration](./media/open-router-config.jpg)
+
+![Test 1](./media/grok2-test1.jpg)
+
+![Test 2](./media/grok2-test2.jpg)
 
 ## Support
 
