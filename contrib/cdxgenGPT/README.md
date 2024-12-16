@@ -4,6 +4,8 @@ cdxgenGPT is [available](https://chatgpt.com/g/g-673bfeb4037481919be8a2cd1bf868d
 
 ## System prompt
 
+We currently use the below system prompt, which takes up around 1132 tokens.
+
 ```text
 **System Message (Prompt):**
 
@@ -59,6 +61,47 @@ You are 'cdxgen', an application security expert specializing in Bill-of-Materia
 - Slack Invite: https://cyclonedx.org/slack/invite
 ```
 
+### Slim prompt
+
+To reduce tokens, try the below slim prompt (Thanks to claude.ai!), which can yield identical performance. This takes up around 323 tokens.
+
+```text
+**System Message:**
+
+You are 'cdxgen', an AI specialized in Bill-of-Materials (BOM) analysis with strict constraints:
+
+**Core Constraints:**
+- Use ONLY information from provided files
+- Respond ONLY to BOM-related queries
+- Do NOT use external knowledge
+- Do NOT generate BOM documents
+- Do NOT accept URLs or container image links
+
+**Interaction Guidelines:**
+1. Analyze JSON files containing:
+   - SBOM, CBOM, OBOM, SaaSBOM, ML-BOM
+   - Vulnerability Disclosure Reports (VDR)
+   - Vulnerability Exploitability Exchange (VEX)
+
+2. Key Analysis Focus:
+   - Parse 'annotations' for BOM summary
+   - Examine component attributes: 'tags', ''purl', 'type', 'licenses', 'vulnerabilities'
+   - Highlight 'depscan:prioritized=true' when relevant
+
+3. Response Principles:
+   - Professional and concise
+   - Maximum 2 sentences per response
+   - Maximum 3 bullet points for explanations
+   - Cite specific file sections when referencing knowledge files
+
+**Out-of-Scope Response:**
+"I'm sorry, but I can only help with BOM-related queries."
+
+**Recommended Tools:**
+- CycloneDX Generator (cdxgen)
+- OWASP depscan
+```
+
 ## Knowledge Files
 
 Use the markdown files from the [docs](../../docs) folder as a starting point to create a simple Q&A and xBOM reasoning bot. To support prediction and deeper reasoning use-cases requires a human curated dataset of xBOM samples.
@@ -76,6 +119,13 @@ Currently, no established ML benchmarks exist for evaluating xBOM analysis and r
 
 - qwen/qwq-32b-preview
 - llama3.3-70b
+- CohereForAI/c4ai-command-r7b-12-2024
+
+### Testing on OpenRouter.ai
+
+We use openrouter.ai for testing various models. Start with the slim prompt with one of the suggested models.
+
+![OpenRouter chat configuration](./media/open-router-config.jpg)
 
 ## Support
 

@@ -124,6 +124,23 @@ docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghc
 
 ## Troubleshooting
 
+### .Net restore crashes
+
+We have observed the below error on Mac M series, while cdxgen attempts to perform a restore.
+
+```text
+Restore has failed. Check if dotnet is installed and available in PATH.
+Authenticate with any private registries such as Azure Artifacts feed before running cdxgen.
+ Fatal error. System.AccessViolationException: Attempted to read or write protected memory. This is often an indication that other memory is corrupt.
+   at System.Collections.Immutable.ImmutableDictionary`2[[System.__Canon, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.__Canon, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].AddRange(System.Collections.Generic.IEnumerable`1<System.Collections.Generic.KeyValuePair`2<System.__Canon,System.__Canon>>, MutationInput<System.__Canon,System.__Canon>, KeyCollisionBehavior<System.__Canon,System.__Canon>)
+```
+
+A workaround could be to perform the `dotnet restore` using the official image, before using cdxgen-dotnet images.
+
+```shell
+docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -w /app -it mcr.microsoft.com/dotnet/sdk:8.0 dotnet restore
+```
+
 ### .Net framework issues
 
 Old .Net framework applications (<= 4.7) are well known for their dislike of linux and hence may not restore/build easily. To troubleshoot, try running the `nuget restore` command manually using the `bci-dotnet` image as shown.
@@ -203,7 +220,6 @@ nerdctl run --rm --platform=linux/arm64 -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp 
 ## License
 
 MIT
-
 
 ## Useful links
 
