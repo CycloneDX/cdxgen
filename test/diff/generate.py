@@ -25,7 +25,7 @@ def build_args():
     parser.add_argument(
         '--clone-dir',
         type=Path,
-        default=Path(f'{os.getenv("GITHUB_WORKSPACE")}/src_repos'),
+        default=f'{os.getenv("GITHUB_WORKSPACE")}/src_repos',
         help='Path to src_repos',
         dest='clone_dir'
     )
@@ -460,7 +460,7 @@ def run_pre_builds(repo_data, output_dir, debug_cmds, sdkman_sh):
     [
         cmds.extend(row['pre_build_cmd'].split(';'))
         for row in repo_data
-        if row['pre_build_cmd']
+        if row['pre_build_cmd'] and row['pre_build_cmd'].startswith('sdk use ')
     ]
     cmds = [cmd.lstrip().rstrip() for cmd in cmds]
     cmds = set(cmds)
