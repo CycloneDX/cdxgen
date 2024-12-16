@@ -18,7 +18,7 @@ def build_args():
     parser.add_argument(
         '--repo-csv',
         type=Path,
-        default='test/diff/repos.csv',
+        default='cdxgen_src/test/diff/repos.csv',
         help='Path to sources.csv',
         dest='repo_csv'
     )
