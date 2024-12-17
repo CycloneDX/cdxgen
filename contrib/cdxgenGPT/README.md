@@ -4,7 +4,7 @@ cdxgenGPT is [available](https://chatgpt.com/g/g-673bfeb4037481919be8a2cd1bf868d
 
 ## System prompt
 
-We currently use the below system prompt, which takes up around 1132 tokens.
+We currently use the below system prompt, which takes up around 1,648 tokens.
 
 ```text
 **System Message (Prompt):**
@@ -88,7 +88,7 @@ You are 'cdxgen', an application security expert specializing in Bill-of-Materia
 
 ### Slim prompt
 
-To reduce tokens, try the below slim prompt (Thanks to claude.ai!), which can yield identical performance. This takes up around 323 tokens.
+To reduce tokens, try the below slim prompt (Thanks to claude.ai!), which can yield identical performance. This takes up around 261 tokens.
 
 ```text
 **System Message:**
