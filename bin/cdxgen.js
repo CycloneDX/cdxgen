@@ -315,6 +315,10 @@ const args = yargs(hideBin(process.argv))
       "filename",
     ],
   })
+  .option("inspect-purl", {
+    description: "Genereate an SBOM for a specific purl",
+    type: "string"
+  })
   .completion("completion", "Generate bash/zsh completion")
   .array("type")
   .array("excludeType")
@@ -375,7 +379,7 @@ if (process.env.GLOBAL_AGENT_HTTP_PROXY || process.env.HTTP_PROXY) {
   globalAgent.bootstrap();
 }
 
-const filePath = args._[0] || ".";
+let filePath = args._[0] || ".";
 if (!args.projectName) {
   if (filePath !== ".") {
     args.projectName = basename(filePath);
@@ -565,6 +569,14 @@ const checkPermissions = (filePath) => {
     options.usagesSlicesFile = `${options.projectName}-usages.json`;
   }
   prepareEnv(filePath, options);
+
+  if (options.inspectPurl) {
+    const purlInspectorModule = await import("../lib/inspectors/inspect.js");
+    const purlObject = await purlInspectorModule.validateAndParsePurl(options.inspectPurl);
+    const pomPath = await purlInspectorModule.inspectPurl(purlObject);
+    filePath = dirname(pomPath);
+  }
+
   let bomNSData = (await createBom(filePath, options)) || {};
   // Add extra metadata and annotations with post processing
   bomNSData = postProcess(bomNSData, options);
