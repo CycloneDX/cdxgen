@@ -26,6 +26,7 @@ import { ATOM_DB, dirNameStr } from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
 import { postProcess } from "../lib/stages/postgen/postgen.js";
 import { prepareEnv } from "../lib/stages/pregen/pregen.js";
+import { PackageURL } from "packageurl-js";
 
 // Support for config files
 const configPath = findUpSync([
@@ -315,6 +316,10 @@ const args = yargs(hideBin(process.argv))
       "filename",
     ],
   })
+  .option("inspect-purl", {
+    description: "Genereate SBOM for a publicly available package (currently supports only purls from maven central)",
+    type: "string"
+  })
   .completion("completion", "Generate bash/zsh completion")
   .array("type")
   .array("excludeType")
@@ -375,7 +380,7 @@ if (process.env.GLOBAL_AGENT_HTTP_PROXY || process.env.HTTP_PROXY) {
   globalAgent.bootstrap();
 }
 
-const filePath = args._[0] || ".";
+let filePath = args._[0] || ".";
 if (!args.projectName) {
   if (filePath !== ".") {
     args.projectName = basename(filePath);
@@ -565,6 +570,32 @@ const checkPermissions = (filePath) => {
     options.usagesSlicesFile = `${options.projectName}-usages.json`;
   }
   prepareEnv(filePath, options);
+
+  if (options.inspectPurl) {
+    try {
+      const purlBomGenerator = await import("../lib/helpers/purlbom.js");
+      
+      let purlObj;
+      try {
+        purlObj = PackageURL.fromString(options.inspectPurl);
+      } catch (ex) {
+        console.error("Invalid PURL provided:", options.inspectPurl);
+        process.exit(1);
+      }
+
+      const pomPath = await purlBomGenerator.generatePurlMetadata(purlObj);
+      if (!pomPath) {
+        console.error("Failed to process the PURL:", options.inspectPurl);
+        process.exit(1);
+      }
+  
+      filePath = dirname(pomPath);
+    } catch (err) {
+      console.error("Unexpected error occurred:", err.message);
+      process.exit(1);
+    }
+  }
+
   let bomNSData = (await createBom(filePath, options)) || {};
   // Add extra metadata and annotations with post processing
   bomNSData = postProcess(bomNSData, options);
