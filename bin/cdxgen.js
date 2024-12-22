@@ -26,6 +26,7 @@ import { ATOM_DB, dirNameStr } from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
 import { postProcess } from "../lib/stages/postgen/postgen.js";
 import { prepareEnv } from "../lib/stages/pregen/pregen.js";
+import { PackageURL } from "packageurl-js";
 
 // Support for config files
 const configPath = findUpSync([
@@ -571,10 +572,28 @@ const checkPermissions = (filePath) => {
   prepareEnv(filePath, options);
 
   if (options.inspectPurl) {
-    const purlInspectorModule = await import("../lib/inspectors/inspect.js");
-    const purlObject = await purlInspectorModule.validateAndParsePurl(options.inspectPurl);
-    const pomPath = await purlInspectorModule.inspectPurl(purlObject);
-    filePath = dirname(pomPath);
+    try {
+      const purlBomGenerator = await import("../lib/helpers/purlbom.js");
+      
+      let purlObj;
+      try {
+        purlObj = PackageURL.fromString(options.inspectPurl);
+      } catch (ex) {
+        console.error("Invalid PURL provided:", options.inspectPurl);
+        process.exit(1);
+      }
+
+      const pomPath = await purlBomGenerator.generatePurlMetadata(purlObj);
+      if (!pomPath) {
+        console.error("Failed to process the PURL:", options.inspectPurl);
+        process.exit(1);
+      }
+  
+      filePath = dirname(pomPath);
+    } catch (err) {
+      console.error("Unexpected error occurred:", err.message);
+      process.exit(1);
+    }
   }
 
   let bomNSData = (await createBom(filePath, options)) || {};
