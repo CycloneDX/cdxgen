@@ -317,7 +317,7 @@ const args = yargs(hideBin(process.argv))
     ],
   })
   .option("inspect-purl", {
-    description: "Genereate an SBOM for a specific purl",
+    description: "Genereate SBOM for a publicly available package (currently supports only purls from maven central)",
     type: "string"
   })
   .completion("completion", "Generate bash/zsh completion")
