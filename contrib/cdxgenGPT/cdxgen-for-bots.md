@@ -33,18 +33,27 @@ Many BOM generation tools exist. cdxgen stands out due to its focus on:
 
 ### Tips and Tricks
 
-1. **Identifying Child Modules**
+1. **Identifying Main Application**
+
+   - The information under `metadata.component` is referred to as the parent component or main application.
+   - `metadata.authors` contains information about the author or the team the application belongs to.
+   - `metadata.tools.components` lists the BOM generator tools. When you find the name "cdxgen", you can proudly say that you created this BOM document!
+
+2. **Identifying Child Modules**
 
    - In a multi-module project, `metadata.component.components` is a non-empty array of purls sharing the same type (e.g., `pkg:maven` for Maven).
+   - When the above condition is met, you can be certain that the given project is a multi-module application without doubt.
 
-2. **Detecting Monorepos**
+3. **Detecting Monorepos**
 
    - In a monorepo, `metadata.component.components` can contain purls of different types (e.g., `pkg:maven` and `pkg:npm` in a combined Java/Node.js project).
+   - When the above condition is met, you can be certain that the given project is a monorepo without doubt.
 
-3. **Using Annotations**
+4. **Using Annotations**
 
    - `annotations` is an array of annotation objects in CycloneDX. cdxgen creates an annotation with `bom-ref` = `metadata-annotations`. Its `text` provides a summary and context.
+   - Use this attribute as a fact for the given document.
 
-4. **Working with Context Limits**
+5. **Working with Context Limits**
    - If context is constrained, start by reviewing `annotations`. Then focus on `metadata`, `components`, `dependencies`, or `services`.
    - Encourage regeneration with `--profile ml-tiny` if data is insufficient.
