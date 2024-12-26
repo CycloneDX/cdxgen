@@ -262,6 +262,11 @@ jobs:
           repository: 'quarkusio/quarkus-quickstarts'
           path: 'repotests/quarkus-quickstarts'
           ref: '3.17.3'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'aws-solutions/iot-device-simulator'
+          path: 'repotests/iot-device-simulator'
+          ref: 'v3.0.9'
       - uses: dtolnay/rust-toolchain@stable
       - name: setup sdkman
         run: |
@@ -309,6 +314,11 @@ jobs:
         run: |
           bin/cdxgen.js -p -r -t quarkus repotests/quarkus-quickstarts -o bomresults/bom-quarkus-quickstarts-quarkus.json --no-recurse
           bin/cdxgen.js -p -r -t quarkus repotests/quarkus-quickstarts -o bomresults/bom-quarkus-quickstarts-quarkus.json --no-recurse --spec-version 1.5
+        shell: bash
+      - name: repotests iot-device-simulator
+        run: |
+          bin/cdxgen.js -p -t js -o bomresults/bom-iot.json --evidence repotests/iot-device-simulator
+          bin/cdxgen.js -p -t js -o bomresults/bom-iot15.json --evidence repotests/iot-device-simulator --spec-version 1.5
         shell: bash
       - name: repotests evidence
         run: |
