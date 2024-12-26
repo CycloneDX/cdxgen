@@ -67,7 +67,7 @@ RUN set -e; \
     && cargo --version \
     && rustc --version \
     && python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade pip virtualenv \
-    && python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade pipenv poetry --target /opt/pypi \
+    && python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade pipenv poetry uv --target /opt/pypi \
     && curl -s "https://get.sdkman.io" | bash \
     && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true" >> $HOME/.sdkman/etc/config \
     && source "$HOME/.sdkman/bin/sdkman-init.sh" \

@@ -28,7 +28,7 @@ RUN source /root/.nvm/nvm.sh \
     && zypper --non-interactive install -l --no-recommends clang7 llvm7 llvm7-devel libcurl-devel libjpeg62-devel libmariadb-devel \
         postgresql-devel postgresql16-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel \
     && python3 -m pip install --no-cache-dir --upgrade pip virtualenv \
-    && python3 -m pip install --no-cache-dir --upgrade --user pipenv poetry blint \
+    && python3 -m pip install --no-cache-dir --upgrade --user pipenv poetry blint uv \
     && npm install -g @cyclonedx/cdxgen --omit=dev \
     && zypper clean -a
 
