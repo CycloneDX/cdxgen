@@ -388,13 +388,15 @@ export function parsePiplockData(lockData: any): Promise<any[]>;
 /**
  * Method to parse python pyproject.toml file
  *
- * @param {string} tomlFile Toml file
+ * @param {string} tomlFile pyproject.toml file
+ * @returns {Object} Object with parent component, root dependencies, and metadata.
  */
-export function parsePyProjectToml(tomlFile: string): {};
+export function parsePyProjectTomlFile(tomlFile: string): any;
 /**
- * Method to parse poetry.lock data
+ * Method to parse poetry.lock like data.
+ * TODO: Rewrite to use toml library.
  *
- * @param {Object} lockData JSON data from poetry.lock
+ * @param {Object} lockData JSON data from poetry.lock, pdm.lock, or uv.lock file
  * @param {string} lockFile Lock file name for evidence
  * @param {string} pyProjectFile pyproject.toml file
  */
@@ -404,7 +406,12 @@ export function parsePoetrylockData(lockData: any, lockFile: string, pyProjectFi
     rootList?: undefined;
 } | {
     pkgList: any[];
-    rootList: any[];
+    rootList: {
+        name: any;
+        version: any;
+        description: any;
+        properties: any[];
+    }[];
     dependenciesList: {
         ref: string;
         dependsOn: any[];

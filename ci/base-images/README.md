@@ -146,7 +146,7 @@ docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -w /app -it mcr.microsoft.com/dot
 Old .Net framework applications (<= 4.7) are well known for their dislike of linux and hence may not restore/build easily. To troubleshoot, try running the `nuget restore` command manually using the `bci-dotnet` image as shown.
 
 ```shell
-docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -w /app -it ghcr.io/cyclonedx/bci-dotnet:main nuget restore -Verbosity detailed /app/<solution file name>
+docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -w /app -it ghcr.io/cyclonedx/bci-dotnet:master nuget restore -Verbosity detailed /app/<solution file name>
 ```
 
 If you see any mono-related crashes, there isn't a lot that can be done other than using the correct version of Windows for the restore step.
@@ -156,7 +156,7 @@ If you see any mono-related crashes, there isn't a lot that can be done other th
 Assemblies that are present in the Global Assembly Cache can be referred to and used directly without specifying a version number. This style of includes is common with namespaces such as `System.`, `Microsoft.`, and `Mono.`. Use the command `gacutil -l` to [obtain](https://learn.microsoft.com/en-us/dotnet/framework/app-domains/how-to-view-the-contents-of-the-gac#view-the-assemblies-in-the-gac) the version details for libraries from GAC.
 
 ```shell
-docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -w /app -it ghcr.io/cyclonedx/bci-dotnet:main gacutil -l
+docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -w /app -it ghcr.io/cyclonedx/bci-dotnet:master gacutil -l
 ```
 
 Sample output:

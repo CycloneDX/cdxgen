@@ -1,0 +1,91 @@
+#################################################
+# Project metadata
+#################################################
+
+[project]
+requires-python = ">=3.11"
+name = "fastapi-nano"
+version = "0.1.0"
+description = "A minimal FastAPI project template."
+readme = "README.md"
+keywords = ["fastapi", "template", "minimal", "docker", "cookiecutter"]
+license = {file = "LICENSE"}
+authors = [{name = "Redowan Delowar", email = "redowan.nafi@gmail.com"}]
+dependencies = [
+    "bcrypt>=4.2.0",
+    "fastapi>=0.115.4",
+    "gunicorn>=23.0.0",
+    "passlib>=1.7.4",
+    "python-jose[cryptography]>=3.3.0",
+    "python-multipart>=0.0.17",
+    "uvicorn>=0.32.0",
+]
+[dependency-groups]
+dev = [
+    "httpx>=0.27.2",
+    "mypy>=1.13.0",
+    "pip-tools>=7.4.1",
+    "pytest>=8.3.3",
+    "pytest-cov>=6.0.0",
+    "requests>=2.32.3",
+    "ruff>=0.7.1",
+]
+
+[project.urls]
+Repository = "https://github.com/rednafi/fastapi-nano.git"
+
+#################################################
+# Mypy config
+#################################################
+
+[tool.mypy]
+follow_imports = "skip"
+ignore_missing_imports = true
+warn_no_return = true
+warn_unused_ignores = true
+allow_untyped_globals = true
+allow_redefinition = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+show_error_codes = true
+pretty = true
+
+[[tool.mypy.overrides]]
+module = "svc.tests.*"
+ignore_errors = true
+
+#################################################
+# Ruff config
+#################################################
+
+[tool.ruff]
+respect-gitignore = true
+target-version = "py311"
+
+[tool.ruff.lint]
+# Enable Pyflakes `E` and `F` codes by default
+select = ["E", "F", "PT", "C4", "I"]
+ignore = ["E501"]
+
+per-file-ignores = {}
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+#################################################
+# Pytest config
+#################################################
+
+[tool.pytest.ini_options]
+addopts = "--strict-markers --maxfail 1 --cov svc tests/ --no-header"
+markers = """
+    integration: mark a test as an integration test.
+"""
+console_output_style = "progress"
+
+#################################################
+# Setuptools config
+#################################################
+
+[tool.setuptools.packages.find]
+where = ["app"]  # ["."] by default

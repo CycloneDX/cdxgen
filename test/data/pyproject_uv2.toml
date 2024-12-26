@@ -1,0 +1,43 @@
+[project]
+name = "una-root"
+version = "0"
+requires-python = ">=3.11"
+dependencies = ["una", "hatch-una"]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest >= 8.3.1",
+    "basedpyright >= 1.15.2",
+    "mkdocs-material >= 9.5.31",
+    "ruff >= 0.6.2",
+]
+package = false
+
+[tool.uv.sources]
+una = { workspace = true }
+hatch-una = { workspace = true }
+
+[tool.uv.workspace]
+members = ["una", "plugins/hatch"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["A", "E", "F", "I", "N", "T100", "UP", "ANN401"]
+ignore = ["F841"]  # pyright does this
+
+[tool.ruff.lint.isort]
+known-first-party = ["una"]
+
+[tool.basedpyright]
+venvPath = "."
+venv = ".venv"
+pythonVersion = "3.11"
+strict = ["una/**/*.py", "plugins/**/*.py"]
+ignore = ["dist/"]
+reportUnnecessaryTypeIgnoreComment = true
+reportImplicitOverride = false
+reportUnusedCallResult = false
+enableTypeIgnoreComments = true
