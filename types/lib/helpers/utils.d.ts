@@ -1115,6 +1115,12 @@ export function executeAtom(src: any, args: any): boolean;
  */
 export function findAppModules(src: string, language: string, methodology?: string, slicesFile?: string): any;
 /**
+ * Create uv.lock file with uv sync command.
+ *
+ * @param {string} basePath
+ */
+export function createUVLock(basePath: string): void;
+/**
  * Execute pip freeze by creating a virtual env in a temp directory and construct the dependency tree
  *
  * @param {string} basePath Base path
