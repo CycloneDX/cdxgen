@@ -45,7 +45,7 @@ RUN set -e; \
     && mv /root/.sdkman/candidates/* /opt/ \
     && rm -rf /root/.sdkman \
     && python3 -m pip install --no-cache-dir --upgrade pip virtualenv \
-    && python3 -m pip install --no-cache-dir --upgrade pipenv poetry --target /opt/pypi \
+    && python3 -m pip install --no-cache-dir --upgrade pipenv poetry uv --target /opt/pypi \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
     && source /root/.nvm/nvm.sh \
     && nvm install ${NODE_VERSION} \

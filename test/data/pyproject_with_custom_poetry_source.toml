@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "cpggen"
+name = "cpggen" # This is cpggen not something else
 version = "1.9.0"
 description = "Generate CPG for multiple languages for code and threat analysis"
 authors = ["Team AppThreat <cloud@appthreat.com>"]
