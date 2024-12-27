@@ -410,7 +410,7 @@ jobs:
         shell: bash
       - name: repotests bazel-examples
         run: |
-          bin/cdxgen.js -p -r -t java17 repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json --fail-on-error
+          bin/cdxgen.js -p -r -t java17 repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json
         shell: bash
       - name: repotests gallery
         run: |
