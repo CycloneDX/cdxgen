@@ -276,6 +276,7 @@ const args = yargs(hideBin(process.argv))
     description:
       "The list of standards which may consist of regulations, industry or organizational-specific standards, maturity models, best practices, or any other requirements which can be evaluated against or attested to.",
     choices: [
+      "asvs-5.0",
       "asvs-4.0.3",
       "bsimm-v13",
       "masvs-2.0.0",
