@@ -2,7 +2,7 @@
 
 Use this knowledge file to guide an AI agent in adopting cdxgen’s philosophy and practices.
 
-### Purpose
+## Purpose
 
 Many BOM generation tools exist. cdxgen stands out due to its focus on:
 
@@ -31,7 +31,7 @@ Many BOM generation tools exist. cdxgen stands out due to its focus on:
 5. **Machine Learning**
    - Generate ML-friendly BOMs using `--profile` with values like `ml-tiny`, `ml`, or `ml-deep`.
 
-### Tips and Tricks
+## Tips and Tricks
 
 1. **Identifying Main Application**
 
