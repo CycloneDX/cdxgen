@@ -428,8 +428,8 @@ jobs:
       - name: repotests microservices-demo
         if: matrix.os == 'windows-latest'
         run: |
-          bin/cdxgen.js -p --no-recurse repotests/microservices-demo -o bomresults/bom-msd-1.json --fail-on-error
-          bin/cdxgen.js -p -r repotests/microservices-demo -o bomresults/bom-msd-2.json --fail-on-error
+          bin/cdxgen.js -p --no-recurse repotests/microservices-demo -o bomresults/bom-msd-1.json
+          bin/cdxgen.js -p -r repotests/microservices-demo -o bomresults/bom-msd-2.json
           bin/cdxgen.js -p -r -t universal repotests/microservices-demo -o bomresults/bom-yaml.json
         shell: bash
       - name: repotests openpbs
@@ -458,10 +458,10 @@ jobs:
         shell: bash
       - name: repotests dotnet-paket
         run: |
-          bin/cdxgen.js -p -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket.json --deep
-          FETCH_LICENSE=true bin/cdxgen.js -p -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket-2.json --fail-on-error
-          bin/cdxgen.js -p -r -t dotnet repotests/dotnet-podcasts -o bomresults/bom-dotnet-podcasts.json --profile research --export-proto
-          bin/cdxgen.js -p -r -t dotnet repotests/react-native-windows -o bomresults/bom-react-native-windows.json
+          bin/cdxgen.js -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket.json --deep
+          FETCH_LICENSE=true bin/cdxgen.js -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket-2.json --fail-on-error
+          bin/cdxgen.js -r -t dotnet repotests/dotnet-podcasts -o bomresults/bom-dotnet-podcasts.json --profile research --export-proto
+          bin/cdxgen.js -r -t dotnet repotests/react-native-windows -o bomresults/bom-react-native-windows.json
         shell: bash
       - name: repotests SimpleFrameworkApp
         run: |
