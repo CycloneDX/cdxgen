@@ -510,6 +510,15 @@ const applyAdvancedOptions = (options) => {
       options.installDeps = true;
       break;
   }
+  // When the user specifies source-code-analysis as a technique, then enable deep and evidence mode.
+  if (
+    options?.technique &&
+    Array.isArray(options.technique) &&
+    options?.technique?.includes("source-code-analysis")
+  ) {
+    options.deep = true;
+    options.evidence = true;
+  }
   return options;
 };
 applyAdvancedOptions(options);
