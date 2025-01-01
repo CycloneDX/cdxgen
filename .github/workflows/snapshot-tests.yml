@@ -15,9 +15,8 @@ jobs:
     steps:
 
       - uses: actions/checkout@v4
-
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        with:
+          path: cdxgen_src
 
       -  name: cdxgen, custom-json-diff installs
          shell: bash
@@ -25,16 +24,21 @@ jobs:
            SHELL: bash
          run: |
            rm -rf original_snapshots new_snapshots src_repos
+           cd cdxgen_src
+           corepack enable pnpm
            cdxgen_tarball=$(pnpm pack | tail -1)
            npm install -g "$cdxgen_tarball"
-           git clone https://github.com/appthreat/cdxgen-samples.git original_snapshots
+           cd ..
            python3.12 -m venv .venv
-           source .venv/bin/activate && pip install -r test/diff/requirements.txt
+           source .venv/bin/activate && pip install -r cdxgen_src/test/diff/requirements.txt
+           git clone https://github.com/appthreat/cdxgen-samples.git original_snapshots
+           cd original_snapshots
+           git checkout feature/expand_snapshots_3
 
       - name: Generate scripts
         run: |
           source .venv/bin/activate
-          python test/diff/generate.py
+          python cdxgen_src/test/diff/generate.py
 
       - name: Upload shell scripts generated as artifact
         uses: actions/upload-artifact@v4
@@ -58,7 +62,7 @@ jobs:
       - name: Test BOMs
         run: |
           source .venv/bin/activate
-          python test/diff/diff_tests.py --migrate-legacy
+          python cdxgen_src/test/diff/diff_tests.py --migrate-legacy
           if test -f new_snapshots/diffs.json; then
             echo "status=FAILED" >> "$GITHUB_ENV"
           fi
