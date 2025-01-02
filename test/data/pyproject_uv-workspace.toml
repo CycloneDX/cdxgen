@@ -1,0 +1,21 @@
+[project]
+name = "my-app"
+version = "0.1.0"
+description = "An example of uv workspace"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "my-lib",
+]
+
+[dependency-groups]
+dev = [
+    "ruff >= 0.8.1",
+    "pytest >= 8.3.4",
+]
+
+[tool.uv.sources]
+my-lib = { workspace = true }
+
+[tool.uv.workspace]
+members = [ "packages/*" ]
