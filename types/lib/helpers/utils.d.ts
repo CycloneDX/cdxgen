@@ -402,9 +402,11 @@ export function parsePyProjectTomlFile(tomlFile: string): any;
 export function parsePyLockData(lockData: any, lockFile: string, pyProjectFile: string): Promise<{
     pkgList: any[];
     dependenciesList: any[];
+    parentComponent?: undefined;
     rootList?: undefined;
     workspaceWarningShown?: undefined;
 } | {
+    parentComponent: any;
     pkgList: any[];
     rootList: {
         name: any;
