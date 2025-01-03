@@ -393,18 +393,20 @@ export function parsePiplockData(lockData: any): Promise<any[]>;
  */
 export function parsePyProjectTomlFile(tomlFile: string): any;
 /**
- * Method to parse poetry.lock like data.
- * TODO: Rewrite to use toml library.
+ * Method to parse python lock files such as poetry.lock, pdm.lock, uv.lock.
  *
  * @param {Object} lockData JSON data from poetry.lock, pdm.lock, or uv.lock file
  * @param {string} lockFile Lock file name for evidence
  * @param {string} pyProjectFile pyproject.toml file
  */
-export function parsePoetrylockData(lockData: any, lockFile: string, pyProjectFile: string): Promise<{
+export function parsePyLockData(lockData: any, lockFile: string, pyProjectFile: string): Promise<{
     pkgList: any[];
     dependenciesList: any[];
+    parentComponent?: undefined;
     rootList?: undefined;
+    workspaceWarningShown?: undefined;
 } | {
+    parentComponent: any;
     pkgList: any[];
     rootList: {
         name: any;
@@ -416,6 +418,7 @@ export function parsePoetrylockData(lockData: any, lockFile: string, pyProjectFi
         ref: string;
         dependsOn: any[];
     }[];
+    workspaceWarningShown: boolean;
 }>;
 /**
  * Method to parse requirements.txt data. This must be replaced with atom parsedeps.
@@ -1117,9 +1120,10 @@ export function findAppModules(src: string, language: string, methodology?: stri
 /**
  * Create uv.lock file with uv sync command.
  *
- * @param {string} basePath
+ * @param {string} basePath Path
+ * @param {Object} options CLI options
  */
-export function createUVLock(basePath: string): void;
+export function createUVLock(basePath: string, options: any): void;
 /**
  * Execute pip freeze by creating a virtual env in a temp directory and construct the dependency tree
  *
