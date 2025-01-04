@@ -65,7 +65,7 @@
   "bugs": {
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
-  "packageManager": "pnpm@9.15.1",
+  "packageManager": "pnpm@9.15.2",
   "lint-staged": {
     "*": "biome check --fix --no-errors-on-unmatched"
   },
