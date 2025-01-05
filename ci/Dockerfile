@@ -1,4 +1,4 @@
-FROM almalinux:10-kitten-minimal
+FROM almalinux:9.5-minimal
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
@@ -17,12 +17,13 @@ ARG SWIFT_BRANCH=swift-6.0.1-release
 ARG SWIFT_VERSION=swift-6.0.1-RELEASE
 ARG SWIFT_WEBROOT=https://download.swift.org
 ARG JAVA_VERSION=23.0.1-tem
-ARG SBT_VERSION=1.10.5
+ARG SBT_VERSION=1.10.7
 ARG MAVEN_VERSION=3.9.9
 ARG GRADLE_VERSION=8.11
 ARG GO_VERSION=1.23.3
 ARG NODE_VERSION=23.5.0
 ARG PYTHON_VERSION=3.12
+ARG RUBY_VERSION=3.4.0
 
 ENV GOPATH=/opt/app-root/go \
     JAVA_VERSION=$JAVA_VERSION \
@@ -36,6 +37,7 @@ ENV GOPATH=/opt/app-root/go \
     SBT_HOME="/root/.sdkman/candidates/sbt/${SBT_VERSION}" \
     PYTHON_VERSION=3.12 \
     PYTHON_CMD=/usr/bin/python3.12 \
+    RUBY_VERSION=$RUBY_VERSION \
     PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING="utf-8" \
     COMPOSER_ALLOW_SUPERUSER=1 \
@@ -56,8 +58,13 @@ ENV GOPATH=/opt/app-root/go \
     CDXGEN_IN_CONTAINER=true \
     SDKMAN_DIR=/root/.sdkman \
     SDKMAN_CANDIDATES_DIR=/root/.sdkman/candidates \
-    npm_config_python=/usr/bin/python3.12
-ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/root/.cargo/bin:/opt/pypi/bin:
+    npm_config_python=/usr/bin/python3.12 \
+    MALLOC_CONF="dirty_decay_ms:2000,narenas:2,background_thread:true" \
+    RUBY_CONFIGURE_OPTS="--with-jemalloc --enable-yjit" \
+    RUBYOPT="--yjit" \
+    RUBY_BUILD_BUILD_PATH="/tmp/rbenv" \
+    RUBY_BUILD_HTTP_CLIENT=curl
+ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/root/.cargo/bin:/opt/pypi/bin:/root/.rbenv/bin:
 
 COPY . /opt/cdxgen
 
@@ -76,8 +83,11 @@ RUN set -e; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
     esac \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
-    python${PYTHON_VERSION} python${PYTHON_VERSION}-devel python${PYTHON_VERSION}-pip ruby ruby-devel glibc-common glibc-all-langpacks \
-        pcre2 which tar gzip zip unzip bzip2 sudo ncurses sqlite-devel gnupg2 dotnet-sdk-9.0 \
+        python${PYTHON_VERSION} python${PYTHON_VERSION}-devel python${PYTHON_VERSION}-pip glibc-common glibc-all-langpacks \
+        openssl-devel libffi-devel libyaml zlib-devel \
+        pcre2 which tar gzip zip unzip bzip2 sudo ncurses ncurses-devel sqlite-devel gnupg2 dotnet-sdk-9.0 \
+    && microdnf install -y epel-release \
+    && microdnf install --enablerepo=crb -y libyaml-devel jemalloc-devel \
     && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 10 \
     && alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYTHON_VERSION} 10 \
     && /usr/bin/python${PYTHON_VERSION} --version \
@@ -93,6 +103,17 @@ RUN set -e; \
     && source /root/.nvm/nvm.sh \
     && nvm install ${NODE_VERSION} \
     && node --version \
+    && git clone https://github.com/rbenv/rbenv.git --depth=1 ~/.rbenv \
+    && echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc \
+    && echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.bashrc \
+    && source ~/.bashrc \
+    && mkdir -p "$(rbenv root)/plugins" \
+    && git clone https://github.com/rbenv/ruby-build.git --depth=1 "$(rbenv root)/plugins/ruby-build" \
+    && rbenv install ${RUBY_VERSION} \
+    && rbenv global ${RUBY_VERSION} \
+    && ruby --version \
+    && which ruby \
+    && rm -rf /root/.rbenv/cache $RUBY_BUILD_BUILD_PATH \
     && curl -s "https://get.sdkman.io" | bash \
     && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> $HOME/.sdkman/etc/config \
     && source "$HOME/.sdkman/bin/sdkman-init.sh" \
@@ -112,7 +133,6 @@ RUN set -e; \
     && chmod +x /usr/bin/swift \
     && rm -rf "$GNUPGHOME" swift.tar.gz.sig swift.tar.gz \
     && swift --version \
-    && microdnf install -y epel-release \
     && mkdir -p ${ANDROID_HOME}/cmdline-tools \
     && curl -L https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o ${ANDROID_HOME}/cmdline-tools/android_tools.zip \
     && unzip ${ANDROID_HOME}/cmdline-tools/android_tools.zip -d ${ANDROID_HOME}/cmdline-tools/ \
@@ -131,7 +151,7 @@ RUN set -e; \
     && /usr/local/bin/lein \
     && curl -L -O https://github.com/clojure/brew-install/releases/latest/download/linux-install.sh \
     && chmod +x linux-install.sh \
-    && sudo ./linux-install.sh \
+    && ./linux-install.sh \
     && curl -L --output /usr/local/bin/bazel https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
     && chmod +x /usr/local/bin/bazel \
     && useradd -ms /bin/bash cyclonedx \

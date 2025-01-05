@@ -1,4 +1,4 @@
-FROM almalinux:10-kitten-minimal
+FROM almalinux:9.5-minimal
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
@@ -11,7 +11,7 @@ LABEL maintainer="cyclonedx" \
       org.opencontainers.image.description="Container image for cdxgen SBOM generator" \
       org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ppc64 -r /app --server"
 
-ARG SBT_VERSION=1.10.5
+ARG SBT_VERSION=1.10.7
 ARG MAVEN_VERSION=3.9.9
 ARG GRADLE_VERSION=8.11
 ARG GO_VERSION=1.23.3
@@ -56,7 +56,7 @@ RUN set -e; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
     esac; \
     echo -e "[nodejs]\nname=nodejs\nstream=20\nprofiles=\nstate=enabled\n" > /etc/dnf/modules.d/nodejs.module \
-    && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
+    && microdnf install --nodocs -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
         python${PYTHON_VERSION} python${PYTHON_VERSION}-devel python${PYTHON_VERSION}-pip ruby ruby-devel java-21-openjdk-headless \
         pcre2 which tar gzip zip unzip bzip2 sudo nodejs ncurses gnupg2 sqlite-devel \
     && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 10 \
@@ -93,7 +93,7 @@ RUN set -e; \
     && /usr/local/bin/lein \
     && curl -L -O https://github.com/clojure/brew-install/releases/latest/download/linux-install.sh \
     && chmod +x linux-install.sh \
-    && sudo ./linux-install.sh \
+    && ./linux-install.sh \
     && useradd -ms /bin/bash cyclonedx \
     && npm install --unsafe-perm -g corepack \
     && npm install --unsafe-perm -g @microsoft/rush --omit=dev \

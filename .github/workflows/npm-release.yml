@@ -65,6 +65,7 @@ jobs:
       with:
         node-version: '23.x'
         registry-url: https://registry.npmjs.org/
+    - uses: oras-project/setup-oras@v1
     - name: Trim CI agent
       run: |
         chmod +x contrib/free_disk_space.sh
