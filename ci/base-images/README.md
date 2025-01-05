@@ -54,6 +54,12 @@ Dotnet 3.1 or Dotnet 6.0
 docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-dotnet6:v11 -r /app -o /app/bom.json -t dotnet
 ```
 
+Dotnet 3.1 or Dotnet 6.0 (debian)
+
+```shell
+docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11 -r /app -o /app/bom.json -t dotnet
+```
+
 Dotnet 7.0
 
 ```shell
@@ -66,12 +72,26 @@ Dotnet 8.0
 docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-dotnet8:v11 -r /app -o /app/bom.json -t dotnet
 ```
 
+Dotnet 8.0 (debian)
+
+Use the debian version of the image in case of any crashes with the SLE version used by the image above.
+
+```shell
+docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-dotnet8:v11 -r /app -o /app/bom.json -t dotnet
+```
+
 Dotnet 9.0
 
 Dotnet 9 is also bundled with the official `ghcr.io/cyclonedx/cdxgen` image.
 
 ```shell
 docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-dotnet9:v11 -r /app -o /app/bom.json -t dotnet
+```
+
+Dotnet 9.0 (debian)
+
+```shell
+docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-dotnet9:v11 -r /app -o /app/bom.json -t dotnet
 ```
 
 ### Python applications
