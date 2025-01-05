@@ -19,7 +19,6 @@ ENV JAVA_VERSION=$JAVA_VERSION \
 ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/usr/local/bin:/root/.local/bin:
 
 COPY ci/base-images/debian/install.sh /tmp/
-COPY ci/base-images/nuget /usr/lib/mono/nuget
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl bash bzip2 git-core zip unzip make gawk \
     && apt-get install -y build-essential mono-devel python3 python3-pip python3-dev \
@@ -31,7 +30,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl bash bzip2
     && echo -e '#!/bin/sh\nexec /usr/bin/mono /usr/lib/mono/nuget/nuget.exe "$@"\n' > /usr/bin/nuget \
     && chmod +x /usr/bin/nuget \
     && rm -rf /usr/lib/mono/nuget \
-    && nuget help \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
+COPY ci/base-images/nuget /usr/lib/mono/nuget
 CMD /bin/bash
