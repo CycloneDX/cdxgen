@@ -21,16 +21,12 @@ ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:
 COPY ci/base-images/debian/install.sh /tmp/
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl bash bzip2 git-core zip unzip make gawk \
-    && apt-get install -y build-essential mono-devel python3 python3-pip python3-dev \
+    && apt-get install -y build-essential mono-devel mono-xbuild nuget python3 python3-pip python3-dev \
     && chmod +x /tmp/install.sh \
     && ./tmp/install.sh && rm /tmp/install.sh \
     && node -v \
     && npm -v \
     && dotnet --list-sdks \
-    && echo -e '#!/bin/sh\nexec /usr/bin/mono /usr/lib/mono/nuget/nuget.exe "$@"\n' > /usr/bin/nuget \
-    && chmod +x /usr/bin/nuget \
-    && rm -rf /usr/lib/mono/nuget \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
-COPY ci/base-images/nuget /usr/lib/mono/nuget
 CMD /bin/bash
