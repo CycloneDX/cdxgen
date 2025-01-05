@@ -38,7 +38,7 @@ RUN set -e; \
             ;; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
     esac \
-    && zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends gcc14 gcc14-c++ gcc14-fortran \
+    && zypper refresh && zypper --non-interactive dup && zypper --non-interactive install -l --no-recommends gcc14 gcc14-c++ gcc14-fortran \
         bzip2 python312 python312-devel python312-pip findutils java-23-openjdk-devel \
         libicu-devel gdal-devel git-core wget zip unzip make gawk nodejs22 npm22 rust1.81 cargo1.81 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 10 \

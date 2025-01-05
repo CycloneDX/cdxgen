@@ -21,7 +21,7 @@ RUN set -e; \
             ;; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
     esac \
-    && zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends gcc12 gcc12-c++ gcc12-fortran \
+    && zypper refresh && zypper --non-interactive dup && zypper --non-interactive install -l --no-recommends gcc12 gcc12-c++ gcc12-fortran \
         python310 python310-devel python310-pip findutils java-23-openjdk-devel \
         bzip2 git-core wget zip unzip make gawk nodejs22 npm22 nodejs22-devel gdal-devel libxml2-devel \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-12 10 \
