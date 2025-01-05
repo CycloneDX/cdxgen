@@ -31,7 +31,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl bash bzip2
     && echo -e '#!/bin/sh\nexec /usr/bin/mono /usr/lib/mono/nuget/nuget.exe "$@"\n' > /usr/bin/nuget \
     && chmod +x /usr/bin/nuget \
     && rm -rf /usr/lib/mono/nuget \
-    && nuget --help \
+    && nuget help \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
 CMD /bin/bash
