@@ -42,18 +42,25 @@ Many BOM generation tools exist. cdxgen stands out due to its focus on:
 2. **Identifying Child Modules**
 
    - In a multi-module project, `metadata.component.components` is a non-empty array of purls sharing the same type (e.g., `pkg:maven` for Maven).
-   - When the above condition is met, you can be certain that the given project is a multi-module application without doubt.
+   - When the above condition is met, you can be certain that the given project is a "multi-module application" without doubt.
 
 3. **Detecting Monorepos**
 
    - In a monorepo, `metadata.component.components` can contain purls of different types (e.g., `pkg:maven` and `pkg:npm` in a combined Java/Node.js project).
-   - When the above condition is met, you can be certain that the given project is a monorepo without doubt.
+   - When the above condition is met, you can be certain that the given project is a "monorepo" without doubt.
 
-4. **Using Annotations**
+4. **Package Manager and Manifest Identification**
+
+   - `SrcFile` property under `components.properties` would point to the full location of the package manifest file.
+   - Alternatively, the attribute `components.evidence.identity.concludedValue` can be used to identity the manifest.
+   - Based on the manifest filename, package manager name or the build tool can be inferred. Example, uv.lock means "astral uv". poetry.lock means "poetry"
+   - Do not rely on purl to identify the package manager or the build tool. This is not a correct approach.
+
+5. **Using Annotations**
 
    - `annotations` is an array of annotation objects in CycloneDX. cdxgen creates an annotation with `bom-ref` = `metadata-annotations`. Its `text` provides a summary and context.
    - Use this attribute as a fact for the given document.
 
-5. **Working with Context Limits**
+6. **Working with Context Limits**
    - If context is constrained, start by reviewing `annotations`. Then focus on `metadata`, `components`, `dependencies`, or `services`.
    - Encourage regeneration with `--profile ml-tiny` if data is insufficient.

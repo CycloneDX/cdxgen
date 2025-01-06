@@ -483,8 +483,8 @@ jobs:
           file: ci/base-images/cdxgen/Dockerfile.dotnet8
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.meta-cdxgen-dotnet8.outputs.tags }}
-          labels: ${{ steps.meta-cdxgen-dotnet8.outputs.labels }}
+          tags: ${{ steps.meta-cdxgen-debian-dotnet8.outputs.tags }}
+          labels: ${{ steps.meta-cdxgen-debian-dotnet8.outputs.labels }}
 
   sle-dotnet9-image:
     if: github.repository == 'CycloneDX/cdxgen'
