@@ -1,5 +1,5 @@
 project,link,language,language_range,config_files,package_manager,pm_version,pre_build_cmd,build_cmd,cdxgen_vars,commit
-genforce,https://github.com/genforce/genforce.git,python,"3.9.20,3.10.15",requirements.txt,pip,,,pip install -r requirements.txt,,197feee82101b78266521c8470648bbb9b7f31f4
+genforce,https://github.com/genforce/genforce.git,python,"3.9.21,3.10.16",requirements.txt,pip,,,pip install -r requirements.txt,,197feee82101b78266521c8470648bbb9b7f31f4
 java-sec-code,https://github.com/JoyChou93/java-sec-code.git,java8,8,,,,sdk use java 8.0.432-tem,mvn -B clean compile -DskipTests=true,,457d703e8f89bff657c6c51151ada71ebd09a1c6
 restic,https://github.com/restic/restic.git,go,,,,,,go run build.go,,3786536dc18ef27aedcfa8e4c6953b48353eee79
 syncthing,https://github.com/syncthing/syncthing.git,go,,,,,,go run build.go,,ba6ac2f604eb1cd27764460b687537c5e40aaaf8
@@ -9,7 +9,7 @@ astro,https://github.com/withastro/astro.git,javascript,>=18.17.1,"package.json,
 plantuml,https://github.com/plantuml/plantuml.git,java8,8,,gradle,,sdk use java 8.0.432-tem,gradle clean build -x javaDoc -PjavacRelease=8,GRADLE_ARGS='clean build -x javaDoc -PjavacRelease=8',8eb791f39478778788fd47a9195dc1b2feb3eade
 plantuml_17,https://github.com/plantuml/plantuml.git,java17,17,,gradle,,,gradle clean build -x javaDoc -PjavacRelease=17,GRADLE_ARGS='clean build -x javaDoc -PjavacRelease=17',8eb791f39478778788fd47a9195dc1b2feb3eade
 jazzer,https://github.com/CodeIntelligenceTesting/jazzer.git,java8,8,,bazelisk,7.3.0,sdk use java 8.0.432-tem,bazelisk build //:jazzer_release,BAZEL_CMD='bazelisk' BAZEL_TARGET=//:jazzer_release,3947707d7db7e5cae0c8cfaeb10bdfeb06fc32bb
-tinydb,https://github.com/msiemens/tinydb.git,python,"3.9.20,3.10.15,3.11.10,3.12.7","pyproject.toml,poetry.lock",poetry,,,poetry install,,10644a0e07ad180c5b756aba272ee6b0dbd12df8
-funcy,https://github.com/Suor/funcy.git,python,"3.9.20,3.10.15",setup.py,pip,,rm test_requirements.txt,python setup.py install,,859056d039adea75c1c3550286437ce0b612fe92
-numpy,https://github.com/numpy/numpy.git,python-c,"3.9.20,3.10.15,3.11.10,3.12.7","setup.py,pyproject.toml",pip,,git submodule update --init,,,93fdebfcb4bc4cd53c959ccd0117a612d5f13f1a
-requests,https://github.com/psf/requests.git,python,"3.9.20,3.10.15,3.11.10,3.12.7","setup.py",,,,pip install .,,23540c93cac97c763fe59e843a08fa2825aa80fd
+tinydb,https://github.com/msiemens/tinydb.git,python,"3.9.21,3.10.16,3.11.11,3.12.8","pyproject.toml,poetry.lock",poetry,,,poetry install,,10644a0e07ad180c5b756aba272ee6b0dbd12df8
+funcy,https://github.com/Suor/funcy.git,python,"3.9.21,3.10.16",setup.py,pip,,rm test_requirements.txt,python setup.py install,,859056d039adea75c1c3550286437ce0b612fe92
+numpy,https://github.com/numpy/numpy.git,python-c,"3.9.21,3.10.16,3.11.11,3.12.8","setup.py,pyproject.toml",pip,,git submodule update --init,,,93fdebfcb4bc4cd53c959ccd0117a612d5f13f1a
+requests,https://github.com/psf/requests.git,python,"3.9.21,3.10.16,3.11.11,3.12.8","setup.py",,,,pip install .,,23540c93cac97c763fe59e843a08fa2825aa80fd
