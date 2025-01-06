@@ -33,7 +33,6 @@ RUN source /root/.nvm/nvm.sh \
         postgresql-devel postgresql16-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel graphviz-devel \
     && cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
     && mkdir -p /opt/cdxgen-node-cache \
-    && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && chmod a-w -R /opt \
     && zypper clean -a

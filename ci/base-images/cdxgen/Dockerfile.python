@@ -34,7 +34,6 @@ RUN source /root/.nvm/nvm.sh \
     && python3 -m pip install --no-cache-dir --upgrade --user pipenv poetry blint uv \
     && cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
     && mkdir -p /opt/cdxgen-node-cache \
-    && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && chmod a-w -R /opt \
     && zypper clean -a

@@ -59,7 +59,6 @@ RUN set -e; \
     && chmod +x /usr/bin/bazel \
     && bazel --version \
     && npm install -g corepack \
-    && useradd -ms /bin/bash cyclonedx \
     && zypper clean -a
 
 CMD /bin/bash

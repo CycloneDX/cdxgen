@@ -22,7 +22,6 @@ RUN zypper refresh && zypper --non-interactive update && zypper --non-interactiv
     && mv /root/.sdkman/candidates/* /opt/ \
     && rm -rf /root/.sdkman \
     && npm install -g corepack \
-    && useradd -ms /bin/bash cyclonedx \
     && zypper clean -a
 
 CMD /bin/bash
