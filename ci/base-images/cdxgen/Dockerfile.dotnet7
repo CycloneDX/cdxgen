@@ -16,6 +16,8 @@ ENV CDXGEN_IN_CONTAINER=true \
     PYTHONPATH=/opt/pypi
 ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:
 
+COPY . /opt/cdxgen
+
 RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
     && mkdir -p /opt/cdxgen-node-cache \
     && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
