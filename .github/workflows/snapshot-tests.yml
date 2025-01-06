@@ -55,6 +55,7 @@ jobs:
       - name: Run scripts
         env:
           PREFER_MAVEN_DEPS_TREE: false
+          ATOM_JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64
         run: |
           bash new_snapshots/cdxgen_commands.sh
 
