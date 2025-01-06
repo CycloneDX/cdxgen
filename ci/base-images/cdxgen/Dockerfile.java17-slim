@@ -11,8 +11,14 @@ LABEL maintainer="CycloneDX" \
       org.opencontainers.image.description="Rolling image with cdxgen SBOM generator for Java 17 apps" \
       org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java17-slim:v11 -r /app --server"
 
-ENV CDXGEN_IN_CONTAINER=true
+ENV CDXGEN_IN_CONTAINER=true \
+    NODE_COMPILE_CACHE="/opt/cdxgen-node-cache"
+ENV PATH=${PATH}:/usr/local/bin:
 
-RUN npm install -g @cyclonedx/cdxgen --omit=dev
+RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
+    && mkdir -p /opt/cdxgen-node-cache \
+    && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
+    && node /opt/cdxgen/bin/cdxgen.js --help \
+    && chmod a-w -R /opt
 
-ENTRYPOINT ["cdxgen"]
+ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]

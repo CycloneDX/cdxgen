@@ -23,12 +23,17 @@ ENV NVM_DIR="/root/.nvm" \
     CDXGEN_IN_CONTAINER=true \
     SAFE_PIP_INSTALL=true \
     CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
+    NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:
 
 RUN source /root/.nvm/nvm.sh \
     && zypper --non-interactive install -l --no-recommends clang7 llvm7 llvm7-devel libcurl-devel libjpeg62-devel libmariadb-devel \
         postgresql-devel postgresql16-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel \
-    && npm install -g @cyclonedx/cdxgen --omit=dev \
+    && cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
+    && mkdir -p /opt/cdxgen-node-cache \
+    && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
+    && node /opt/cdxgen/bin/cdxgen.js --help \
+    && chmod a-w -R /opt \
     && zypper clean -a
 
 ENTRYPOINT ["cdxgen"]
