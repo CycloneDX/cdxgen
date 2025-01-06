@@ -19,6 +19,8 @@ RUN zypper --non-interactive install -l --no-recommends git-core nodejs20 npm20 
     && chmod +x /usr/bin/nuget \
     && rm -rf /usr/lib/mono/nuget \
     && dotnet --list-sdks \
+    && npm install -g corepack \
+    && useradd -ms /bin/bash cyclonedx \
     && zypper clean -a
 COPY ci/base-images/nuget /usr/lib/mono/nuget
 CMD /bin/bash

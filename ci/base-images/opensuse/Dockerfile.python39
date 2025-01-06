@@ -35,12 +35,14 @@ RUN set -e; \
     && npm install -g npm \
     && node -v \
     && npm -v \
+    && npm install -g corepack \
     && poetry --version \
     && pipenv --version \
     && gcc --version \
     && curl -L --output /usr/bin/bazel https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
     && chmod +x /usr/bin/bazel \
     && bazel --version \
+    && useradd -ms /bin/bash cyclonedx \
     && zypper clean -a
 
 CMD /bin/bash
