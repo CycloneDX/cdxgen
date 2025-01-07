@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 
-import { tmpdir } from "node:os";
-import { basename, dirname, join } from "node:path";
 import { spawnSync } from "node:child_process";
-import { fileURLToPath } from "node:url";
 import {
   copyFileSync,
   existsSync,
   lstatSync,
   mkdirSync,
+  mkdtempSync,
   readFileSync,
   rmSync,
   writeFileSync,
-  mkdtempSync,
 } from "node:fs";
+import { tmpdir } from "node:os";
+import { basename, dirname, join } from "node:path";
 import process from "node:process";
+import { fileURLToPath } from "node:url";
 
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
@@ -27,13 +27,11 @@ const DOCKER_CMD = process.env.DOCKER_CMD || "docker";
 function gitClone(name, repoUrl, commit, cloneDir) {
   const repoDir = join(cloneDir, name);
   const gitArgs = ["clone", repoUrl, repoDir];
-  console.log(
-    `Cloning Repo ${name} to ${repoDir}`,
-  );
+  console.log(`Cloning Repo ${name} to ${repoDir}`);
   let result = spawnSync("git", gitArgs, {
     encoding: "utf-8",
     shell: false,
-    cwd: cloneDir
+    cwd: cloneDir,
   });
   if (result.status !== 0) {
     console.log(result.stderr);
@@ -47,7 +45,7 @@ function gitClone(name, repoUrl, commit, cloneDir) {
     result = spawnSync("git", ["checkout", commit], {
       encoding: "utf-8",
       shell: false,
-      cwd: repoDir
+      cwd: repoDir,
     });
     if (result.status !== 0) {
       console.log(`Unable to checkout ${commit}`);
@@ -59,7 +57,7 @@ function gitClone(name, repoUrl, commit, cloneDir) {
     result = spawnSync("git", ["submodule", "update", "--init"], {
       encoding: "utf-8",
       shell: false,
-      cwd: repoDir
+      cwd: repoDir,
     });
     if (result.status !== 0) {
       console.log(`Unable to checkout ${commit}`);
@@ -70,7 +68,7 @@ function gitClone(name, repoUrl, commit, cloneDir) {
   return repoDir;
 }
 
-function runWithDocker(args, options={}) {
+function runWithDocker(args, options = {}) {
   console.log(`Executing ${DOCKER_CMD} ${args.join(" ")}`);
   const result = spawnSync(DOCKER_CMD, args, {
     ...options,
@@ -89,10 +87,12 @@ function readcsv(acsv, outputDir) {
   const argsList = [];
   if (!existsSync(outputDir)) {
     mkdirSync(outputDir, {
-      recursive: true
+      recursive: true,
     });
   }
-  const csvLines = readFileSync(acsv, {encoding: "utf-8"}).split("\n").slice(1);
+  const csvLines = readFileSync(acsv, { encoding: "utf-8" })
+    .split("\n")
+    .slice(1);
   for (const aline of csvLines) {
     const values = aline.split(/[,|]/);
     argsList.push({
@@ -101,7 +101,7 @@ function readcsv(acsv, outputDir) {
       commit: values[2],
       image: values[3],
       language: values[4],
-      cdxgen_vars: values[5]
+      cdxgen_vars: values[5],
     });
   }
   return argsList;
@@ -118,7 +118,12 @@ function main(argvs) {
     if (!repoArgs?.project?.length) {
       continue;
     }
-    const repoDir = gitClone(repoArgs.project, repoArgs.link, repoArgs.commit, tempDir);
+    const repoDir = gitClone(
+      repoArgs.project,
+      repoArgs.link,
+      repoArgs.commit,
+      tempDir,
+    );
     const repoOutputDir = join(argvs[1], repoArgs.project, repoArgs.commit);
     const envVars = ["-e", "CDXGEN_DEBUG_MODE=debug"];
     if (repoArgs.cdxgen_vars) {
@@ -131,10 +136,13 @@ function main(argvs) {
     }
     if (!existsSync(repoOutputDir)) {
       mkdirSync(repoOutputDir, {
-        recursive: true
+        recursive: true,
       });
     }
-    const bomFile = join(repoOutputDir, `bom-${repoArgs.language.replaceAll(" ", "-")}.json`);
+    const bomFile = join(
+      repoOutputDir,
+      `bom-${repoArgs.language.replaceAll(" ", "-")}.json`,
+    );
     const dockerArgs = [
       "run",
       "--rm",
@@ -157,16 +165,21 @@ function main(argvs) {
       dockerArgs.push("-t");
       dockerArgs.push(alang);
     }
-    runWithDocker(dockerArgs, {cwd: repoDir});
+    runWithDocker(dockerArgs, { cwd: repoDir });
     if (existsSync(join(repoDir, "bom.json"))) {
       copyFileSync(join(repoDir, "bom.json"), bomFile);
     } else {
-      console.log(join(repoDir, "bom.json"), "was not found! Check if the image used is valid for this project:", repoArgs.image, repoArgs.language);
+      console.log(
+        join(repoDir, "bom.json"),
+        "was not found! Check if the image used is valid for this project:",
+        repoArgs.image,
+        repoArgs.language,
+      );
       process.exit(1);
     }
   }
   if (tempDir.startsWith(tmpdir())) {
-    rmSync(tempDir, {recursive: true, force: true});
+    rmSync(tempDir, { recursive: true, force: true });
   }
 }
 
