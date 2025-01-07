@@ -26,4 +26,4 @@ RUN zypper --non-interactive install --allow-downgrade -l --no-recommends readli
     && chmod a-w -R /opt \
     && zypper clean -a
 
-ENTRYPOINT ["cdxgen"]
+ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]

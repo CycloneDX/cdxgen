@@ -38,4 +38,4 @@ RUN source /root/.nvm/nvm.sh \
     && chmod a-w -R /opt \
     && zypper clean -a
 
-ENTRYPOINT ["cdxgen"]
+ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]
