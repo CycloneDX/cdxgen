@@ -115,6 +115,9 @@ function main(argvs) {
   const tempDir = mkdtempSync(join(tmpdir(), "bulk-generate-"));
   const reposList = readcsv(argvs[0], argvs[1]);
   for (const repoArgs of reposList) {
+    if (!repoArgs?.project?.length) {
+      continue;
+    }
     const repoDir = gitClone(repoArgs.project, repoArgs.link, repoArgs.commit, tempDir);
     const repoOutputDir = join(argvs[1], repoArgs.project, repoArgs.commit);
     const envVars = ["-e", "CDXGEN_DEBUG_MODE=debug"];
@@ -125,6 +128,11 @@ function main(argvs) {
           envVars.push(avaluePair);
         }
       }
+    }
+    if (!existsSync(repoOutputDir)) {
+      mkdirSync(repoOutputDir, {
+        recursive: true
+      });
     }
     const bomFile = join(repoOutputDir, `bom-${repoArgs.language.replaceAll(" ", "-")}.json`);
     const dockerArgs = [
@@ -153,7 +161,7 @@ function main(argvs) {
     if (existsSync(join(repoDir, "bom.json"))) {
       copyFileSync(join(repoDir, "bom.json"), bomFile);
     } else {
-      console.log(join(repoDir, "bom.json"), "was not found!");
+      console.log(join(repoDir, "bom.json"), "was not found! Check if the image used is valid for this project:", repoArgs.image, repoArgs.language);
       process.exit(1);
     }
   }
