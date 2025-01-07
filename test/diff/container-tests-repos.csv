@@ -1,0 +1,5 @@
+project,link,commit,image,language,cdxgen_vars
+astro,https://github.com/withastro/astro.git,9d6bcdb88fcb9df0c5c70e2b591bcf962ce55f63,ghcr.io/cyclonedx/cdxgen-node20:v11,js,,
+funcy,https://github.com/Suor/funcy.git,859056d039adea75c1c3550286437ce0b612fe92,ghcr.io/cyclonedx/cdxgen-python311:v11,python,,
+numpy,https://github.com/numpy/numpy.git,93fdebfcb4bc4cd53c959ccd0117a612d5f13f1a,ghcr.io/cyclonedx/cdxgen-python311:v11,python,,
+genforce,https://github.com/genforce/genforce.git,197feee82101b78266521c8470648bbb9b7f31f4,ghcr.io/cyclonedx/cdxgen-python311:v11,python,,
