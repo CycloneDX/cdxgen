@@ -595,11 +595,30 @@ export function parseGoVersionData(buildInfoData: any): Promise<any[]>;
  */
 export function getRubyGemsMetadata(pkgList: any[]): Promise<any[]>;
 /**
- * Method to parse Gemspec
+ * Utility method to convert a gem package name to a CamelCased module name. Low accuracy.
+ *
+ * @param name Package name
+ */
+export function toGemModuleNames(name: any): string[];
+/**
+ * Collect all namespaces for a given gem present at the given gemHome
+ *
+ * @param {String} rubyCommand Ruby command to use if bundle is not available
+ * @param {String} bundleCommand Bundle command to use
+ * @param {String} gemHome Value to use as GEM_HOME env variable
+ * @param {String} gemName Name of the gem
+ * @param {String} filePath File path
+ *
+ * @returns {Array<string>} List of module names
+ */
+export function collectGemModuleNames(rubyCommand: string, bundleCommand: string, gemHome: string, gemName: string, filePath: string): Array<string>;
+/**
+ * Method to parse Gemspec file contents
  *
  * @param {string} gemspecData Gemspec data
+ * @param {string} gemspecFile File name for evidence.
  */
-export function parseGemspecData(gemspecData: string): Promise<any[]>;
+export function parseGemspecData(gemspecData: string, gemspecFile: string): Promise<any[]>;
 /**
  * Method to parse Gemfile.lock
  *
@@ -1350,6 +1369,7 @@ export let CARGO_CMD: string;
 export let CLJ_CMD: string;
 export let LEIN_CMD: string;
 export const SWIFT_CMD: "xcrun swift" | "swift";
+export const RUBY_CMD: any;
 export const PYTHON_EXCLUDED_COMPONENTS: string[];
 export const PROJECT_TYPE_ALIASES: {
     java: string[];
