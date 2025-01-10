@@ -191,6 +191,16 @@
     "pkg:composer/roducks",
     "pkg:composer/queryphp",
     "pkg:composer/silex",
-    "pkg:composer/psr"
+    "pkg:composer/psr",
+    "pkg:gem/rails",
+    "pkg:gem/sinatra",
+    "pkg:gem/hanami",
+    "pkg:gem/padrino",
+    "pkg:gem/cuba",
+    "pkg:gem/grape",
+    "pkg:gem/volt",
+    "pkg:gem/trailblazer",
+    "pkg:gem/ramaze",
+    "pkg:gem/scorched"
   ]
 }

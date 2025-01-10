@@ -143,6 +143,17 @@ export function collectSwiftInfo(dir: string): {
     version: any;
 };
 /**
+ * Collect Ruby version
+ *
+ * @param {string} dir Working directory
+ * @returns Object containing Ruby details
+ */
+export function collectRubyInfo(dir: string): {
+    type: string;
+    name: string;
+    version: any;
+};
+/**
  * Method to run a swift command
  *
  * @param {String} dir Working directory
@@ -202,6 +213,49 @@ export function getNvmToolDirectory(toolName: string): string;
  * @returns {String} path of the tool if not found installs and then returns paths. false if encounters an error.
  */
 export function getOrInstallNvmTool(toolVersion: string): string;
+/**
+ * Method to check if rbenv is available.
+ *
+ * @returns {Boolean} true if rbenv is available. false otherwise.
+ */
+export function isRbenvAvailable(): boolean;
+export function rubyVersionDir(rubyVersion: any): string;
+/**
+ * Perform bundle install using Ruby container images. Not working cleanly yet.
+ *
+ * @param rubyVersion Ruby version
+ * @param cdxgenGemHome Gem Home
+ * @param filePath Path
+ */
+export function bundleInstallWithDocker(rubyVersion: any, cdxgenGemHome: any, filePath: any): boolean;
+/**
+ * Install a particular ruby version using rbenv.
+ *
+ * @param rubyVersion Ruby version to install
+ * @param filePath File path
+ */
+export function installRubyVersion(rubyVersion: any, filePath: any): {
+    fullToolBinDir: string;
+    status: boolean;
+};
+/**
+ * Method to install bundler using gem.
+ *
+ * @param rubyVersion Ruby version
+ * @param bundlerVersion Bundler version
+ */
+export function installRubyBundler(rubyVersion: any, bundlerVersion: any): boolean;
+/**
+ * Method to perform bundle install
+ *
+ * @param cdxgenGemHome cdxgen Gem home
+ * @param rubyVersion Ruby version
+ * @param bundleCommand Bundle command to use
+ * @param basePath working directory
+ *
+ * @returns {boolean} true if the install was successful. false otherwise.
+ */
+export function performBundleInstall(cdxgenGemHome: any, rubyVersion: any, bundleCommand: any, basePath: any): boolean;
 export const GIT_COMMAND: any;
 export namespace SDKMAN_JAVA_TOOL_ALIASES {
     let java8: any;

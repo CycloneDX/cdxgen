@@ -296,7 +296,7 @@ const args = yargs(hideBin(process.argv))
   .option("feature-flags", {
     description: "Experimental feature flags to enable. Advanced users only.",
     hidden: true,
-    choices: ["safe-pip-install", "suggest-build-tools"],
+    choices: ["safe-pip-install", "suggest-build-tools", "ruby-docker-install"],
   })
   .option("min-confidence", {
     description:
