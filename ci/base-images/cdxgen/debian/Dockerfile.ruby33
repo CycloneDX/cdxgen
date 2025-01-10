@@ -22,6 +22,7 @@ COPY . /opt/cdxgen
 RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
     && mkdir -p /opt/cdxgen-node-cache \
     && node /opt/cdxgen/bin/cdxgen.js --help \
+    && rm -rf ${CDXGEN_GEM_HOME} && mkdir -p ${CDXGEN_GEM_HOME} \
     && chmod a-w -R /opt
 
 ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]

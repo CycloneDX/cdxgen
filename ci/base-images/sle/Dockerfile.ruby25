@@ -1,0 +1,37 @@
+FROM registry.suse.com/bci/ruby:2.5
+
+ENV LC_ALL=en_US.UTF-8 \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US.UTF-8 \
+    JAVA_OPTIONS="-Dhttps.protocols=TLSv1.1,TLSv1.2"
+
+ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:
+
+RUN set -e; \
+    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
+    url=; \
+    case "${ARCH_NAME##*-}" in \
+        'x86_64') \
+            OS_ARCH_SUFFIX=''; \
+            GOBIN_VERSION='amd64'; \
+            ;; \
+        'aarch64') \
+            OS_ARCH_SUFFIX='-aarch64'; \
+            GOBIN_VERSION='arm64'; \
+            ;; \
+        *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
+    esac \
+    && zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends git-core java-21-openjdk-devel nodejs20 npm20 python311 python311-pip wget zip unzip make gawk \
+    && npm install -g corepack \
+    && gem install bundler -v 2.3.27 \
+    && gem install rubygems-update -v 3.3.27 \
+    && bundle config git.allow_insecure true \
+    && git clone https://github.com/rbenv/rbenv.git --depth=1 ~/.rbenv \
+    && echo 'export PATH="/root/.rbenv/bin:$PATH"' >> ~/.bashrc \
+    && echo 'eval "$(/root/.rbenv/bin/rbenv init - bash)"' >> ~/.bashrc \
+    && source ~/.bashrc \
+    && mkdir -p "$(rbenv root)/plugins" \
+    && git clone https://github.com/rbenv/ruby-build.git --depth=1 "$(rbenv root)/plugins/ruby-build" \
+    && zypper clean -a
+
+CMD /bin/bash
