@@ -146,24 +146,32 @@ docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghc
 
 Use the custom image `ghcr.io/cyclonedx/cdxgen-ruby34:v11`.
 
-Ruby 3.3.6
+Ruby 3.3.6 (debian version)
 
 ```shell
 docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ruby33:v11 -r /app -o /app/bom.json -t ruby
 ```
 
-Ruby 3.4.1
+Ruby 3.4.1 (debian version)
 
 ```shell
 docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ruby34:v11 -r /app -o /app/bom.json -t ruby
 ```
 
-Pass any Ruby version with the type argument to make cdxgen automatically install the appropriate version using `rbenv` prior to BOM generation.
+Ruby 2.5.0 (SLE version)
 
-Example: Pass `-t ruby2.5.0` to install Ruby 2.5.0
+Use the custom image `ghcr.io/cyclonedx/cdxgen-ruby25:v11`.
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ruby34:v11 -r /app -o /app/bom.json -t ruby2.5.0
+docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ruby25:v11 -r /app -o /app/bom.json -t ruby
+```
+
+Pass any Ruby version with the type argument to make cdxgen automatically install the appropriate version using `rbenv` prior to BOM generation.
+
+Example: Pass `-t ruby3.3.1` to install Ruby 3.3.1
+
+```shell
+docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ruby34:v11 -r /app -o /app/bom.json -t ruby3.3.1
 ```
 
 ## Troubleshooting
