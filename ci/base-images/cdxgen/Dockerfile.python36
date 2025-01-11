@@ -24,7 +24,7 @@ ENV NVM_DIR="/root/.nvm" \
     SAFE_PIP_INSTALL=true \
     CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
-    PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:
+    PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/opt/cdxgen/node_modules/.bin:
 
 COPY . /opt/cdxgen
 
