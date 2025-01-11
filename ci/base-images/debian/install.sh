@@ -7,6 +7,10 @@ source ~/.bashrc
 mkdir -p "$(rbenv root)/plugins"
 git clone https://github.com/rbenv/ruby-build.git --depth=1 "$(rbenv root)/plugins/ruby-build"
 
+if [ x"${ATOM_RUBY_VERSION}" != "x" ]; then
+  rbenv install $ATOM_RUBY_VERSION
+fi
+
 curl -s "https://get.sdkman.io" | bash
 chmod +x /root/.sdkman/bin/sdkman-init.sh
 source $HOME/.sdkman/bin/sdkman-init.sh
