@@ -144,18 +144,18 @@ docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghc
 
 ### Ruby applications
 
-Use the custom image `ghcr.io/cyclonedx/cdxgen-ruby34:v11`.
+Use the custom image `ghcr.io/cyclonedx/cdxgen-debian-ruby34:v11`.
 
 Ruby 3.3.6 (debian version)
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ruby33:v11 -r /app -o /app/bom.json -t ruby
+docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby33:v11 -r /app -o /app/bom.json -t ruby
 ```
 
 Ruby 3.4.1 (debian version)
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ruby34:v11 -r /app -o /app/bom.json -t ruby
+docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby34:v11 -r /app -o /app/bom.json -t ruby
 ```
 
 Ruby 2.5.0 (SLE version)
@@ -171,7 +171,7 @@ Pass any Ruby version with the type argument to make cdxgen automatically instal
 Example: Pass `-t ruby3.3.1` to install Ruby 3.3.1
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ruby34:v11 -r /app -o /app/bom.json -t ruby3.3.1
+docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby34:v11 -r /app -o /app/bom.json -t ruby3.3.1
 ```
 
 Working with Ruby 1.8 applications? We have a Ruby 1.8 image that uses `debian:jessie` as the base image. Unfortunately, we couldn't find a way to install nodejs >= 20 in jessie, so we need a split workflow:
@@ -185,13 +185,13 @@ docker run --rm -v /tmp:/tmp:rw -e GEM_HOME=/tmp/gems -v $(pwd):/app:rw -w /app 
 # docker run --rm -v /tmp:/tmp:rw -e GEM_HOME=/tmp/gems -e "BUNDLE_INSTALL_ARGS=--without test" -v $(pwd):/app:rw -w /app -t ghcr.io/cyclonedx/debian-ruby18:master bundle install
 ```
 
-2. Run cdxgen using ruby33 or ruby34 image.
+2. Run cdxgen using ruby25 image.
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -e CDXGEN_GEM_HOME=/tmp/gems -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ruby34:v11 -r /app -o /app/bom.json -t ruby --lifecyle pre-build
+docker run --rm -e CDXGEN_DEBUG_MODE=debug -e CDXGEN_GEM_HOME=/tmp/gems -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ruby25:v11 -r /app -o /app/bom.json -t ruby --lifecycle pre-build
 ```
 
-Notice the use of `GEM_HOME` and `CDXGEN_GEM_HOME` environment variables.
+Notice the use of `GEM_HOME` and `CDXGEN_GEM_HOME` environment variables. `--deep` mode is currently not supported for Ruby 1.8.
 
 ## Troubleshooting
 
