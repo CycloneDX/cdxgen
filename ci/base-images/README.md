@@ -174,6 +174,25 @@ Example: Pass `-t ruby3.3.1` to install Ruby 3.3.1
 docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ruby34:v11 -r /app -o /app/bom.json -t ruby3.3.1
 ```
 
+Working with Ruby 1.8 applications? We have a Ruby 1.8 image that uses `debian:jessie` as the base image. Unfortunately, we couldn't find a way to install nodejs >= 20 in jessie, so we need a split workflow:
+
+1. Perform bundle install with our debian-ruby18 image.
+
+```shell
+docker run --rm -v /tmp:/tmp:rw -e GEM_HOME=/tmp/gems -v $(pwd):/app:rw -w /app -t ghcr.io/cyclonedx/debian-ruby18:master bundle install
+
+# Optionally, pass any bundle install args to build those stubborn projects
+# docker run --rm -v /tmp:/tmp:rw -e GEM_HOME=/tmp/gems -e "BUNDLE_INSTALL_ARGS=--without test" -v $(pwd):/app:rw -w /app -t ghcr.io/cyclonedx/debian-ruby18:master bundle install
+```
+
+2. Run cdxgen using ruby33 or ruby34 image.
+
+```shell
+docker run --rm -e CDXGEN_DEBUG_MODE=debug -e CDXGEN_GEM_HOME=/tmp/gems -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ruby34:v11 -r /app -o /app/bom.json -t ruby --lifecyle pre-build
+```
+
+Notice the use of `GEM_HOME` and `CDXGEN_GEM_HOME` environment variables.
+
 ## Troubleshooting
 
 ### .Net restore crashes
