@@ -7,6 +7,7 @@ ENV LC_ALL=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     ATOM_RUBY_VERSION=$ATOM_RUBY_VERSION \
     ATOM_RUBY_HOME=/root/.rbenv/versions/${ATOM_RUBY_VERSION} \
+    BUNDLE_SILENCE_ROOT_WARNING=true \
     JAVA_OPTIONS="-Dhttps.protocols=TLSv1.1,TLSv1.2"
 
 ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:
