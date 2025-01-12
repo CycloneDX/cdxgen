@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash b
     && ./tmp/install.sh && rm /tmp/install.sh \
     && node -v \
     && npm -v \
-    && gem install bundler --no-ri --no-rdoc \
+    && gem install bundler \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
 

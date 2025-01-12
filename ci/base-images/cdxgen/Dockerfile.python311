@@ -11,7 +11,7 @@ LABEL maintainer="CycloneDX" \
       org.opencontainers.image.description="Rolling image with cdxgen SBOM generator for Python 3.11 apps" \
       org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-python311:v11 -r /app --server"
 
-ARG NODE_VERSION=20.17.0
+ARG NODE_VERSION=20.18.1
 
 ENV NVM_DIR="/root/.nvm" \
     PYTHON_CMD=python3 \

@@ -1,7 +1,6 @@
 FROM debian:jessie
 
 ARG JAVA_VERSION=23.0.1-tem
-ARG NODE_VERSION=20.17.0
 ARG ATOM_RUBY_VERSION=3.4.1
 ARG BUNDLER_VERSION=1.17.3
 ARG RAKE_VERSION=0.7.3
@@ -18,9 +17,8 @@ ENV JAVA_VERSION=$JAVA_VERSION \
     BUNDLE_SILENCE_ROOT_WARNING=true \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
-    LANGUAGE=en_US.UTF-8 \
-    NVM_DIR="/root/.nvm"
-ENV PATH=/usr/local/rvm/gems/ruby-${RUBY_VERSION}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION}@global/bin:/usr/local/rvm/rubies/ruby-${RUBY_VERSION}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/rvm/bin:${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:
+    LANGUAGE=en_US.UTF-8
+ENV PATH=/usr/local/rvm/gems/ruby-${RUBY_VERSION}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION}@global/bin:/usr/local/rvm/rubies/ruby-${RUBY_VERSION}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/rvm/bin:${PATH}:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:
 
 COPY ci/base-images/debian/install.sh /tmp/
 

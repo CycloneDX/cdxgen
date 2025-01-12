@@ -26,7 +26,7 @@ RUN set -e; \
             ;; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
     esac \
-    && zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends git-core java-21-openjdk-devel nodejs20 npm20 python311 python311-pip wget zip unzip make gawk \
+    && zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends git-core java-21-openjdk-devel nodejs20 npm20 python311 python311-pip wget zip unzip make gawk rust \
     && npm install -g corepack \
     && gem install bundler -v 2.3.27 \
     && gem install rubygems-update -v 3.3.27 \
