@@ -86,3 +86,8 @@ The following environment variables are available to configure the bom generatio
 | GRADLE_ARGS                       | A space-separated list of additional arguments passed to Gradle commands. Useful for providing custom profiles, configurations, or settings for builds.                                                                                                |
 | SDKMAN_VERSION                    | Specifies the version of SDKMAN to use. Useful for managing SDKs and ensuring compatibility with tools and environments.                                                                                                                              |
 | NVM_DIR                           | Defines the directory where Node Version Manager (NVM) is installed. Used to locate and manage Node.js versions in environments where NVM is utilized.                                                                                                |
+| RBENV_CMD | rbenv command to use |
+| RBENV_ROOT | Set the rbenv root directory for custom rbenv installations. |
+| BUNDLE_INSTALL_ARGS | Additional arguments to pass to bundle install command. |
+| BUNDLE_UPDATE_ARGS | Additional arguments to pass to bundle update command. |
+| CDXGEN_GEM_HOME | Customize the GEM_HOME directory to use, while collecting the module names for all the gems in deep mode. This could be different from the system gems directory too. Can be used in addition to `GEM_PATH` environment variable too to improve the success rate. |
