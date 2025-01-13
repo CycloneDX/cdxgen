@@ -91,3 +91,4 @@ The following environment variables are available to configure the bom generatio
 | BUNDLE_INSTALL_ARGS | Additional arguments to pass to bundle install command. |
 | BUNDLE_UPDATE_ARGS | Additional arguments to pass to bundle update command. |
 | CDXGEN_GEM_HOME | Customize the GEM_HOME directory to use, while collecting the module names for all the gems in deep mode. This could be different from the system gems directory too. Can be used in addition to `GEM_PATH` environment variable too to improve the success rate. |
+| CDXGEN_TEMP_DIR | Specifies the parent temporary directory used for storing intermediate files during SBOM generation. The directory is automatically cleaned up after the process completes. |

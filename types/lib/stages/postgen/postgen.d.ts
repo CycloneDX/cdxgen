@@ -38,6 +38,7 @@ export function filterBom(bomJson: any, options: any): any;
  * Clean up
  */
 export function cleanupEnv(_options: any): void;
+export function cleanupTmpDir(): void;
 /**
  * Annotate the document with annotator
  *

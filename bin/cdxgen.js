@@ -2,7 +2,6 @@
 
 import crypto from "node:crypto";
 import fs from "node:fs";
-import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import process from "node:process";
 import { URL } from "node:url";
@@ -22,7 +21,7 @@ import {
   printSummary,
   printTable,
 } from "../lib/helpers/display.js";
-import { ATOM_DB, dirNameStr } from "../lib/helpers/utils.js";
+import { ATOM_DB, dirNameStr, getTmpDir } from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
 import { postProcess } from "../lib/stages/postgen/postgen.js";
 import { prepareEnv } from "../lib/stages/pregen/pregen.js";
@@ -541,9 +540,9 @@ const checkPermissions = (filePath) => {
     );
     return false;
   }
-  if (!process.permission.has("fs.write", tmpdir())) {
+  if (!process.permission.has("fs.write", getTmpDir())) {
     console.log(
-      `FileSystemWrite permission required. Please invoke with the argument --allow-fs-write="${tmpdir()}"`,
+      `FileSystemWrite permission required. Please invoke with the argument --allow-fs-write="${getTmpDir()}"`,
     );
     return false;
   }

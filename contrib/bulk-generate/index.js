@@ -11,10 +11,10 @@ import {
   rmSync,
   writeFileSync,
 } from "node:fs";
-import { tmpdir } from "node:os";
 import { basename, dirname, join } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
+import { getTmpDir } from "../../lib/helpers/utils.js";
 
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
@@ -112,7 +112,7 @@ function main(argvs) {
     console.log("USAGE: node index.js <csv file> <output directory>");
     process.exit(1);
   }
-  const tempDir = mkdtempSync(join(tmpdir(), "bulk-generate-"));
+  const tempDir = mkdtempSync(join(getTmpDir(), "bulk-generate-"));
   const reposList = readcsv(argvs[0], argvs[1]);
   for (const repoArgs of reposList) {
     if (!repoArgs?.project?.length) {

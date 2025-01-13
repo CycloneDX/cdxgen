@@ -56,6 +56,7 @@ jobs:
           mkdir -p denoresults
         env:
           CI: true
+          CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-repotests
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         if: matrix.os != 'self-hosted'
