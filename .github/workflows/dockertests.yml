@@ -45,6 +45,7 @@ jobs:
           mkdir -p bomresults repotests
         env:
           CI: true
+          CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-dockertests
       - uses: actions/checkout@v4
         with:
           repository: 'grafana-operator/grafana-operator'
