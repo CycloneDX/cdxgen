@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import fs from "node:fs";
-import { homedir, tmpdir } from "node:os";
+import { homedir } from "node:os";
 import { join } from "node:path";
 import process from "node:process";
 import repl from "node:repl";
@@ -19,6 +19,7 @@ import {
   printTable,
   printVulnerabilities,
 } from "../lib/helpers/display.js";
+import { getTmpDir } from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
 
 const options = {
@@ -107,7 +108,7 @@ cdxgenRepl.defineCommand("create", {
   help: "create an SBOM for the given path",
   async action(sbomOrPath) {
     this.clearBufferedCommand();
-    const tempDir = fs.mkdtempSync(join(tmpdir(), "cdxgen-repl-"));
+    const tempDir = fs.mkdtempSync(join(getTmpDir(), "cdxgen-repl-"));
     const bomFile = join(tempDir, "bom.json");
     const bomNSData = await createBom(sbomOrPath, {
       multiProject: true,

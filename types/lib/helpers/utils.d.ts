@@ -51,6 +51,7 @@ export function getAllFilesWithIgnore(dirPath: string, pattern: string, ignoreLi
  * @returns {string} ISO formatted timestamp, without milliseconds.
  */
 export function getTimestamp(): string;
+export function getTmpDir(): any;
 /**
  * Method to determine if a license is a valid SPDX license expression
  *
@@ -1368,6 +1369,7 @@ export let GO_CMD: string;
 export let CARGO_CMD: string;
 export let CLJ_CMD: string;
 export let LEIN_CMD: string;
+export let CDXGEN_TEMP_DIR: string;
 export const SWIFT_CMD: "xcrun swift" | "swift";
 export const RUBY_CMD: any;
 export const PYTHON_EXCLUDED_COMPONENTS: string[];
