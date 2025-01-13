@@ -1,0 +1,51 @@
+FROM debian:jessie
+
+ARG JAVA_VERSION=23.0.1-tem
+ARG ATOM_RUBY_VERSION=3.4.1
+ARG BUNDLER_VERSION=1.17.3
+ARG RAKE_VERSION=0.7.3
+ARG RMAGICK_VERSION=2.16.0
+ARG NOKOGIRI_VERSION=1.5.11
+
+ENV JAVA_VERSION=$JAVA_VERSION \
+    JAVA_HOME="/opt/java/${JAVA_VERSION}" \
+    ATOM_RUBY_VERSION=$ATOM_RUBY_VERSION \
+    RUBY_VERSION=1.8.7-p374 \
+    BUNDLER_VERSION=$BUNDLER_VERSION \
+    RAKE_VERSION=$RAKE_VERSION \
+    RMAGICK_VERSION=$RMAGICK_VERSION \
+    BUNDLE_SILENCE_ROOT_WARNING=true \
+    LC_ALL=en_US.UTF-8 \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US.UTF-8
+ENV PATH=/usr/local/rvm/gems/ruby-${RUBY_VERSION}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION}@global/bin:/usr/local/rvm/rubies/ruby-${RUBY_VERSION}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/rvm/bin:${PATH}:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:
+
+COPY ci/base-images/debian/install.sh /tmp/
+
+RUN set -ex \
+    && rm /etc/apt/sources.list \
+    && echo "deb http://archive.debian.org/debian-security jessie/updates main" >> /etc/apt/sources.list.d/jessie.list \
+    && echo "deb http://archive.debian.org/debian jessie main" >> /etc/apt/sources.list.d/jessie.list \
+    && apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -qq -y --force-yes --no-install-recommends curl bash bzip2 git-core zip unzip make gawk gnupg2 nodejs \
+    && apt-get install -qq -y --force-yes build-essential python3 python3-pip python3-dev libmagic-dev locales autoconf automake bison libffi-dev libgdbm-dev \
+        libncurses5-dev libsqlite3-dev libtool libyaml-dev pkg-config sqlite3 zlib1g-dev libgmp-dev libreadline6-dev libssl-dev libc-dev libxslt-dev libmagickwand-dev \
+    && command curl -sSL https://rvm.io/mpapis.asc | gpg2 --import - \
+    && command curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import - \
+    && echo "export rvm_max_time_flag=20" >> ~/.rvmrc \
+    && curl -sSL https://get.rvm.io | bash -s stable --ruby=${RUBY_VERSION} \
+    && rvm use ruby-${RUBY_VERSION} \
+    && ruby --version \
+    && gem install bundler -v ${BUNDLER_VERSION} --no-ri --no-rdoc \
+    && gem install rake -v ${RAKE_VERSION} --no-ri --no-rdoc \
+    && gem install slimgems --no-ri --no-rdoc \
+    && gem install nokogiri -v ${NOKOGIRI_VERSION} \
+    && gem install rmagick -v ${RMAGICK_VERSION} \
+    && gem install eventmachine -v 1.2.7 \
+    && gem install sqlite3-ruby -v 1.2.4 \
+    && gem install sqlite3 -v 1.3.13 \
+    && chmod +x /tmp/install.sh \
+    && SKIP_PYTHON=yes SKIP_NODEJS=yes ./tmp/install.sh && rm /tmp/install.sh \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && rm -rf /var/lib/apt/lists/*
+
+CMD /bin/bash
