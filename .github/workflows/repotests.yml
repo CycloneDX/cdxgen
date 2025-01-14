@@ -66,6 +66,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
       - name: pip install custom-json-diff
         run: |
           pip install custom-json-diff
@@ -268,10 +272,24 @@ jobs:
           repository: 'aws-solutions/iot-device-simulator'
           path: 'repotests/iot-device-simulator'
           ref: 'v3.0.9'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'bionomia/bionomia'
+          path: 'repotests/bionomia'
+          ref: '5ada8b5f4a5f68561a7195e2badc2f744dc4676e'
       - uses: dtolnay/rust-toolchain@stable
       - name: setup sdkman
         run: |
           curl -s "https://get.sdkman.io" | bash
+        if: runner.os != 'Windows'
+      - name: setup rbenv
+        run: |
+          git clone https://github.com/rbenv/rbenv.git --depth=1 ~/.rbenv
+          echo 'export PATH="~/.rbenv/bin:$PATH"' >> ~/.bashrc
+          echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.bashrc
+          source ~/.bashrc
+          mkdir -p "~/.rbenv/plugins"
+          git clone https://github.com/rbenv/ruby-build.git --depth=1 "~/.rbenv/plugins/ruby-build"
         if: runner.os != 'Windows'
       - name: repotests react-app
         run: |
@@ -332,6 +350,7 @@ jobs:
         shell: bash
       - name: repotests blint
         run: |
+          python -m pip install poetry
           bin/cdxgen.js -t python repotests/blint -o bomresults/blint-req.json --required-only -p --fail-on-error
           bin/cdxgen.js -t python repotests/blint -o bomresults/blint-research.json --profile research -p --fail-on-error
         shell: bash
@@ -407,7 +426,13 @@ jobs:
         shell: bash
       - name: repotests railsgoat
         run: |
-          bin/cdxgen.js -p -r -t ruby repotests/railsgoat -o bomresults/bom-ruby.json --fail-on-error
+          bin/cdxgen.js -r -t ruby repotests/railsgoat -o bomresults/bom-ruby.json --fail-on-error
+        shell: bash
+      - name: repotests bionomia
+        run: |
+          bin/cdxgen.js -r -t ruby repotests/bionomia -o bomresults/bom-bionomia.json --fail-on-error
+          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r -t ruby3.3.6 repotests/bionomia -o bomresults/bom-bionomia-deep.json --deep --fail-on-error
+          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r -p -t ruby3.3.6 repotests/bionomia -o bomresults/bom-bionomia-research.json --profile research --fail-on-error
         shell: bash
       - name: repotests bazel-examples
         run: |
