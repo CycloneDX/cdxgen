@@ -64,6 +64,12 @@ If you are a [Homebrew][homebrew-homepage] user, you can also install [cdxgen][h
 $ brew install cdxgen
 ```
 
+If you are a [Winget][winget-homepage] user on windows, you can also install cdxgen via:
+
+```shell
+$ winget install cdxgen
+```
+
 Deno and bun runtime can be used with limited support.
 
 ```shell
@@ -548,6 +554,7 @@ pnpm test
 [github-rate-limit]: https://docs.github.com/en/rest/overview/rate-limits-for-the-rest-api#primary-rate-limit-for-github_token-in-github-actions
 [homebrew-homepage]: https://brew.sh
 [homebrew-cdxgen]: https://formulae.brew.sh/formula/cdxgen
+[winget-homepage]: https://learn.microsoft.com/en-us/windows/package-manager/winget/
 [jsr-cdxgen]: https://jsr.io/@cyclonedx/cdxgen
 [jwt-homepage]: https://jwt.io
 [jwt-libraries]: https://jwt.io/libraries
