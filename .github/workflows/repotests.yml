@@ -284,7 +284,12 @@ jobs:
         if: runner.os != 'Windows'
       - name: setup rbenv
         run: |
-          curl -fsSL https://rbenv.org/install.sh | bash
+          git clone https://github.com/rbenv/rbenv.git --depth=1 ~/.rbenv
+          echo 'export PATH="/root/.rbenv/bin:$PATH"' >> ~/.bashrc
+          echo 'eval "$(/root/.rbenv/bin/rbenv init - bash)"' >> ~/.bashrc
+          source ~/.bashrc
+          mkdir -p "$(rbenv root)/plugins"
+          git clone https://github.com/rbenv/ruby-build.git --depth=1 "$(rbenv root)/plugins/ruby-build"
         if: runner.os != 'Windows'
       - name: repotests react-app
         run: |
@@ -425,11 +430,9 @@ jobs:
       - name: repotests bionomia
         run: |
           bin/cdxgen.js -r -t ruby repotests/bionomia -o bomresults/bom-bionomia.json --fail-on-error
-          bin/cdxgen.js -r -t ruby repotests/bionomia -o bomresults/bom-bionomia-deep.json --deep --fail-on-error
-          bin/cdxgen.js -r -p -t ruby repotests/bionomia -o bomresults/bom-bionomia-research.json --profile research --fail-on-error
+          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r -t ruby3.3.6 repotests/bionomia -o bomresults/bom-bionomia-deep.json --deep --fail-on-error
+          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r -p -t ruby3.3.6 repotests/bionomia -o bomresults/bom-bionomia-research.json --profile research --fail-on-error
         shell: bash
-        env:
-          CDXGEN_DEBUG_MODE: debug
       - name: repotests bazel-examples
         run: |
           bin/cdxgen.js -p -r -t java17 repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json
