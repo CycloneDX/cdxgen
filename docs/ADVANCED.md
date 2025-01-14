@@ -464,7 +464,7 @@ docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -it ghcr.io/cyclonedx/cdxgen-dotn
 
 If the project requires legacy frameworks such as .Net Framework 4.6/4.7, then a Windows operating system or container is required to generate the SBOM correctly. A workaround is to commit the project.assets.json and the lock files to the repository from Windows and run cdxgen from Linux as normal.
 
-For legacy Java projects, use the custom images `ghcr.io/cyclonedx/cdxgen-java:v11` (Java 11) or `ghcr.io/cyclonedx/cdxgen-java17:v11` (Java 17). Alternatively, use the CLI arguments as shown.
+For legacy Java projects, use the custom images `ghcr.io/cyclonedx/cdxgen-java11:v11` (Java 11) or `ghcr.io/cyclonedx/cdxgen-java17:v11` (Java 17). Alternatively, use the CLI arguments as shown.
 
 ```shell
 cdxgen -t java11
