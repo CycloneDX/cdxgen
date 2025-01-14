@@ -491,6 +491,83 @@ jobs:
           tags: ${{ steps.meta-debian-ruby18.outputs.tags }}
           labels: ${{ steps.meta-debian-ruby18.outputs.labels }}
 
+  debian-ruby26-image:
+    if: github.repository == 'CycloneDX/cdxgen'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-debian-ruby26
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/debian-ruby26
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/base-images/debian/Dockerfile.ruby26
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-debian-ruby26.outputs.tags }}
+          labels: ${{ steps.meta-debian-ruby26.outputs.labels }}
+
+  cdxgen-debian-ruby26-image:
+    if: github.repository == 'CycloneDX/cdxgen'
+    runs-on: ubuntu-latest
+    needs: debian-ruby26-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-cdxgen-debian-ruby26
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-debian-ruby26
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/master'
+        with:
+          context: .
+          file: ci/base-images/cdxgen/debian/Dockerfile.ruby26
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/cdxgen-debian-ruby26:v11
+          labels: ${{ steps.meta-cdxgen-debian-ruby26.outputs.labels }}
+
   sle-dotnet7-image:
     if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
