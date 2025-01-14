@@ -21,7 +21,7 @@ COPY . /opt/cdxgen
 RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
     && mkdir -p /opt/cdxgen-node-cache \
     && node /opt/cdxgen/bin/cdxgen.js --help \
-    && pip install --upgrade --no-cache-dir blint --target /opt/pypi \
+    && pip install --upgrade --no-cache-dir blint atom-tools --target /opt/pypi \
     && chmod a-w -R /opt
 
 ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]

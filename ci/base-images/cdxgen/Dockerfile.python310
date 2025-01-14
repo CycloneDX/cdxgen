@@ -15,7 +15,7 @@ ENV CDXGEN_IN_CONTAINER=true \
     SAFE_PIP_INSTALL=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
-    PATH=${PATH}:/opt/cdxgen/node_modules/.bin:
+    PATH=${PATH}:/opt/pypi/bin:/opt/cdxgen/node_modules/.bin:
 
 COPY . /opt/cdxgen
 
@@ -24,6 +24,7 @@ RUN zypper --non-interactive install --allow-downgrade -l --no-recommends readli
     && cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
     && mkdir -p /opt/cdxgen-node-cache \
     && node /opt/cdxgen/bin/cdxgen.js --help \
+    && pip install --upgrade --no-cache-dir atom-tools --target /opt/pypi \
     && chmod a-w -R /opt \
     && zypper clean -a
 
