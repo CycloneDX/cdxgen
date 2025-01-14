@@ -421,7 +421,7 @@ jobs:
       - name: repotests railsgoat
         run: |
           bin/cdxgen.js -r -t ruby repotests/railsgoat -o bomresults/bom-ruby.json --fail-on-error
-          shell: bash
+        shell: bash
       - name: repotests bionomia
         run: |
           bin/cdxgen.js -r -t ruby repotests/bionomia -o bomresults/bom-bionomia.json --fail-on-error
