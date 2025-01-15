@@ -680,7 +680,13 @@ export function parseCargoDependencyData(cargoLockData: any): {
     dependsOn: any[];
 }[];
 export function parseCargoAuditableData(cargoData: any): Promise<any[]>;
-export function parsePubLockData(pubLockData: any): Promise<any[]>;
+export function parsePubLockData(pubLockData: any): Promise<any[] | {
+    rootList: {
+        name: string;
+        version: any;
+    }[];
+    pkgList: any[];
+}>;
 export function parsePubYamlData(pubYamlData: any): any[];
 export function parseHelmYamlData(helmData: any): any[];
 export function recurseImageNameLookup(keyValueObj: any, pkgList: any, imgList: any): any;
