@@ -129,7 +129,7 @@ docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghc
 
 For `dotnet` and `dotnet-framework`, SBOM could include components without a version number. Often, these components begin with the prefix `System.`.
 
-Global Assembly Cache (GAC) dependencies must be made available in the build output of the project for version detection. A simple way to have the dotnet build copy the GAC dependencies into the build directory is to place the file `Directory.Build.props` into the root of the project and ensure the contents include the following:
+Global Assembly Cache (GAC) dependencies (System Runtime dependencies) must be made available in the build output of the project for version detection. A simple way to have the dotnet build copy the GAC dependencies into the build directory is to place the file `Directory.Build.props` into the root of the project and ensure the contents include the following:
 
 ```
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -141,7 +141,7 @@ Global Assembly Cache (GAC) dependencies must be made available in the build out
 </Project>
 ```
 
-Then, run cdxgen dotnet9 image `ghcr.io/cyclonedx/cdxgen-debian-dotnet9:v11` with the `--deep` argument.
+Then, run cdxgen cli with the `--deep` argument.
 
 ### Python applications
 
