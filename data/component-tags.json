@@ -125,7 +125,6 @@
   "properties": {
     "all": [
       "sql",
-      "http",
       "xml",
       "cloud",
       "middleware",
