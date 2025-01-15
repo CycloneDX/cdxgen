@@ -1,6 +1,6 @@
 FROM registry.suse.com/bci/python:3.6
 
-ARG JAVA_VERSION=23.0.1-tem
+ARG JAVA_VERSION=21.0.5-tem
 ARG MAVEN_VERSION=3.9.9
 ARG GCC_VERSION=13
 ARG NODE_VERSION=20.18.1
@@ -55,4 +55,4 @@ RUN set -e; \
     && npm install -g corepack \
     && zypper clean -a
 
-CMD /bin/bash
+CMD ["/bin/bash"]

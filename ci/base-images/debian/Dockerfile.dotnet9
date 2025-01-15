@@ -11,6 +11,7 @@ ENV JAVA_VERSION=$JAVA_VERSION \
     NUGET_XMLDOC_MODE=skip \
     DOTNET_RUNNING_IN_CONTAINER=true \
     DOTNET_CLI_TELEMETRY_OPTOUT=1 \
+    JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8" \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
@@ -29,4 +30,4 @@ RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash b
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
 
-CMD /bin/bash
+CMD ["/bin/bash"]

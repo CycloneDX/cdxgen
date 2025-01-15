@@ -28,4 +28,4 @@ RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash b
     && dotnet --list-sdks \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
-CMD /bin/bash
+CMD ["/bin/bash"]

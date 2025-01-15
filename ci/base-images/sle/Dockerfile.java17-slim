@@ -46,4 +46,4 @@ RUN set -e; \
     && npm install -g corepack \
     && zypper clean -a
 
-CMD /bin/bash
+CMD ["/bin/bash"]
