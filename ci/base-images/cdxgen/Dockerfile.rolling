@@ -16,14 +16,14 @@ ENV CDXGEN_DEBUG_MODE=debug \
     CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     PYTHONPATH=/opt/pypi
-ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin::/opt/cdxgen/node_modules/.bin:
+ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:/opt/cdxgen/node_modules/.bin:
 
 COPY . /opt/cdxgen
 
 RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
     && mkdir -p /opt/cdxgen-node-cache \
     && node /opt/cdxgen/bin/cdxgen.js --help \
-    && pip install --upgrade --no-cache-dir blint --target /opt/pypi \
+    && pip install --upgrade --no-cache-dir blint atom-tools --target /opt/pypi \
     && chmod a-w -R /opt
 
 ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]

@@ -24,7 +24,7 @@ ENV NVM_DIR="/root/.nvm" \
     SAFE_PIP_INSTALL=true \
     CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
-    PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/opt/cdxgen/node_modules/.bin:
+    PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/opt/pypi/bin:/opt/cdxgen/node_modules/.bin:
 
 COPY . /opt/cdxgen
 
@@ -34,6 +34,7 @@ RUN source /root/.nvm/nvm.sh \
     && cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
     && mkdir -p /opt/cdxgen-node-cache \
     && node /opt/cdxgen/bin/cdxgen.js --help \
+    && pip install --upgrade --no-cache-dir atom-tools --target /opt/pypi \
     && chmod a-w -R /opt \
     && zypper clean -a
 

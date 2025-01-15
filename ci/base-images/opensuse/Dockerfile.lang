@@ -60,7 +60,7 @@ RUN set -e; \
     && rm dotnet.tar.gz \
     && dotnet --list-sdks \
     && mkdir /opt/pypi \
-    && python -m pip install --no-cache-dir --upgrade poetry pipenv blint custom-json-diff uv --target /opt/pypi \
+    && python -m pip install --no-cache-dir --upgrade poetry pipenv blint atom-tools custom-json-diff uv --target /opt/pypi \
     && node -v \
     && npm -v \
     && npm install -g corepack \

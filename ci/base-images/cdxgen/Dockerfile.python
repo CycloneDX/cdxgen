@@ -31,7 +31,7 @@ RUN source /root/.nvm/nvm.sh \
     && zypper --non-interactive install -l --no-recommends clang7 llvm7 llvm7-devel libcurl-devel libjpeg62-devel libmariadb-devel \
         postgresql-devel postgresql16-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel \
     && python3 -m pip install --no-cache-dir --upgrade pip virtualenv \
-    && python3 -m pip install --no-cache-dir --upgrade --user pipenv poetry blint uv \
+    && python3 -m pip install --no-cache-dir --upgrade --user pipenv poetry blint atom-tools uv \
     && cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
     && mkdir -p /opt/cdxgen-node-cache \
     && node /opt/cdxgen/bin/cdxgen.js --help \
