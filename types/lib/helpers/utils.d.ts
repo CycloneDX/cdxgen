@@ -608,7 +608,7 @@ export function toGemModuleNames(name: any): string[];
  * @param {String} bundleCommand Bundle command to use
  * @param {String} gemHome Value to use as GEM_HOME env variable
  * @param {String} gemName Name of the gem
- * @param {String} filePath File path
+ * @param {String} filePath File path to the directory containing the Gemfile or .bundle directory
  *
  * @returns {Array<string>} List of module names
  */
