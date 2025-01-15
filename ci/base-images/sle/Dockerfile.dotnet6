@@ -22,4 +22,4 @@ RUN zypper --non-interactive install -l --no-recommends git-core nodejs20 npm20 
     && npm install -g corepack \
     && zypper clean -a
 COPY ci/base-images/nuget /usr/lib/mono/nuget
-CMD /bin/bash
+CMD ["/bin/bash"]

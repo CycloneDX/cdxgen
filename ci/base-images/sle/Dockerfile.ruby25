@@ -45,4 +45,4 @@ RUN set -e; \
     && java --version \
     && zypper clean -a
 
-CMD /bin/bash
+CMD ["/bin/bash"]

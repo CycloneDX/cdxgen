@@ -15,6 +15,7 @@ ENV JAVA_VERSION=$JAVA_VERSION \
     RAKE_VERSION=$RAKE_VERSION \
     RMAGICK_VERSION=$RMAGICK_VERSION \
     BUNDLE_SILENCE_ROOT_WARNING=true \
+    JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8" \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
@@ -31,7 +32,6 @@ RUN set -ex \
         libncurses5-dev libsqlite3-dev libtool libyaml-dev pkg-config sqlite3 zlib1g-dev libgmp-dev libreadline6-dev libssl-dev libc-dev libxslt-dev libmagickwand-dev \
     && command curl -sSL https://rvm.io/mpapis.asc | gpg2 --import - \
     && command curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import - \
-    && locale-gen en_US.UTF-8 \
     && echo "export rvm_max_time_flag=20" >> ~/.rvmrc \
     && curl -sSL https://get.rvm.io | bash -s stable --ruby=${RUBY_VERSION} \
     && rvm use ruby-${RUBY_VERSION} \
@@ -49,4 +49,4 @@ RUN set -ex \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
 
-CMD /bin/bash
+CMD ["/bin/bash"]

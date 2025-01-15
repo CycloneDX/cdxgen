@@ -8,6 +8,7 @@ ENV JAVA_VERSION=$JAVA_VERSION \
     JAVA_HOME="/opt/java/${JAVA_VERSION}" \
     ATOM_RUBY_VERSION=$ATOM_RUBY_VERSION \
     BUNDLE_SILENCE_ROOT_WARNING=true \
+    JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8" \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
@@ -18,7 +19,6 @@ COPY ci/base-images/debian/install.sh /tmp/
 
 RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash bzip2 git-core zip unzip make gawk \
     && apt-get install -qq -y build-essential gcc-9 g++-9 python2 libmagic-dev locales nodejs \
-    && locale-gen en_US.UTF-8 \
     && gem install bundler -v 1.17.3 \
     && bundle config git.allow_insecure true \
     && chmod +x /tmp/install.sh \
@@ -29,4 +29,4 @@ RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash b
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
 
-CMD /bin/bash
+CMD ["/bin/bash"]

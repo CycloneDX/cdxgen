@@ -1,6 +1,6 @@
 FROM registry.suse.com/bci/dotnet-sdk:7.0
 
-ARG JAVA_VERSION=21.0.5-tem
+ARG JAVA_VERSION=23.0.1-tem
 
 ENV DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
     DOTNET_NOLOGO=true \
@@ -24,4 +24,4 @@ RUN zypper refresh && zypper --non-interactive update && zypper --non-interactiv
     && npm install -g corepack \
     && zypper clean -a
 
-CMD /bin/bash
+CMD ["/bin/bash"]

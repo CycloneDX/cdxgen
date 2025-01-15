@@ -275,5 +275,7 @@
   "rubyzip": ["Zip"],
   "solid_cable": ["SolidCable"],
   "solid_cache": ["SolidCache"],
-  "solid_queue": ["SolidQueue"]
+  "solid_queue": ["SolidQueue"],
+  "globalid": ["GlobalID"],
+  "tzinfo": ["TZInfo"]
 }

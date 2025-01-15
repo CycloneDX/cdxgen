@@ -46,4 +46,4 @@ RUN set -e; \
     && bazel --version \
     && zypper clean -a
 
-CMD /bin/bash
+CMD ["/bin/bash"]

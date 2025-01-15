@@ -1,11 +1,12 @@
 FROM ruby:3.4
 
-ARG JAVA_VERSION=21.0.5-tem
+ARG JAVA_VERSION=23.0.1-tem
 ARG NODE_VERSION=23.6.0
 
 ENV JAVA_VERSION=$JAVA_VERSION \
     JAVA_HOME="/opt/java/${JAVA_VERSION}" \
     BUNDLE_SILENCE_ROOT_WARNING=true \
+    JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8" \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
@@ -16,7 +17,6 @@ COPY ci/base-images/debian/install.sh /tmp/
 
 RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash bzip2 git-core zip unzip make gawk \
     && apt-get install -qq -y build-essential python3 python3-pip python3-dev libmagic-dev locales \
-    && locale-gen en_US.UTF-8 \
     && chmod +x /tmp/install.sh \
     && ./tmp/install.sh && rm /tmp/install.sh \
     && node -v \
@@ -25,4 +25,4 @@ RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash b
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
 
-CMD /bin/bash
+CMD ["/bin/bash"]

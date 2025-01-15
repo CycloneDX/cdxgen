@@ -12,11 +12,11 @@ Below table summarizes all available container image versions. These images incl
 | Java     | 23                       | ghcr.io/cyclonedx/cdxgen-deno:master                                              | Default all-in-one container image with all the latest and greatest tools with deno runtime.                                |
 | Java     | 11                       | ghcr.io/cyclonedx/cdxgen-java11-slim:v11, ghcr.io/cyclonedx/cdxgen-java11:v11     | Java 11 version with and without Android 33 SDK.                                                                            |
 | Java     | 17                       | ghcr.io/cyclonedx/cdxgen-java17-slim:v11, ghcr.io/cyclonedx/cdxgen-java17:v11     | Java 17 version with and without Android 34 SDK.                                                                            |
-| Dotnet   | .Net Framework 4.6 - 4.8 | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11, ghcr.io/cyclonedx/cdxgen-dotnet6:v11 | .Net Framework                                                                                                              |
-| Dotnet   | .Net Core 3.1            | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11, ghcr.io/cyclonedx/cdxgen-dotnet6:v11 | .Net Core 3.1                                                                                                               |
-| Dotnet   | .Net 6                   | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11, ghcr.io/cyclonedx/cdxgen-dotnet6:v11 | .Net 6                                                                                                                      |
-| Dotnet   | .Net 7                   | ghcr.io/cyclonedx/cdxgen-dotnet7:v11                                              | .Net 7                                                                                                                      |
-| Dotnet   | .Net 8                   | ghcr.io/cyclonedx/cdxgen-debian-dotnet8:v11, ghcr.io/cyclonedx/cdxgen-dotnet8:v11 | .Net 8                                                                                                                      |
+| Dotnet   | .Net Framework 4.6 - 4.8 | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11, ghcr.io/cyclonedx/cdxgen-dotnet6:v11 | .Net Framework. --deep mode unsupported.                                                                                    |
+| Dotnet   | .Net Core 3.1            | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11, ghcr.io/cyclonedx/cdxgen-dotnet6:v11 | .Net Core 3.1. --deep mode unsupported.                                                                                     |
+| Dotnet   | .Net 6                   | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11, ghcr.io/cyclonedx/cdxgen-dotnet6:v11 | .Net 6. --deep mode unsupported.                                                                                            |
+| Dotnet   | .Net 7                   | ghcr.io/cyclonedx/cdxgen-dotnet7:v11                                              | .Net 7. --deep mode unsupported.                                                                                            |
+| Dotnet   | .Net 8                   | ghcr.io/cyclonedx/cdxgen-debian-dotnet8:v11, ghcr.io/cyclonedx/cdxgen-dotnet8:v11 | .Net 8. --deep mode unsupported.                                                                                            |
 | Dotnet   | .Net 9                   | ghcr.io/cyclonedx/cdxgen-debian-dotnet9:v11, ghcr.io/cyclonedx/cdxgen-dotnet9:v11 | .Net 9                                                                                                                      |
 | Python   | 3.6                      | ghcr.io/cyclonedx/cdxgen-python36:v11                                             | No dependency tree                                                                                                          |
 | Python   | 3.9                      | ghcr.io/cyclonedx/cdxgen-python39:v11                                             |                                                                                                                             |
@@ -124,6 +124,24 @@ Dotnet 9.0 (debian)
 ```shell
 docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-dotnet9:v11 -r /app -o /app/bom.json -t dotnet
 ```
+
+## Including .NET Global Assembly Cache dependencies in the results
+
+For `dotnet` and `dotnet-framework`, SBOM could include components without a version number. Often, these components begin with the prefix `System.`.
+
+Global Assembly Cache (GAC) dependencies must be made available in the build output of the project for version detection. A simple way to have the dotnet build copy the GAC dependencies into the build directory is to place the file `Directory.Build.props` into the root of the project and ensure the contents include the following:
+
+```
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<ItemDefinitionGroup>
+  <Reference>
+    <Private>True</Private>
+  </Reference>
+</ItemDefinitionGroup>
+</Project>
+```
+
+Then, run cdxgen dotnet9 image `ghcr.io/cyclonedx/cdxgen-debian-dotnet9:v11` with the `--deep` argument.
 
 ### Python applications
 
