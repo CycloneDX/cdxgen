@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0-bookworm-slim
 
-ARG JAVA_VERSION=23.0.1-tem
+ARG JAVA_VERSION=21.0.5-tem
 ARG NODE_VERSION=22.13.0
 
 ENV JAVA_VERSION=$JAVA_VERSION \
