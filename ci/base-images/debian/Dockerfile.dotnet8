@@ -11,7 +11,6 @@ ENV JAVA_VERSION=$JAVA_VERSION \
     NUGET_XMLDOC_MODE=skip \
     DOTNET_RUNNING_IN_CONTAINER=true \
     DOTNET_CLI_TELEMETRY_OPTOUT=1 \
-    JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8" \
     NVM_DIR="/root/.nvm"
 ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:/usr/local/bin:/root/.local/bin:
 
@@ -23,8 +22,12 @@ RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash b
     && ./tmp/install.sh && rm /tmp/install.sh \
     && node -v \
     && npm -v \
-    && dotnet --list-sdks \
+    && rm -rf /usr/lib/nuget \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
-
+COPY ci/base-images/nuget /usr/lib/nuget
+RUN mv /usr/lib/nuget/nuget.exe /usr/lib/nuget/NuGet.exe \
+    && dotnet --list-sdks \
+    && nuget help
 CMD ["/bin/bash"]
+
