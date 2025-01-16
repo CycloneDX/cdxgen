@@ -23,6 +23,9 @@ RUN set -e; \
     ARCH_NAME="$(dpkg --print-architecture)"; \
     url=; \
     case "${ARCH_NAME##*-}" in \
+        'amd64') \
+            DOSAI_ARCH_SUFFIX='-full'; \
+            ;; \
         'x86_64') \
             DOSAI_ARCH_SUFFIX='-full'; \
             ;; \
