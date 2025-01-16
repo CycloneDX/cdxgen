@@ -13,12 +13,31 @@ LABEL maintainer="CycloneDX" \
 
 ENV CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
-    PYTHONPATH=/opt/pypi
+    PYTHONPATH=/opt/pypi \
+    DOSAI_CMD=/usr/local/bin/dosai
 ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:/opt/cdxgen/node_modules/.bin:
 
 COPY . /opt/cdxgen
 
-RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
+RUN set -e; \
+    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
+    url=; \
+    case "${ARCH_NAME##*-}" in \
+        'x86_64') \
+            DOSAI_ARCH_SUFFIX='-full'; \
+            ;; \
+        'arm64') \
+            DOSAI_ARCH_SUFFIX='-linux-arm64-full'; \
+            ;; \
+        'aarch64') \
+            DOSAI_ARCH_SUFFIX='-linux-arm64-full'; \
+            ;; \
+        *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
+    esac \
+    && cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
+    && curl -L https://github.com/owasp-dep-scan/dosai/releases/latest/download/Dosai${DOSAI_ARCH_SUFFIX} -o /usr/local/bin/dosai \
+    && chmod +x /usr/local/bin/dosai \
+    && dosai --help \
     && mkdir -p /opt/cdxgen-node-cache \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && pip install --upgrade --no-cache-dir blint atom-tools --target /opt/pypi \

@@ -36,5 +36,3 @@ if [ x"${SKIP_NODEJS}" != "xyes" ]; then
   source /root/.nvm/nvm.sh
   nvm install ${NODE_VERSION}
 fi
-locale-gen en_US.UTF-8
-dpkg-reconfigure locales
