@@ -70,18 +70,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.3.4'
-          bundler-cache: true
-        id: ruby33
       - name: npm install, build
         run: |
           corepack enable
           corepack pnpm install
           echo "${GITHUB_WORKSPACE}/node_modules/.bin" >> "$GITHUB_PATH"
-      - name: Check pre-reqs
-        run: |
           mkdir -p repotests
           mkdir -p rubyresults
       - uses: actions/checkout@v4
@@ -89,6 +82,11 @@ jobs:
           repository: 'campsite/campsite'
           path: 'repotests/campsite'
           ref: '10197238bbbefd9c9ac7c77467b647fd93993ba0'
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.4'
+          bundler-cache: true
+        id: ruby33
       - name: bundle install
         run: |
           cd repotests/campsite/api
@@ -107,13 +105,13 @@ jobs:
           rbastgen --help
           echo "ATOM_RUBY_HOME: ${ATOM_RUBY_HOME}"
           echo "BUNDLE_PATH: ${BUNDLE_PATH}"
-          node $GITHUB_WORKSPACE/bin/cdxgen.js -p -t ruby --profile research -o bom.json .
+          node $GITHUB_WORKSPACE/bin/cdxgen.js -p -t ruby --profile research -o bom.json . --lifecycle pre-build
           ls -lh
           cp bom.json *.slices.json $GITHUB_WORKSPACE/rubyresults
         env:
           CDXGEN_DEBUG_MODE: debug
           ATOM_RUBY_HOME: ${{ steps.ruby34.outputs.ruby-prefix }}
-          BUNDLE_PATH: vendor/bundle
+          CDXGEN_GEM_HOME: ${{ github.workspace }}/repotests/campsite/api/vendor/bundle
       - uses: actions/upload-artifact@v4
         with:
           name: rubyresults
