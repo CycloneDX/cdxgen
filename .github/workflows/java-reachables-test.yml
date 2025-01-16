@@ -72,11 +72,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.4'
-          bundler-cache: true
-        id: ruby34
-      - uses: ruby/setup-ruby@v1
-        with:
           ruby-version: '3.3.4'
           bundler-cache: true
         id: ruby33
@@ -87,8 +82,6 @@ jobs:
           echo "${GITHUB_WORKSPACE}/node_modules/.bin" >> "$GITHUB_PATH"
       - name: Check pre-reqs
         run: |
-          echo "PATH: ${PATH}"
-          rbastgen --help
           mkdir -p repotests
           mkdir -p rubyresults
       - uses: actions/checkout@v4
@@ -102,18 +95,25 @@ jobs:
           bundle install
         env:
           BUNDLE_PATH: vendor/bundle
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+        id: ruby34
       - name: generate sbom with reachables
         run: |
+          cd repotests/campsite/api
+          echo "PATH: ${PATH}"
+          rbastgen --help
           echo "ATOM_RUBY_HOME: ${ATOM_RUBY_HOME}"
           echo "BUNDLE_PATH: ${BUNDLE_PATH}"
-          cd repotests/campsite/api
           node $GITHUB_WORKSPACE/bin/cdxgen.js -p -t ruby --profile research -o bom.json .
           ls -lh
           cp bom.json *.slices.json $GITHUB_WORKSPACE/rubyresults
         env:
           CDXGEN_DEBUG_MODE: debug
           ATOM_RUBY_HOME: ${{ steps.ruby34.outputs.ruby-prefix }}
-          BUNDLE_PATH: ${{ github.workspace/repotests/campsite/api/vendor/bundle }}
+          BUNDLE_PATH: vendor/bundle
       - uses: actions/upload-artifact@v4
         with:
           name: rubyresults
