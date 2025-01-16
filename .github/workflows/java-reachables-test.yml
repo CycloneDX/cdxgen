@@ -7,7 +7,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 jobs:
-  build:
+  java-sample1:
     strategy:
       fail-fast: false
       matrix:
@@ -51,3 +51,50 @@ jobs:
         with:
           name: bomresults
           path: bomresults
+
+  ruby-sample1:
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ['23.x']
+        os: ['ubuntu-latest']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '23'
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+      - name: npm install, build
+        run: |
+          corepack enable
+          corepack pnpm install
+          mkdir -p repotests
+          mkdir -p rubyresults
+      - uses: actions/checkout@v4
+        with:
+          repository: 'campsite/campsite'
+          path: 'repotests/campsite'
+          ref: '10197238bbbefd9c9ac7c77467b647fd93993ba0'
+      - name: bundle install
+        run: |
+          cd repotests/campsite/api
+          bundle install
+          node bin/cdxgen.js -p -t ruby --profile research -o bom.json .
+          cp bom.json *.slices.json $GITHUB_WORKSPACE/rubyresults
+        env:
+          BUNDLE_PATH: vendor/bundle
+          CDXGEN_DEBUG_MODE: debug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rubyresults
+          path: rubyresults
