@@ -84,6 +84,7 @@ jobs:
         run: |
           corepack enable
           corepack pnpm install
+          corepack pnpm install -g .
           mkdir -p repotests
           mkdir -p rubyresults
       - uses: actions/checkout@v4
@@ -96,7 +97,9 @@ jobs:
           cd repotests/campsite/api
           bundle install
           echo "ATOM_RUBY_HOME: ${ATOM_RUBY_HOME}"
+          rbastgen --help
           node $GITHUB_WORKSPACE/bin/cdxgen.js -p -t ruby --profile research -o bom.json .
+          ls -lh
           cp bom.json *.slices.json $GITHUB_WORKSPACE/rubyresults
         env:
           BUNDLE_PATH: vendor/bundle
