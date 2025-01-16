@@ -96,7 +96,7 @@ jobs:
           cd repotests/campsite/api
           bundle install
           echo "ATOM_RUBY_HOME: ${ATOM_RUBY_HOME}"
-          node bin/cdxgen.js -p -t ruby --profile research -o bom.json .
+          node $GITHUB_WORKSPACE/cdxgen/bin/cdxgen.js -p -t ruby --profile research -o bom.json .
           cp bom.json *.slices.json $GITHUB_WORKSPACE/rubyresults
         env:
           BUNDLE_PATH: vendor/bundle
