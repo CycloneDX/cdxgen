@@ -84,7 +84,8 @@ jobs:
         run: |
           corepack enable
           corepack pnpm install
-          corepack pnpm install -g .
+          echo "${GITHUB_WORKSPACE}/node_modules/.bin" >> $GITHUB_PATH
+          rbastgen --help
           mkdir -p repotests
           mkdir -p rubyresults
       - uses: actions/checkout@v4
@@ -97,7 +98,6 @@ jobs:
           cd repotests/campsite/api
           bundle install
           echo "ATOM_RUBY_HOME: ${ATOM_RUBY_HOME}"
-          rbastgen --help
           node $GITHUB_WORKSPACE/bin/cdxgen.js -p -t ruby --profile research -o bom.json .
           ls -lh
           cp bom.json *.slices.json $GITHUB_WORKSPACE/rubyresults
@@ -105,6 +105,7 @@ jobs:
           BUNDLE_PATH: vendor/bundle
           CDXGEN_DEBUG_MODE: debug
           ATOM_RUBY_HOME: ${{ steps.ruby34.outputs.ruby-prefix }}
+
       - uses: actions/upload-artifact@v4
         with:
           name: rubyresults
