@@ -73,8 +73,11 @@ jobs:
       - name: npm install, build
         run: |
           corepack enable
-          corepack pnpm install
+          corepack pnpm install --package-import-method copy
+          pnpm config set global-bin-dir "${RUNNER_TEMP}/bin"
+          corepack pnpm install -g .
           echo "${GITHUB_WORKSPACE}/node_modules/.bin" >> "$GITHUB_PATH"
+          echo "${RUNNER_TEMP}/bin" >> "$GITHUB_PATH"
           mkdir -p repotests
           mkdir -p rubyresults
       - uses: actions/checkout@v4
@@ -84,34 +87,32 @@ jobs:
           ref: '10197238bbbefd9c9ac7c77467b647fd93993ba0'
       - uses: ruby/setup-ruby@v1
         with:
+          ruby-version: '3.4'
+        id: ruby34
+      - uses: ruby/setup-ruby@v1
+        with:
           ruby-version: '3.3.4'
-          bundler-cache: true
-        id: ruby33
       - name: bundle install
         run: |
           cd repotests/campsite/api
           bundle install
+          rm -rf vendor/cache vendor/yarn
         env:
-          BUNDLE_PATH: vendor/bundle
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.4'
-          bundler-cache: true
-        id: ruby34
+          BUNDLE_PATH: ${{ runner.temp }}/vendor/bundle
       - name: generate sbom with reachables
         run: |
-          cd repotests/campsite/api
-          echo "PATH: ${PATH}"
-          rbastgen --help
           echo "ATOM_RUBY_HOME: ${ATOM_RUBY_HOME}"
-          echo "BUNDLE_PATH: ${BUNDLE_PATH}"
-          node $GITHUB_WORKSPACE/bin/cdxgen.js -p -t ruby --profile research -o bom.json . --lifecycle pre-build
+          echo "CDXGEN_GEM_HOME: ${CDXGEN_GEM_HOME}"
+          atom --help
+          rbastgen --help
+          node $GITHUB_WORKSPACE/bin/cdxgen.js -t ruby --profile research -o bom.json .
           ls -lh
-          cp bom.json *.slices.json $GITHUB_WORKSPACE/rubyresults
+          cp app.atom bom.json *.slices.json $GITHUB_WORKSPACE/rubyresults
         env:
           CDXGEN_DEBUG_MODE: debug
           ATOM_RUBY_HOME: ${{ steps.ruby34.outputs.ruby-prefix }}
-          CDXGEN_GEM_HOME: ${{ github.workspace }}/repotests/campsite/api/vendor/bundle
+          CDXGEN_GEM_HOME: ${{ runner.temp }}/vendor/bundle/ruby/3.3.0
+        working-directory: ./repotests/campsite/api
       - uses: actions/upload-artifact@v4
         with:
           name: rubyresults
