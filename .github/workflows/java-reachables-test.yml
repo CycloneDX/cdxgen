@@ -84,7 +84,10 @@ jobs:
         run: |
           corepack enable
           corepack pnpm install
-          echo "${GITHUB_WORKSPACE}/node_modules/.bin" >> $GITHUB_PATH
+          echo "${GITHUB_WORKSPACE}/node_modules/.bin" >> "$GITHUB_PATH"
+      - name: Check pre-reqs
+        run: |
+          echo "PATH: ${PATH}"
           rbastgen --help
           mkdir -p repotests
           mkdir -p rubyresults
