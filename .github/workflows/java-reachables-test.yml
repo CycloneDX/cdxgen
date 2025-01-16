@@ -74,6 +74,12 @@ jobs:
         with:
           ruby-version: '3.4'
           bundler-cache: true
+        id: ruby34
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.4'
+          bundler-cache: true
+        id: ruby33
       - name: npm install, build
         run: |
           corepack enable
@@ -89,11 +95,13 @@ jobs:
         run: |
           cd repotests/campsite/api
           bundle install
+          echo "ATOM_RUBY_HOME: ${ATOM_RUBY_HOME}"
           node bin/cdxgen.js -p -t ruby --profile research -o bom.json .
           cp bom.json *.slices.json $GITHUB_WORKSPACE/rubyresults
         env:
           BUNDLE_PATH: vendor/bundle
           CDXGEN_DEBUG_MODE: debug
+          ATOM_RUBY_HOME: ${{ steps.ruby34.outputs.ruby-prefix }}
       - uses: actions/upload-artifact@v4
         with:
           name: rubyresults
