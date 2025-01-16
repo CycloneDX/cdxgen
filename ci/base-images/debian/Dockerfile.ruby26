@@ -9,9 +9,6 @@ ENV JAVA_VERSION=$JAVA_VERSION \
     ATOM_RUBY_VERSION=$ATOM_RUBY_VERSION \
     BUNDLE_SILENCE_ROOT_WARNING=true \
     JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8" \
-    LC_ALL=en_US.UTF-8 \
-    LANG=en_US.UTF-8 \
-    LANGUAGE=en_US.UTF-8 \
     NVM_DIR="/root/.nvm"
 ENV PATH=/root/.nvm/versions/node/v${NODE_VERSION}/bin:${PATH}:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:
 

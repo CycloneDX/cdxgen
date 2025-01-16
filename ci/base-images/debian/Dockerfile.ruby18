@@ -15,10 +15,7 @@ ENV JAVA_VERSION=$JAVA_VERSION \
     RAKE_VERSION=$RAKE_VERSION \
     RMAGICK_VERSION=$RMAGICK_VERSION \
     BUNDLE_SILENCE_ROOT_WARNING=true \
-    JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8" \
-    LC_ALL=en_US.UTF-8 \
-    LANG=en_US.UTF-8 \
-    LANGUAGE=en_US.UTF-8
+    JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
 ENV PATH=/usr/local/rvm/gems/ruby-${RUBY_VERSION}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION}@global/bin:/usr/local/rvm/rubies/ruby-${RUBY_VERSION}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/rvm/bin:${PATH}:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:
 
 COPY ci/base-images/debian/install.sh /tmp/
