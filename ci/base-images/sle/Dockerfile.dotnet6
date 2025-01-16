@@ -17,7 +17,6 @@ RUN zypper --non-interactive install -l --no-recommends git-core nodejs20 npm20 
     && zypper --non-interactive install --allow-unsigned-rpm -l --no-recommends mono-complete libexif12 libexif-devel \
     && echo -e '#!/bin/sh\nexec /usr/bin/mono /usr/lib/mono/nuget/nuget.exe "$@"\n' > /usr/bin/nuget \
     && chmod +x /usr/bin/nuget \
-    && rm -rf /usr/lib/mono/nuget \
     && dotnet --list-sdks \
     && npm install -g corepack \
     && zypper clean -a
