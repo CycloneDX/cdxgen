@@ -109,7 +109,7 @@ jobs:
           rbastgen --help
           node $GITHUB_WORKSPACE/bin/cdxgen.js -t ruby --profile research -o bom.json .
           ls -lh
-          cp app.atom bom.json *.slices.json $GITHUB_WORKSPACE/rubyresults
+          cp bom.json *.slices.json $GITHUB_WORKSPACE/rubyresults
         env:
           CDXGEN_DEBUG_MODE: debug
           ATOM_RUBY_HOME: ${{ steps.ruby34.outputs.ruby-prefix }}
