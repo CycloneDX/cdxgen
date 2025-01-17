@@ -52,7 +52,7 @@ jobs:
           name: bomresults
           path: bomresults
 
-  ruby-sample1:
+  ruby-samples:
     strategy:
       fail-fast: false
       matrix:
@@ -79,13 +79,28 @@ jobs:
           repository: 'OWASP/railsgoat'
           path: 'repotests/railsgoat'
           ref: 'c1e8ff1e3b24a1c48fcfc9fbee0f65dc296b49d9'
-      - name: generate deep sbom
+      - name: generate reachables sbom - bionomia
         run: |
+          mkdir -p $GITHUB_WORKSPACE/rubyresults/bionomia
           cd repotests/bionomia
           docker run --rm -e CDXGEN_DEBUG_MODE -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby33:v11 -r /app -o /app/bom.json -t ruby --profile research
-          ls -lh
-          mkdir -p $GITHUB_WORKSPACE/rubyresults/bionomia
           cp bom.json *.slices.json $GITHUB_WORKSPACE/rubyresults/bionomia
+        env:
+          CDXGEN_DEBUG_MODE: debug
+      - name: generate reachables sbom - railsgoat
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/rubyresults/railsgoat
+          cd repotests/railsgoat
+          docker run --rm -e CDXGEN_DEBUG_MODE -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby26:v11 -r /app -o /app/bom.json -t ruby --profile research
+          cp bom.json *.slices.json $GITHUB_WORKSPACE/rubyresults/railsgoat
+        env:
+          CDXGEN_DEBUG_MODE: debug
+      - name: generate reachables sbom - campsite
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/rubyresults/campsite
+          cd repotests/campsite/api
+          docker run --rm -e CDXGEN_DEBUG_MODE -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby34:v11 -r /app -o /app/bom.json -t ruby --profile research
+          cp bom.json *.slices.json $GITHUB_WORKSPACE/rubyresults/campsite
         env:
           CDXGEN_DEBUG_MODE: debug
       - uses: actions/upload-artifact@v4
