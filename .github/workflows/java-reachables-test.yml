@@ -70,16 +70,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: npm install, build
+      - name: setup paths
         run: |
-          corepack enable
-          corepack pnpm install --package-import-method copy
-          pnpm config set global-bin-dir "${RUNNER_TEMP}/bin"
-          corepack pnpm install -g .
-          echo "${GITHUB_WORKSPACE}/node_modules/.bin" >> "$GITHUB_PATH"
+          corepack enable pnpm
           echo "${RUNNER_TEMP}/bin" >> "$GITHUB_PATH"
+          echo "${GITHUB_WORKSPACE}/node_modules/.bin" >> "$GITHUB_PATH"
           mkdir -p repotests
           mkdir -p rubyresults
+      - name: npm install, build
+        run: |
+          pnpm install --package-import-method copy
+          pnpm config set global-bin-dir "${RUNNER_TEMP}/bin"
+          pnpm install -g .
       - uses: actions/checkout@v4
         with:
           repository: 'campsite/campsite'
