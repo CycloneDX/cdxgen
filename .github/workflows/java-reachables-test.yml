@@ -101,6 +101,7 @@ jobs:
           rm -rf vendor/cache vendor/yarn
         env:
           BUNDLE_PATH: ${{ runner.temp }}/vendor/bundle
+          BUNDLE_WITHOUT: "development:test"
       - name: generate sbom with reachables
         run: |
           echo "ATOM_RUBY_HOME: ${ATOM_RUBY_HOME}"
