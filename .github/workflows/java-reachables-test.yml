@@ -104,6 +104,7 @@ jobs:
           BUNDLE_WITHOUT: "development:test"
       - name: generate sbom with reachables
         run: |
+          cd repotests/campsite/api
           echo "ATOM_RUBY_HOME: ${ATOM_RUBY_HOME}"
           echo "CDXGEN_GEM_HOME: ${CDXGEN_GEM_HOME}"
           atom --help
@@ -115,7 +116,6 @@ jobs:
           CDXGEN_DEBUG_MODE: debug
           ATOM_RUBY_HOME: ${{ steps.ruby34.outputs.ruby-prefix }}
           CDXGEN_GEM_HOME: ${{ runner.temp }}/vendor/bundle/ruby/3.3.0
-        working-directory: ./repotests/campsite/api
       - uses: actions/upload-artifact@v4
         with:
           name: rubyresults
