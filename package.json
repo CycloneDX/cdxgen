@@ -99,7 +99,7 @@
     "@iarna/toml": "2.2.5"
   },
   "optionalDependencies": {
-    "@appthreat/atom": "2.1.5",
+    "@appthreat/atom": "2.1.8",
     "@appthreat/cdx-proto": "1.0.1",
     "@cyclonedx/cdxgen-plugins-bin": "1.6.9",
     "@cyclonedx/cdxgen-plugins-bin-arm": "1.6.9",
@@ -123,7 +123,7 @@
     "typescript": "^5.7.2"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["sqlite3", "@biomejs/biome"],
+    "onlyBuiltDependencies": ["sqlite3", "@biomejs/biome", "@appthreat/atom"],
     "overrides": {
       "glob": "^11.0.0",
       "node-gyp": "^10.2.0",

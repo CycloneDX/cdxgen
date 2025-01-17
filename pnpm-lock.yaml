@@ -108,8 +108,8 @@ importers:
         version: 5.7.3
     optionalDependencies:
       '@appthreat/atom':
-        specifier: 2.1.5
-        version: 2.1.5
+        specifier: 2.1.8
+        version: 2.1.8
       '@appthreat/cdx-proto':
         specifier: 1.0.1
         version: 1.0.1
@@ -162,8 +162,8 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@appthreat/atom@2.1.5':
-    resolution: {integrity: sha512-mFo6lKJs8f9mNe9EwC3XjskT6LZkZLVUTHTEunNEF0UQrob5JAn/ruHzVfyuh6o3o+HqZHk+tx56Wdlb1nHj6g==}
+  '@appthreat/atom@2.1.8':
+    resolution: {integrity: sha512-M2F/mquKNxESUqEBOYz1mI5NnbQp9OjjpDiYzWBWyACAase+KBQ735La3T+UHkOd6yozKLwjaNyG2bxuJChz1A==}
     engines: {node: '>=16.0.0'}
     hasBin: true
 
@@ -2672,7 +2672,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@appthreat/atom@2.1.5':
+  '@appthreat/atom@2.1.8':
     dependencies:
       '@babel/parser': 7.26.5
       typescript: 5.7.3
