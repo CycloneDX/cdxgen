@@ -519,6 +519,10 @@ pnpm run lint
 pnpm test
 ```
 
+## Sponsors
+
+<img src="./docs/_media/LevoLogo-LightBg.jpg" width="200" height="auto">
+
 <!-- LINK LABELS -->
 <!-- Badges -->
 
