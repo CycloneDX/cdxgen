@@ -148,12 +148,24 @@ export function parseYarnLock(yarnLockFile: string): Promise<{
  */
 export function parseNodeShrinkwrap(swFile: string): Promise<any[]>;
 /**
+ * Parse pnpm workspace file
+ *
+ * @param {string} workspaceFile pnpm-workspace.yaml
+ * @returns {object} Object containing packages and catalogs
+ */
+export function parsePnpmWorkspace(workspaceFile: string): object;
+/**
  * Parse nodejs pnpm lock file
  *
  * @param {string} pnpmLock pnpm-lock.yaml file
- * @param {object} parentComponent parent component
+ * @param {Object} parentComponent parent component
+ * @param {Array[String]} workspacePackages Workspace packages
+ * @param {Object} workspaceSrcFiles Workspace package.json files
+ * @param {Object} workspaceCatalogs Workspace catalogs
+ * @param {Object} workspaceDirectDeps Direct dependencies of each workspace
+ * @param {Object} depsWorkspaceRefs Workspace references for each dependency
  */
-export function parsePnpmLock(pnpmLock: string, parentComponent?: object): Promise<{
+export function parsePnpmLock(pnpmLock: string, parentComponent?: any, workspacePackages?: any, workspaceSrcFiles?: any, _workspaceCatalogs?: {}, _workspaceDirectDeps?: {}, depsWorkspaceRefs?: any): Promise<{
     pkgList?: undefined;
     dependenciesList?: undefined;
     parentSubComponents?: undefined;
