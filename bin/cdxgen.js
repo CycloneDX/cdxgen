@@ -167,6 +167,7 @@ const args = yargs(hideBin(process.argv))
   })
   .option("install-deps", {
     type: "boolean",
+    default: true,
     description:
       "Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans. Use --no-install-deps to disable this feature.",
   })
@@ -506,7 +507,6 @@ const applyAdvancedOptions = (options) => {
       options.installDeps = true;
       break;
     default:
-      options.installDeps = true;
       break;
   }
   // When the user specifies source-code-analysis as a technique, then enable deep and evidence mode.
