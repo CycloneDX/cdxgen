@@ -15,7 +15,7 @@ jobs:
       fail-fast: true
       matrix:
         node-version: ['23.x']
-        os: ['ubuntu-latest', 'windows-latest']
+        os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'windows-latest']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -33,13 +33,13 @@ jobs:
           deno-version: v2.x
       - uses: oven-sh/setup-bun@v1
       - name: Trim CI agent
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm'
         run: |
           chmod +x contrib/free_disk_space.sh
           ./contrib/free_disk_space.sh
       - uses: sbt/setup-sbt@v1
       - name: Install bazelisk - linux
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm'
         run: |
           curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.20.0/bazelisk-linux-amd64"
           sudo mv bazelisk-linux-amd64 /usr/local/bin/bazel
@@ -62,7 +62,7 @@ jobs:
         uses: android-actions/setup-android@v3
         if: matrix.os != 'self-hosted'
       - uses: swift-actions/setup-swift@v2
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm'
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -607,7 +607,7 @@ jobs:
         continue-on-error: true
         shell: bash
       - uses: actions/upload-artifact@v4
-        if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
+        if: github.ref == 'refs/heads/master' && (matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm')
         with:
           name: bomresults
           path: bomresults

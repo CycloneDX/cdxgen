@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-latest]
+        os: ['ubuntu-24.04', 'ubuntu-24.04-arm']
         node-version: ['23.x']
         java-version: ['23']
     runs-on: ${{ matrix.os }}
@@ -85,7 +85,7 @@ jobs:
   linux-dockertar-tests:
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: ['ubuntu-24.04', 'ubuntu-24.04-arm']
         node-version: ['23.x']
         java-version: ['23']
     runs-on: ${{ matrix.os }}
@@ -134,7 +134,7 @@ jobs:
         env:
           CDXGEN_DEBUG_MODE: debug
   os-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     strategy:
       matrix:
