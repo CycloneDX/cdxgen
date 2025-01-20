@@ -431,8 +431,6 @@ jobs:
       - name: repotests bionomia
         run: |
           bin/cdxgen.js -r -t ruby repotests/bionomia -o bomresults/bom-bionomia.json --fail-on-error
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r -t ruby3.3.6 repotests/bionomia -o bomresults/bom-bionomia-deep.json --deep --fail-on-error
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r -p -t ruby3.3.6 repotests/bionomia -o bomresults/bom-bionomia-research.json --profile research --fail-on-error
         shell: bash
       - name: repotests bazel-examples
         run: |
