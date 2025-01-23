@@ -58,6 +58,12 @@ Sections include:
 npm install -g @cyclonedx/cdxgen
 ```
 
+To run cdxgen without installing (hotloading), use the [pnpm dlx](https://pnpm.io/cli/dlx) command.
+
+```shell
+corepack pnpm dlx @cyclonedx/cdxgen --help
+```
+
 If you are a [Homebrew][homebrew-homepage] user, you can also install [cdxgen][homebrew-cdxgen] via:
 
 ```shell

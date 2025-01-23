@@ -18,7 +18,7 @@ If you are a [Homebrew](https://brew.sh/) user, you can also install [cdxgen](ht
 brew install cdxgen
 ```
 
-For Windows, Single Application Executable (sae) builds are available from GitHub [Releases](https://github.com/CycloneDX/cdxgen/releases) in two flavours:
+For Windows and Linux, Single Application Executable (sae) builds are available from GitHub [Releases](https://github.com/CycloneDX/cdxgen/releases) in two flavours:
 
 - cdxgen.exe - Node 22 runtime + CLI with the optional binary plugins (atom, dosai, etc)
 - cdxgen-slim.exe - Node 22 runtime + CLI
