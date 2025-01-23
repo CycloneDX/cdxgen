@@ -38,6 +38,7 @@ jobs:
            sudo npm install -g "$cdxgen_tarball"
            git clone https://github.com/appthreat/cdxgen-samples.git original_snapshots
            python3.12 -m venv .venv
+           source .venv/bin/activate && pip install setuptools wheel
            source .venv/bin/activate && pip install -r test/diff/requirements.txt
 
       - name: Generate scripts
