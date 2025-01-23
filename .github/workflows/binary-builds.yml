@@ -18,9 +18,9 @@ jobs:
     if: github.repository == 'CycloneDX/cdxgen'
     strategy:
       matrix:
-        os: ['ubuntu-latest', 'windows-latest', 'arm64']
+        os: ['ubuntu-24.04', 'windows-latest', 'ubuntu-24.04-arm']
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             build: |
               rm -rf ci contrib tools_config
               npx --yes @appthreat/caxa --input . --output "cdxgen" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
@@ -42,7 +42,7 @@ jobs:
             artifact: cdxgen
             sartifact: cdxgen-slim
             vartifact: cdx-verify
-          - os: arm64
+          - os: ubuntu-24.04-arm
             build: |
               rm -rf ci contrib tools_config
               npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen-arm64" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
