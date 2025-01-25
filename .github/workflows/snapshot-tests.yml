@@ -28,6 +28,7 @@ jobs:
         id: set_env
         run: |
           python3.12 -m venv .venv
+          echo "venv_path=$(pwd)/.venv" >> $GITHUB_ENV
           source .venv/bin/activate
           pip install setuptools wheel
           echo "::set-output name=venv_path::$(pwd)/.venv"
@@ -60,6 +61,7 @@ jobs:
           python test/diff/generate.py
         env:
           ATOM_JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64
+
       - name: Upload shell scripts generated as artifact
         uses: actions/upload-artifact@v4
         with:
