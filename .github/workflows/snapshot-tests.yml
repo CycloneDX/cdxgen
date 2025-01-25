@@ -24,12 +24,12 @@ jobs:
     outputs:
       venv_path: ${{ steps.set_env.outputs.venv_path }}
     steps:
-      - name: Create venv & install prerequisites
+      - name: Create venv and install prerequisites
         id: set_env
         run: |
           python3.12 -m venv .venv
           source .venv/bin/activate
-          pip install wheel setuptools
+          pip install setuptools wheel
           echo "::set-output name=venv_path::$(pwd)/.venv"
 
   test_non_dotnet:
@@ -42,21 +42,21 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
 
-      -  name: cdxgen, custom-json-diff installs
-         shell: bash
-         env:
-           SHELL: bash
-         run: |
-           source ${{ needs.pregen.outputs.venv_path }}/bin/activate
-           rm -rf original_snapshots new_snapshots src_repos
-           cdxgen_tarball=$(pnpm pack | tail -1)
-           sudo npm install -g "$cdxgen_tarball"
-           git clone https://github.com/appthreat/cdxgen-samples.git original_snapshots
-           pip install -r test/diff/requirements.txt
+      - name: cdxgen, custom-json-diff installs
+        shell: bash
+        env:
+          SHELL: bash
+        run: |
+          rm -rf original_snapshots new_snapshots src_repos
+          cdxgen_tarball=$(pnpm pack | tail -1)
+          sudo npm install -g "$cdxgen_tarball"
+          git clone https://github.com/appthreat/cdxgen-samples.git original_snapshots
+          source ${{ needs.pregen.outputs.venv_path }}/bin/activate
+          pip install -r test/diff/requirements.txt
 
       - name: Generate scripts
         run: |
-          source .venv/bin/activate
+          source ${{ needs.pregen.outputs.venv_path }}/bin/activate
           python test/diff/generate.py
         env:
           ATOM_JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64
@@ -82,10 +82,10 @@ jobs:
 
       - name: Test BOMs
         run: |
-          source .venv/bin/activate
+          source ${{ needs.pregen.outputs.venv_path }}/bin/activate
           python test/diff/diff_tests.py --migrate-legacy
           if test -f new_snapshots/diffs.json; then
-            echo "status=FAILED" >> "$GITHUB_ENV"
+            echo "status=FAILED" >> $GITHUB_ENV
           fi
 
       - name: Upload diff
