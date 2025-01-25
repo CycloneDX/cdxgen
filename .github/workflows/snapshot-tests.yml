@@ -37,7 +37,7 @@ jobs:
           echo "pwd:"
           pwd
           python3.12 -m venv .venv
-          ls -al .venv  || echo venv doesn;t exist
+          ls -al .venv  || echo venv doesnt exist
           echo "VENV_PATH=$(pwd)/.venv" >> $GITHUB_ENV
           source .venv/bin/activate
           pip install setuptools wheel
