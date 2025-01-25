@@ -17,6 +17,10 @@ concurrency:
   group: "${{ github.workflow }}-${{ github.head_ref || github.run_id }}"
   cancel-in-progress: true
 
+defaults:
+  run:
+    working-directory: ${{ github.workspace }}
+
 jobs:
 
   pregen:
@@ -24,24 +28,32 @@ jobs:
     outputs:
       venv_path: ${{ steps.set_env.outputs.venv_path }}
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Create venv and install prerequisites
         id: set_env
         run: |
           python3.12 -m venv .venv
-          echo "venv_path=$(pwd)/.venv" >> $GITHUB_ENV
+          echo "VENV_PATH=$(pwd)/.venv" >> $GITHUB_ENV
+          echo "::set-output name=venv_path::$(pwd)/.venv"
           source .venv/bin/activate
           pip install setuptools wheel
-          echo "::set-output name=venv_path::$(pwd)/.venv"
 
   test_non_dotnet:
     runs-on: ["snapshot-test"]
     needs: pregen
     steps:
-
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
+
+      - name: Debug paths
+        run: |
+          echo "VENV_PATH: ${{ needs.pregen.outputs.venv_path }}"
+          ls -al ${{ needs.pregen.outputs.venv_path }}
 
       - name: cdxgen, custom-json-diff installs
         shell: bash
