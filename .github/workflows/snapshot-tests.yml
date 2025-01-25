@@ -34,9 +34,11 @@ jobs:
       - name: Create venv and install prerequisites
         id: set_env
         run: |
+          echo "pwd:"
+          pwd
+          ls -al .venv 
           python3.12 -m venv .venv
           echo "VENV_PATH=$(pwd)/.venv" >> $GITHUB_ENV
-          echo "::set-output name=venv_path::$(pwd)/.venv"
           source .venv/bin/activate
           pip install setuptools wheel
 
@@ -53,7 +55,10 @@ jobs:
       - name: Debug paths
         run: |
           echo "VENV_PATH: ${{ needs.pregen.outputs.venv_path }}"
-          ls -al ${{ needs.pregen.outputs.venv_path }}
+          echo "Running pwd to confirm the directory:"
+          pwd
+          ls -al ${{ needs.pregen.outputs.venv_path }}  # Path access verification
+      
 
       - name: cdxgen, custom-json-diff installs
         shell: bash
