@@ -34,13 +34,18 @@ jobs:
       - name: Create venv and install prerequisites
         id: set_env
         run: |
-          echo "pwd:"
-          pwd
           python3.12 -m venv .venv
-          ls -al .venv  || echo venv doesnt exist
-          echo "VENV_PATH=$(pwd)/.venv" >> $GITHUB_ENV
+          echo "venv_path=$(pwd)/.venv" >> $GITHUB_OUTPUT
           source .venv/bin/activate
           pip install setuptools wheel
+
+      - name: Cache venv
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            venv-${{ runner.os }}-
 
   test_non_dotnet:
     runs-on: ["snapshot-test"]
@@ -49,16 +54,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Restore venv
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            venv-${{ runner.os }}-
+
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
-
-      - name: Debug paths
-        run: |
-          echo "VENV_PATH: ${{ needs.pregen.outputs.venv_path }}"
-          echo "Running pwd to confirm the directory:"
-          pwd
-          ls -al ${{ needs.pregen.outputs.venv_path }}  || oops no venv here
-      
 
       - name: cdxgen, custom-json-diff installs
         shell: bash
@@ -69,12 +74,12 @@ jobs:
           cdxgen_tarball=$(pnpm pack | tail -1)
           sudo npm install -g "$cdxgen_tarball"
           git clone https://github.com/appthreat/cdxgen-samples.git original_snapshots
-          source ${{ needs.pregen.outputs.venv_path }}/bin/activate
+          source .venv/bin/activate
           pip install -r test/diff/requirements.txt
 
       - name: Generate scripts
         run: |
-          source ${{ needs.pregen.outputs.venv_path }}/bin/activate
+          source .venv/bin/activate
           python test/diff/generate.py
         env:
           ATOM_JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64
@@ -101,7 +106,7 @@ jobs:
 
       - name: Test BOMs
         run: |
-          source ${{ needs.pregen.outputs.venv_path }}/bin/activate
+          source .venv/bin/activate
           python test/diff/diff_tests.py --migrate-legacy
           if test -f new_snapshots/diffs.json; then
             echo "status=FAILED" >> $GITHUB_ENV
