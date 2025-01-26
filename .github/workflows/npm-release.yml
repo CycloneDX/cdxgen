@@ -126,7 +126,7 @@ jobs:
           cdxgen-oci-image.cdx.json
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  containers-perms:
+  containers-secure:
     if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:

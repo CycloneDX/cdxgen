@@ -9,12 +9,12 @@ LABEL maintainer="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
       org.opencontainers.image.description="Container image for cdxgen SBOM generator packing latest build tools with secure defaults." \
-      org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-secure -r /app --help"
+      org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-secure cdxgen -r /app --server"
 
 ARG SWIFT_SIGNING_KEY=52BB7E3DE28A71BE22EC05FFEF80A866B47A981F
 ARG SWIFT_PLATFORM=ubi9
-ARG SWIFT_BRANCH=swift-6.0.1-release
-ARG SWIFT_VERSION=swift-6.0.1-RELEASE
+ARG SWIFT_BRANCH=swift-6.0.3-release
+ARG SWIFT_VERSION=swift-6.0.3-RELEASE
 ARG SWIFT_WEBROOT=https://download.swift.org
 ARG JAVA_VERSION=23.0.1-tem
 ARG SBT_VERSION=1.10.7
@@ -24,6 +24,7 @@ ARG GO_VERSION=1.23.5
 ARG NODE_VERSION=23.6.1
 ARG PYTHON_VERSION=3.12
 ARG RUBY_VERSION=3.4.1
+ARG JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
 
 ENV GOPATH=/opt/app-root/go \
     JAVA_VERSION=$JAVA_VERSION \
@@ -31,10 +32,10 @@ ENV GOPATH=/opt/app-root/go \
     MAVEN_VERSION=$MAVEN_VERSION \
     GRADLE_VERSION=$GRADLE_VERSION \
     GRADLE_OPTS="-Dorg.gradle.daemon=false" \
-    JAVA_HOME="/root/.sdkman/candidates/java/${JAVA_VERSION}" \
-    MAVEN_HOME="/root/.sdkman/candidates/maven/${MAVEN_VERSION}" \
-    GRADLE_HOME="/root/.sdkman/candidates/gradle/${GRADLE_VERSION}" \
-    SBT_HOME="/root/.sdkman/candidates/sbt/${SBT_VERSION}" \
+    JAVA_HOME="/opt/.sdkman/candidates/java/${JAVA_VERSION}" \
+    MAVEN_HOME="/opt/.sdkman/candidates/maven/${MAVEN_VERSION}" \
+    GRADLE_HOME="/opt/.sdkman/candidates/gradle/${GRADLE_VERSION}" \
+    SBT_HOME="/opt/.sdkman/candidates/sbt/${SBT_VERSION}" \
     PYTHON_VERSION=3.12 \
     PYTHON_CMD=/usr/bin/python3.12 \
     RUBY_VERSION=$RUBY_VERSION \
@@ -42,7 +43,7 @@ ENV GOPATH=/opt/app-root/go \
     PYTHONIOENCODING="utf-8" \
     COMPOSER_ALLOW_SUPERUSER=1 \
     ANDROID_HOME=/opt/android-sdk-linux \
-    JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8" \
+    JAVA_TOOL_OPTIONS=$JAVA_TOOL_OPTIONS \
     SWIFT_SIGNING_KEY=$SWIFT_SIGNING_KEY \
     SWIFT_PLATFORM=$SWIFT_PLATFORM \
     SWIFT_BRANCH=$SWIFT_BRANCH \
@@ -51,25 +52,24 @@ ENV GOPATH=/opt/app-root/go \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
-    NVM_DIR="/root/.nvm" \
+    NVM_DIR="/opt/.nvm" \
     TMPDIR=/tmp \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     PYTHONPATH=/opt/pypi \
     CDXGEN_IN_CONTAINER=true \
     CDXGEN_SECURE_MODE=true \
     CDXGEN_DEBUG_MODE=debug \
-    NODE_OPTIONS='--permission --allow-fs-read="/app/*" --allow-fs-read="/opt/*" --allow-fs-write="/tmp/*" --allow-fs-write="/app/*.json" --allow-child-process' \
-    SDKMAN_DIR=/root/.sdkman \
-    SDKMAN_CANDIDATES_DIR=/root/.sdkman/candidates \
+    SDKMAN_DIR=/opt/.sdkman \
+    SDKMAN_CANDIDATES_DIR=/opt/.sdkman/candidates \
     npm_config_python=/usr/bin/python3.12 \
     MALLOC_CONF="dirty_decay_ms:2000,narenas:2,background_thread:true" \
     RUBY_CONFIGURE_OPTS="--with-jemalloc --enable-yjit" \
     RUBYOPT="--yjit" \
     RUBY_BUILD_BUILD_PATH="/tmp/rbenv" \
     RUBY_BUILD_HTTP_CLIENT=curl
-ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/root/.cargo/bin:/opt/pypi/bin:/root/.rbenv/bin:/root/.rbenv/versions/3.4.1/bin:
+ENV PATH=${PATH}:/opt/bin:/opt/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/opt/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/root/.cargo/bin:/opt/pypi/bin:/root/.rbenv/bin:/root/.rbenv/versions/3.4.1/bin:
 
-COPY . /opt/cdxgen
+COPY . /opt/cdxgen    
 
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
@@ -99,27 +99,29 @@ RUN set -e; \
     && /opt/pypi/bin/poetry --version \
     && /opt/pypi/bin/pipenv --version \
     && /opt/pypi/bin/blint --help \
+    && mkdir -p /opt/bin /opt/.nvm \
     && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && cargo --version \
     && rustc --version \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
-    && source /root/.nvm/nvm.sh \
+    && source ${NVM_DIR}/nvm.sh \
     && nvm install ${NODE_VERSION} \
     && node --version \
-    && git clone https://github.com/rbenv/rbenv.git --depth=1 ~/.rbenv \
-    && echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc \
-    && echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.bashrc \
+    && git clone https://github.com/rbenv/rbenv.git --depth=1 /root/.rbenv \
+    && echo 'export PATH="/root/.rbenv/bin:$PATH"' >> ~/.bashrc \
+    && echo 'eval "$(/root/.rbenv/bin/rbenv init - bash)"' >> ~/.bashrc \
+    && echo 'export NVM_DIR=/opt/.nvm' >> ~/.bashrc \
     && source ~/.bashrc \
     && mkdir -p "$(rbenv root)/plugins" \
     && git clone https://github.com/rbenv/ruby-build.git --depth=1 "$(rbenv root)/plugins/ruby-build" \
     && rbenv install ${RUBY_VERSION} \
     && rbenv global ${RUBY_VERSION} \
+    && rm -rf /root/.rbenv/cache $RUBY_BUILD_BUILD_PATH \
     && ruby --version \
     && which ruby \
-    && rm -rf /root/.rbenv/cache $RUBY_BUILD_BUILD_PATH \
     && curl -s "https://get.sdkman.io" | bash \
-    && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> $HOME/.sdkman/etc/config \
-    && source "$HOME/.sdkman/bin/sdkman-init.sh" \
+    && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> /opt/.sdkman/etc/config \
+    && source "/opt/.sdkman/bin/sdkman-init.sh" \
     && sdk install java $JAVA_VERSION \
     && sdk install maven $MAVEN_VERSION \
     && sdk install gradle $GRADLE_VERSION \
@@ -168,14 +170,16 @@ RUN set -e; \
     && gem install bundler \
     && gem --version \
     && bundler --version \
-    && cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
+    && cd /opt/cdxgen && corepack enable && pnpm config set global-bin-dir /opt/bin \
+    && corepack pnpm install --prod --package-import-method copy && corepack pnpm link --global && corepack pnpm cache delete \
     && mkdir -p /opt/cdxgen-node-cache \
     && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
     && chmod a-w -R /opt \
-    && node /opt/cdxgen/bin/cdxgen.js --help \
+    && cdxgen --help \
     && rm -rf /var/cache/yum /root/.cache/pypoetry \
     && microdnf clean all
-
+ENV NODE_OPTIONS='--permission --allow-fs-read="/app/*" --allow-fs-read="/opt/*" --allow-fs-write="/tmp/*" --allow-fs-write="/app/*.json" --allow-child-process --trace-warnings'
+RUN cdxgen --help
 USER cyclonedx
 WORKDIR /app
-ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]
+CMD ["cdxgen"]
