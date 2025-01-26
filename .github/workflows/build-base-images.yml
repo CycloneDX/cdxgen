@@ -223,6 +223,18 @@ jobs:
           tags: ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11
           labels: ${{ steps.meta-cdxgen-debian-dotnet6.outputs.labels }}
 
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          context: .
+          file: ci/base-images/cdxgen/debian/Dockerfile.dotnet6
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cdxgen-debian-dotnet6.outputs.tags }}
+          labels: ${{ steps.meta-cdxgen-debian-dotnet6.outputs.labels }}
+
+
   sle-ruby25-image:
     if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
@@ -996,6 +1008,17 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ghcr.io/cyclonedx/cdxgen-debian-dotnet9:v11
+          labels: ${{ steps.meta-cdxgen-debian-dotnet9.outputs.labels }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          context: .
+          file: ci/base-images/cdxgen/debian/Dockerfile.dotnet9
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cdxgen-debian-dotnet9.outputs.tags }}
           labels: ${{ steps.meta-cdxgen-debian-dotnet9.outputs.labels }}
 
   sle-java-image:
