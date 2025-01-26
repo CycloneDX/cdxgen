@@ -3,7 +3,7 @@
 When the experimental permission model is enabled, cdxgen would be prevented from operating with the below error.
 
 ```shell
-❯ node --experimental-permission bin/cdxgen.js -o /tmp/bom.json ~/work/sandbox/vuln-spring -t java
+❯ node --permission bin/cdxgen.js -o /tmp/bom.json ~/work/sandbox/vuln-spring -t java
 node:internal/modules/cjs/loader:179
   const result = internalModuleStat(filename);
                  ^
@@ -33,7 +33,19 @@ Node.js v20.3.1
 Example invocation:
 
 ```shell
-node --experimental-permission --allow-fs-read="/home/almalinux/work*" --allow-fs-write=/tmp --allow-child-process bin/cdxgen.js -o /tmp/bom.json ~/work/sandbox/vuln-spring -t java
+node --permission --allow-fs-read="/home/almalinux/work*" --allow-fs-write="/tmp/*" --allow-child-process bin/cdxgen.js -o /tmp/bom.json /home/almalinux/work/sandbox/vuln-spring -t java
+```
+
+The above command is too simple. For example, below is a command I use on my macOS machine. When sdkman, nvm, etc. are used, more `--allow-fs-read` arguments are required. Use "\*" to get things working.
+
+```shell
+node --permission --allow-fs-read=\* --allow-fs-write="/tmp/*" --allow-fs-write="/Volumes/Work/sandbox/pnpm 2/*.json" --allow-fs-write="/Users/prabhu/Library/Application Support/.atomdb" --allow-fs-write="/var/folders/h5/43_6kqvs4w7cclqtdbpj_7g80000gn/T/*" --allow-child-process --allow-addons /Volumes/Work/CycloneDX/cdxgen/bin/cdxgen.js --evidence -o bom.json -t js "$(pwd)"
+```
+
+Below example uses the environment variable `NODE_OPTIONS` to pass additional options to the node runtime dynamically.
+
+```shell
+NODE_OPTIONS='--permission --allow-fs-read="*" --allow-fs-write="/tmp/*" --allow-fs-write="/Volumes/Work/sandbox/pnpm 2/*.json" --allow-fs-write="/Users/prabhu/Library/Application Support/.atomdb" --allow-fs-write="/var/folders/h5/43_6kqvs4w7cclqtdbpj_7g80000gn/T/*" --allow-child-process --allow-addons' node /Volumes/Work/CycloneDX/cdxgen/bin/cdxgen.js --evidence -o bom.json -t js "$(pwd)"
 ```
 
 ## Warning messages

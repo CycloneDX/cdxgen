@@ -37,6 +37,7 @@ jobs:
         run: |
           chmod +x contrib/free_disk_space.sh
           ./contrib/free_disk_space.sh
+      - uses: sbt/setup-sbt@v1
       - name: Install bazelisk - linux
         if: matrix.os == 'ubuntu-latest'
         run: |

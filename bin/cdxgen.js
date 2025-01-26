@@ -21,7 +21,14 @@ import {
   printSummary,
   printTable,
 } from "../lib/helpers/display.js";
-import { ATOM_DB, dirNameStr, getTmpDir } from "../lib/helpers/utils.js";
+import {
+  ATOM_DB,
+  dirNameStr,
+  getTmpDir,
+  isMac,
+  isSecureMode,
+  isWin,
+} from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
 import { postProcess } from "../lib/stages/postgen/postgen.js";
 import { prepareEnv } from "../lib/stages/pregen/pregen.js";
@@ -141,6 +148,7 @@ const args = yargs(hideBin(process.argv))
   })
   .option("fail-on-error", {
     type: "boolean",
+    default: !isSecureMode,
     description: "Fail if any dependency extractor fails.",
   })
   .option("no-babel", {
@@ -167,7 +175,7 @@ const args = yargs(hideBin(process.argv))
   })
   .option("install-deps", {
     type: "boolean",
-    default: true,
+    default: !isSecureMode,
     description:
       "Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans. Use --no-install-deps to disable this feature.",
   })
@@ -357,6 +365,10 @@ const args = yargs(hideBin(process.argv))
   .alias("h", "help")
   .wrap(Math.min(120, yargs().terminalWidth())).argv;
 
+if (process.env?.CDXGEN_NODE_OPTIONS) {
+  process.env.NODE_OPTIONS = `${process.env.NODE_OPTIONS || ""} ${process.env.CDXGEN_NODE_OPTIONS}`;
+}
+
 if (args.version) {
   const packageJsonAsString = fs.readFileSync(
     join(dirName, "..", "package.json"),
@@ -376,7 +388,7 @@ if (process.env.GLOBAL_AGENT_HTTP_PROXY || process.env.HTTP_PROXY) {
   globalAgent.bootstrap();
 }
 
-const filePath = args._[0] || ".";
+const filePath = args._[0] || process.cwd();
 if (!args.projectName) {
   if (filePath !== ".") {
     args.projectName = basename(filePath);
@@ -460,7 +472,7 @@ const applyAdvancedOptions = (options) => {
       options.deep = true;
       options.evidence = false;
       options.includeCrypto = false;
-      options.installDeps = true;
+      options.installDeps = !isSecureMode;
       break;
     case "deep-learning":
     case "ml-deep":
@@ -468,7 +480,7 @@ const applyAdvancedOptions = (options) => {
       options.deep = true;
       options.evidence = true;
       options.includeCrypto = true;
-      options.installDeps = true;
+      options.installDeps = !isSecureMode;
       break;
     default:
       break;
@@ -526,30 +538,121 @@ applyAdvancedOptions(options);
  * Check for node >= 20 permissions
  *
  * @param {string} filePath File path
+ * @param {Object} options CLI Options
  * @returns
  */
-const checkPermissions = (filePath) => {
+const checkPermissions = (filePath, options) => {
   if (!process.permission) {
     return true;
   }
+  const fullFilePath = resolve(filePath);
+  // Secure mode checks
+  if (isSecureMode) {
+    if (process.permission.has("fs.read", "*")) {
+      console.log(
+        "\x1b[1;35mSECURE MODE: DO NOT run cdxgen with FileSystemRead permission set to wildcard.\x1b[0m",
+      );
+    }
+    if (process.permission.has("fs.write", "*")) {
+      console.log(
+        "\x1b[1;35mSECURE MODE: DO NOT run cdxgen with FileSystemWrite permission set to wildcard.\x1b[0m",
+      );
+    }
+    if (process.permission.has("worker")) {
+      console.log(
+        "SECURE MODE: DO NOT run cdxgen with worker thread permission! Remove `--allow-worker` argument.",
+      );
+    }
+    if (filePath !== fullFilePath) {
+      console.log(
+        `\x1b[1;35mSECURE MODE: Invoke cdxgen with an absolute path to improve security. Use ${fullFilePath} instead of ${filePath}.\x1b[0m`,
+      );
+      if (fullFilePath.includes(" ")) {
+        console.log(
+          "\x1b[1;35mSECURE MODE: Directory names containing spaces are known to cause issues. Rename the directories by replacing spaces with hyphens or underscores.\x1b[0m",
+        );
+      } else if (fullFilePath.length > 255 && isWin) {
+        console.log(
+          "Ensure 'Enable Win32 Long paths' is set to 'Enabled' by using Group Policy Editor.",
+        );
+      }
+      return false;
+    }
+  }
+
   if (!process.permission.has("fs.read", filePath)) {
     console.log(
-      `FileSystemRead permission required. Please invoke with the argument --allow-fs-read="${resolve(
+      `\x1b[1;35mSECURE MODE: FileSystemRead permission required. Please invoke cdxgen with the argument --allow-fs-read="${resolve(
         filePath,
-      )}"`,
+      )}"\x1b[0m`,
     );
     return false;
+  }
+  if (!process.permission.has("fs.write", options.output)) {
+    console.log(
+      `\x1b[1;35mSECURE MODE: FileSystemWrite permission is required to create the output BOM file. Please invoke cdxgen with the argument --allow-fs-write="${options.output}"\x1b[0m`,
+    );
+  }
+  if (options.evidence) {
+    const slicesFilesKeys = [
+      "deps-slices-file",
+      "usages-slices-file",
+      "reachables-slices-file",
+    ];
+    if (options?.type?.includes("swift")) {
+      slicesFilesKeys.push("semantics-slices-file");
+    }
+    for (const sf of slicesFilesKeys) {
+      let issueFound = false;
+      if (!process.permission.has("fs.write", options[sf])) {
+        console.log(
+          `SECURE MODE: FileSystemWrite permission is required to create the output slices file. Please invoke cdxgen with the argument --allow-fs-write="${options[sf]}"`,
+        );
+        if (!issueFound) {
+          issueFound = true;
+        }
+      }
+      if (issueFound) {
+        return false;
+      }
+    }
+    if (!process.permission.has("fs.write", process.env.ATOM_DB || ATOM_DB)) {
+      console.log(
+        `SECURE MODE: FileSystemWrite permission is required to create the output slices file. Please invoke cdxgen with the argument --allow-fs-write="${process.env.ATOM_DB || ATOM_DB}"`,
+      );
+      return false;
+    }
+    console.log(
+      "TIP: Invoke cdxgen with `--allow-addons` to allow the use of sqlite3 native addon. This addon is required for evidence mode.",
+    );
+  } else {
+    if (process.permission.has("fs.write", process.env.ATOM_DB || ATOM_DB)) {
+      console.log(
+        `SECURE MODE: FileSystemWrite permission is not required for the directory "${process.env.ATOM_DB || ATOM_DB}" in non-evidence mode. Consider removing the argument --allow-fs-write="${process.env.ATOM_DB || ATOM_DB}".`,
+      );
+      return false;
+    }
   }
   if (!process.permission.has("fs.write", getTmpDir())) {
     console.log(
-      `FileSystemWrite permission required. Please invoke with the argument --allow-fs-write="${getTmpDir()}"`,
+      `FileSystemWrite permission may be required to the TEMP directory. Please invoke cdxgen with the argument --allow-fs-write="${join(getTmpDir(), "*")}"`,
+    );
+    if (isMac) {
+      console.log(
+        "TIP: macOS doesn't use `/tmp` prefix for TEMP directories. Use the argument shown above.",
+      );
+    }
+  }
+  if (!process.permission.has("child") && !isSecureMode) {
+    console.log(
+      "ChildProcess permission is missing. This is required to spawn commands for some languages. Please invoke cdxgen with the argument --allow-child-process in case of issues.",
+    );
+  }
+  if (process.permission.has("child") && options?.lifecycle === "pre-build") {
+    console.log(
+      "SECURE MODE: ChildProcess permission is not required for pre-build SBOM generation. Please invoke cdxgen without the argument --allow-child-process.",
     );
     return false;
-  }
-  if (!process.permission.has("child")) {
-    console.log(
-      "ChildProcess permission is missing. This is required to spawn commands for some languages. Please invoke with the argument --allow-child-process",
-    );
   }
   return true;
 };
@@ -566,7 +669,10 @@ const checkPermissions = (filePath) => {
     return serverModule.start(options);
   }
   // Check if cdxgen has the required permissions
-  if (!checkPermissions(filePath)) {
+  if (!checkPermissions(filePath, options)) {
+    if (isSecureMode) {
+      process.exit(1);
+    }
     return;
   }
   // This will prevent people from accidentally using the usages slices belonging to a different project
