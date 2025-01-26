@@ -55,6 +55,7 @@ ENV GOPATH=/opt/app-root/go \
     NVM_DIR="/opt/.nvm" \
     TMPDIR=/tmp \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
+    NODE_NO_WARNINGS=1 \
     PYTHONPATH=/opt/pypi \
     CDXGEN_IN_CONTAINER=true \
     CDXGEN_SECURE_MODE=true \
@@ -119,13 +120,13 @@ RUN set -e; \
     && rm -rf /root/.rbenv/cache $RUBY_BUILD_BUILD_PATH \
     && ruby --version \
     && which ruby \
-    && curl -s "https://get.sdkman.io" | bash \
+    && curl -s "https://get.sdkman.io?rcupdate=false" | bash \
     && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> /opt/.sdkman/etc/config \
     && source "/opt/.sdkman/bin/sdkman-init.sh" \
-    && sdk install java $JAVA_VERSION \
-    && sdk install maven $MAVEN_VERSION \
-    && sdk install gradle $GRADLE_VERSION \
-    && sdk install sbt $SBT_VERSION \
+    && sdk install java $JAVA_VERSION /opt/.sdkman/candidates/java \
+    && sdk install maven $MAVEN_VERSION /opt/.sdkman/candidates/maven \
+    && sdk install gradle $GRADLE_VERSION /opt/.sdkman/candidates/gradle \
+    && sdk install sbt $SBT_VERSION /opt/.sdkman/candidates/sbt \
     && SWIFT_WEBDIR="$SWIFT_WEBROOT/$SWIFT_BRANCH/$(echo $SWIFT_PLATFORM | tr -d .)$OS_ARCH_SUFFIX" \
     && SWIFT_BIN_URL="$SWIFT_WEBDIR/$SWIFT_VERSION/$SWIFT_VERSION-$SWIFT_PLATFORM$OS_ARCH_SUFFIX.tar.gz" \
     && SWIFT_SIG_URL="$SWIFT_BIN_URL.sig" \
@@ -150,6 +151,7 @@ RUN set -e; \
     && curl -LO "https://dl.google.com/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz" \
     && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
     && rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
+    && go telemetry off \
     && curl -LO "https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein" \
     && chmod +x lein \
     && mv lein /usr/local/bin/ \
@@ -170,7 +172,7 @@ RUN set -e; \
     && gem install bundler \
     && gem --version \
     && bundler --version \
-    && cd /opt/cdxgen && corepack enable && pnpm config set global-bin-dir /opt/bin \
+    && cd /opt/cdxgen && corepack enable && corepack pnpm config set global-bin-dir /opt/bin \
     && corepack pnpm install --prod --package-import-method copy && corepack pnpm link --global && corepack pnpm cache delete \
     && mkdir -p /opt/cdxgen-node-cache \
     && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
