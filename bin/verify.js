@@ -43,6 +43,10 @@ if (args.version) {
   process.exit(0);
 }
 
+if (process.env?.CDXGEN_NODE_OPTIONS) {
+  process.env.NODE_OPTIONS = `${process.env.NODE_OPTIONS || ""} ${process.env.CDXGEN_NODE_OPTIONS}`;
+}
+
 const bomJson = JSON.parse(fs.readFileSync(args.input, "utf8"));
 let hasInvalidComp = false;
 // Validate any component signature
