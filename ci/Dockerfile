@@ -145,6 +145,7 @@ RUN set -e; \
     && curl -LO "https://dl.google.com/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz" \
     && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
     && rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
+    && go telemetry off \
     && curl -LO "https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein" \
     && chmod +x lein \
     && mv lein /usr/local/bin/ \
