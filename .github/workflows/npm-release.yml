@@ -126,6 +126,69 @@ jobs:
           cdxgen-oci-image.cdx.json
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  containers-perms:
+    if: github.repository == 'CycloneDX/cdxgen'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '23.x'
+          registry-url: https://registry.npmjs.org/
+      - uses: oras-project/setup-oras@v1
+      - name: Trim CI agent
+        run: |
+          chmod +x contrib/free_disk_space.sh
+          ./contrib/free_disk_space.sh
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta2
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-secure
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/Dockerfile-secure
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta2.outputs.tags }}
+          labels: ${{ steps.meta2.outputs.labels }}
+          cache-from: type=gha,scope=cdxgen-secure
+          cache-to: type=gha,mode=max,scope=cdxgen-secure
+      - name: Attach cdx sbom
+        run: |
+          corepack enable
+          corepack pnpm install
+          node bin/cdxgen.js -t docker -o cdxgen-secure-oci-image.cdx.json ghcr.io/cyclonedx/cdxgen-secure:latest
+          oras attach --artifact-type sbom/cyclonedx ghcr.io/cyclonedx/cdxgen-secure:latest ./cdxgen-secure-oci-image.cdx.json:application/json
+          oras discover --format tree ghcr.io/cyclonedx/cdxgen-secure:latest
+        continue-on-error: true
+        if: startsWith(github.ref, 'refs/tags/')
+      - name: Attach cdx secure sbom to release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            cdxgen-secure-oci-image.cdx.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   containers-deno:
     if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
@@ -140,17 +203,11 @@ jobs:
       with:
         node-version: '23.x'
         registry-url: https://registry.npmjs.org/
+    - uses: oras-project/setup-oras@v1
     - name: Trim CI agent
       run: |
         chmod +x contrib/free_disk_space.sh
         ./contrib/free_disk_space.sh
-    - name: Setup nydus
-      run: |
-        curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.2.4/nydus-static-v2.2.4-linux-amd64.tgz
-        tar -xvf nydus-static-v2.2.4-linux-amd64.tgz
-        chmod +x nydus-static/*
-        mv nydus-static/* /usr/local/bin/
-        rm -rf nydus-static-v2.2.4-linux-amd64.tgz nydus-static
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
     - name: Set up Docker Buildx
@@ -192,17 +249,11 @@ jobs:
       with:
         node-version: '23.x'
         registry-url: https://registry.npmjs.org/
+    - uses: oras-project/setup-oras@v1
     - name: Trim CI agent
       run: |
         chmod +x contrib/free_disk_space.sh
         ./contrib/free_disk_space.sh
-    - name: Setup nydus
-      run: |
-        curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.2.4/nydus-static-v2.2.4-linux-amd64.tgz
-        tar -xvf nydus-static-v2.2.4-linux-amd64.tgz
-        chmod +x nydus-static/*
-        mv nydus-static/* /usr/local/bin/
-        rm -rf nydus-static-v2.2.4-linux-amd64.tgz nydus-static
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
     - name: Set up Docker Buildx
@@ -244,17 +295,11 @@ jobs:
       with:
         node-version: '23.x'
         registry-url: https://registry.npmjs.org/
+    - uses: oras-project/setup-oras@v1
     - name: Trim CI agent
       run: |
         chmod +x contrib/free_disk_space.sh
         ./contrib/free_disk_space.sh
-    - name: Setup nydus
-      run: |
-        curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.2.4/nydus-static-v2.2.4-linux-amd64.tgz
-        tar -xvf nydus-static-v2.2.4-linux-amd64.tgz
-        chmod +x nydus-static/*
-        mv nydus-static/* /usr/local/bin/
-        rm -rf nydus-static-v2.2.4-linux-amd64.tgz nydus-static
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
     - name: Set up Docker Buildx
