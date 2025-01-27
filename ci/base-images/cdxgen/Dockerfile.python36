@@ -36,5 +36,5 @@ RUN source /root/.nvm/nvm.sh \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && chmod a-w -R /opt \
     && zypper clean -a
-
+WORKDIR /app
 ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]

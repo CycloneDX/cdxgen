@@ -21,5 +21,5 @@ RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-
     && mkdir -p /opt/cdxgen-node-cache \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && chmod a-w -R /opt
-
+WORKDIR /app
 ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]

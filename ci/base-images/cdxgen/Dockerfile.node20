@@ -22,5 +22,5 @@ RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && pip install --upgrade --no-cache-dir atom-tools --target /opt/pypi \
     && chmod a-w -R /opt
-
+WORKDIR /app
 ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]

@@ -37,5 +37,5 @@ RUN source /root/.nvm/nvm.sh \
     && pip install --upgrade --no-cache-dir atom-tools --target /opt/pypi \
     && chmod a-w -R /opt \
     && zypper clean -a
-
+WORKDIR /app
 ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]
