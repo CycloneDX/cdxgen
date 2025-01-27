@@ -173,5 +173,5 @@ RUN set -e; \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && rm -rf /var/cache/yum /root/.cache/pypoetry \
     && microdnf clean all
-
+WORKDIR /app
 ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]
