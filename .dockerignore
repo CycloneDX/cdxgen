@@ -6,4 +6,3 @@ test/
 docs/
 contrib/
 **/node_modules
-ci/
