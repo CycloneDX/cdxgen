@@ -114,6 +114,7 @@ jobs:
         with:
           repository: 'bazelbuild/examples'
           path: 'repotests/bazel-examples'
+          ref: 'b51e3bdd468ce8c4a516d7dca993909dcc84af32'
       - uses: actions/checkout@v4
         with:
           repository: 'flutter/gallery'

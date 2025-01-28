@@ -148,7 +148,7 @@ const args = yargs(hideBin(process.argv))
   })
   .option("fail-on-error", {
     type: "boolean",
-    default: !isSecureMode,
+    default: isSecureMode,
     description: "Fail if any dependency extractor fails.",
   })
   .option("no-babel", {
