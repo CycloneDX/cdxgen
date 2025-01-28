@@ -69,7 +69,6 @@ jobs:
         with:
           packages: 'platform-tools'
       - run: sdkmanager --uninstall "build-tools;30.0.3"
-      - run: sdkmanager tools
       - uses: swift-actions/setup-swift@v2
         if: matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm'
       - name: Set up Python
