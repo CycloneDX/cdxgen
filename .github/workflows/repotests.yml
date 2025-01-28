@@ -39,10 +39,16 @@ jobs:
           ./contrib/free_disk_space.sh
       - uses: sbt/setup-sbt@v1
       - name: Install bazelisk - linux
-        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm'
+        if: matrix.os == 'ubuntu-24.04'
         run: |
           curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.20.0/bazelisk-linux-amd64"
           sudo mv bazelisk-linux-amd64 /usr/local/bin/bazel
+          chmod +x /usr/local/bin/bazel
+      - name: Install bazelisk - linux arm
+        if: matrix.os == 'ubuntu-24.04-arm'
+        run: |
+          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.20.0/bazelisk-linux-arm64"
+          sudo mv bazelisk-linux-arm64 /usr/local/bin/bazel
           chmod +x /usr/local/bin/bazel
       - name: Install bazelisk - windows
         if: matrix.os == 'windows-latest'
@@ -324,7 +330,7 @@ jobs:
           bin/cdxgen.js -p -t java -exclude-type js repotests/java-sec-code -o bomresults/bom-java-sec-code-10.json
         shell: bash
       - name: repotests greyhound
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-24.04'
         run: |
           bin/cdxgen.js -p -r -t java11 repotests/greyhound -o bomresults/bom-greyhound-java.json
           bin/cdxgen.js -p -r -t gradle repotests/greyhound -o bomresults/bom-greyhound-gradle.json
@@ -607,7 +613,7 @@ jobs:
         continue-on-error: true
         shell: bash
       - uses: actions/upload-artifact@v4
-        if: github.ref == 'refs/heads/master' && (matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm')
+        if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-24.04-arm'
         with:
           name: bomresults
           path: bomresults
