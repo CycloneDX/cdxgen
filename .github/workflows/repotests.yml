@@ -72,7 +72,7 @@ jobs:
       - uses: swift-actions/setup-swift@v2
         if: matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm'
         with:
-          swift-version: 6.0.3
+          swift-version: '6.0'
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
