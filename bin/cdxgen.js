@@ -433,10 +433,6 @@ if (options.includeFormulation) {
  * @param {object} options CLI options
  */
 const applyAdvancedOptions = (options) => {
-  // Temporary fix till we figure out a better logic
-  if (options["install-deps"]) {
-    options.installDeps = true;
-  }
   switch (options.profile) {
     case "appsec":
       options.deep = true;
