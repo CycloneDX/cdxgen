@@ -8,7 +8,6 @@ prettier,https://github.com/prettier/prettier.git,javascript,>=18,"package.json,
 astro,https://github.com/withastro/astro.git,javascript,>=18.17.1,"package.json,pnpm-lock.yaml",pnpm,9.12.1,,pnpm install,,9d6bcdb88fcb9df0c5c70e2b591bcf962ce55f63
 plantuml,https://github.com/plantuml/plantuml.git,java8,8,,gradle,,sdk use java 8.0.432-tem,gradle clean build -x javaDoc -PjavacRelease=8,GRADLE_ARGS='clean build -x javaDoc -PjavacRelease=8',8eb791f39478778788fd47a9195dc1b2feb3eade
 plantuml_17,https://github.com/plantuml/plantuml.git,java17,17,,gradle,,,gradle clean build -x javaDoc -PjavacRelease=17,GRADLE_ARGS='clean build -x javaDoc -PjavacRelease=17',8eb791f39478778788fd47a9195dc1b2feb3eade
-jazzer,https://github.com/CodeIntelligenceTesting/jazzer.git,java8,8,,bazelisk,7.3.0,sdk use java 8.0.432-tem,bazelisk build //:jazzer_release,BAZEL_CMD='bazelisk' BAZEL_TARGET=//:jazzer_release,3947707d7db7e5cae0c8cfaeb10bdfeb06fc32bb
 tinydb,https://github.com/msiemens/tinydb.git,python,"3.9.20,3.10.15,3.11.10,3.12.7","pyproject.toml,poetry.lock",poetry,,,poetry install,,10644a0e07ad180c5b756aba272ee6b0dbd12df8
 funcy,https://github.com/Suor/funcy.git,python,"3.9.20,3.10.15",setup.py,pip,,rm test_requirements.txt,python setup.py install,,859056d039adea75c1c3550286437ce0b612fe92
 numpy,https://github.com/numpy/numpy.git,python-c,"3.9.20,3.10.15,3.11.10,3.12.7","setup.py,pyproject.toml",pip,,git submodule update --init,,,93fdebfcb4bc4cd53c959ccd0117a612d5f13f1a
