@@ -71,6 +71,8 @@ jobs:
       - run: sdkmanager --uninstall "build-tools;30.0.3"
       - uses: swift-actions/setup-swift@v2
         if: matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm'
+        with:
+          swift-version: 6.0.3
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
