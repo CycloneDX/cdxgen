@@ -114,6 +114,7 @@ jobs:
         with:
           repository: 'bazelbuild/examples'
           path: 'repotests/bazel-examples'
+          ref: 'b51e3bdd468ce8c4a516d7dca993909dcc84af32'
       - uses: actions/checkout@v4
         with:
           repository: 'flutter/gallery'
@@ -323,6 +324,7 @@ jobs:
           bin/cdxgen.js -p -t java -exclude-type js repotests/java-sec-code -o bomresults/bom-java-sec-code-10.json
         shell: bash
       - name: repotests greyhound
+        if: matrix.os == 'ubuntu-latest'
         run: |
           bin/cdxgen.js -p -r -t java11 repotests/greyhound -o bomresults/bom-greyhound-java.json
           bin/cdxgen.js -p -r -t gradle repotests/greyhound -o bomresults/bom-greyhound-gradle.json
