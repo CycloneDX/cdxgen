@@ -15,7 +15,7 @@ jobs:
       fail-fast: true
       matrix:
         node-version: ['23.x']
-        os: ['ubuntu-latest', 'windows-latest']
+        os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'windows-latest', 'macos-15']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -33,17 +33,27 @@ jobs:
           deno-version: v2.x
       - uses: oven-sh/setup-bun@v1
       - name: Trim CI agent
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm'
         run: |
           chmod +x contrib/free_disk_space.sh
           ./contrib/free_disk_space.sh
       - uses: sbt/setup-sbt@v1
       - name: Install bazelisk - linux
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-24.04'
         run: |
           curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.20.0/bazelisk-linux-amd64"
           sudo mv bazelisk-linux-amd64 /usr/local/bin/bazel
           chmod +x /usr/local/bin/bazel
+      - name: Install bazelisk - linux arm
+        if: matrix.os == 'ubuntu-24.04-arm'
+        run: |
+          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.20.0/bazelisk-linux-arm64"
+          sudo mv bazelisk-linux-arm64 /usr/local/bin/bazel
+          chmod +x /usr/local/bin/bazel
+      - name: Install bazelisk - mac
+        if: matrix.os == 'macos-15'
+        run: |
+          brew install bazelisk
       - name: Install bazelisk - windows
         if: matrix.os == 'windows-latest'
         run: choco install -y bazel
@@ -60,9 +70,13 @@ jobs:
           CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-repotests
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-        if: matrix.os != 'self-hosted'
+        with:
+          packages: 'platform-tools'
+      - run: sdkmanager --uninstall "build-tools;30.0.3"
       - uses: swift-actions/setup-swift@v2
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-15'
+        with:
+          swift-version: '6.0'
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -324,7 +338,7 @@ jobs:
           bin/cdxgen.js -p -t java -exclude-type js repotests/java-sec-code -o bomresults/bom-java-sec-code-10.json
         shell: bash
       - name: repotests greyhound
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-24.04'
         run: |
           bin/cdxgen.js -p -r -t java11 repotests/greyhound -o bomresults/bom-greyhound-java.json
           bin/cdxgen.js -p -r -t gradle repotests/greyhound -o bomresults/bom-greyhound-gradle.json
@@ -399,6 +413,7 @@ jobs:
           CDXGEN_DEBUG_MODE=debug ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l javascript --with-reachables -p repotests/sveltejs-examples
         shell: bash
       - name: repotests shiftleft-go-example
+        if: matrix.os != 'macos-15'
         run: |
           FETCH_LICENSE=false bin/cdxgen.js -p -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json --fail-on-error --export-proto
         shell: bash
@@ -448,6 +463,7 @@ jobs:
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json --fail-on-error
         shell: bash
       - name: repotests swift-markdown
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-15'
         run: |
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json --profile research
@@ -567,7 +583,6 @@ jobs:
           SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/1.6-bom-github.json --spec-version 1.6
           FETCH_LICENSE=0 bin/cdxgen.js -r -t js repotests/shiftleft-ts-example -o bomresults/1.6-bom-ts-1.json --fail-on-error --spec-version 1.6
           FETCH_LICENSE=1 bin/cdxgen.js -r -t js repotests/shiftleft-ts-example --required-only -o bomresults/1.6-bom-ts-2.json --fail-on-error --spec-version 1.6
-          FETCH_LICENSE=false bin/cdxgen.js -r -t go repotests/shiftleft-go-example -o bomresults/1.6-bom-go.json --fail-on-error --spec-version 1.6
           FETCH_LICENSE=true bin/cdxgen.js -r -t csharp repotests/vulnerable_net_core -o bomresults/1.6-bom-csharp2.json --spec-version 1.6
           FETCH_LICENSE=false bin/cdxgen.js -r repotests/Goatly.NET -o bomresults/1.6-bom-csharp3.json --spec-version 1.6
           FETCH_LICENSE=true bin/cdxgen.js -r -t python repotests/DjanGoat -o bomresults/1.6-bom-python.json --fail-on-error --spec-version 1.6
@@ -579,7 +594,6 @@ jobs:
           SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/1.4-bom-github.json --spec-version 1.4
           FETCH_LICENSE=0 bin/cdxgen.js -r -t js repotests/shiftleft-ts-example -o bomresults/1.4-bom-ts-1.json --fail-on-error --spec-version 1.4
           FETCH_LICENSE=1 bin/cdxgen.js -r -t js repotests/shiftleft-ts-example --required-only -o bomresults/1.4-bom-ts-2.json --fail-on-error --spec-version 1.4
-          FETCH_LICENSE=false bin/cdxgen.js -r -t go repotests/shiftleft-go-example -o bomresults/1.4-bom-go.json --fail-on-error --spec-version 1.4
           FETCH_LICENSE=true bin/cdxgen.js -r -t csharp repotests/vulnerable_net_core -o bomresults/1.4-bom-csharp2.json --spec-version 1.4
           FETCH_LICENSE=false bin/cdxgen.js -r repotests/Goatly.NET -o bomresults/1.4-bom-csharp3.json --spec-version 1.4
           FETCH_LICENSE=true bin/cdxgen.js -r -t python repotests/DjanGoat -o bomresults/1.4-bom-python.json --fail-on-error --spec-version 1.4
@@ -607,7 +621,7 @@ jobs:
         continue-on-error: true
         shell: bash
       - uses: actions/upload-artifact@v4
-        if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
+        if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-24.04-arm'
         with:
           name: bomresults
           path: bomresults

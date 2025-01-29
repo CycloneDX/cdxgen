@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-latest]
+        os: ['ubuntu-24.04', 'ubuntu-24.04-arm']
         node-version: ['23.x']
         java-version: ['23']
     runs-on: ${{ matrix.os }}
@@ -51,6 +51,7 @@ jobs:
           repository: 'grafana-operator/grafana-operator'
           path: 'repotests/grafana-operator'
       - name: dockertests
+        if: matrix.os == 'ubuntu-24.04'
         run: |
           bin/cdxgen.js ubuntu:latest -t docker -o bomresults/bom-ubuntu.json --fail-on-error
           docker rmi ubuntu:latest
@@ -82,10 +83,26 @@ jobs:
           ls -ltr bomresults
         env:
           CDXGEN_DEBUG_MODE: debug
+      - name: dockertests arm
+        if: matrix.os == 'ubuntu-24.04-arm'
+        run: |
+          bin/cdxgen.js ubuntu:latest -t docker -o bomresults/bom-ubuntu.json --fail-on-error
+          docker rmi ubuntu:latest
+          bin/cdxgen.js alpine:latest -t docker -o bomresults/bom-alpine.json --fail-on-error
+          docker rmi alpine:latest
+          bin/cdxgen.js almalinux:9.4-minimal -t docker -o bomresults/bom-almalinux.json --fail-on-error
+          docker rmi almalinux:9.4-minimal
+          bin/cdxgen.js centos:latest -t oci -o bomresults/bom-centos.json --fail-on-error
+          docker rmi centos:latest
+          bin/cdxgen.js -t docker-compose test/data -o bomresults/bom-dc.json --fail-on-error
+          bin/cdxgen.js -t operator repotests/grafana-operator -o bomresults/bom-op.json --fail-on-error
+          ls -ltr bomresults
+        env:
+          CDXGEN_DEBUG_MODE: debug
   linux-dockertar-tests:
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: ['ubuntu-24.04', 'ubuntu-24.04-arm']
         node-version: ['23.x']
         java-version: ['23']
     runs-on: ${{ matrix.os }}
@@ -121,6 +138,7 @@ jobs:
           repository: 'grafana-operator/grafana-operator'
           path: 'repotests/grafana-operator'
       - name: dockertests
+        if: matrix.os == 'ubuntu-24.04'
         run: |
           docker pull elasticsearch@sha256:3686a5757ed46c9dbcf00f6f71fce48ffc5413b193a80d1c46a21e7aad4c53ad
           docker save -o /tmp/elastic.tar elasticsearch@sha256:3686a5757ed46c9dbcf00f6f71fce48ffc5413b193a80d1c46a21e7aad4c53ad
@@ -134,12 +152,12 @@ jobs:
         env:
           CDXGEN_DEBUG_MODE: debug
   os-tests:
-    runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: ['23.x']
         java-version: ['23']
+        os: [ubuntu-24.04, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
@@ -172,6 +190,7 @@ jobs:
         env:
           CDXGEN_DEBUG_MODE: debug
       - uses: actions/upload-artifact@v4
+        if: matrix.os == 'ubuntu-24.04-arm'
         with:
           name: bomresults-os
           path: bomresults
