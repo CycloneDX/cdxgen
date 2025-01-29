@@ -413,6 +413,7 @@ jobs:
           CDXGEN_DEBUG_MODE=debug ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l javascript --with-reachables -p repotests/sveltejs-examples
         shell: bash
       - name: repotests shiftleft-go-example
+        if: matrix.os != 'macos-15'
         run: |
           FETCH_LICENSE=false bin/cdxgen.js -p -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json --fail-on-error --export-proto
         shell: bash

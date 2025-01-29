@@ -96,7 +96,6 @@ jobs:
           docker rmi centos:latest
           bin/cdxgen.js -t docker-compose test/data -o bomresults/bom-dc.json --fail-on-error
           bin/cdxgen.js -t operator repotests/grafana-operator -o bomresults/bom-op.json --fail-on-error
-          rm /tmp/scanslim.tar
           ls -ltr bomresults
         env:
           CDXGEN_DEBUG_MODE: debug
