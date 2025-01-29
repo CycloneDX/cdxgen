@@ -41,6 +41,7 @@
   "types": "./types/index.d.ts",
   "bin": {
     "cdxgen": "bin/cdxgen.js",
+    "cdxgen-secure": "bin/cdxgen.js",
     "obom": "bin/cdxgen.js",
     "cbom": "bin/cdxgen.js",
     "cdxi": "bin/repl.js",

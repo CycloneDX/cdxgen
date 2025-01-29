@@ -396,7 +396,18 @@ if (!args.projectName) {
     args.projectName = basename(resolve(filePath));
   }
 }
-
+if (
+  filePath.includes(" ") ||
+  filePath.includes("\r") ||
+  filePath.includes("\n")
+) {
+  console.log(
+    `'${filePath}' contains spaces. This could lead to bugs when invoking external build tools.`,
+  );
+  if (isSecureMode) {
+    process.exit(1);
+  }
+}
 // Support for obom/cbom aliases
 if (process.argv[1].includes("obom") && !args.type) {
   args.type = "os";
@@ -411,6 +422,10 @@ const options = Object.assign({}, args, {
   noBabel: args.noBabel || args.babel === false,
   project: args.projectId,
   deep: args.deep || args.evidence,
+  output:
+    isSecureMode && args.output === "bom.json"
+      ? resolve(join(filePath, args.output))
+      : args.output,
 });
 
 if (process.argv[1].includes("cbom")) {
@@ -418,6 +433,13 @@ if (process.argv[1].includes("cbom")) {
   options.evidence = true;
   options.specVersion = 1.6;
   options.deep = true;
+}
+if (process.argv[1].includes("cdxgen-secure")) {
+  console.log(
+    "NOTE: Secure mode only restricts cdxgen from performing certain activities such as package installation. It does not provide security guarantees in the presence of malicious code.",
+  );
+  options.installDeps = false;
+  process.env.CDXGEN_SECURE_MODE = true;
 }
 if (options.standard) {
   options.specVersion = 1.6;
@@ -542,10 +564,33 @@ applyAdvancedOptions(options);
  * @returns
  */
 const checkPermissions = (filePath, options) => {
+  const fullFilePath = resolve(filePath);
+  if (
+    process.getuid &&
+    process.getuid() === 0 &&
+    process.env?.CDXGEN_IN_CONTAINER !== "true"
+  ) {
+    console.log(
+      "\x1b[1;35mSECURE MODE: DO NOT run cdxgen with root privileges.\x1b[0m",
+    );
+  }
   if (!process.permission) {
+    if (isSecureMode) {
+      console.log(
+        "\x1b[1;35mSecure mode requires permission-related arguments. These can be passed as CLI arguments directly to the node runtime or set the NODE_OPTIONS environment variable as shown below.\x1b[0m",
+      );
+      const nodeOptionsVal = `--permission --allow-fs-read="${getTmpDir()}/*" --allow-fs-write="${getTmpDir()}/*" --allow-fs-read="${fullFilePath}/*" --allow-fs-write="${options.output}" --allow-child-process`;
+      console.log(
+        `${isWin ? "$env:" : "export "}NODE_OPTIONS='${nodeOptionsVal}'`,
+      );
+      if (process.env?.CDXGEN_IN_CONTAINER !== "true") {
+        console.log(
+          "TIP: Run cdxgen using the secure container image 'ghcr.io/cyclonedx/cdxgen-secure' for best experience.",
+        );
+      }
+    }
     return true;
   }
-  const fullFilePath = resolve(filePath);
   // Secure mode checks
   if (isSecureMode) {
     if (process.permission.has("fs.read", "*")) {
@@ -565,7 +610,7 @@ const checkPermissions = (filePath, options) => {
     }
     if (filePath !== fullFilePath) {
       console.log(
-        `\x1b[1;35mSECURE MODE: Invoke cdxgen with an absolute path to improve security. Use ${fullFilePath} instead of ${filePath}.\x1b[0m`,
+        `\x1b[1;35mSECURE MODE: Invoke cdxgen with an absolute path to improve security. Use '${fullFilePath}' instead of '${filePath}'\x1b[0m`,
       );
       if (fullFilePath.includes(" ")) {
         console.log(

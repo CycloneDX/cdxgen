@@ -10,7 +10,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 jobs:
-  build:
+  cli-tests:
     strategy:
       fail-fast: true
       matrix:
@@ -24,6 +24,9 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '23'
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -293,6 +296,16 @@ jobs:
           repository: 'bionomia/bionomia'
           path: 'repotests/bionomia'
           ref: '5ada8b5f4a5f68561a7195e2badc2f744dc4676e'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'ollama/ollama'
+          path: 'repotests/ollama'
+          ref: 'v0.5.7'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'caddyserver/caddy'
+          path: 'repotests/caddy'
+          ref: 'v2.9.1'
       - uses: dtolnay/rust-toolchain@stable
       - name: setup sdkman
         run: |
@@ -413,9 +426,13 @@ jobs:
           CDXGEN_DEBUG_MODE=debug ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l javascript --with-reachables -p repotests/sveltejs-examples
         shell: bash
       - name: repotests shiftleft-go-example
-        if: matrix.os != 'macos-15'
         run: |
-          FETCH_LICENSE=false bin/cdxgen.js -p -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json --fail-on-error --export-proto
+          FETCH_LICENSE=false bin/cdxgen.js -p -r -t golang repotests/shiftleft-go-example -o bomresults/bom-go.json --fail-on-error --export-proto
+        shell: bash
+      - name: repotests ollama
+        run: |
+          bin/cdxgen.js -p -r -t go repotests/ollama -o bomresults/bom-ollama.json --fail-on-error
+          bin/cdxgen.js -p -r -t go repotests/caddy -o bomresults/bom-caddy.json --fail-on-error
         shell: bash
       - name: repotests go mod tests
         run: |
@@ -582,7 +599,7 @@ jobs:
           bin/cdxgen.js -r -t java repotests/shiftleft-java-example -o bomresults/1.6-bom-java.json --generate-key-and-sign --spec-version 1.6
           SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/1.6-bom-github.json --spec-version 1.6
           FETCH_LICENSE=0 bin/cdxgen.js -r -t js repotests/shiftleft-ts-example -o bomresults/1.6-bom-ts-1.json --fail-on-error --spec-version 1.6
-          FETCH_LICENSE=1 bin/cdxgen.js -r -t js repotests/shiftleft-ts-example --required-only -o bomresults/1.6-bom-ts-2.json --fail-on-error --spec-version 1.6
+          FETCH_LICENSE=1 bin/cdxgen.js -r -t javascript repotests/shiftleft-ts-example --required-only -o bomresults/1.6-bom-ts-2.json --fail-on-error --spec-version 1.6
           FETCH_LICENSE=true bin/cdxgen.js -r -t csharp repotests/vulnerable_net_core -o bomresults/1.6-bom-csharp2.json --spec-version 1.6
           FETCH_LICENSE=false bin/cdxgen.js -r repotests/Goatly.NET -o bomresults/1.6-bom-csharp3.json --spec-version 1.6
           FETCH_LICENSE=true bin/cdxgen.js -r -t python repotests/DjanGoat -o bomresults/1.6-bom-python.json --fail-on-error --spec-version 1.6
@@ -593,7 +610,7 @@ jobs:
           bin/cdxgen.js -r -t java repotests/shiftleft-java-example -o bomresults/1.4-bom-java.json --generate-key-and-sign --spec-version 1.4
           SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/1.4-bom-github.json --spec-version 1.4
           FETCH_LICENSE=0 bin/cdxgen.js -r -t js repotests/shiftleft-ts-example -o bomresults/1.4-bom-ts-1.json --fail-on-error --spec-version 1.4
-          FETCH_LICENSE=1 bin/cdxgen.js -r -t js repotests/shiftleft-ts-example --required-only -o bomresults/1.4-bom-ts-2.json --fail-on-error --spec-version 1.4
+          FETCH_LICENSE=1 bin/cdxgen.js -r -t javascript repotests/shiftleft-ts-example --required-only -o bomresults/1.4-bom-ts-2.json --fail-on-error --spec-version 1.4
           FETCH_LICENSE=true bin/cdxgen.js -r -t csharp repotests/vulnerable_net_core -o bomresults/1.4-bom-csharp2.json --spec-version 1.4
           FETCH_LICENSE=false bin/cdxgen.js -r repotests/Goatly.NET -o bomresults/1.4-bom-csharp3.json --spec-version 1.4
           FETCH_LICENSE=true bin/cdxgen.js -r -t python repotests/DjanGoat -o bomresults/1.4-bom-python.json --fail-on-error --spec-version 1.4
@@ -625,3 +642,112 @@ jobs:
         with:
           name: bomresults
           path: bomresults
+
+  secure-mode-tests:
+    strategy:
+      fail-fast: true
+      matrix:
+        node-version: ['23.x']
+        os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'macos-15']
+    runs-on: ${{ matrix.os }}
+    env:
+      CDXGEN_DEBUG_MODE: debug
+      NODE_NO_WARNINGS: 1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '23'
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Trim CI agent
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm'
+        run: |
+          chmod +x contrib/free_disk_space.sh
+          ./contrib/free_disk_space.sh
+      - uses: sbt/setup-sbt@v1
+      - name: Install bazelisk - linux
+        if: matrix.os == 'ubuntu-24.04'
+        run: |
+          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.20.0/bazelisk-linux-amd64"
+          sudo mv bazelisk-linux-amd64 /usr/local/bin/bazel
+          chmod +x /usr/local/bin/bazel
+      - name: Install bazelisk - linux arm
+        if: matrix.os == 'ubuntu-24.04-arm'
+        run: |
+          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.20.0/bazelisk-linux-arm64"
+          sudo mv bazelisk-linux-arm64 /usr/local/bin/bazel
+          chmod +x /usr/local/bin/bazel
+      - name: Install bazelisk - mac
+        if: matrix.os == 'macos-15'
+        run: |
+          brew install bazelisk
+      - name: Install bazelisk - windows
+        if: matrix.os == 'windows-latest'
+        run: choco install -y bazel
+      - name: npm install, build and test
+        run: |
+          corepack enable
+          corepack pnpm install --package-import-method copy
+          mkdir -p repotests
+          mkdir -p bomresults
+        env:
+          CI: true
+          CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-repotests
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+      - name: pip install custom-json-diff
+        run: |
+          pip install custom-json-diff
+      - uses: actions/checkout@v4
+        with:
+          repository: 'hoolicorp/java-sec-code'
+          path: 'repotests/java-sec-code'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'quarkusio/quarkus-quickstarts'
+          path: 'repotests/quarkus-quickstarts'
+          ref: '3.17.3'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'aws-solutions/iot-device-simulator'
+          path: 'repotests/iot-device-simulator'
+          ref: 'v3.0.9'
+      - name: setup sdkman
+        run: |
+          curl -s "https://get.sdkman.io" | bash
+        if: runner.os != 'Windows'
+      - name: setup rbenv
+        run: |
+          git clone https://github.com/rbenv/rbenv.git --depth=1 ~/.rbenv
+          echo 'export PATH="~/.rbenv/bin:$PATH"' >> ~/.bashrc
+          echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.bashrc
+          source ~/.bashrc
+          mkdir -p "~/.rbenv/plugins"
+          git clone https://github.com/rbenv/ruby-build.git --depth=1 "~/.rbenv/plugins/ruby-build"
+        if: runner.os != 'Windows'
+      - name: repotests
+        run: |
+          bin/cdxgen.js -p -t java ${GITHUB_WORKSPACE}/repotests/java-sec-code -o ${GITHUB_WORKSPACE}/bomresults/bom-java-sec-code-1.json --fail-on-error
+          bin/cdxgen.js -p -t java ${GITHUB_WORKSPACE}/repotests/java-sec-code -o ${GITHUB_WORKSPACE}/bomresults/bom-java-sec-code-2.json --author foo --author bar --standard asvs-4.0.3
+          bin/cdxgen.js -p -t java ${GITHUB_WORKSPACE}/repotests/java-sec-code -o ${GITHUB_WORKSPACE}/bomresults/bom-java-sec-code-3.json --required-only --fail-on-error
+          bin/cdxgen.js -p -t java ${GITHUB_WORKSPACE}/repotests/java-sec-code -o ${GITHUB_WORKSPACE}/bomresults/bom-java-sec-code-4.json --filter postgres --filter json
+          bin/cdxgen.js -p -r -t quarkus ${GITHUB_WORKSPACE}/repotests/quarkus-quickstarts -o ${GITHUB_WORKSPACE}/bomresults/bom-quarkus-quickstarts-quarkus.json --no-recurse --fail-on-error
+          bin/cdxgen.js -p -t js -o ${GITHUB_WORKSPACE}/bomresults/bom-iot.json ${GITHUB_WORKSPACE}/repotests/iot-device-simulator --fail-on-error
+        shell: bash
+        env:
+          NODE_OPTIONS: "--permission --allow-fs-read=/home/runner/* --allow-fs-read=/tmp/* --allow-fs-read=/run/user/1001/* --allow-fs-read=/opt/hostedtoolcache/* --allow-fs-write=/tmp/* --allow-fs-read=/Users/runner/* --allow-fs-read=${{ github.workspace }}/* --allow-fs-write=${{ github.workspace }}/bomresults/*.json --allow-fs-read=${{ runner.temp }}/* --allow-fs-write=${{ runner.temp }}/* --allow-child-process --trace-warnings"
+          CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-repotests
