@@ -101,6 +101,7 @@ jobs:
           CDXGEN_DEBUG_MODE: debug
   linux-dockertar-tests:
     strategy:
+      fail-fast: true
       matrix:
         os: ['ubuntu-24.04', 'ubuntu-24.04-arm']
         node-version: ['23.x']
@@ -153,6 +154,7 @@ jobs:
           CDXGEN_DEBUG_MODE: debug
   os-tests:
     strategy:
+      fail-fast: true
       matrix:
         node-version: ['23.x']
         java-version: ['23']
@@ -199,6 +201,7 @@ jobs:
     runs-on: windows-latest
 
     strategy:
+      fail-fast: true
       matrix:
         node-version: ['23.x']
         java-version: ['23']

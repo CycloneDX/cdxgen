@@ -1365,7 +1365,7 @@ export function isPartialTree(dependencies: any[], componentsCount?: number): bo
  */
 export function recomputeScope(pkgList: any[], dependencies: any[]): any[];
 export const dirNameStr: string;
-export const isSecureMode: boolean;
+export const isSecureMode: any;
 export const isWin: boolean;
 export const isMac: boolean;
 export let ATOM_DB: string;
