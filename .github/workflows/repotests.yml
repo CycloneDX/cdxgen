@@ -15,7 +15,7 @@ jobs:
       fail-fast: true
       matrix:
         node-version: ['23.x']
-        os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'windows-latest']
+        os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'windows-latest', 'macos-15']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -50,6 +50,10 @@ jobs:
           curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.20.0/bazelisk-linux-arm64"
           sudo mv bazelisk-linux-arm64 /usr/local/bin/bazel
           chmod +x /usr/local/bin/bazel
+      - name: Install bazelisk - mac
+        if: matrix.os == 'macos-15'
+        run: |
+          brew install bazelisk
       - name: Install bazelisk - windows
         if: matrix.os == 'windows-latest'
         run: choco install -y bazel
@@ -70,7 +74,7 @@ jobs:
           packages: 'platform-tools'
       - run: sdkmanager --uninstall "build-tools;30.0.3"
       - uses: swift-actions/setup-swift@v2
-        if: matrix.os == 'ubuntu-24.04'
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-15'
         with:
           swift-version: '6.0'
       - name: Set up Python
@@ -458,7 +462,7 @@ jobs:
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json --fail-on-error
         shell: bash
       - name: repotests swift-markdown
-        if: matrix.os == 'ubuntu-24.04'
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-15'
         run: |
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json --profile research
