@@ -152,12 +152,12 @@ jobs:
         env:
           CDXGEN_DEBUG_MODE: debug
   os-tests:
-    runs-on: [ubuntu-24.04, ubuntu-24.04-arm]
-
     strategy:
       matrix:
         node-version: ['23.x']
         java-version: ['23']
+        os: [ubuntu-24.04, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
