@@ -91,7 +91,7 @@ RUN set -e; \
     && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 10 \
     && alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYTHON_VERSION} 10 \
     && /usr/bin/python${PYTHON_VERSION} --version \
-    && /usr/bin/python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade pip virtualenv \
+    && /usr/bin/python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade setuptools wheel pip virtualenv \
     && /usr/bin/python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade pipenv poetry blint atom-tools uv --target /opt/pypi \
     && /opt/pypi/bin/poetry --version \
     && /opt/pypi/bin/pipenv --version \

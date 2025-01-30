@@ -34,7 +34,7 @@ RUN set -e; \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3.10 10 \
     && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 10 \
     && mkdir /opt/pypi \
-    && python -m pip install --no-cache-dir --upgrade pip virtualenv \
+    && python -m pip install --no-cache-dir --upgrade setuptools pip virtualenv \
     && python -m pip install --no-cache-dir --upgrade poetry pipenv uv --target /opt/pypi \
     && curl -LO "https://dl.google.com/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz" \
     && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \

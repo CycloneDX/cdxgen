@@ -48,7 +48,7 @@ RUN set -e; \
     && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
     && rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
     && go telemetry off \
-    && python3 -m pip install --no-cache-dir --upgrade pip virtualenv \
+    && python3 -m pip install --no-cache-dir --upgrade setuptools pip virtualenv \
     && python3 -m pip install --no-cache-dir --upgrade pipenv poetry uv --target /opt/pypi \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
     && source /root/.nvm/nvm.sh \
