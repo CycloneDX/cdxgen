@@ -1,21 +1,23 @@
 FROM registry.suse.com/bci/python:3.11
 
-ARG JAVA_VERSION=23.0.1-tem
+ARG JAVA_VERSION=23.0.2-tem
 ARG MAVEN_VERSION=3.9.9
 ARG GCC_VERSION=13
 ARG NODE_VERSION=20.18.1
+ARG GO_VERSION=1.23.5
 
 ENV JAVA_VERSION=$JAVA_VERSION \
     MAVEN_VERSION=$MAVEN_VERSION \
     JAVA_HOME="/opt/java/${JAVA_VERSION}" \
     MAVEN_HOME="/opt/maven/${MAVEN_VERSION}" \
+    GOPATH=/opt/app-root/go \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     NVM_DIR="/root/.nvm" \
     npm_config_python=/usr/bin/python3.11 \
     PYTHONPATH=/opt/pypi
-ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/usr/local/bin:/opt/pypi/bin:
+ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/usr/local/bin:/opt/pypi/bin:${GOPATH}/bin:/usr/local/go/bin:
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     url=; \
@@ -41,10 +43,12 @@ RUN set -e; \
     && source "$HOME/.sdkman/bin/sdkman-init.sh" \
     && sdk install java $JAVA_VERSION \
     && sdk install maven $MAVEN_VERSION \
-    && sdk offline enable \
     && mv /root/.sdkman/candidates/* /opt/ \
-    && rm -rf /root/.sdkman \
-    && python3 -m pip install --no-cache-dir --upgrade pip virtualenv \
+    && curl -LO "https://dl.google.com/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz" \
+    && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
+    && rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
+    && go telemetry off \
+    && python3 -m pip install --no-cache-dir --upgrade setuptools pip virtualenv \
     && python3 -m pip install --no-cache-dir --upgrade pipenv poetry uv --target /opt/pypi \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
     && source /root/.nvm/nvm.sh \

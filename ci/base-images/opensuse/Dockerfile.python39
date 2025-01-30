@@ -30,7 +30,7 @@ RUN set -e; \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3.9 10 \
     && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 10 \
     && mkdir /opt/pypi \
-    && python -m pip install --no-cache-dir --upgrade pip virtualenv \
+    && python -m pip install --no-cache-dir --upgrade setuptools pip virtualenv \
     && python -m pip install --no-cache-dir --upgrade poetry pipenv uv --target /opt/pypi \
     && npm install -g npm \
     && node -v \

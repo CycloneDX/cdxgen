@@ -43,9 +43,7 @@ RUN set -e; \
     && sdk install maven $MAVEN_VERSION \
     && sdk install gradle $GRADLE_VERSION \
     && sdk install sbt $SBT_VERSION \
-    && sdk offline enable \
     && mv /root/.sdkman/candidates/* /opt/ \
-    && rm -rf /root/.sdkman \
     && mkdir -p ${ANDROID_HOME}/cmdline-tools \
     && curl -L https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip -o ${ANDROID_HOME}/cmdline-tools/android_tools.zip \
     && unzip ${ANDROID_HOME}/cmdline-tools/android_tools.zip -d ${ANDROID_HOME}/cmdline-tools/ \
