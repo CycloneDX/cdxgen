@@ -1,6 +1,6 @@
 FROM registry.suse.com/bci/dotnet-sdk:7.0
 
-ARG JAVA_VERSION=23.0.1-tem
+ARG JAVA_VERSION=23.0.2-tem
 
 ENV DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
     DOTNET_NOLOGO=true \
