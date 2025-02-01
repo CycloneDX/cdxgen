@@ -28,6 +28,7 @@ import {
   isMac,
   isSecureMode,
   isWin,
+  safeExistsSync,
 } from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
 import { postProcess } from "../lib/stages/postgen/postgen.js";
@@ -579,7 +580,9 @@ const checkPermissions = (filePath, options) => {
       console.log(
         "\x1b[1;35mSecure mode requires permission-related arguments. These can be passed as CLI arguments directly to the node runtime or set the NODE_OPTIONS environment variable as shown below.\x1b[0m",
       );
-      const nodeOptionsVal = `--permission --allow-fs-read="${getTmpDir()}/*" --allow-fs-write="${getTmpDir()}/*" --allow-fs-read="${fullFilePath}/*" --allow-fs-write="${options.output}" --allow-child-process`;
+      const childProcessArgs =
+        options?.lifecycle !== "pre-build" ? " --allow-child-process" : "";
+      const nodeOptionsVal = `--permission --allow-fs-read="${getTmpDir()}/*" --allow-fs-write="${getTmpDir()}/*" --allow-fs-read="${fullFilePath}/*" --allow-fs-write="${options.output}"${childProcessArgs}`;
       console.log(
         `${isWin ? "$env:" : "export "}NODE_OPTIONS='${nodeOptionsVal}'`,
       );
@@ -680,11 +683,11 @@ const checkPermissions = (filePath, options) => {
   }
   if (!process.permission.has("fs.write", getTmpDir())) {
     console.log(
-      `FileSystemWrite permission may be required to the TEMP directory. Please invoke cdxgen with the argument --allow-fs-write="${join(getTmpDir(), "*")}"`,
+      `FileSystemWrite permission may be required for the TEMP directory. Please invoke cdxgen with the argument --allow-fs-write="${join(getTmpDir(), "*")}" in case of any crashes.`,
     );
     if (isMac) {
       console.log(
-        "TIP: macOS doesn't use `/tmp` prefix for TEMP directories. Use the argument shown above.",
+        "TIP: macOS doesn't use the `/tmp` prefix for TEMP directories. Use the argument shown above.",
       );
     }
   }
@@ -752,7 +755,7 @@ const checkPermissions = (filePath, options) => {
           (process.env.SBOM_SIGN_ALGORITHM &&
             process.env.SBOM_SIGN_ALGORITHM !== "none" &&
             process.env.SBOM_SIGN_PRIVATE_KEY &&
-            fs.existsSync(process.env.SBOM_SIGN_PRIVATE_KEY)))
+            safeExistsSync(process.env.SBOM_SIGN_PRIVATE_KEY)))
       ) {
         let alg = process.env.SBOM_SIGN_ALGORITHM || "RS512";
         if (alg.includes("none")) {
@@ -794,7 +797,7 @@ const checkPermissions = (filePath, options) => {
           );
           if (
             process.env.SBOM_SIGN_PUBLIC_KEY &&
-            fs.existsSync(process.env.SBOM_SIGN_PUBLIC_KEY)
+            safeExistsSync(process.env.SBOM_SIGN_PUBLIC_KEY)
           ) {
             jwkPublicKey = crypto
               .createPublicKey(
