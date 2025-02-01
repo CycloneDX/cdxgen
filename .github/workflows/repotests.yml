@@ -739,6 +739,14 @@ jobs:
           mkdir -p "~/.rbenv/plugins"
           git clone https://github.com/rbenv/ruby-build.git --depth=1 "~/.rbenv/plugins/ruby-build"
         if: runner.os != 'Windows'
+      - name: repotests - no exec
+        run: |
+          bin/cdxgen.js -p -t pnpm ${GITHUB_WORKSPACE} --no-recurse -o ${GITHUB_WORKSPACE}/bomresults/bom-self.json --fail-on-error
+        shell: bash
+        env:
+          NODE_OPTIONS: "--permission --allow-fs-read=${{ runner.temp }}/cdxgen-repotests/* --allow-fs-read=${{ github.workspace }}/* --allow-fs-write=${{ github.workspace }}/bomresults/bom-self.json --trace-warnings"
+          CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-repotests
+          JAVA_HOME: ""
       - name: repotests
         run: |
           bin/cdxgen.js -p -t java ${GITHUB_WORKSPACE}/repotests/java-sec-code -o ${GITHUB_WORKSPACE}/bomresults/bom-java-sec-code-1.json --fail-on-error
