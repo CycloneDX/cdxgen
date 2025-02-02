@@ -284,6 +284,11 @@ jobs:
           path: 'repotests/expo-test'
       - uses: actions/checkout@v4
         with:
+          repository: 'malice00/cdxgen-cocoapods-test'
+          ref: 'main'
+          path: 'repotests/cocoapods-test'
+      - uses: actions/checkout@v4
+        with:
           repository: 'elastic/elasticsearch'
           path: 'repotests/elasticsearch'
       - uses: actions/checkout@v4
@@ -566,6 +571,7 @@ jobs:
           COCOA_MERGE_SUBSPECS=true                                                            bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full.json
           COCOA_MERGE_SUBSPECS=true COCOA_RESOLVE_FROM_NODE=true GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full-npm.json
         env:
+          CDXGEN_THINK_MODE: true
           COCOA_FULL_SCAN: true
           COCOA_PODSPEC_REPLACEMENTS: "/([\\s\\S]+)/=require File.join(File.dirname(`node --print \"require.resolve('expo/package.json')\"`), \"scripts/autolinking\")<NEWLINE>require File.join(File.dirname(`node --print \"require.resolve('react-native/package.json')\"`), \"scripts/react_native_pods\")<NEWLINE>$1"
           COCOA_RESOLVE_FROM_NODE_EXCLUSION_DIRS: sdks,third-party-podspecs
@@ -584,12 +590,22 @@ jobs:
           COCOA_MERGE_SUBSPECS=true                                                            bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full.json
           COCOA_MERGE_SUBSPECS=true COCOA_RESOLVE_FROM_NODE=true GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full-npm.json
         env:
+          CDXGEN_THINK_MODE: true
           COCOA_RESOLVE_FROM_NODE_EXCLUSION_DIRS: sdks,third-party-podspecs
           GRADLE_ARGS_DEPENDENCIES: "--configuration releaseRuntimeClasspath"
           GRADLE_SKIP_MODULES: root
         shell: bash
+      - name: repotests cocoapods
+        if: matrix.os != 'windows-latest'
+        run: |
+          COCOA_FULL_SCAN=false                                                                               bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-simple.json
+                                                                                                              bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-full.json
+                                COCOA_MERGE_SUBSPECS=true                                                     bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-full-nosubs.json
+                                COCOA_MERGE_SUBSPECS=true COCOA_INCLUDED_TARGETS=cdxgenexpotest               bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-target.json
+                                COCOA_MERGE_SUBSPECS=true COCOA_INCLUDED_TARGETS="cdxgenexpotest copy 2/deep" bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-target_deep.json
         env:
-          CDXGEN_THINK_MODE: true
+          COCOA_FULL_SCAN: true
+        shell: bash
       - name: repotests elasticsearch
         run: |
           bin/cdxgen.js -t gradle repotests/elasticsearch -o bomresults/bom-elasticsearch.json
