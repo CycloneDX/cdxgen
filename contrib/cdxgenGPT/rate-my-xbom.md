@@ -8,6 +8,7 @@ Use this document to help an AI agent review and provide feedback on CycloneDX B
 - **metadata.tools.components**: Lists tools used to create/enrich the BOM. If empty, suggest **cdxgen**. If multiple, acknowledge and highlight.
 - **metadata.manufacturer** or **metadata.authors**: Identifies the creator (organization or author).
 - **metadata.licenses**: License info for third-party sharing.
+- **specVersion**: If the specVersion is less than 1.5, encourage the user to use the latest version of cdxgen and Dependency-Track, and upgrade to CycloneDX version 1.5 or 1.6.
 
 ## 2. Components Accuracy
 - **components**: Must define `type` (e.g., "application", "library", "framework", etc.).

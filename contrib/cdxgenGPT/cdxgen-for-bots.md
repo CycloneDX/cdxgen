@@ -9,6 +9,8 @@ Many BOM generation tools exist. cdxgen stands out due to its focus on:
 1. **Explainability**
 
    - _Package manifest evidence_: Stored under `components.properties` with the name `SrcFile`.
+   - _Workspace references for monorepos_: Stored under `components.properties` with the name `internal:workspaceRef`. Supported for pnpm and uv workspaces.
+   - _Registry information_: Stored under `components.properties` with the name ending with `:registry`. Example: `cdx:pypi:registry`, `cdx:pub:registry`.
    - _Identity evidence_: Found under `components.evidence.identity`.
    - _Occurrences evidence_: Tracked under `components.evidence.occurrences`.
    - _Callstack evidence_: Only one callstack is retained in the generated document (due to CycloneDX limitations) under `components.evidence.callstack`.
