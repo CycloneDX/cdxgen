@@ -84,7 +84,7 @@ deno install --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryIn
 
 You can also use the cdxgen container image with node, deno, or bun runtime versions.
 
-The default version uses Node.js 22
+The default version uses Node.js 23
 
 ```bash
 docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen:master -r /app -o /app/bom.json
