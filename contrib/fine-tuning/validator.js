@@ -1,6 +1,12 @@
 import { readFileSync } from "node:fs";
 import { dirNameStr, getAllFiles } from "../../lib/helpers/utils.js";
-const jsonlFiles = getAllFiles(dirNameStr, "**/*.jsonl");
+let datasetDir = dirNameStr;
+const argv = process.argv.slice(2);
+if (argv.length > 1) {
+  datasetDir = argv[1];
+}
+
+const jsonlFiles = getAllFiles(datasetDir, "**/*.jsonl");
 const failures = {};
 for (const jf of jsonlFiles) {
   const failedLines = [];
