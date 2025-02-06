@@ -1,0 +1,6 @@
+{"messages": [{"role": "user", "content": "What is the learning objective of this lesson?"}, {"role": "assistant", "content": "To learn about generating an SBOM with reachable evidence for Dependency-Track, a Java application."}]}
+{"messages": [{"role": "user", "content": "What are the prerequisites for this lesson?"}, {"role": "assistant", "content": "Java >= 21, Maven, and Node.js > 20 must be installed."}]}
+{"messages": [{"role": "user", "content": "How do I install cdxgen?"}, {"role": "assistant", "content": "Run the command sudo npm install -g @cyclonedx/cdxgen."}]}
+{"messages": [{"role": "user", "content": "How do I clone and compile Dependency-Track?"}, {"role": "assistant", "content": "Run the following commands: git clone https://github.com/DependencyTrack/dependency-track, cd dependency-track, mvn clean compile -P clean-exclude-wars -P enhance -P embedded-jetty -DskipTests."}]}
+{"messages": [{"role": "user", "content": "How do I create an SBOM with the research profile for Dependency-Track?"}, {"role": "assistant", "content": "Navigate to the dependency-track directory and run cdxgen -o bom.json -t java --profile research . -p."}]}
+{"messages": [{"role": "user", "content": "What will the resulting BOM file include?", "role": "assistant", "content": "The resulting BOM file would include components with the occurrence and call stack evidence."}]}
