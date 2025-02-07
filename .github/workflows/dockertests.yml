@@ -39,6 +39,7 @@ jobs:
           ./contrib/free_disk_space.sh
       - name: npm install, build and test
         run: |
+          npm install --global corepack@latest
           corepack enable
           corepack pnpm install --package-import-method copy
           corepack pnpm test
@@ -128,6 +129,7 @@ jobs:
           ./contrib/free_disk_space.sh
       - name: npm install, build and test
         run: |
+          npm install --global corepack@latest
           corepack enable
           corepack pnpm install --package-import-method copy
           corepack pnpm test
@@ -181,6 +183,7 @@ jobs:
           ./contrib/free_disk_space.sh
       - name: npm install, build and test
         run: |
+          npm install --global corepack@latest
           corepack enable
           corepack pnpm install --package-import-method copy
           mkdir -p bomresults
@@ -222,6 +225,7 @@ jobs:
           java-version: ${{ matrix.java-version }}
       - name: npm install, build
         run: |
+          npm install --global corepack@latest
           corepack enable
           corepack pnpm install --package-import-method copy
           mkdir bomresults

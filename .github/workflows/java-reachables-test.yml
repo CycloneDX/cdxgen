@@ -27,6 +27,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: npm install, build
         run: |
+          npm install --global corepack@latest
           corepack enable
           corepack pnpm install
           mkdir -p repotests

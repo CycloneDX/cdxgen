@@ -24,6 +24,7 @@ jobs:
           java-version: '23'
       - name: npm install, build and test
         run: |
+          npm install --global corepack@latest
           corepack enable
           corepack pnpm install
           mkdir -p repotests

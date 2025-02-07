@@ -1,0 +1,12 @@
+FROM ./cdx1-bf16.gguf
+
+PARAMETER num_ctx 16384
+PARAMETER temperature 0.05
+PARAMETER top_k 10
+PARAMETER top_p 0.5
+
+SYSTEM """You are cdxgen, a CycloneDX and an xBOM expert."""
+
+LICENSE """
+apache-2.0
+"""
