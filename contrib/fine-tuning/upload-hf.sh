@@ -13,13 +13,13 @@ QUANT_MODEL_4BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-4bit
 huggingface-cli whoami
 
 echo "Uploading datasets"
-huggingface-cli upload --repo-type dataset CycloneDX/cdx-docs ./cdxgen-docs cdxgen-docs
-huggingface-cli upload --repo-type dataset CycloneDX/cdx-docs ./guides guides
+huggingface-cli upload --quiet --repo-type dataset CycloneDX/cdx-docs ./cdxgen-docs cdxgen-docs
+huggingface-cli upload --quiet --repo-type dataset CycloneDX/cdx-docs ./guides guides
 
 echo "Uploading models. Please wait ..."
-huggingface-cli upload --repo-type model ${QUANT_MODEL_8BIT} ./${QUANT_MODEL_8BIT} .
-huggingface-cli upload --repo-type model ${QUANT_MODEL_6BIT} ./${QUANT_MODEL_6BIT} .
-huggingface-cli upload --repo-type model ${QUANT_MODEL_4BIT} ./${QUANT_MODEL_4BIT} .
+huggingface-cli upload --quiet --repo-type model ${QUANT_MODEL_8BIT} ./${QUANT_MODEL_8BIT} .
+huggingface-cli upload --quiet --repo-type model ${QUANT_MODEL_6BIT} ./${QUANT_MODEL_6BIT} .
+huggingface-cli upload --quiet --repo-type model ${QUANT_MODEL_4BIT} ./${QUANT_MODEL_4BIT} .
 
-huggingface-cli upload --repo-type model ${FUSED_MODEL} ./${FUSED_MODEL} .
-huggingface-cli upload --repo-type model ${FUSED_GGUF_MODEL} ./${FUSED_GGUF_MODEL} .
+huggingface-cli upload --quiet --repo-type model ${FUSED_MODEL} ./${FUSED_MODEL} .
+huggingface-cli upload --quiet --repo-type model ${FUSED_GGUF_MODEL} ./${FUSED_GGUF_MODEL} .
