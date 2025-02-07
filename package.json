@@ -66,7 +66,7 @@
   "bugs": {
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
-  "packageManager": "pnpm@10.0.0",
+  "packageManager": "pnpm@10.2.1",
   "lint-staged": {
     "*": "biome check --fix --no-errors-on-unmatched"
   },
@@ -89,7 +89,7 @@
     "packageurl-js": "1.0.2",
     "prettify-xml": "^1.2.0",
     "properties-reader": "^2.3.0",
-    "semver": "^7.7.0",
+    "semver": "^7.7.1",
     "ssri": "^12.0.0",
     "table": "^6.9.0",
     "tar": "^7.4.3",
