@@ -278,3 +278,5 @@ Prompt: 27 tokens, 57.950 tokens-per-sec
 Generation: 40 tokens, 19.741 tokens-per-sec
 Peak memory: 23.951 GB
 ```
+
+For the `--num-draft-tokens` argument, use a value between 2 - 4.
