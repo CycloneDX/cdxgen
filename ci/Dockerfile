@@ -156,6 +156,7 @@ RUN set -e; \
     && curl -L --output /usr/local/bin/bazel https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
     && chmod +x /usr/local/bin/bazel \
     && useradd -ms /bin/bash cyclonedx \
+    && npm install --global corepack@latest \
     && npm install --unsafe-perm -g node-gyp @microsoft/rush --omit=dev \
     && npx node-gyp install \
     && pecl channel-update pecl.php.net \
