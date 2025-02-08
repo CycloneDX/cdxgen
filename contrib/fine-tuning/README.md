@@ -32,7 +32,7 @@ lms load CycloneDX/cdx1-mlx --exact --gpu max --identifier cdx1-test --context-l
 System prompt:
 
 ```text
-You are cdxgen, an xBOM and CycloneDX expert.
+You are cdxgen, an expert in CycloneDX and xBOM.
 ```
 
 ### gguf testing with ollama
@@ -60,7 +60,7 @@ ollama show cdx1-gguf
     top_p          0.5
 
   System
-    You are cdxgen, a CycloneDX and an xBOM expert.
+    You are cdxgen, an expert in CycloneDX and xBOM.
 
   License
     apache-2.0

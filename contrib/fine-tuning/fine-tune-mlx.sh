@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 set -e
 TUNING_TOOL=mlx
+# This must be really ibm-granite. Wish mlx supported this.
 BASE_MODEL=unsloth/phi-4
 BASE_MODEL_MLX=${BASE_MODEL}-${TUNING_TOOL}
 HF_ORG=CycloneDX
 TOOL_BASE_MODEL=cdx1
 NUM_LAYERS=16
+ADAPTERS_PATH=adapters
+DATASET_PATH=dataset
 
 FUSED_MODEL=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}
 FUSED_GGUF_MODEL=${HF_ORG}/${TOOL_BASE_MODEL}-gguf
@@ -14,34 +17,45 @@ QUANT_MODEL_6BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-6bit
 QUANT_MODEL_4BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-4bit
 
 ### mlx-lm needs train.jsonl and valid.jsonl
-rm -rf dataset ${HF_ORG} adapters ${BASE_MODEL}
-mkdir -p dataset ${HF_ORG}
+rm -rf ${DATASET_PATH} ${HF_ORG} ${ADAPTERS_PATH} ${BASE_MODEL}
+mkdir -p ${DATASET_PATH} ${HF_ORG}
 
-node prepare.js dataset
-node validator.js dataset
+# Create a single train and valid jsonl from our dataset
+# In the future, we can have a separate dataset pipeline
+node prepare.js ${DATASET_PATH}
 
+# Validate jsonlines to reduce errors in the model
+# Need to validate and check for malicious code snippets here at some point
+node validator.js ${DATASET_PATH}
+
+# This step always pulls the latest base model from HF. Need to think about versioning and checksum to prevent model injection attacks
 echo "Test base model with the prompt 'Tell me about cdxgen'. Usually yields a low-quality response."
 mlx_lm.generate --model ${BASE_MODEL} --prompt "Tell me about cdxgen" --temp 0.05
 
-# We first convert from HF to mlx
+# We first convert from HF to mlx to speed up the rest of the process
+# It is possible that the gguf export is getting broken due to this split processing?
 rm -rf ${BASE_MODEL_MLX}
 mlx_lm.convert --hf-path ${BASE_MODEL} --mlx-path ${BASE_MODEL_MLX}
 
-echo "Weight-Decomposed Low-Rank Adaptation (DoRA) fine-tuning ${BASE_MODEL_MLX} with cdx1 dataset. This might take a while ..."
-mlx_lm.lora --model ${BASE_MODEL_MLX} --train --data dataset --fine-tune-type lora --batch-size 1 --num-layers ${NUM_LAYERS} --iters 1000 --grad-checkpoint
+# We use LoRA fine-tuning over DoRA due to better compatibility with vLLM and llama.cpp
+echo "Low-Rank Adaptation (LoRA) fine-tuning ${BASE_MODEL_MLX} with cdx1 dataset. This might take a while ..."
+mlx_lm.lora --model ${BASE_MODEL_MLX} --train --data dataset --adapter-path ${ADAPTERS_PATH} --fine-tune-type lora --batch-size 1 --num-layers ${NUM_LAYERS} --iters 1000 --grad-checkpoint
 
 echo "Fuse model to ${FUSED_MODEL} using the cdx1 adapters"
 rm -rf ${FUSED_MODEL} ${FUSED_GGUF_MODEL}
-mlx_lm.fuse --model ${BASE_MODEL_MLX} --adapter-path adapters --hf-path ${FUSED_MODEL} --save-path ${FUSED_MODEL} --de-quantize --export-gguf --gguf-path cdx1-f16.gguf
+# gguf export via mlx isn't working
+# mlx_lm.fuse --model ${BASE_MODEL_MLX} --adapter-path adapters --hf-path ${FUSED_MODEL} --save-path ${FUSED_MODEL} --de-quantize --export-gguf --gguf-path cdx1-f16.gguf
+mlx_lm.fuse --model ${BASE_MODEL_MLX} --adapter-path adapters --hf-path ${FUSED_MODEL} --save-path ${FUSED_MODEL} --de-quantize
 
 echo "Test fused model with the prompt 'Tell me about cdxgen'. Must yield a better response."
 mlx_lm.generate --model ./${FUSED_MODEL} --prompt "Tell me about cdxgen" --temp 0.05
 
-mkdir -p ${FUSED_GGUF_MODEL}
-mv ${FUSED_MODEL}/cdx1-f16.gguf ${FUSED_GGUF_MODEL}
-cp Modelfile ${FUSED_GGUF_MODEL}/
-cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${FUSED_GGUF_MODEL}/
-sed -i'' 's|CycloneDX/cdx1-gguf|./cdx1-f16.gguf|g' ${FUSED_GGUF_MODEL}/Modelfile
+# Not working
+# mkdir -p ${FUSED_GGUF_MODEL}
+# mv ${FUSED_MODEL}/cdx1-f16.gguf ${FUSED_GGUF_MODEL}
+# cp Modelfile ${FUSED_GGUF_MODEL}/
+# cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${FUSED_GGUF_MODEL}/
+# sed -i'' 's|CycloneDX/cdx1-gguf|./cdx1-f16.gguf|g' ${FUSED_GGUF_MODEL}/Modelfile
 
 echo "Create quantized models"
 rm -rf ${QUANT_MODEL_8BIT}
@@ -58,5 +72,3 @@ rm -rf ${QUANT_MODEL_4BIT}
 mlx_lm.convert --hf-path ${FUSED_MODEL} --mlx-path ${QUANT_MODEL_4BIT} -q --q-bits 4 --dtype bfloat16
 echo "Test ${QUANT_MODEL_4BIT} with the prompt 'Tell me about cdxgen'. Must yield a better response."
 mlx_lm.generate --model ./${QUANT_MODEL_4BIT} --prompt "Tell me about cdxgen" --temp 0.05
-
-rm -rf dataset adapters ${BASE_MODEL}

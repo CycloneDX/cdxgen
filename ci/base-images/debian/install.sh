@@ -35,4 +35,5 @@ if [ x"${SKIP_NODEJS}" != "xyes" ]; then
   chmod +x /root/.nvm/nvm.sh
   source /root/.nvm/nvm.sh
   nvm install ${NODE_VERSION}
+  npm install --global corepack@latest
 fi
