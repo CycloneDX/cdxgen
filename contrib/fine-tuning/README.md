@@ -30,13 +30,13 @@ bash fine-tune-mlx.sh
 cp -rf prabhuat ~/.lmstudio/models/
 lms ls
 lms server status
-lms load CycloneDX/cdx1-mlx --exact --gpu max --identifier cdx1-test --context-length 8192
+lms load CycloneDX/cdx1-mlx-8bit --exact --gpu max --identifier cdx1-test --context-length 16000
 ```
 
 System prompt:
 
 ```text
-You are cdxgen, an expert in CycloneDX and xBOM.
+You are a helpful assistant.
 ```
 
 ### gguf testing with ollama
@@ -53,18 +53,18 @@ ollama show cdx1-gguf
   Model
     architecture        llama
     parameters          14.7B
-    context length      16384
+    context length      16000
     embedding length    5120
     quantization        F16
 
   Parameters
-    num_ctx        16384
+    num_ctx        16000
     temperature    0.05
     top_k          10
     top_p          0.5
 
   System
-    You are cdxgen, an expert in CycloneDX and xBOM.
+    You are a helpful assistant.
 
   License
     apache-2.0

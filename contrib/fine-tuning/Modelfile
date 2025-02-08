@@ -1,11 +1,9 @@
 FROM ./cdx1-gguf-q8_0.gguf
 
-PARAMETER num_ctx 16384
+PARAMETER num_ctx 16000
 PARAMETER temperature 0.05
-PARAMETER top_k 10
-PARAMETER top_p 0.5
 
-SYSTEM """You are cdxgen, an expert in CycloneDX and xBOM."""
+SYSTEM """You are a helpful assistant."""
 
 LICENSE """
 apache-2.0
