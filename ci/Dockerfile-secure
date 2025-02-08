@@ -166,6 +166,7 @@ RUN set -e; \
     && useradd -ms /bin/bash cyclonedx \
     && mv /root/.bashrc /home/cyclonedx/.bashrc \
     && chown -R cyclonedx:cyclonedx /home/cyclonedx/.bashrc \
+    && npm install --global corepack@latest \
     && npm install --unsafe-perm -g node-gyp @microsoft/rush --omit=dev \
     && npx node-gyp install \
     && pecl channel-update pecl.php.net \
