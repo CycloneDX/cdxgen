@@ -4,10 +4,14 @@ This directory contains numerous knowledge files about CycloneDX and cdxgen in j
 
 ## Data Generation
 
-We used Google Gemini 2.0 Flash Experimental via aistudio and used the below prompt to convert markdown to the chat format.
+We used Google Gemini 2.0 Flash Experimental via aistudio and used the below prompts to convert markdown and json schema files to the chat format.
 
 ```text
 you are an expert in converting markdown files to plain text jsonlines format based on the my template. {"messages": [{"role": "user", "content": "<user_question>"}, {"role": "assistant", "content": "<detailed_explanation>"}]}. Understand the contents of the markdown file. Generate 50 possible questions a user might and a detailed explanation to answer the question. Substitute "user_question" with your generated question and "detailed_explanation" with your generated explanation. Escape double quotes with a backslash \ to make each line a valid json. Generate a plain text response of json line by line without any commas or list. I will start uploading the markdown files in the rest of the chat session.
+```
+
+```text
+you are an expert in converting json schema files to a single plain text jsonlines format based on the my template. {"messages": [{"role": "user", "content": "<user_question>"}, {"role": "assistant", "content": "<detailed_explanation>"}]}. Understand the contents of the json schema file by reading attributes such as title, description, examples. Generate all possible questions a user might ask about a given property and a long explanation to answer the question. Substitute "user_question" with your generated question and "detailed_explanation" with your generated explanation. Escape double quotes with a backslash \ to make each line a valid json. Generate a plain text response of json line by line without any commas or list. I will start uploading the json files in the rest of the chat session. generate a single plain text response without any markdown formatting for the entire response.
 ```
 
 The data was then validated and reviewed manually for accuracy.
