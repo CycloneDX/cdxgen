@@ -99,7 +99,7 @@ We tested temperature sensitivity without a system prompt. Below are the results
 ### Test
 
 Question: What is the purpose of the bomFormat property in a CycloneDX BOM?
-Answer: The `bomFormat` property specifies the format of the Bill of Materials (BOM). It is used to identify the file as a CycloneDX BOM because BOMs do not inherently have a filename convention, and JSON schema does not support namespaces for this purpose.  The value of this property must always be \"CycloneDX\" to clearly indicate that the document is indeed a CycloneDX BOM.
+Answer: The `bomFormat` property specifies the format of the Bill of Materials (BOM). It is used to identify the file as a CycloneDX BOM because BOMs do not inherently have a filename convention, and JSON schema does not support namespaces for this purpose. The value of this property must always be \"CycloneDX\" to clearly indicate that the document is indeed a CycloneDX BOM.
 
 ### Responses
 
@@ -234,3 +234,47 @@ The bomFormat property represents the version of the BOM specification that the 
 ```
 
 Beyond 1.1, the responses degrade significantly.
+
+## Speculative decoding
+
+To improve `tokens/sec` during generation (at the cost of increased memory-use), use the `8-bit` version along with the `4-bit` version.
+
+Example: 4-bit version generates 29.5 tokens/sec, with slight reduced accuracy. Note the use of `bomgen` instead of `cdxgen`.
+
+```text
+mlx_lm.generate --model ./CycloneDX/cdx1-mlx-4bit --prompt "How do I generate an SBOM for a java project? Share the full command to be used." --temp 0.05
+==========
+To generate an SBOM for a Java project, use the following command:
+bomgen --type java --project-dir /path/to/java/project --output /path/to/output/bom.json
+Replace /path/to/java/project with the path to your Java project directory and /path/to/output/bom.json with the desired output file path.
+==========
+Prompt: 27 tokens, 147.377 tokens-per-sec
+Generation: 69 tokens, 29.553 tokens-per-sec
+Peak memory: 8.319 GB
+```
+
+8-bit version can generate an accurate response at 16.3 tokens/sec.
+
+```text
+mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "How do I generate an SBOM for a java project? Share the full command to be used." --temp 0.05
+==========
+To generate an SBOM for a Java project, use the following command:
+cdxgen -t java -r /path/to/java/project -o /path/to/output/sbom.json
+Replace /path/to/java/project with the path to your Java project and /path/to/output/sbom.json with the desired output file path.
+==========
+Prompt: 27 tokens, 145.037 tokens-per-sec
+Generation: 69 tokens, 16.312 tokens-per-sec
+Peak memory: 15.648 GB
+```
+
+By using the 4-bit version to speculatively decode, we improve the generation time for the 8-bit model from 16.3 to 19.7 tokens/sec without sacrificing accuracy. The peak memory does go up from 15.648 to 23.951 GB.
+
+```text
+mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "How do I generate an SBOM for a java project? Share the full command to be used." --temp 0.05 --draft-model ./CycloneDX/cdx1-mlx-4bit
+==========
+To generate an SBOM for a Java project, use the following command: cdxgen -t java -r /path/to/java/project -o /path/to/output/sbom.json.
+==========
+Prompt: 27 tokens, 57.950 tokens-per-sec
+Generation: 40 tokens, 19.741 tokens-per-sec
+Peak memory: 23.951 GB
+```
