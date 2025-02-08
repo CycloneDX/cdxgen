@@ -39,40 +39,55 @@ System prompt:
 You are a helpful assistant.
 ```
 
-### gguf testing with ollama
+### Testing with ollama
 
-Use the generated `Modelfile` inside `CycloneDX/cdx1-gguf` to test cdx1 with ollama.
+Create a Modelfile as shown:
+
+```text
+FROM hf.co/CycloneDX/cdx1-gguf-Q8_0-GGUF
+
+PARAMETER num_ctx 16000
+PARAMETER temperature 0.05
+
+SYSTEM """You are a helpful assistant."""
+```
 
 ```shell
-cd CycloneDX/cdx1-gguf
-ollama create cdx1-gguf -f ./Modelfile
+ollama create cdx1 -f ./Modelfile
 ```
 
 ```text
-ollama show cdx1-gguf
-  Model
+ollama show cdx1
+Model
     architecture        llama
     parameters          14.7B
-    context length      16000
+    context length      16384
     embedding length    5120
-    quantization        F16
+    quantization        Q8_0
 
   Parameters
     num_ctx        16000
+    stop           "<|im_start|>"
+    stop           "<|im_sep|>"
+    stop           "<|im_end|>"
+    stop           "<|im_start|>"
+    stop           "<|im_sep|>"
+    stop           "<|im_end|>"
+    stop           "<|im_start|>"
+    stop           "<|im_sep|>"
+    stop           "<|im_end|>"
+    stop           "<|im_start|>user<|im_sep|>"
     temperature    0.05
-    top_k          10
-    top_p          0.5
 
   System
     You are a helpful assistant.
-
-  License
-    apache-2.0
 ```
 
 ```shell
-ollama run cdx1-gguf "Tell me about cdxgen"
+ollama run cdx1 "Tell me about cdxgen"
 ```
+
+Use `hf.co/CycloneDX/cdx1-gguf-BF16-GGUF` for higher precision needs.
 
 ### Validating jsonlines files
 
