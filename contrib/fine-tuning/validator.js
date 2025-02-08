@@ -20,6 +20,8 @@ for (const jf of jsonlFiles) {
   }
   if (failedLines.length) {
     failures[jf] = failedLines;
+  } else {
+    console.log(jf, "is valid!");
   }
 }
 
