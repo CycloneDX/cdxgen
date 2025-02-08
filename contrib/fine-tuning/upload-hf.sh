@@ -5,7 +5,6 @@ HF_ORG=CycloneDX
 TUNING_TOOL=mlx
 TOOL_BASE_MODEL=cdx1
 FUSED_MODEL=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}
-FUSED_GGUF_MODEL=${HF_ORG}/${TOOL_BASE_MODEL}-gguf
 QUANT_MODEL_8BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-8bit
 QUANT_MODEL_6BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-6bit
 QUANT_MODEL_4BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-4bit
@@ -22,4 +21,3 @@ huggingface-cli upload --quiet --repo-type model ${QUANT_MODEL_6BIT} ./${QUANT_M
 huggingface-cli upload --quiet --repo-type model ${QUANT_MODEL_4BIT} ./${QUANT_MODEL_4BIT} .
 
 huggingface-cli upload --quiet --repo-type model ${FUSED_MODEL} ./${FUSED_MODEL} .
-huggingface-cli upload --quiet --repo-type model ${FUSED_GGUF_MODEL} ./${FUSED_GGUF_MODEL} .
