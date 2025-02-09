@@ -280,3 +280,48 @@ Peak memory: 23.951 GB
 ```
 
 For the `--num-draft-tokens` argument, use a value between 2 - 4.
+
+## Short-and-quick factual answer
+
+cdx1 is trained to provide a short, quick answer to a given prompt. To receive a detailed response, the user's prompt must explicitly request it.
+
+Example: `Does cdxgen offer container images for building sbom for dotnet?`
+
+```text
+mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "Does cdxgen offer container images for building sbom for dotnet?" --temp 0.05 --system-prompt "You are a helpful assistant."
+==========
+Yes, cdxgen provides container images for building SBOMs for .NET applications.
+==========
+```
+
+Include `Can you provide a detailed example?` to increase number of generated tokens.
+
+```text
+mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "Does cdxgen offer container images for building sbom for dotnet? Can you provide a detailed example?" --temp 0.05 --system-prompt "You are a helpful assistant." --max-tokens 128000
+==========
+Yes, cdxgen offers container images for building SBOMs for .NET. Here's a detailed example:
+
+1. **Pull the .NET SBOM container image:**
+   ```bash
+   docker pull ghcr.io/cyclonedx/cdxgen-dotnet:latest
+   ```
+
+2. **Run the container with your .NET project:**
+   ```bash
+   docker run --rm -v $(pwd):/app -w /app ghcr.io/cyclonedx/cdxgen-dotnet:latest cdxgen -t dotnet -o sbom.json
+   ```
+
+This command mounts your current directory (which should contain your .NET project) into the container and runs `cdxgen` to generate an SBOM for the .NET project.
+==========
+```
+
+It is not possible to modify this behaviour using system prompts alone.
+
+Example:
+
+```text
+mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "Does cdxgen offer container images for building sbom for dotnet?" --temp 0.05 --system-prompt "You are a helpful assistant. Always provide a detailed response with examples and reference to the source." --max-tokens 128000
+==========
+Yes, cdxgen provides container images for building SBOMs for .NET applications.
+==========
+```

@@ -1,0 +1,1 @@
+{"messages":[{"role":"user","content":"Generate an SBOM for the project '/tmp/foo'"},{"role":"assistant","tool_calls":[{"id":"call_id","type":"function","function":{"name":"createBom","arguments":"\"/tmp/foo\""}}]}],"tools":[{"type":"function","function":{"name":"createBom","description":"Create Bom string for various languages","parameters":{"type":"string"}}}]}
