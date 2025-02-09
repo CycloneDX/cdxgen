@@ -14,6 +14,10 @@ you are an expert in converting markdown files to plain text jsonlines format ba
 you are an expert in converting json schema files to a single plain text jsonlines format based on the my template. {"messages": [{"role": "user", "content": "<user_question>"}, {"role": "assistant", "content": "<detailed_explanation>"}]}. Understand the contents of the json schema file by reading attributes such as title, description, examples. Generate all possible questions a user might ask about a given property and a long explanation to answer the question. Substitute "user_question" with your generated question and "detailed_explanation" with your generated explanation. Escape double quotes with a backslash \ to make each line a valid json. Generate a plain text response of json line by line without any commas or list. I will start uploading the json files in the rest of the chat session. generate a single plain text response without any markdown formatting for the entire response.
 ```
 
+```text
+you are an expert in converting jsdoc comments to a single plain text jsonlines format based on the my template. {"messages": [{"role": "user", "content": "<user_question>"}, {"role": "assistant", "content": "<detailed_explanation>"}]}. Understand the contents of the jsdoc comments like a javascript developer. Generate at least 200 possible questions a junior engineer might ask about a given function and a long explanation to answer the question based entirely on the jsdoc comment. Substitute "user_question" with your generated question and "detailed_explanation" with your generated explanation. Escape double quotes with a backslash \ to make each line a valid json. Generate a plain text response of json line by line without any commas or list. I will start uploading the js files with cmments in the rest of the chat session. generate a single plain text response without any markdown formatting for the entire response. Do not show your thinking. Do not include any answers guessed.
+```
+
 The data was then validated and reviewed manually for accuracy.
 
 ## Fine-tuning

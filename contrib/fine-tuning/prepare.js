@@ -19,6 +19,10 @@ const validData = [];
 
 for (const jf of jsonlFiles) {
   const lines = readFileSync(jf, "utf-8");
+  // Ignore empty lines
+  if (!lines.trim().length) {
+    continue;
+  }
   trainData.push(lines);
   if (jf.includes("readme") || jf.includes("cli") || jf.includes("semantics")) {
     validData.push(lines);
