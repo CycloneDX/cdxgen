@@ -7,6 +7,8 @@ set -e
 # conda activate llama.cpp
 # python -m pip install -r requirements.txt
 # cmake .
+export TOKENIZERS_PARALLELISM=false
+
 TUNING_TOOL=mlx
 HF_ORG=CycloneDX
 TOOL_BASE_MODEL=cdx1
@@ -42,3 +44,8 @@ export HF_HUB_ENABLE_HF_TRANSFER=0
 huggingface-cli whoami
 huggingface-cli upload --quiet --repo-type model ${GGUF_MODEL_Q8_0_NAME} ${GGUF_MODEL_Q8_0_PATH} .
 huggingface-cli upload --quiet --repo-type model ${GGUF_MODEL_BF16_0_NAME} ${GGUF_MODEL_BF16_0_PATH} .
+
+ollama cp hf.co/${GGUF_MODEL_Q8_0_NAME} ${GGUF_MODEL_Q8_0_NAME}
+ollama push ${GGUF_MODEL_Q8_0_NAME}
+ollama cp hf.co/${GGUF_MODEL_BF16_0_NAME} ${GGUF_MODEL_BF16_0_NAME}
+ollama push ${GGUF_MODEL_BF16_0_NAME}
