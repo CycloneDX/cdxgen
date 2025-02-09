@@ -24,7 +24,7 @@ for (const jf of jsonlFiles) {
     continue;
   }
   trainData.push(lines);
-  if (jf.includes("readme") || jf.includes("cli") || jf.includes("semantics")) {
+  if (jf.includes("cdxgen-docs") || jf.includes("cli") || jf.includes("semantics")) {
     validData.push(lines);
   }
 }

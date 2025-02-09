@@ -26,7 +26,7 @@ The bomFormat property specifies the format of the BOM. It can be set to "applic
 Good results with this system prompt.
 
 ```text
-mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "What is the purpose of the bomFormat property in a CycloneDX BOM?" --temp 0.05 --system-prompt "You are a helpful assistant."
+mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "What is the purpose of the bomFormat property in a CycloneDX BOM?" --temp 0.05 --system-prompt "You are a helpful assistant to the user."
 ==========
 The `bomFormat` property specifies the format of the BOM. It is a required property and should be set to "CycloneDX".
 ==========
@@ -37,7 +37,7 @@ Repeat the test with multiple temperature.
 Temperature: 0.1
 
 ```text
-mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "What is the purpose of the bomFormat property in a CycloneDX BOM?" --temp 0.1 --system-prompt "You are a helpful assistant."
+mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "What is the purpose of the bomFormat property in a CycloneDX BOM?" --temp 0.1 --system-prompt "You are a helpful assistant to the user."
 ==========
 The `bomFormat` property specifies the format of the BOM. It is a required property and should be set to "CycloneDX".
 ==========
@@ -48,7 +48,7 @@ Above 0.1, the models gets **lazy**.
 Temperature: 0.2
 
 ```
-mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "What is the purpose of the bomFormat property in a CycloneDX BOM?" --temp 0.2 --system-prompt "You are a helpful assistant."
+mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "What is the purpose of the bomFormat property in a CycloneDX BOM?" --temp 0.2 --system-prompt "You are a helpful assistant to the user."
 ==========
 The `bomFormat` property specifies the format of the BOM. It is a string value that identifies the format of the BOM.
 ==========
@@ -57,7 +57,7 @@ The `bomFormat` property specifies the format of the BOM. It is a string value t
 Temperature: 0.3
 
 ```text
-mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "What is the purpose of the bomFormat property in a CycloneDX BOM?" --temp 0.3 --system-prompt "You are a helpful assistant."
+mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "What is the purpose of the bomFormat property in a CycloneDX BOM?" --temp 0.3 --system-prompt "You are a helpful assistant to the user."
 ==========
 The `bomFormat` property specifies the format of the BOM. It is a string value and is required.
 ==========
@@ -84,7 +84,7 @@ The `bomFormat` property specifies the format of the BOM.
 Temperature: 0.6 - 1.0 (Identical responses)
 
 ```text
-mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "What is the purpose of the bomFormat property in a CycloneDX BOM?" --temp 0.6 --system-prompt "You are a helpful assistant."
+mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "What is the purpose of the bomFormat property in a CycloneDX BOM?" --temp 0.6 --system-prompt "You are a helpful assistant to the user."
 ==========
 The `bomFormat` property specifies the format of the BOM.
 ==========
@@ -288,7 +288,7 @@ cdx1 is trained to provide a short, quick answer to a given prompt. To receive a
 Example: `Does cdxgen offer container images for building sbom for dotnet?`
 
 ```text
-mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "Does cdxgen offer container images for building sbom for dotnet?" --temp 0.05 --system-prompt "You are a helpful assistant."
+mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "Does cdxgen offer container images for building sbom for dotnet?" --temp 0.05 --system-prompt "You are a helpful assistant to the user."
 ==========
 Yes, cdxgen provides container images for building SBOMs for .NET applications.
 ==========
@@ -297,7 +297,7 @@ Yes, cdxgen provides container images for building SBOMs for .NET applications.
 Include `Can you provide a detailed example?` to increase number of generated tokens.
 
 ```text
-mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "Does cdxgen offer container images for building sbom for dotnet? Can you provide a detailed example?" --temp 0.05 --system-prompt "You are a helpful assistant." --max-tokens 128000
+mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "Does cdxgen offer container images for building sbom for dotnet? Can you provide a detailed example?" --temp 0.05 --system-prompt "You are a helpful assistant to the user." --max-tokens 128000
 ==========
 Yes, cdxgen offers container images for building SBOMs for .NET. Here's a detailed example:
 
@@ -320,7 +320,7 @@ It is not possible to modify this behaviour using system prompts alone.
 Example:
 
 ```text
-mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "Does cdxgen offer container images for building sbom for dotnet?" --temp 0.05 --system-prompt "You are a helpful assistant. Always provide a detailed response with examples and reference to the source." --max-tokens 128000
+mlx_lm.generate --model ./CycloneDX/cdx1-mlx-8bit --prompt "Does cdxgen offer container images for building sbom for dotnet?" --temp 0.05 --system-prompt "You are a helpful assistant to the user. Always provide a detailed response with examples and reference to the source." --max-tokens 128000
 ==========
 Yes, cdxgen provides container images for building SBOMs for .NET applications.
 ==========

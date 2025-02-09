@@ -40,7 +40,7 @@ lms load CycloneDX/cdx1-mlx-8bit --exact --gpu max --identifier cdx1-test --cont
 System prompt:
 
 ```text
-You are a helpful assistant.
+You are a helpful assistant to the user.
 ```
 
 ### Testing with ollama
@@ -53,7 +53,7 @@ FROM hf.co/CycloneDX/cdx1-gguf-Q8_0-GGUF
 PARAMETER num_ctx 16000
 PARAMETER temperature 0.05
 
-SYSTEM """You are a helpful assistant."""
+SYSTEM """You are a helpful assistant to the user."""
 ```
 
 ```shell
@@ -84,7 +84,7 @@ Model
     temperature    0.05
 
   System
-    You are a helpful assistant.
+    You are a helpful assistant to the user.
 ```
 
 ```shell

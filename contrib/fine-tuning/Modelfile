@@ -3,7 +3,7 @@ FROM ./cdx1-gguf-q8_0.gguf
 PARAMETER num_ctx 16000
 PARAMETER temperature 0.05
 
-SYSTEM """You are a helpful assistant."""
+SYSTEM """You are a helpful assistant to the user."""
 
 LICENSE """
 apache-2.0
