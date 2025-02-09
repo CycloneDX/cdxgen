@@ -11,7 +11,7 @@ ADAPTERS_PATH=adapters
 DATASET_PATH=dataset
 
 FUSED_MODEL=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}
-FUSED_GGUF_MODEL=${HF_ORG}/${TOOL_BASE_MODEL}-gguf
+# FUSED_GGUF_MODEL=${HF_ORG}/${TOOL_BASE_MODEL}-gguf
 QUANT_MODEL_8BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-8bit
 QUANT_MODEL_6BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-6bit
 QUANT_MODEL_4BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-4bit
@@ -42,7 +42,7 @@ echo "Low-Rank Adaptation (LoRA) fine-tuning ${BASE_MODEL_MLX} with cdx1 dataset
 mlx_lm.lora --model ${BASE_MODEL_MLX} --train --data dataset --adapter-path ${ADAPTERS_PATH} --fine-tune-type lora --batch-size 1 --num-layers ${NUM_LAYERS} --iters 1000 --grad-checkpoint
 
 echo "Fuse model to ${FUSED_MODEL} using the cdx1 adapters"
-rm -rf ${FUSED_MODEL} ${FUSED_GGUF_MODEL}
+rm -rf ${FUSED_MODEL}
 # gguf export via mlx isn't working
 # mlx_lm.fuse --model ${BASE_MODEL_MLX} --adapter-path adapters --hf-path ${FUSED_MODEL} --save-path ${FUSED_MODEL} --de-quantize --export-gguf --gguf-path cdx1-f16.gguf
 mlx_lm.fuse --model ${BASE_MODEL_MLX} --adapter-path adapters --hf-path ${FUSED_MODEL} --save-path ${FUSED_MODEL} --de-quantize
