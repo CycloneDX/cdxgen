@@ -1,0 +1,12 @@
+title = "Software transparency"
+
+prompt = '''
+Why do we need Software transparency?
+'''
+
+human_answer = '''
+'''
+
+teacher_model_answer = '''
+'''
+

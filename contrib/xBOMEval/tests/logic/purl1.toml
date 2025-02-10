@@ -1,0 +1,11 @@
+title = "Who knows purl better?"
+
+prompt = '''
+What is the package URL type for Node applications? Alice says it is 'pkg:node', while Bob claims it is 'pkg:npm'. Meanwhile, Peter believes it could be 'pkg:npm', 'pkg:yarn', or 'pkg:pnpm', depending on the package manager.
+'''
+
+human_answer = '''
+'''
+
+teacher_model_answer = '''
+'''
