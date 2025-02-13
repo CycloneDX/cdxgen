@@ -41,7 +41,7 @@ jobs:
         run: |
           npm install --global corepack@latest
           corepack enable
-          corepack pnpm install --package-import-method copy
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
           corepack pnpm test
           mkdir -p bomresults repotests
         env:
@@ -131,7 +131,7 @@ jobs:
         run: |
           npm install --global corepack@latest
           corepack enable
-          corepack pnpm install --package-import-method copy
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
           corepack pnpm test
           mkdir -p bomresults repotests
         env:
@@ -185,7 +185,7 @@ jobs:
         run: |
           npm install --global corepack@latest
           corepack enable
-          corepack pnpm install --package-import-method copy
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
           mkdir -p bomresults
         env:
           CI: true
@@ -227,7 +227,7 @@ jobs:
         run: |
           npm install --global corepack@latest
           corepack enable
-          corepack pnpm install --package-import-method copy
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
           mkdir bomresults
         env:
           CI: true
