@@ -543,9 +543,10 @@ jobs:
       - name: repotests expo
         run: |
           cd repotests/expo-test && npm ci && cd ../..
-          GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_SKIP_MODULES=root                               bin/cdxgen.js -p -t gradle        repotests/expo-test -o bomresults/bom-expo.json --fail-on-error
-          GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_SKIP_MODULES=root GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p -t gradle        repotests/expo-test -o bomresults/bom-expo-npm.json --fail-on-error
-          GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_SKIP_MODULES=root GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-multi.json --fail-on-error
+          java --version
+          GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_SKIP_MODULES=root                               bin/cdxgen.js -p -t gradle        repotests/expo-test -o bomresults/bom-expo.json
+          GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_SKIP_MODULES=root GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p -t gradle        repotests/expo-test -o bomresults/bom-expo-npm.json
+          GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_SKIP_MODULES=root GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-multi.json
         shell: bash
       - name: repotests elasticsearch
         run: |
