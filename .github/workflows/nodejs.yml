@@ -34,7 +34,7 @@ jobs:
         run: |
           npm install --global corepack@latest
           corepack enable
-          corepack pnpm install
+          corepack pnpm install --config.strict-dep-builds=true
           corepack pnpm test
           NPM_CONFIG_PROVENANCE=true corepack pnpm publish --access=public --dry-run --no-git-checks
         env:
