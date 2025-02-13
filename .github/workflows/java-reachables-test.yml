@@ -29,7 +29,7 @@ jobs:
         run: |
           npm install --global corepack@latest
           corepack enable
-          corepack pnpm install
+          corepack pnpm install --config.strict-dep-builds=true
           mkdir -p repotests
           mkdir -p bomresults
       - uses: actions/checkout@v4

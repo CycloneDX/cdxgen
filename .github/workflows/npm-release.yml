@@ -36,7 +36,7 @@ jobs:
       run: |
         npm install --global corepack@latest
         corepack enable
-        corepack pnpm install
+        corepack pnpm install --config.strict-dep-builds=true
         npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
         echo "cyclonedx:registry=https://registry.npmjs.org" > ~/.npmrc
         NPM_CONFIG_PROVENANCE=true corepack pnpm publish --access=public --no-git-checks
@@ -48,7 +48,7 @@ jobs:
       run: |
         npm install --global corepack@latest
         corepack enable
-        corepack pnpm install
+        corepack pnpm install --config.strict-dep-builds=true
         npx jsr publish --allow-dirty
       continue-on-error: true
       env:
@@ -115,7 +115,7 @@ jobs:
       run: |
         npm install --global corepack@latest
         corepack enable
-        corepack pnpm install
+        corepack pnpm install --config.strict-dep-builds=true
         node bin/cdxgen.js -t docker -o cdxgen-oci-image.cdx.json ghcr.io/cyclonedx/cdxgen:latest
         oras attach --artifact-type sbom/cyclonedx ghcr.io/cyclonedx/cdxgen:latest ./cdxgen-oci-image.cdx.json:application/json
         oras discover --format tree ghcr.io/cyclonedx/cdxgen:latest
@@ -179,7 +179,7 @@ jobs:
         run: |
           npm install --global corepack@latest
           corepack enable
-          corepack pnpm install
+          corepack pnpm install --config.strict-dep-builds=true
           node bin/cdxgen.js -t docker -o cdxgen-secure-oci-image.cdx.json ghcr.io/cyclonedx/cdxgen-secure:latest
           oras attach --artifact-type sbom/cyclonedx ghcr.io/cyclonedx/cdxgen-secure:latest ./cdxgen-secure-oci-image.cdx.json:application/json
           oras discover --format tree ghcr.io/cyclonedx/cdxgen-secure:latest

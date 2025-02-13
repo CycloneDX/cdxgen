@@ -34,7 +34,7 @@ RUN set -e; \
             ;; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
     esac \
-    && cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
+    && cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy && corepack pnpm cache delete \
     && curl -L https://github.com/owasp-dep-scan/dosai/releases/latest/download/Dosai${DOSAI_ARCH_SUFFIX} -o /usr/local/bin/dosai \
     && chmod +x /usr/local/bin/dosai \
     && dosai --help \

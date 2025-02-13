@@ -516,7 +516,7 @@ Before raising a PR, please run the following commands.
 
 ```bash
 corepack enable pnpm
-pnpm install
+pnpm install --config.strict-dep-builds=true
 # Generate types using jsdoc syntax
 pnpm run gen-types
 # Run biomejs formatter and linter with auto fix
