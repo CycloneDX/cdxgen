@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
+# Need the latest master from https://github.com/ml-explore/mlx-examples
 set -e
 TUNING_TOOL=mlx
-# This must be really ibm-granite. Wish mlx supported this.
 BASE_MODEL=unsloth/phi-4
 BASE_MODEL_MLX=${BASE_MODEL}-${TUNING_TOOL}
 HF_ORG=CycloneDX
@@ -34,7 +34,7 @@ mlx_lm.generate --model ${BASE_MODEL} --prompt "Tell me about cdxgen" --temp 0.0
 
 # We use LoRA fine-tuning over DoRA due to better compatibility with vLLM and llama.cpp
 echo "Low-Rank Adaptation (LoRA) fine-tuning ${BASE_MODEL} with cdx1 dataset. This might take a while ..."
-mlx_lm.lora --model ${BASE_MODEL} --train --data dataset --adapter-path ${ADAPTERS_PATH} --fine-tune-type lora --batch-size 1 --num-layers ${NUM_LAYERS} --iters 2000 --grad-checkpoint --max-seq-length 16000 --learning-rate "3e-5"
+mlx_lm.lora --model ${BASE_MODEL} --train --data ${DATASET_PATH} --adapter-path ${ADAPTERS_PATH} --mask-prompt --fine-tune-type lora --batch-size 1 --num-layers ${NUM_LAYERS} --iters 2000 --grad-checkpoint --max-seq-length 16000 --learning-rate "3e-5"
 
 echo "Fuse model to ${FUSED_MODEL} using the cdx1 adapters"
 rm -rf ${FUSED_MODEL}
