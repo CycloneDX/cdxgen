@@ -307,6 +307,11 @@ jobs:
           repository: 'caddyserver/caddy'
           path: 'repotests/caddy'
           ref: 'v2.9.1'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'MaibornWolff/SecObserve'
+          path: 'repotests/SecObserve'
+          ref: 'v1.28.0'
       - uses: dtolnay/rust-toolchain@stable
       - name: setup sdkman
         run: |
@@ -531,13 +536,14 @@ jobs:
         shell: bash
       - name: repotests blint
         run: |
-          bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint.json
+          bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint.json --fail-on-error
           bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint-deep.json --deep
           bin/cdxgen.js -p -t java repotests/broken-mvn-wrapper -o bomresults/bom-broken-mvn-wrapper.json
         shell: bash
       - name: repotests expo
         run: |
           cd repotests/expo-test && npm ci && cd ../..
+          java --version
           GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_SKIP_MODULES=root                               bin/cdxgen.js -p -t gradle        repotests/expo-test -o bomresults/bom-expo.json
           GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_SKIP_MODULES=root GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p -t gradle        repotests/expo-test -o bomresults/bom-expo-npm.json
           GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_SKIP_MODULES=root GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-multi.json
@@ -547,6 +553,10 @@ jobs:
           bin/cdxgen.js -t gradle repotests/elasticsearch -o bomresults/bom-elasticsearch.json
           GRADLE_INCLUDED_BUILDS=:build-conventions,:build-tools,:build-tools-internal bin/cdxgen.js -t gradle repotests/elasticsearch -o bomresults/bom-elasticsearch-with-included-builds.json
           custom-json-diff -i bomresults/bom-elasticsearch.json bomresults/bom-elasticsearch-with-included-builds.json -o bomresults/diff-elasticsearch preset-diff
+        shell: bash
+      - name: repotests SecObserve
+        run: |
+          bin/cdxgen.js repotests/SecObserve -o bomresults/bom-SecObserve.json --fail-on-error
         shell: bash
       - name: jenkins plugins
         run: |
