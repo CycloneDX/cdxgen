@@ -21,6 +21,7 @@ import {
   printSummary,
   printTable,
 } from "../lib/helpers/display.js";
+import { thoughtEnd, thoughtLog } from "../lib/helpers/logger.js";
 import {
   ATOM_DB,
   dirNameStr,
@@ -397,6 +398,7 @@ if (!args.projectName) {
     args.projectName = basename(resolve(filePath));
   }
 }
+thoughtLog(`Let's try to generate a CycloneDX BOM for the path '${filePath}'`);
 if (
   filePath.includes(" ") ||
   filePath.includes("\r") ||
@@ -412,6 +414,9 @@ if (
 // Support for obom/cbom aliases
 if (process.argv[1].includes("obom") && !args.type) {
   args.type = "os";
+  thoughtLog(
+    "Ok, the user wants to generate an Operations Bill-of-Materials (OBOM).",
+  );
 }
 
 /**
@@ -428,14 +433,28 @@ const options = Object.assign({}, args, {
       ? resolve(join(filePath, args.output))
       : args.output,
 });
-
+// Filter duplicate types. Eg: -t gradle -t gradle
+if (options.projectType && Array.isArray(options.projectType)) {
+  options.projectType = Array.from(new Set(options.projectType));
+}
+if (!options.projectType) {
+  thoughtLog(
+    "Ok, the user wants me to identify all the project types and generate a consolidated BOM document.",
+  );
+}
 if (process.argv[1].includes("cbom")) {
+  thoughtLog(
+    "Ok, the user wants to generate Cryptographic Bill-of-Materials (CBOM).",
+  );
   options.includeCrypto = true;
   options.evidence = true;
   options.specVersion = 1.6;
   options.deep = true;
 }
 if (process.argv[1].includes("cdxgen-secure")) {
+  thoughtLog(
+    "Ok, the user wants cdxgen to run in secure mode by default. Let's try and use the permissions api.",
+  );
   console.log(
     "NOTE: Secure mode only restricts cdxgen from performing certain activities such as package installation. It does not provide security guarantees in the presence of malicious code.",
   );
@@ -446,6 +465,9 @@ if (options.standard) {
   options.specVersion = 1.6;
 }
 if (options.includeFormulation) {
+  thoughtLog(
+    "Wait, the user wants to include formulation information. Let's warn about accidentally disclosing sensitive data via the BOM files.",
+  );
   console.log(
     "NOTE: Formulation section could include sensitive data such as emails and secrets.\nPlease review the generated SBOM before distribution.\n",
   );
@@ -456,6 +478,13 @@ if (options.includeFormulation) {
  * @param {object} options CLI options
  */
 const applyAdvancedOptions = (options) => {
+  if (options?.profile !== "generic") {
+    thoughtLog(`BOM profile to use is '${options.profile}'.`);
+  } else {
+    thoughtLog(
+      "The user hasn't specified a profile. Should I suggest one to optimize the BOM for a specific use case or persona 🤔?",
+    );
+  }
   switch (options.profile) {
     case "appsec":
       options.deep = true;
@@ -507,6 +536,11 @@ const applyAdvancedOptions = (options) => {
       break;
     default:
       break;
+  }
+  if (options.lifecycle) {
+    thoughtLog(
+      `BOM must be generated for the lifecycle '${options.lifecycle}'.`,
+    );
   }
   switch (options.lifecycle) {
     case "pre-build":
@@ -728,7 +762,9 @@ const checkPermissions = (filePath, options) => {
     options.usagesSlicesFile = `${options.projectName}-usages.json`;
   }
   prepareEnv(filePath, options);
+  thoughtLog("Getting ready to generate the BOM ⚡️.");
   let bomNSData = (await createBom(filePath, options)) || {};
+  thoughtLog("Tweaking the generated BOM data. Nearly there.");
   // Add extra metadata and annotations with post processing
   bomNSData = postProcess(bomNSData, options);
   if (
@@ -748,6 +784,13 @@ const checkPermissions = (filePath, options) => {
       } else {
         jsonPayload = JSON.stringify(bomNSData.bomJson, null, null);
         fs.writeFileSync(jsonFile, jsonPayload);
+        if (jsonFile.endsWith("bom.json")) {
+          thoughtLog(
+            `Let's save the file to "${jsonFile}". Should I suggest the '.cdx.json' file extension for better semantics?`,
+          );
+        } else {
+          thoughtLog(`Let's save the file to "${jsonFile}".`);
+        }
       }
       if (
         jsonPayload &&
@@ -843,6 +886,7 @@ const checkPermissions = (filePath, options) => {
               jsonFile,
               JSON.stringify(bomJsonUnsignedObj, null, null),
             );
+            thoughtLog(`Signing the BOM file "${jsonFile}".`);
             if (publicKeyFile) {
               // Verifying this signature
               const signatureVerification = jws.verify(
@@ -929,10 +973,13 @@ const checkPermissions = (filePath, options) => {
   }
   // Perform automatic validation
   if (options.validate) {
+    thoughtLog("Wait, let's check the generated BOM file for any issues.");
     if (!validateBom(bomNSData.bomJson)) {
       process.exit(1);
     }
+    thoughtLog("BOM is looking good. Thank you for using cdxgen!");
   }
+  thoughtEnd();
   // Automatically submit the bom data
   // biome-ignore lint/suspicious/noDoubleEquals: yargs passes true for empty values
   if (options.serverUrl && options.serverUrl != true && options.apiKey) {
