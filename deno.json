@@ -75,6 +75,7 @@
     "uuid": "npm:uuid@^11.0.2",
     "xml-js": "npm:xml-js@^1.6.11",
     "yargs": "npm:yargs@^17.7.2",
+    "yoctocolors": "npm:yoctocolors@^2.1.1",
     "jest": "npm:jest@^29.7.0",
     "@jest/globals": "npm:@jest/globals@^29.7.0",
     "sequelize": "npm:sequelize@^6.37.3",

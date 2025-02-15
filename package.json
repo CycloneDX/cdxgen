@@ -66,13 +66,14 @@
   "bugs": {
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
-  "packageManager": "pnpm@10.3.0",
+  "packageManager": "pnpm@10.4.0",
   "lint-staged": {
     "*": "biome check --fix --no-errors-on-unmatched"
   },
   "dependencies": {
     "@babel/parser": "^7.26.7",
     "@babel/traverse": "^7.26.7",
+    "@iarna/toml": "2.2.5",
     "@npmcli/arborist": "9.0.0",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
@@ -97,7 +98,7 @@
     "validate-iri": "^1.0.1",
     "xml-js": "^1.6.11",
     "yargs": "^17.7.2",
-    "@iarna/toml": "2.2.5"
+    "yoctocolors": "^2.1.1"
   },
   "optionalDependencies": {
     "@appthreat/atom": "2.1.11",
