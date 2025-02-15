@@ -15,6 +15,7 @@ Many BOM generation tools exist. cdxgen stands out due to its focus on:
    - _Occurrences evidence_: Tracked under `components.evidence.occurrences`.
    - _Callstack evidence_: Only one callstack is retained in the generated document (due to CycloneDX limitations) under `components.evidence.callstack`.
    - _Metadata_: The `metadata.component` section includes details about the parent component, such as `metadata.component.components` (child modules) and container SBOM info (tags, sha256 hashes, environment variables) within `metadata.component.properties`.
+   - _Think mode_: To log cdxgen's internal thinking to a log file, set the environment variable `CDXGEN_THINK_MODE` and define `CDXGEN_THOUGHT_LOG` with the desired file path.
 
 2. **Precision**
 
