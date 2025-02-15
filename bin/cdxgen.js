@@ -977,7 +977,7 @@ const checkPermissions = (filePath, options) => {
     if (!validateBom(bomNSData.bomJson)) {
       process.exit(1);
     }
-    thoughtLog("BOM is looking good. Thank you for using cdxgen!");
+    thoughtLog("BOM file looks valid. Thank you for using cdxgen!");
   }
   thoughtEnd();
   // Automatically submit the bom data
