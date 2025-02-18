@@ -702,10 +702,7 @@ export function parseCargoTomlData(cargoTomlFile: string, simple?: boolean, pkgF
  * @returns {Array} A list of the project's components as described by the Cargo.lock-file.
  */
 export function parseCargoData(cargoLockFile: string, simple?: boolean, pkgFilesMap?: any): any[];
-export function parseCargoDependencyData(cargoLockData: any): {
-    ref: string;
-    dependsOn: any[];
-}[];
+export function parseCargoDependencyData(cargoLockData: any): any[];
 export function parseCargoAuditableData(cargoData: any): Promise<any[]>;
 /**
  * Method to parse pubspec.lock files.
