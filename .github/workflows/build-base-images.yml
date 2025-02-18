@@ -843,7 +843,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           context: .
-          file: ci/base-images/cdxgen/Dockerfile.dotnet8
+          file: ci/base-images/cdxgen/debian/Dockerfile.dotnet8
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta-cdxgen-debian-dotnet8.outputs.tags }}
