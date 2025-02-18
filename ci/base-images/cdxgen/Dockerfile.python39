@@ -19,7 +19,7 @@ ENV CDXGEN_IN_CONTAINER=true \
 
 COPY . /opt/cdxgen
 
-RUN zypper --non-interactive install --allow-downgrade -l --no-recommends readline-devel clang13 llvm15 llvm15-devel libjpeg62-devel libmariadb-devel \
+RUN zypper --non-interactive install --allow-downgrade -l --no-recommends readline-devel clang15 llvm15 llvm15-devel libjpeg62-devel libmariadb-devel \
         postgresql16-devel postgresql16-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel graphviz-devel \
     && cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy && corepack pnpm cache delete \
     && mkdir -p /opt/cdxgen-node-cache \
