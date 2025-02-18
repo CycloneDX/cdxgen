@@ -516,8 +516,8 @@ jobs:
         shell: bash
       - name: repotests rust
         run: |
-          bin/cdxgen.js -p -r -t rust repotests/rs-rust -o bomresults/bom-rs-rust.json --fail-on-error
-          bin/cdxgen.js -p -r -t rust repotests/rs-cargo -o bomresults/bom-rs-cargo.json --fail-on-error
+          bin/cdxgen.js -p -r -t rust repotests/rs-rust -o bomresults/bom-rs-rust.json --exclude "**/tests/**" --fail-on-error
+          bin/cdxgen.js -p -r -t rust repotests/rs-cargo -o bomresults/bom-rs-cargo.json --exclude "**/tests/**" --fail-on-error
           cargo generate-lockfile --manifest-path repotests/rs-validator/validator/Cargo.toml
           bin/cdxgen.js -p -r -t rust repotests/rs-validator -o bomresults/bom-rs-validator.json --fail-on-error
           bin/cdxgen.js -p -r -t rust repotests/rs-axum -o bomresults/bom-rs-axum.json --fail-on-error
