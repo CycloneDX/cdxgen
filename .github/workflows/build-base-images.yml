@@ -57,6 +57,7 @@ jobs:
           labels: ${{ steps.meta-bci-lang.outputs.labels }}
 
   sle-dotnet-image:
+    if: false
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -96,6 +97,7 @@ jobs:
           labels: ${{ steps.meta-bci-dotnet.outputs.labels }}
 
   cdxgen-dotnet-image:
+    if: false
     runs-on: ubuntu-latest
     needs: sle-dotnet-image
     permissions:
