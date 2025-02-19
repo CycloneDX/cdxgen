@@ -27,7 +27,8 @@ mv /root/.sdkman/candidates/* /opt/
 rm -rf /root/.sdkman
 
 if [ x"${SKIP_PYTHON}" != "xyes" ]; then
-  python3 -m pip install --no-cache-dir --upgrade pip virtualenv
+  python3 --version
+  python3 -m pip install --no-cache-dir --upgrade pip virtualenv --break-system-packages
   python3 -m pip install --no-cache-dir --upgrade --user pipenv poetry uv
 fi
 
