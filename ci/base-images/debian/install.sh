@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+set -e
 
 git clone https://github.com/rbenv/rbenv.git --depth=1 ~/.rbenv
 echo 'export PATH="/root/.rbenv/bin:$PATH"' >> ~/.bashrc
