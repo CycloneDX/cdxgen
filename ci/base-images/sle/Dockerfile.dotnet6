@@ -9,7 +9,7 @@ ENV DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
 ENV PATH=${PATH}:/usr/local/bin:
 
 RUN zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends git-core nodejs20 npm20 \
-        python311 python311-pip wget zip unzip make gawk java-21-openjdk-devel \
+        python311 python311-pip wget zip unzip make gawk java-21-openjdk-devel curl \
     && rpm -Uvh https://packages.microsoft.com/config/sles/15/packages-microsoft-prod.rpm \
     && zypper --non-interactive install -l --no-recommends dotnet-sdk-3.1 \
     && zypper --non-interactive addrepo -G -f -K https://download.opensuse.org/repositories/Mono/SLE_15_SP1/Mono.repo \
