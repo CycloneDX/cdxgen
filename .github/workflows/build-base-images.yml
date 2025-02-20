@@ -150,7 +150,7 @@ jobs:
 
   debian-dotnet6-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ["macos-hosted", "arm64"]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -188,7 +188,7 @@ jobs:
 
   cdxgen-debian-dotnet6-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ["macos-hosted", "arm64"]
+    runs-on: ubuntu-latest
     needs: debian-dotnet6-image
     permissions:
       packages: write
@@ -318,7 +318,7 @@ jobs:
 
   debian-ruby33-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ["macos-hosted", "arm64"]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -356,7 +356,7 @@ jobs:
 
   cdxgen-debian-ruby33-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ["macos-hosted", "arm64"]
+    runs-on: ubuntu-latest
     needs: debian-ruby33-image
     permissions:
       packages: write
@@ -395,7 +395,7 @@ jobs:
 
   debian-ruby34-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ["macos-hosted", "arm64"]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -433,7 +433,7 @@ jobs:
 
   cdxgen-debian-ruby34-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ["macos-hosted", "arm64"]
+    runs-on: ubuntu-latest
     needs: debian-ruby34-image
     permissions:
       packages: write
@@ -472,7 +472,7 @@ jobs:
 
   debian-ruby18-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ["macos-hosted", "arm64"]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -510,7 +510,7 @@ jobs:
 
   debian-ruby26-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ["macos-hosted", "arm64"]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -548,7 +548,7 @@ jobs:
 
   cdxgen-debian-ruby26-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ["macos-hosted", "arm64"]
+    runs-on: ubuntu-latest
     needs: debian-ruby26-image
     permissions:
       packages: write
@@ -763,7 +763,7 @@ jobs:
 
   debian-dotnet8-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ["macos-hosted", "arm64"]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -801,7 +801,7 @@ jobs:
 
   cdxgen-debian-dotnet8-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ["macos-hosted", "arm64"]
+    runs-on: ubuntu-latest
     needs: debian-dotnet8-image
     permissions:
       packages: write
@@ -939,7 +939,7 @@ jobs:
 
   debian-dotnet9-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ["macos-hosted", "arm64"]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -977,7 +977,7 @@ jobs:
 
   cdxgen-debian-dotnet9-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ["macos-hosted", "arm64"]
+    runs-on: ubuntu-latest
     needs: debian-dotnet8-image
     permissions:
       packages: write
