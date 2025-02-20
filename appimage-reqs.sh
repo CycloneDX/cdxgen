@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 APPDIR=$1
 OPTDIR=${APPDIR}/opt
-NODE_VERSION=20.18.1
+NODE_VERSION=20.18.3
 export PATH=$PATH:${APPDIR}/usr/bin:
 
 curl -LO "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz" \
