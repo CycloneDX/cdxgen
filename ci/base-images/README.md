@@ -6,31 +6,31 @@ Custom language specific base images contributed by AppThreat from this [repo](h
 
 Below table summarizes all available container image versions. These images include additional language-specific build tools and development libraries to enable automatic restore and build operations.
 
-| Language | Version                      | Container Image Tags                                                              | Comments                                                                                                                                  |
-| -------- | ---------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Java     | 23                           | ghcr.io/cyclonedx/cdxgen:master                                                   | Default all-in-one container image with all the latest and greatest tools with Node 23 runtime. Permission model is opt-in.               |
-| Java     | 23                           | ghcr.io/cyclonedx/cdxgen-deno:master                                              | Default all-in-one container image with all the latest and greatest tools with deno runtime. Uses deno permissions model by default.      |
-| Java     | 23                           | ghcr.io/cyclonedx/cdxgen-secure:master                                            | Secure all-in-one container image with all the latest and greatest tools with Node 23 runtime. Uses Node.js permissions model by default. |
-| Java     | 11                           | ghcr.io/cyclonedx/cdxgen-java11-slim:v11, ghcr.io/cyclonedx/cdxgen-java11:v11     | Java 11 version with and without Android 33 SDK.                                                                                          |
-| Java     | 17                           | ghcr.io/cyclonedx/cdxgen-java17-slim:v11, ghcr.io/cyclonedx/cdxgen-java17:v11     | Java 17 version with and without Android 34 SDK.                                                                                          |
-| Dotnet   | .Net Framework 4.6 - 4.8     | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11                                       | .Net Framework                                                                                                                            |
-| Dotnet   | .Net Core 2.1, 3.1, .Net 5.0 | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11                                       | Invoke with --platform=linux/amd64 for better compatibility.                                                                              |
-| Dotnet   | .Net 6                       | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11                                       | .Net 6                                                                                                                                    |
-| Dotnet   | .Net 7                       | ghcr.io/cyclonedx/cdxgen-dotnet7:v11                                              | .Net 7                                                                                                                                    |
-| Dotnet   | .Net 8                       | ghcr.io/cyclonedx/cdxgen-debian-dotnet8:v11, ghcr.io/cyclonedx/cdxgen-dotnet8:v11 | .Net 8                                                                                                                                    |
-| Dotnet   | .Net 9                       | ghcr.io/cyclonedx/cdxgen-debian-dotnet9:v11, ghcr.io/cyclonedx/cdxgen-dotnet9:v11 | .Net 9                                                                                                                                    |
-| Python   | 3.6                          | ghcr.io/cyclonedx/cdxgen-python36:v11                                             | No dependency tree                                                                                                                        |
-| Python   | 3.9                          | ghcr.io/cyclonedx/cdxgen-python39:v11                                             |                                                                                                                                           |
-| Python   | 3.10                         | ghcr.io/cyclonedx/cdxgen-python310:v11                                            |                                                                                                                                           |
-| Python   | 3.11                         | ghcr.io/cyclonedx/cdxgen-python311:v11                                            |                                                                                                                                           |
-| Python   | 3.12                         | ghcr.io/cyclonedx/cdxgen-python312:v11                                            |                                                                                                                                           |
-| Node.js  | 20                           | ghcr.io/cyclonedx/cdxgen-node20:v11                                               | Use `--platform=linux/amd64` in case of `npm install` errors.                                                                             |
-| Node.js  | 23                           | ghcr.io/cyclonedx/cdxgen:master                                                   | Supports automatic node installation. Example: Pass `-t node20` to install node 20.                                                       |
-| Ruby     | 3.3.6                        | ghcr.io/cyclonedx/cdxgen-debian-ruby33:v11                                        | Supports automatic Ruby installation for 3.3.x. Example: Pass `-t ruby3.3.1` to install Ruby 3.3.1.                                       |
-| Ruby     | 3.4.1                        | ghcr.io/cyclonedx/cdxgen-debian-ruby34:v11                                        | Supports automatic Ruby installation for 3.4.x. Example: Pass `-t ruby3.4.0` to install Ruby 3.4.0.                                       |
-| Ruby     | 2.5.0                        | ghcr.io/cyclonedx/cdxgen-ruby25:v11                                               | Supports automatic Ruby installation for 2.5.x. Example: Pass `-t ruby2.5.1` to install Ruby 2.5.1.                                       |
-| Ruby     | 2.6.10                       | ghcr.io/cyclonedx/cdxgen-debian-ruby26:v11                                        | Supports automatic Ruby installation for 2.6.x. Example: Pass `-t ruby2.6.1` to install Ruby 2.6.1.                                       |
-| Ruby     | 1.8.x                        | ghcr.io/cyclonedx/debian-ruby18:master                                            | Base image for `bundle install` only. No cdxgen equivalent with Ruby 1.8.x. `--deep` mode and research profile unsupported.               |
+| Language | Version                      | Container Image Tags                                                                           | Comments                                                                                                                                  |
+| -------- | ---------------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Java     | 23                           | ghcr.io/cyclonedx/cdxgen:master                                                                | Default all-in-one container image with all the latest and greatest tools with Node 23 runtime. Permission model is opt-in.               |
+| Java     | 23                           | ghcr.io/cyclonedx/cdxgen-deno:master                                                           | Default all-in-one container image with all the latest and greatest tools with deno runtime. Uses deno permissions model by default.      |
+| Java     | 23                           | ghcr.io/cyclonedx/cdxgen-secure:master                                                         | Secure all-in-one container image with all the latest and greatest tools with Node 23 runtime. Uses Node.js permissions model by default. |
+| Java     | 11                           | ghcr.io/cyclonedx/cdxgen-java11-slim:v11, ghcr.io/cyclonedx/cdxgen-java11:v11                  | Java 11 version with and without Android 33 SDK.                                                                                          |
+| Java     | 17                           | ghcr.io/cyclonedx/cdxgen-java17-slim:v11, ghcr.io/cyclonedx/cdxgen-java17:v11                  | Java 17 version with and without Android 34 SDK.                                                                                          |
+| Dotnet   | .Net Framework 4.6 - 4.8     | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11                                                    | .Net Framework                                                                                                                            |
+| Dotnet   | .Net Core 2.1, 3.1, .Net 5.0 | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11                                                    | Invoke with --platform=linux/amd64 for better compatibility.                                                                              |
+| Dotnet   | .Net 6                       | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11                                                    | .Net 6                                                                                                                                    |
+| Dotnet   | .Net 7                       | ghcr.io/cyclonedx/cdxgen-dotnet7:v11 (amd64 only)                                              | .Net 7                                                                                                                                    |
+| Dotnet   | .Net 8                       | ghcr.io/cyclonedx/cdxgen-debian-dotnet8:v11, ghcr.io/cyclonedx/cdxgen-dotnet8:v11 (amd64 only) | .Net 8                                                                                                                                    |
+| Dotnet   | .Net 9                       | ghcr.io/cyclonedx/cdxgen-debian-dotnet9:v11, ghcr.io/cyclonedx/cdxgen-dotnet9:v11 (amd64 only) | .Net 9                                                                                                                                    |
+| Python   | 3.6                          | ghcr.io/cyclonedx/cdxgen-python36:v11                                                          | No dependency tree                                                                                                                        |
+| Python   | 3.9                          | ghcr.io/cyclonedx/cdxgen-python39:v11                                                          |                                                                                                                                           |
+| Python   | 3.10                         | ghcr.io/cyclonedx/cdxgen-python310:v11                                                         |                                                                                                                                           |
+| Python   | 3.11                         | ghcr.io/cyclonedx/cdxgen-python311:v11                                                         |                                                                                                                                           |
+| Python   | 3.12                         | ghcr.io/cyclonedx/cdxgen-python312:v11                                                         |                                                                                                                                           |
+| Node.js  | 20                           | ghcr.io/cyclonedx/cdxgen-node20:v11                                                            | Use `--platform=linux/amd64` in case of `npm install` errors.                                                                             |
+| Node.js  | 23                           | ghcr.io/cyclonedx/cdxgen:master                                                                | Supports automatic node installation. Example: Pass `-t node20` to install node 20.                                                       |
+| Ruby     | 3.3.6                        | ghcr.io/cyclonedx/cdxgen-debian-ruby33:v11                                                     | Supports automatic Ruby installation for 3.3.x. Example: Pass `-t ruby3.3.1` to install Ruby 3.3.1.                                       |
+| Ruby     | 3.4.1                        | ghcr.io/cyclonedx/cdxgen-debian-ruby34:v11                                                     | Supports automatic Ruby installation for 3.4.x. Example: Pass `-t ruby3.4.0` to install Ruby 3.4.0.                                       |
+| Ruby     | 2.5.0                        | ghcr.io/cyclonedx/cdxgen-ruby25:v11                                                            | Supports automatic Ruby installation for 2.5.x. Example: Pass `-t ruby2.5.1` to install Ruby 2.5.1.                                       |
+| Ruby     | 2.6.10                       | ghcr.io/cyclonedx/cdxgen-debian-ruby26:v11                                                     | Supports automatic Ruby installation for 2.6.x. Example: Pass `-t ruby2.6.1` to install Ruby 2.6.1.                                       |
+| Ruby     | 1.8.x                        | ghcr.io/cyclonedx/debian-ruby18:master                                                         | Base image for `bundle install` only. No cdxgen equivalent with Ruby 1.8.x. `--deep` mode and research profile unsupported.               |
 
 Replace `:v11` with a release version tag or sha256 hash for fine-grained control over the image tag.
 
@@ -76,11 +76,11 @@ docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -
 
 ### .Net Framework, .Net Core 3.1, and .Net 6.0 applications
 
-Use the custom image `ghcr.io/cyclonedx/cdxgen-dotnet6:v11`.
+Use the custom image `ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11`.
 
 Example invocation:
 
-.Net Framework 4.6 - 4.8
+.Net Framework 4.6 - 4.8 (debian)
 
 A bundled version of [nuget](./nuget/) and mono is used to support .Net framework apps.
 
@@ -94,39 +94,43 @@ Dotnet 3.1 or Dotnet 6.0 (debian)
 docker run --rm --platform=linux/amd64 -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11 -r /app -o /app/bom.json -t dotnet
 ```
 
-Dotnet 7.0
+Dotnet 7.0 (SLE)
+
+Only SLE version is available for dotnet 7. Use this image only as a last resort, when the project doesn't restore with the debian dotnet 8 version.
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-dotnet7:v11 -r /app -o /app/bom.json -t dotnet
-```
-
-Dotnet 8.0
-
-```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-dotnet8:v11 -r /app -o /app/bom.json -t dotnet
+docker run --rm --platform=linux/amd64 -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-dotnet7:v11 -r /app -o /app/bom.json -t dotnet
 ```
 
 Dotnet 8.0 (debian)
 
-Use the debian version of the image in case of any crashes with the SLE version used by the image above.
+Use the debian version for better performance and compatibility.
 
 ```shell
 docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-dotnet8:v11 -r /app -o /app/bom.json -t dotnet
 ```
 
-Dotnet 9.0
-
-Dotnet 9 is also bundled with the official `ghcr.io/cyclonedx/cdxgen` image.
+Dotnet 8.0 (SLE)
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-dotnet9:v11 -r /app -o /app/bom.json -t dotnet
+docker run --rm --platform=linux/amd64 -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-dotnet8:v11 -r /app -o /app/bom.json -t dotnet
 ```
 
 Dotnet 9.0 (debian)
 
+Dotnet 9 is also bundled with the official `ghcr.io/cyclonedx/cdxgen` image.
+
 ```shell
 docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-dotnet9:v11 -r /app -o /app/bom.json -t dotnet
 ```
+
+Dotnet 9.0 (SLE)
+
+```shell
+docker run --rm --platform=linux/amd64 -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-dotnet9:v11 -r /app -o /app/bom.json -t dotnet
+```
+
+NOTE: SLE dotnet images are only available for the `amd64` architecture. See this [discussion](https://github.com/SUSE/bci/discussions/41). Use `--platform=linux/amd64` as shown when using the SLE images. We highly recommend the debian images for dotnet.
 
 ## Including .NET Global Assembly Cache dependencies in the results
 
@@ -266,18 +270,14 @@ Authenticate with any private registries such as Azure Artifacts feed before run
    at System.Collections.Immutable.ImmutableDictionary`2[[System.__Canon, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.__Canon, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].AddRange(System.Collections.Generic.IEnumerable`1<System.Collections.Generic.KeyValuePair`2<System.__Canon,System.__Canon>>, MutationInput<System.__Canon,System.__Canon>, KeyCollisionBehavior<System.__Canon,System.__Canon>)
 ```
 
-A workaround could be to perform the `dotnet restore` using the official image, before using cdxgen-dotnet images.
-
-```shell
-docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -w /app -it mcr.microsoft.com/dotnet/sdk:8.0 dotnet restore
-```
+A workaround could be to use the debian container images instead of SLE images. SLE dotnet image only support the amd64 architecture.
 
 ### .Net framework issues
 
-Old .Net framework applications (<= 4.7) are well known for their dislike of linux and hence may not restore/build easily. To troubleshoot, try running the `nuget restore` command manually using the `bci-dotnet` image as shown.
+Old .Net framework applications (<= 4.7) are well known for their dislike of linux and hence may not restore/build easily. To troubleshoot, try running the `nuget restore` command manually using the `debian-dotnet6` image as shown.
 
 ```shell
-docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -w /app -it ghcr.io/cyclonedx/bci-dotnet:master nuget restore -Verbosity detailed /app/<solution file name>
+docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -w /app -it ghcr.io/cyclonedx/debian-dotnet6:master nuget restore -Verbosity detailed /app/<solution file name>
 ```
 
 If you see any mono-related crashes, there isn't a lot that can be done other than using the correct version of Windows for the restore step.
@@ -287,7 +287,7 @@ If you see any mono-related crashes, there isn't a lot that can be done other th
 Assemblies that are present in the Global Assembly Cache can be referred to and used directly without specifying a version number. This style of includes is common with namespaces such as `System.`, `Microsoft.`, and `Mono.`. Use the command `gacutil -l` to [obtain](https://learn.microsoft.com/en-us/dotnet/framework/app-domains/how-to-view-the-contents-of-the-gac#view-the-assemblies-in-the-gac) the version details for libraries from GAC.
 
 ```shell
-docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -w /app -it ghcr.io/cyclonedx/bci-dotnet:master gacutil -l
+docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -w /app -it ghcr.io/cyclonedx/debian-dotnet6:master gacutil -l
 ```
 
 Sample output:
