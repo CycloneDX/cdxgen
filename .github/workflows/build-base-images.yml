@@ -503,7 +503,7 @@ jobs:
         with:
           context: .
           file: ci/base-images/debian/Dockerfile.ruby18
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ${{ steps.meta-debian-ruby18.outputs.tags }}
           labels: ${{ steps.meta-debian-ruby18.outputs.labels }}
@@ -541,7 +541,7 @@ jobs:
         with:
           context: .
           file: ci/base-images/debian/Dockerfile.ruby26
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ${{ steps.meta-debian-ruby26.outputs.tags }}
           labels: ${{ steps.meta-debian-ruby26.outputs.labels }}
@@ -580,7 +580,7 @@ jobs:
         with:
           context: .
           file: ci/base-images/cdxgen/debian/Dockerfile.ruby26
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ghcr.io/cyclonedx/cdxgen-debian-ruby26:v11
           labels: ${{ steps.meta-cdxgen-debian-ruby26.outputs.labels }}
