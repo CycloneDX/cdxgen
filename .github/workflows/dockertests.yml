@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: ['ubuntu-24.04', 'ubuntu-24.04-arm']
+        os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'macos-15']
         node-version: ['23.x']
         java-version: ['23']
     runs-on: ${{ matrix.os }}
@@ -85,7 +85,7 @@ jobs:
         env:
           CDXGEN_DEBUG_MODE: debug
       - name: dockertests arm
-        if: matrix.os == 'ubuntu-24.04-arm'
+        if: matrix.os == 'ubuntu-24.04-arm' || matrix.os == 'macos-15'
         run: |
           bin/cdxgen.js ubuntu:latest -t docker -o bomresults/bom-ubuntu.json --fail-on-error
           docker rmi ubuntu:latest

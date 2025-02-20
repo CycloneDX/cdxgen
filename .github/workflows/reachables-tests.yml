@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         node-version: ['23.x']
-        os: ['ubuntu-24.04']
+        os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'macos-15']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -57,7 +57,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu-24.04"]
+        os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'macos-15']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
