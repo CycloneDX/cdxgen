@@ -1,6 +1,6 @@
 FROM registry.opensuse.org/opensuse/bci/python:3.10
 
-ARG GO_VERSION=1.23.5
+ARG GO_VERSION=1.24.0
 
 ENV LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
