@@ -318,7 +318,7 @@ jobs:
 
   debian-ruby33-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     permissions:
       contents: read
       packages: write
@@ -356,7 +356,7 @@ jobs:
 
   cdxgen-debian-ruby33-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     needs: debian-ruby33-image
     permissions:
       packages: write
@@ -395,7 +395,7 @@ jobs:
 
   debian-ruby34-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     permissions:
       contents: read
       packages: write
@@ -433,7 +433,7 @@ jobs:
 
   cdxgen-debian-ruby34-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     needs: debian-ruby34-image
     permissions:
       packages: write
@@ -472,7 +472,7 @@ jobs:
 
   debian-ruby18-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     permissions:
       contents: read
       packages: write
@@ -510,7 +510,7 @@ jobs:
 
   debian-ruby26-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     permissions:
       contents: read
       packages: write
@@ -548,7 +548,7 @@ jobs:
 
   cdxgen-debian-ruby26-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     needs: debian-ruby26-image
     permissions:
       packages: write
