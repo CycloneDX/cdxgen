@@ -1697,7 +1697,7 @@ jobs:
 
   opensuse-lang-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: ['macos-hosted']
     permissions:
       contents: read
       packages: write
@@ -1735,7 +1735,7 @@ jobs:
 
   cdxgen-rolling-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: ['macos-hosted']
     needs: opensuse-lang-image
     permissions:
       packages: write
@@ -1774,7 +1774,7 @@ jobs:
 
   opensuse-python310-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: ['macos-hosted']
     permissions:
       contents: read
       packages: write
@@ -1812,7 +1812,7 @@ jobs:
 
   cdxgen-python310-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: ['macos-hosted']
     needs: opensuse-python310-image
     permissions:
       packages: write
@@ -1862,7 +1862,7 @@ jobs:
 
   opensuse-python39-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: ['macos-hosted']
     permissions:
       contents: read
       packages: write
@@ -1900,7 +1900,7 @@ jobs:
 
   cdxgen-python39-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: ['macos-hosted']
     needs: opensuse-python39-image
     permissions:
       packages: write
