@@ -75,10 +75,10 @@ jobs:
     - name: Setup nydus
       run: |
         curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.3.0/nydus-static-v2.3.0-linux-amd64.tgz
-        tar -xvf nydus-static-v2.2.4-linux-amd64.tgz
+        tar -xvf nydus-static-v2.3.0-linux-amd64.tgz
         chmod +x nydus-static/*
         mv nydus-static/* /usr/local/bin/
-        rm -rf nydus-static-v2.2.4-linux-amd64.tgz nydus-static
+        rm -rf nydus-static-v2.3.0-linux-amd64.tgz nydus-static
     - run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
