@@ -74,7 +74,7 @@ jobs:
         ./contrib/free_disk_space.sh
     - name: Setup nydus
       run: |
-        curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.2.4/nydus-static-v2.2.4-linux-amd64.tgz
+        curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.3.0/nydus-static-v2.3.0-linux-amd64.tgz
         tar -xvf nydus-static-v2.2.4-linux-amd64.tgz
         chmod +x nydus-static/*
         mv nydus-static/* /usr/local/bin/
