@@ -1,6 +1,6 @@
 FROM registry.suse.com/bci/ruby:2.5
 
-ARG ATOM_RUBY_VERSION=3.4.1
+ARG ATOM_RUBY_VERSION=3.4.2
 
 ENV LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \

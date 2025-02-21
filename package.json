@@ -66,7 +66,7 @@
   "bugs": {
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
-  "packageManager": "pnpm@10.4.0",
+  "packageManager": "pnpm@10.4.1",
   "lint-staged": {
     "*": "biome check --fix --no-errors-on-unmatched"
   },
@@ -101,7 +101,7 @@
     "yoctocolors": "^2.1.1"
   },
   "optionalDependencies": {
-    "@appthreat/atom": "2.1.11",
+    "@appthreat/atom": "2.1.12",
     "@appthreat/cdx-proto": "1.0.1",
     "@cyclonedx/cdxgen-plugins-bin": "1.6.9",
     "@cyclonedx/cdxgen-plugins-bin-arm": "1.6.9",
