@@ -33,12 +33,12 @@ jobs:
           chmod +x nydus-static/*
           mv nydus-static/* /usr/local/bin/
           rm -rf nydus-static-v2.3.0-linux-amd64.tgz nydus-static
-          curl -LO https://github.com/containerd/nerdctl/releases/download/v1.7.0/nerdctl-full-1.7.0-linux-amd64.tar.gz
-          sudo tar Cxzvf /usr/local nerdctl-full-1.7.0-linux-amd64.tar.gz
+          curl -LO https://github.com/containerd/nerdctl/releases/download/v2.0.3/nerdctl-full-2.0.3-linux-amd64.tar.gz
+          sudo tar Cxzvf /usr/local nerdctl-full-2.0.3-linux-amd64.tar.gz
           sudo mkdir -p /etc/nydus/
           sudo rm -rf /var/lib/containerd-nydus
-          curl -LO https://github.com/containerd/nydus-snapshotter/releases/download/v0.13.3/nydus-snapshotter-v0.13.3-x86_64.tgz
-          sudo tar Cxzvf /usr/local/bin nydus-snapshotter-v0.13.3-x86_64.tgz
+          curl -LO https://github.com/containerd/nydus-snapshotter/releases/download/v0.15.0/nydus-snapshotter-v0.15.0-x86_64.tgz
+          sudo tar Cxzvf /usr/local/bin nydus-snapshotter-v0.15.0-x86_64.tgz
           sudo mv /usr/local/bin/nydus-snapshotter/* /usr/local/bin/
           sudo cp ./ci/nydusd-config.fusedev.json /etc/nydus/nydusd-config.fusedev.json
           sudo mkdir -p /etc/containerd
