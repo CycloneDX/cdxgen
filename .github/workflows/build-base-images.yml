@@ -20,7 +20,7 @@ env:
 jobs:
   sle-lang-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -58,7 +58,7 @@ jobs:
 
   sle-dotnet-image:
     if: false
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -98,7 +98,7 @@ jobs:
 
   cdxgen-dotnet-image:
     if: false
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-dotnet-image
     permissions:
       packages: write
@@ -150,7 +150,7 @@ jobs:
 
   debian-dotnet6-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -188,7 +188,7 @@ jobs:
 
   cdxgen-debian-dotnet6-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: debian-dotnet6-image
     permissions:
       packages: write
@@ -239,7 +239,7 @@ jobs:
 
   sle-ruby25-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -278,7 +278,7 @@ jobs:
 
   cdxgen-sle-ruby25-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-ruby25-image
     permissions:
       packages: write
@@ -318,7 +318,7 @@ jobs:
 
   debian-ruby33-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -356,7 +356,7 @@ jobs:
 
   cdxgen-debian-ruby33-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: debian-ruby33-image
     permissions:
       packages: write
@@ -395,7 +395,7 @@ jobs:
 
   debian-ruby34-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -433,7 +433,7 @@ jobs:
 
   cdxgen-debian-ruby34-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: debian-ruby34-image
     permissions:
       packages: write
@@ -472,7 +472,7 @@ jobs:
 
   debian-ruby18-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -510,7 +510,7 @@ jobs:
 
   debian-ruby26-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -548,7 +548,7 @@ jobs:
 
   cdxgen-debian-ruby26-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: debian-ruby26-image
     permissions:
       packages: write
@@ -587,7 +587,7 @@ jobs:
 
   sle-dotnet7-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -625,7 +625,7 @@ jobs:
 
   cdxgen-dotnet7-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-dotnet7-image
     permissions:
       packages: write
@@ -675,7 +675,7 @@ jobs:
 
   sle-dotnet8-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -713,7 +713,7 @@ jobs:
 
   cdxgen-dotnet8-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-dotnet8-image
     permissions:
       packages: write
@@ -763,7 +763,7 @@ jobs:
 
   debian-dotnet8-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -801,7 +801,7 @@ jobs:
 
   cdxgen-debian-dotnet8-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: debian-dotnet8-image
     permissions:
       packages: write
@@ -851,7 +851,7 @@ jobs:
 
   sle-dotnet9-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -889,7 +889,7 @@ jobs:
 
   cdxgen-dotnet9-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-dotnet9-image
     permissions:
       packages: write
@@ -939,7 +939,7 @@ jobs:
 
   debian-dotnet9-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -977,7 +977,7 @@ jobs:
 
   cdxgen-debian-dotnet9-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: debian-dotnet8-image
     permissions:
       packages: write
@@ -1027,7 +1027,7 @@ jobs:
 
   sle-java-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1065,7 +1065,7 @@ jobs:
 
   sle-java-slim-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1103,7 +1103,7 @@ jobs:
 
   cdxgen-java-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-java-image
     permissions:
       packages: write
@@ -1154,7 +1154,7 @@ jobs:
 
   cdxgen-java-slim-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-java-slim-image
     permissions:
       packages: write
@@ -1205,7 +1205,7 @@ jobs:
 
   sle-node20-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1243,7 +1243,7 @@ jobs:
 
   cdxgen-node20-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-node20-image
     permissions:
       packages: write
@@ -1294,7 +1294,7 @@ jobs:
 
   sle-java17-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1332,7 +1332,7 @@ jobs:
 
   sle-java17-slim-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1370,7 +1370,7 @@ jobs:
 
   cdxgen-java17-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-java17-image
     permissions:
       packages: write
@@ -1420,7 +1420,7 @@ jobs:
 
   cdxgen-java17-slim-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-java17-slim-image
     permissions:
       packages: write
@@ -1470,7 +1470,7 @@ jobs:
 
   cdxgen-python-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-lang-image
     permissions:
       packages: write
@@ -1521,7 +1521,7 @@ jobs:
 
   sle-python311-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1559,7 +1559,7 @@ jobs:
 
   cdxgen-python311-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-python311-image
     permissions:
       packages: write
@@ -1609,7 +1609,7 @@ jobs:
 
   sle-python36-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1647,7 +1647,7 @@ jobs:
 
   cdxgen-python36-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
     needs: sle-python36-image
     permissions:
       packages: write
@@ -1697,7 +1697,7 @@ jobs:
 
   opensuse-lang-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ['macos-hosted']
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1735,7 +1735,7 @@ jobs:
 
   cdxgen-rolling-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ['macos-hosted']
+    runs-on: 'ubuntu-24.04'
     needs: opensuse-lang-image
     permissions:
       packages: write
@@ -1774,7 +1774,7 @@ jobs:
 
   opensuse-python310-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ['macos-hosted']
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1812,7 +1812,7 @@ jobs:
 
   cdxgen-python310-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ['macos-hosted']
+    runs-on: 'ubuntu-24.04'
     needs: opensuse-python310-image
     permissions:
       packages: write
@@ -1862,7 +1862,7 @@ jobs:
 
   opensuse-python39-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ['macos-hosted']
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1900,7 +1900,7 @@ jobs:
 
   cdxgen-python39-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ['macos-hosted']
+    runs-on: 'ubuntu-24.04'
     needs: opensuse-python39-image
     permissions:
       packages: write
