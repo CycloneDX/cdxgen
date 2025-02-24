@@ -162,13 +162,13 @@ cdxgenRepl.defineCommand("search", {
     if (sbom) {
       if (searchStr) {
         try {
-          const originalSearchString = searchStr;
-          let dependenciesSearchStr = searchStr;
-          if (!searchStr.includes("~>")) {
-            dependenciesSearchStr = `dependencies[ref ~> /${searchStr}/i or dependsOn ~> /${searchStr}/i or provides ~> /${searchStr}/i]`;
-            searchStr = `components[group ~> /${searchStr}/i or name ~> /${searchStr}/i or description ~> /${searchStr}/i or publisher ~> /${searchStr}/i or purl ~> /${searchStr}/i or tags ~> /${searchStr}/i]`;
+          let fixedSearchStr = searchStr.replaceAll("/", "\\/");
+          let dependenciesSearchStr = fixedSearchStr;
+          if (!fixedSearchStr.includes("~>")) {
+            dependenciesSearchStr = `dependencies[ref ~> /${fixedSearchStr}/i or dependsOn ~> /${fixedSearchStr}/i or provides ~> /${fixedSearchStr}/i]`;
+            fixedSearchStr = `components[group ~> /${fixedSearchStr}/i or name ~> /${fixedSearchStr}/i or description ~> /${fixedSearchStr}/i or publisher ~> /${fixedSearchStr}/i or purl ~> /${fixedSearchStr}/i or tags ~> /${fixedSearchStr}/i]`;
           }
-          const expression = jsonata(searchStr);
+          const expression = jsonata(fixedSearchStr);
           let components = await expression.evaluate(sbom);
           const dexpression = jsonata(dependenciesSearchStr);
           let dependencies = await dexpression.evaluate(sbom);
@@ -181,16 +181,12 @@ cdxgenRepl.defineCommand("search", {
           if (!components) {
             console.log("No results found!");
           } else {
-            printTable(
-              { components, dependencies },
-              undefined,
-              originalSearchString,
-            );
+            printTable({ components, dependencies }, undefined, searchStr);
             if (dependencies?.length) {
               printDependencyTree(
                 { components, dependencies },
                 "dependsOn",
-                originalSearchString,
+                searchStr,
               );
             }
           }

@@ -764,7 +764,11 @@ const checkPermissions = (filePath, options) => {
   prepareEnv(filePath, options);
   thoughtLog("Getting ready to generate the BOM ⚡️.");
   let bomNSData = (await createBom(filePath, options)) || {};
-  thoughtLog("Tweaking the generated BOM data. Nearly there.");
+  if (bomNSData?.bomJson) {
+    thoughtLog(
+      "Tweaking the generated BOM data with useful annotations and properties.",
+    );
+  }
   // Add extra metadata and annotations with post processing
   bomNSData = postProcess(bomNSData, options);
   if (
@@ -972,7 +976,7 @@ const checkPermissions = (filePath, options) => {
     }
   }
   // Perform automatic validation
-  if (options.validate) {
+  if (options.validate && bomNSData?.bomJson) {
     thoughtLog("Wait, let's check the generated BOM file for any issues.");
     if (!validateBom(bomNSData.bomJson)) {
       process.exit(1);
