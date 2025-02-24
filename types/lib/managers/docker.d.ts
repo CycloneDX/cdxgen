@@ -1,4 +1,8 @@
 /**
+ * Detect colima
+ */
+export function detectColima(): any;
+/**
  * Detect if Rancher desktop is running on a mac.
  */
 export function detectRancherDesktop(): any;

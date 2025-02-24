@@ -11,11 +11,11 @@ export function postProcess(bomNSData: any, options: any): any;
  * Apply additional metadata based on components
  *
  * @param {Object} bomJson BOM JSON Object
- * @param {Object} _options CLI options
+ * @param {Object} options CLI options
  *
  * @returns {Object} Filtered BOM JSON
  */
-export function applyMetadata(bomJson: any, _options: any): any;
+export function applyMetadata(bomJson: any, options: any): any;
 /**
  * Apply definitions.standards based on options
  *
