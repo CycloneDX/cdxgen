@@ -579,13 +579,25 @@ const applyAdvancedOptions = (options) => {
       break;
   }
   // When the user specifies source-code-analysis as a technique, then enable deep and evidence mode.
-  if (
-    options?.technique &&
-    Array.isArray(options.technique) &&
-    options?.technique?.includes("source-code-analysis")
-  ) {
-    options.deep = true;
-    options.evidence = true;
+  if (options?.technique && Array.isArray(options.technique)) {
+    if (options?.technique?.includes("source-code-analysis")) {
+      options.deep = true;
+      options.evidence = true;
+    }
+    if (options.technique.length === 1) {
+      thoughtLog(
+        `Wait, the user wants me to use only the following technique: '${options.technique.join(", ")}'.`,
+      );
+    } else {
+      thoughtLog(
+        `Alright, I will use only the following techniques: '${options.technique.join(", ")}' for the final BOM.`,
+      );
+    }
+  }
+  if (!options.installDeps) {
+    thoughtLog(
+      "I must avoid any package installations and focus solely on the available artefacts, such as lock files.",
+    );
   }
   return options;
 };
