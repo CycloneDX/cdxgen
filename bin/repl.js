@@ -137,6 +137,19 @@ cdxgenRepl.defineCommand("import", {
     this.displayPrompt();
   },
 });
+cdxgenRepl.defineCommand("summary", {
+  help: "summarize an existing BOM",
+  action() {
+    if (sbom) {
+      printSummary(sbom);
+    } else {
+      console.log(
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM",
+      );
+    }
+    this.displayPrompt();
+  },
+});
 cdxgenRepl.defineCommand("exit", {
   help: "exit",
   action() {
