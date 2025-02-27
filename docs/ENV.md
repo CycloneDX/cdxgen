@@ -159,8 +159,9 @@ These variables are specifically for a single language or tool.
 
 ### Swift
 
-| Variable                  | Description                                                                                                    |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| SWIFT_COMPILER_ARGS       | Full compiler arguments string to use for semantic analysis. Eg: -sdk <path> -F <path> -Xcc -I <path>          |
-| SWIFT_COMPILER_EXTRA_ARGS | Extra compiler arguments to add to the auto-detected string. Eg: -suppress-warnings -track-system-dependencies |
-| SWIFT_SDK_ARGS            | Swift sdk arguments. Eg: -sdk <path>                                                                           |
+| Variable                  | Description                                                                                                                                                                                |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| SWIFT_COMPILER_ARGS       | Full compiler arguments string to use for semantic analysis. Eg: -sdk <path> -F <path> -Xcc -I <path>                                                                                      |
+| SWIFT_COMPILER_EXTRA_ARGS | Extra compiler arguments to add to the auto-detected string. Eg: -suppress-warnings -track-system-dependencies                                                                             |
+| SWIFT_SDK_ARGS            | Swift sdk arguments. Eg: -sdk <path>                                                                                                                                                       |
+| SWIFT_PACKAGE_ARGS        | Additional arguments to pass to the swift package command. The values gets inserted before the 'show-dependencies' sub-command. Example: --swift-sdks-path <swift-sdks-path> --jobs <jobs> |

@@ -949,9 +949,11 @@ export function parseSwiftJsonTreeObject(pkgList: any[], dependenciesList: any[]
  * @param {string} pkgFile Package.swift file
  */
 export function parseSwiftJsonTree(rawOutput: string, pkgFile: string): {
+    rootList?: undefined;
     pkgList?: undefined;
     dependenciesList?: undefined;
 } | {
+    rootList: any[];
     pkgList: any[];
     dependenciesList: any[];
 };
