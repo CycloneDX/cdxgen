@@ -31,6 +31,7 @@ Below table summarizes all available container image versions. These images incl
 | Ruby     | 2.5.0                        | ghcr.io/cyclonedx/cdxgen-ruby25:v11                                                            | Supports automatic Ruby installation for 2.5.x. Example: Pass `-t ruby2.5.1` to install Ruby 2.5.1.                                       |
 | Ruby     | 2.6.10                       | ghcr.io/cyclonedx/cdxgen-debian-ruby26:v11                                                     | Supports automatic Ruby installation for 2.6.x. Example: Pass `-t ruby2.6.1` to install Ruby 2.6.1.                                       |
 | Ruby     | 1.8.x                        | ghcr.io/cyclonedx/debian-ruby18:master                                                         | Base image for `bundle install` only. No cdxgen equivalent with Ruby 1.8.x. `--deep` mode and research profile unsupported.               |
+| Swift    | 6.0.x                        | ghcr.io/cyclonedx/cdxgen-debian-swift:v11                                                      |
 
 Replace `:v11` with a release version tag or sha256 hash for fine-grained control over the image tag.
 
@@ -149,6 +150,14 @@ Global Assembly Cache (GAC) dependencies (System Runtime dependencies) must be m
 ```
 
 Then, run cdxgen cli with the `--deep` argument.
+
+### Swift applications
+
+Use the custom image `ghcr.io/cyclonedx/cdxgen-debian-swift:v11`.
+
+```shell
+docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-swift:v11 -r /app -o /app/bom.json -t swift
+```
 
 ### Python applications
 
