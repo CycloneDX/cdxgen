@@ -69,5 +69,7 @@ RUN set -e; \
     && chmod +x /tmp/install.sh \
     && ./tmp/install.sh && rm /tmp/install.sh \
     && node -v \
-    && npm -v
+    && npm -v \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && rm -rf /var/lib/apt/lists/*
 CMD ["/bin/bash"]
