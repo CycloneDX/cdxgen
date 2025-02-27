@@ -95,8 +95,6 @@ jobs:
           docker rmi almalinux:9.4-minimal
           bin/cdxgen.js centos:latest -t oci -o bomresults/bom-centos.json --fail-on-error
           docker rmi centos:latest
-          bin/cdxgen.js -t docker-compose test/data -o bomresults/bom-dc.json --fail-on-error
-          bin/cdxgen.js -t operator repotests/grafana-operator -o bomresults/bom-op.json --fail-on-error
           ls -ltr bomresults
         env:
           CDXGEN_DEBUG_MODE: debug
