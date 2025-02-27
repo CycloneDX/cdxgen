@@ -761,6 +761,26 @@ export function parseCsPkgData(pkgData: any, pkgFile: any): any[];
  * @returns {Object} Containing parent component, package, and dependencies
  */
 export function parseCsProjData(csProjData: string, projFile: string, pkgNameVersions?: any): any;
+/**
+ * Method to parse .tsproj like xml files
+ *
+ * @param {String} tsProjData Raw data
+ * @param {String} projFile File name
+ * @param {Object} pkgNameVersions Package name - version map object
+ *
+ * @returns {Object} Containing parent component, package, and dependencies
+ */
+export function parseTsProjData(tsProjData: string, projFile: string, pkgNameVersions?: any): any;
+/**
+ * Method to parse .plcproj like xml files
+ *
+ * @param {String} plcProjData Raw data
+ * @param {String} projFile File name
+ * @param {Object} pkgNameVersions Package name - version map object
+ *
+ * @returns {Object} Containing parent component, package, and dependencies
+ */
+export function parsePlcProjData(plcProjData: string, projFile: string, pkgNameVersions?: any): any;
 export function parseCsProjAssetsData(csProjData: any, assetsJsonFile: any): {
     pkgList: any[];
     dependenciesList: any[];
