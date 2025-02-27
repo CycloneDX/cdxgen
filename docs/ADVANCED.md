@@ -615,7 +615,7 @@ Using the `cbom` alias sets the following options:
 Below table summarizes all available container image versions. These images include additional language-specific build tools and development libraries to enable automatic restore and build operations.
 
 | Language | Version                  | Container Image Tags                                                              | Comments                                                                                                                    |
-|----------|--------------------------|-----------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| -------- | ------------------------ | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | Java     | 23                       | ghcr.io/cyclonedx/cdxgen:master                                                   | Default all-in-one container image with all the latest and greatest tools with Node 23 runtime.                             |
 | Java     | 23                       | ghcr.io/cyclonedx/cdxgen-deno:master                                              | Default all-in-one container image with all the latest and greatest tools with deno runtime.                                |
 | Java     | 11                       | ghcr.io/cyclonedx/cdxgen-java11-slim:v11, ghcr.io/cyclonedx/cdxgen-java11:v11     | Java 11 version with and without Android 33 SDK.                                                                            |
@@ -638,5 +638,6 @@ Below table summarizes all available container image versions. These images incl
 | Ruby     | 2.5.0                    | ghcr.io/cyclonedx/cdxgen-ruby25:v11                                               | Supports automatic Ruby installation for 2.5.x. Example: Pass `-t ruby2.5.1` to install Ruby 2.5.1.                         |
 | Ruby     | 2.6.10                   | ghcr.io/cyclonedx/cdxgen-debian-ruby26:v11                                        | Supports automatic Ruby installation for 2.6.x. Example: Pass `-t ruby2.6.1` to install Ruby 2.6.1.                         |
 | Ruby     | 1.8.x                    | ghcr.io/cyclonedx/debian-ruby18:master                                            | Base image for `bundle install` only. No cdxgen equivalent with Ruby 1.8.x. `--deep` mode and research profile unsupported. |
+| Swift    | 6.0.x                    | ghcr.io/cyclonedx/cdxgen-debian-swift:v11                                         |
 
 Replace `:v11` with a release version tag or sha256 hash for fine-grained control over the image tag.
