@@ -47,7 +47,7 @@ jobs:
           ls -ltr repotests/dependency-track/
           cp -rf repotests/dependency-track/*.json bomresults/
         env:
-          CDXGEN_DEBUG_MODE: debug
+          CDXGEN_DEBUG_MODE: verbose
       - uses: actions/upload-artifact@v4
         with:
           name: bomresults

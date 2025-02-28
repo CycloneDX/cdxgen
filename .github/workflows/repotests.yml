@@ -427,9 +427,9 @@ jobs:
         shell: bash
       - name: repotests sveltejs-examples
         run: |
-          CDXGEN_DEBUG_MODE=debug ASTGEN_IGNORE_DIRS="" FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/sveltejs-examples -o bomresults/bom-svelte.json
-          CDXGEN_DEBUG_MODE=debug ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l javascript --with-data-flow -p repotests/sveltejs-examples
-          CDXGEN_DEBUG_MODE=debug ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l javascript --with-reachables -p repotests/sveltejs-examples
+          CDXGEN_DEBUG_MODE=verbose ASTGEN_IGNORE_DIRS="" FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/sveltejs-examples -o bomresults/bom-svelte.json
+          CDXGEN_DEBUG_MODE=verbose ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l javascript --with-data-flow -p repotests/sveltejs-examples
+          CDXGEN_DEBUG_MODE=verbose ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l javascript --with-reachables -p repotests/sveltejs-examples
         shell: bash
       - name: repotests shiftleft-go-example
         run: |
@@ -483,13 +483,13 @@ jobs:
         shell: bash
       - name: repotests ziggurat
         run: |
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json --fail-on-error
+          CDXGEN_DEBUG_MODE=verbose bin/cdxgen.js -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json --fail-on-error
         shell: bash
       - name: repotests swift-markdown
         if: matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-15'
         run: |
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json --profile research
+          CDXGEN_DEBUG_MODE=verbose bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json
+          CDXGEN_DEBUG_MODE=verbose bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json --profile research
         shell: bash
       - name: repotests microservices-demo
         if: matrix.os == 'windows-latest'
@@ -512,7 +512,7 @@ jobs:
         run: |
           cd repotests/ha-android && ./gradlew assembleDebug || true && cd ../..
           bin/cdxgen.js -r -t java repotests/ha-android -o bomresults/bom-android.json
-          CDXGEN_DEBUG_MODE=debug bin/evinse.js -i bomresults/bom-android.json -o bomresults/bom-android.evinse.json -l java repotests/ha-android
+          CDXGEN_DEBUG_MODE=verbose bin/evinse.js -i bomresults/bom-android.json -o bomresults/bom-android.evinse.json -l java repotests/ha-android
         shell: bash
       - name: repotests rust
         run: |
@@ -522,6 +522,8 @@ jobs:
           bin/cdxgen.js -p -r -t rust repotests/rs-validator -o bomresults/bom-rs-validator.json --fail-on-error
           bin/cdxgen.js -p -r -t rust repotests/rs-axum -o bomresults/bom-rs-axum.json --fail-on-error
         shell: bash
+        env:
+          CDXGEN_THINK_MODE: true
       - name: repotests dotnet-paket
         run: |
           bin/cdxgen.js -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket.json --deep
@@ -548,12 +550,16 @@ jobs:
           GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_SKIP_MODULES=root GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p -t gradle        repotests/expo-test -o bomresults/bom-expo-npm.json
           GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_SKIP_MODULES=root GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-multi.json
         shell: bash
+        env:
+          CDXGEN_THINK_MODE: true
       - name: repotests elasticsearch
         run: |
           bin/cdxgen.js -t gradle repotests/elasticsearch -o bomresults/bom-elasticsearch.json
-          GRADLE_INCLUDED_BUILDS=:build-conventions,:build-tools,:build-tools-internal bin/cdxgen.js -t gradle repotests/elasticsearch -o bomresults/bom-elasticsearch-with-included-builds.json
+          bin/cdxgen.js -t gradle repotests/elasticsearch -o bomresults/bom-elasticsearch-with-included-builds.json
           custom-json-diff -i bomresults/bom-elasticsearch.json bomresults/bom-elasticsearch-with-included-builds.json -o bomresults/diff-elasticsearch preset-diff
         shell: bash
+        env:
+          CDXGEN_THINK_MODE: true
       - name: repotests SecObserve
         run: |
           bin/cdxgen.js repotests/SecObserve -o bomresults/bom-SecObserve.json --fail-on-error
@@ -566,7 +572,7 @@ jobs:
           curl -LO https://updates.jenkins.io/download/plugins/jsch/0.1.55.61.va_e9ee26616e7/jsch.hpi
           curl -LO https://updates.jenkins.io/download/plugins/momentjs/1.1.1/momentjs.hpi
           mv *.hpi jenkins
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --fail-on-error
+          CDXGEN_DEBUG_MODE=verbose bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --fail-on-error
         shell: bash
       - name: standalone jar files
         run: |
@@ -662,7 +668,7 @@ jobs:
         os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'macos-15']
     runs-on: ${{ matrix.os }}
     env:
-      CDXGEN_DEBUG_MODE: debug
+      CDXGEN_DEBUG_MODE: verbose
       NODE_NO_WARNINGS: 1
     steps:
       - uses: actions/checkout@v4
