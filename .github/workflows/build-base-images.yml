@@ -150,18 +150,12 @@ jobs:
 
   debian-dotnet6-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -188,18 +182,12 @@ jobs:
 
   cdxgen-debian-dotnet6-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     needs: debian-dotnet6-image
     permissions:
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -721,18 +709,12 @@ jobs:
 
   debian-dotnet8-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -759,18 +741,12 @@ jobs:
 
   cdxgen-debian-dotnet8-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     needs: debian-dotnet8-image
     permissions:
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -897,18 +873,12 @@ jobs:
 
   debian-dotnet9-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -935,18 +905,12 @@ jobs:
 
   cdxgen-debian-dotnet9-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     needs: debian-dotnet9-image
     permissions:
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -1733,18 +1697,12 @@ jobs:
 
   opensuse-lang-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -1771,18 +1729,12 @@ jobs:
 
   cdxgen-rolling-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     needs: opensuse-lang-image
     permissions:
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -1810,18 +1762,12 @@ jobs:
 
   opensuse-python310-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -1848,18 +1794,12 @@ jobs:
 
   cdxgen-python310-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     needs: opensuse-python310-image
     permissions:
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -1898,18 +1838,12 @@ jobs:
 
   opensuse-python39-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -1936,18 +1870,12 @@ jobs:
 
   cdxgen-python39-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'macos-hosted'
     needs: opensuse-python39-image
     permissions:
       packages: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
