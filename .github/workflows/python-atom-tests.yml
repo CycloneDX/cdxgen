@@ -93,4 +93,4 @@ jobs:
           bin/cdxgen.js --no-install-deps -r -t python repotests/bandersnatch -o bomresults/bom-bandersnatch.json --validate
           rm -rf venv
         env:
-          CDXGEN_DEBUG_MODE: debug
+          CDXGEN_DEBUG_MODE: verbose

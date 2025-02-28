@@ -83,7 +83,7 @@ jobs:
           rm /tmp/scanslim.tar
           ls -ltr bomresults
         env:
-          CDXGEN_DEBUG_MODE: debug
+          CDXGEN_DEBUG_MODE: verbose
       - name: dockertests arm
         if: matrix.os == 'ubuntu-24.04-arm'
         run: |
@@ -97,7 +97,7 @@ jobs:
           docker rmi centos:latest
           ls -ltr bomresults
         env:
-          CDXGEN_DEBUG_MODE: debug
+          CDXGEN_DEBUG_MODE: verbose
   linux-dockertar-tests:
     strategy:
       fail-fast: true
@@ -151,7 +151,7 @@ jobs:
           bin/cdxgen.js /tmp/alpine.tar -t docker -o bomresults/bom-alpine.tar.json --fail-on-error
           ls -ltr bomresults
         env:
-          CDXGEN_DEBUG_MODE: debug
+          CDXGEN_DEBUG_MODE: verbose
   os-tests:
     strategy:
       fail-fast: true
@@ -191,7 +191,7 @@ jobs:
         run: |
           bin/cdxgen.js -t os -o bomresults/bom-os.json --fail-on-error
         env:
-          CDXGEN_DEBUG_MODE: debug
+          CDXGEN_DEBUG_MODE: verbose
       - uses: actions/upload-artifact@v4
         if: matrix.os == 'ubuntu-24.04-arm'
         with:
@@ -234,7 +234,7 @@ jobs:
           node bin/cdxgen.js -t os -o bomresults/bom-win.json --fail-on-error
           dir bomresults
         env:
-          CDXGEN_DEBUG_MODE: debug
+          CDXGEN_DEBUG_MODE: verbose
       - uses: actions/upload-artifact@v4
         with:
           name: bomresults-win
