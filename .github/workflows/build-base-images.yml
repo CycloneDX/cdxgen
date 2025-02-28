@@ -1798,12 +1798,18 @@ jobs:
 
   opensuse-python310-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'macos-hosted'
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -1830,12 +1836,18 @@ jobs:
 
   cdxgen-python310-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'macos-hosted'
+    runs-on: 'ubuntu-24.04'
     needs: opensuse-python310-image
     permissions:
       packages: write
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -1874,12 +1886,18 @@ jobs:
 
   opensuse-python39-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'macos-hosted'
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -1906,12 +1924,18 @@ jobs:
 
   cdxgen-python39-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'macos-hosted'
+    runs-on: 'ubuntu-24.04'
     needs: opensuse-python39-image
     permissions:
       packages: write
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
