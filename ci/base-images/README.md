@@ -46,13 +46,13 @@ Example invocations:
 Java 11 version
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java11-slim:v11 -r /app -o /app/bom.json -t java
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java11-slim:v11 -r /app -o /app/bom.json -t java
 ```
 
 Java 11 version with Android 33 SDK and gcc
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java11:v11 -r /app -o /app/bom.json -t java
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java11:v11 -r /app -o /app/bom.json -t java
 ```
 
 Java 8
@@ -60,19 +60,19 @@ Java 8
 Use the java 11 image but pass `-t java8`.
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java11-slim:v11 -r /app -o /app/bom.json -t java8
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java11-slim:v11 -r /app -o /app/bom.json -t java8
 ```
 
 Java 17 version
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java17-slim:v11 -r /app -o /app/bom.json -t java
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java17-slim:v11 -r /app -o /app/bom.json -t java
 ```
 
 Java 17 version with Android 34 SDK and gcc
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java17:v11 -r /app -o /app/bom.json -t java
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java17:v11 -r /app -o /app/bom.json -t java
 ```
 
 ### .Net Framework, .Net Core 3.1, and .Net 6.0 applications
@@ -86,13 +86,13 @@ Example invocation:
 A bundled version of [nuget](./nuget/) and mono is used to support .Net framework apps.
 
 ```shell
-docker run --rm --platform=linux/amd64 -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11 -r /app -o /app/bom.json -t dotnet
+docker run --rm --platform=linux/amd64 -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11 -r /app -o /app/bom.json -t dotnet
 ```
 
 Dotnet 3.1 or Dotnet 6.0 (debian)
 
 ```shell
-docker run --rm --platform=linux/amd64 -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11 -r /app -o /app/bom.json -t dotnet
+docker run --rm --platform=linux/amd64 -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11 -r /app -o /app/bom.json -t dotnet
 ```
 
 Dotnet 7.0 (SLE)
@@ -100,7 +100,7 @@ Dotnet 7.0 (SLE)
 Only SLE version is available for dotnet 7. Use this image only as a last resort, when the project doesn't restore with the debian dotnet 8 version.
 
 ```shell
-docker run --rm --platform=linux/amd64 -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-dotnet7:v11 -r /app -o /app/bom.json -t dotnet
+docker run --rm --platform=linux/amd64 -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-dotnet7:v11 -r /app -o /app/bom.json -t dotnet
 ```
 
 Dotnet 8.0 (debian)
@@ -108,13 +108,13 @@ Dotnet 8.0 (debian)
 Use the debian version for better performance and compatibility.
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-dotnet8:v11 -r /app -o /app/bom.json -t dotnet
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-dotnet8:v11 -r /app -o /app/bom.json -t dotnet
 ```
 
 Dotnet 8.0 (SLE)
 
 ```shell
-docker run --rm --platform=linux/amd64 -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-dotnet8:v11 -r /app -o /app/bom.json -t dotnet
+docker run --rm --platform=linux/amd64 -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-dotnet8:v11 -r /app -o /app/bom.json -t dotnet
 ```
 
 Dotnet 9.0 (debian)
@@ -122,13 +122,13 @@ Dotnet 9.0 (debian)
 Dotnet 9 is also bundled with the official `ghcr.io/cyclonedx/cdxgen` image.
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-dotnet9:v11 -r /app -o /app/bom.json -t dotnet
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-dotnet9:v11 -r /app -o /app/bom.json -t dotnet
 ```
 
 Dotnet 9.0 (SLE)
 
 ```shell
-docker run --rm --platform=linux/amd64 -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-dotnet9:v11 -r /app -o /app/bom.json -t dotnet
+docker run --rm --platform=linux/amd64 -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-dotnet9:v11 -r /app -o /app/bom.json -t dotnet
 ```
 
 NOTE: SLE dotnet images are only available for the `amd64` architecture. See this [discussion](https://github.com/SUSE/bci/discussions/41). Use `--platform=linux/amd64` as shown when using the SLE images. We highly recommend the debian images for dotnet.
@@ -156,7 +156,7 @@ Then, run cdxgen cli with the `--deep` argument.
 Use the custom image `ghcr.io/cyclonedx/cdxgen-debian-swift:v11`.
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-swift:v11 -r /app -o /app/bom.json -t swift
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-swift:v11 -r /app -o /app/bom.json -t swift
 ```
 
 ### Python applications
@@ -168,7 +168,7 @@ Example invocation:
 Python 3.6 (Direct dependencies only without dependency tree)
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-python36:v11 -r /app -o /app/bom.json -t python
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-python36:v11 -r /app -o /app/bom.json -t python
 ```
 
 NOTE: dependency tree is unavailable with Python 3.6
@@ -176,25 +176,25 @@ NOTE: dependency tree is unavailable with Python 3.6
 Python 3.9
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-python39:v11 -r /app -o /app/bom.json -t python
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-python39:v11 -r /app -o /app/bom.json -t python
 ```
 
 Python 3.10
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-python310:v11 -r /app -o /app/bom.json -t python
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-python310:v11 -r /app -o /app/bom.json -t python
 ```
 
 Python 3.11
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-python311:v11 -r /app -o /app/bom.json -t python
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-python311:v11 -r /app -o /app/bom.json -t python
 ```
 
 Python 3.12
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-python312:v11 -r /app -o /app/bom.json -t python
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-python312:v11 -r /app -o /app/bom.json -t python
 ```
 
 ### Node.js applications
@@ -204,7 +204,7 @@ Use the custom image `ghcr.io/cyclonedx/cdxgen-node20:v11`.
 Node.js 20
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-node20:v11 -r /app -o /app/bom.json -t js
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-node20:v11 -r /app -o /app/bom.json -t js
 ```
 
 ### Ruby applications
@@ -214,13 +214,13 @@ Use the custom image `ghcr.io/cyclonedx/cdxgen-debian-ruby34:v11`.
 Ruby 3.3.6 (debian version)
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby33:v11 -r /app -o /app/bom.json -t ruby
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby33:v11 -r /app -o /app/bom.json -t ruby
 ```
 
 Ruby 3.4.1 (debian version)
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby34:v11 -r /app -o /app/bom.json -t ruby
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby34:v11 -r /app -o /app/bom.json -t ruby
 ```
 
 Ruby 2.6.0 (Debian version)
@@ -228,7 +228,7 @@ Ruby 2.6.0 (Debian version)
 Use the custom image `ghcr.io/cyclonedx/cdxgen-debian-ruby26:v11`.
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby26:v11 -r /app -o /app/bom.json -t ruby
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby26:v11 -r /app -o /app/bom.json -t ruby
 ```
 
 Ruby 2.5.0 (SLE version)
@@ -236,7 +236,7 @@ Ruby 2.5.0 (SLE version)
 Use the custom image `ghcr.io/cyclonedx/cdxgen-ruby25:v11`.
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ruby25:v11 -r /app -o /app/bom.json -t ruby
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ruby25:v11 -r /app -o /app/bom.json -t ruby
 ```
 
 Pass any Ruby version with the type argument to make cdxgen automatically install the appropriate version using `rbenv` prior to BOM generation.
@@ -244,7 +244,7 @@ Pass any Ruby version with the type argument to make cdxgen automatically instal
 Example: Pass `-t ruby3.3.1` to install Ruby 3.3.1
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby34:v11 -r /app -o /app/bom.json -t ruby3.3.1
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby34:v11 -r /app -o /app/bom.json -t ruby3.3.1
 ```
 
 Working with Ruby 1.8 applications? We have a Ruby 1.8 image that uses `debian:jessie` as the base image. Unfortunately, we couldn't find a way to install nodejs >= 20 in jessie, so we need a split workflow:
@@ -261,7 +261,7 @@ docker run --rm -v /tmp:/tmp:rw -e GEM_HOME=/tmp/gems -v $(pwd):/app:rw -w /app 
 2. Run cdxgen using ruby25 image.
 
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=debug -e CDXGEN_GEM_HOME=/tmp/gems -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ruby25:v11 -r /app -o /app/bom.json -t ruby --lifecycle pre-build
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -e CDXGEN_GEM_HOME=/tmp/gems -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ruby25:v11 -r /app -o /app/bom.json -t ruby --lifecycle pre-build
 ```
 
 Notice the use of `GEM_HOME` and `CDXGEN_GEM_HOME` environment variables. `--deep` mode is currently not supported for Ruby 1.8.
@@ -354,7 +354,7 @@ Include the below argument with the `nerdctl run` command.
 Example:
 
 ```shell
-nerdctl run --rm --platform=linux/arm64 -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-node20:v11 -r /app -o /app/bom.json -t js
+nerdctl run --rm --platform=linux/arm64 -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-node20:v11 -r /app -o /app/bom.json -t js
 ```
 
 ## License
