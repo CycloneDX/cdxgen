@@ -329,7 +329,7 @@ jobs:
       - name: repotests react-app
         run: |
           FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs8 repotests/react-app -o bomresults/react-app.json --fail-on-error
-          node bin/evinse.js -i bomresults/react-app.json -o bomresults/react-app.evinse.json -l javascript --with-data-flow -p repotests/react-app
+          node bin/evinse.js -i bomresults/react-app.json -o bomresults/react-app.evinse.json -l js --with-data-flow -p repotests/react-app
         shell: bash
       - name: repotests basic-ftp
         run: |
@@ -415,21 +415,21 @@ jobs:
         shell: bash
       - name: repotests shiftleft-ts-example
         run: |
-          FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/shiftleft-ts-example -o bomresults/bom-ts-1.json --include-formulation
-          node bin/evinse.js -i bomresults/bom-ts-1.json -o bomresults/bom-ts.evinse.json -l javascript --with-data-flow -p repotests/shiftleft-ts-example
+          FETCH_LICENSE=false bin/cdxgen.js -p -t javascript repotests/shiftleft-ts-example -o bomresults/bom-ts-1.json --include-formulation
+          node bin/evinse.js -i bomresults/bom-ts-1.json -o bomresults/bom-ts.evinse.json -l js --with-data-flow -p repotests/shiftleft-ts-example
           FETCH_LICENSE=true bin/cdxgen.js -p -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts-2.json --fail-on-error
-          FETCH_LICENSE=1 bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts-3.json --fail-on-error
+          FETCH_LICENSE=1 bin/cdxgen.js -p -r -t javascript repotests/shiftleft-ts-example -o bomresults/bom-ts-3.json --fail-on-error
         shell: bash
       - name: repotests meetingsdk-vuejs-sample
         run: |
           FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/meetingsdk-vuejs-sample -o bomresults/bom-vue.json
-          node bin/evinse.js -i bomresults/bom-vue.json -o bomresults/bom-vue.evinse.json -l javascript --with-data-flow -p repotests/meetingsdk-vuejs-sample
+          node bin/evinse.js -i bomresults/bom-vue.json -o bomresults/bom-vue.evinse.json -l js --with-data-flow -p repotests/meetingsdk-vuejs-sample
         shell: bash
       - name: repotests sveltejs-examples
         run: |
           CDXGEN_DEBUG_MODE=verbose ASTGEN_IGNORE_DIRS="" FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/sveltejs-examples -o bomresults/bom-svelte.json
-          CDXGEN_DEBUG_MODE=verbose ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l javascript --with-data-flow -p repotests/sveltejs-examples
-          CDXGEN_DEBUG_MODE=verbose ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l javascript --with-reachables -p repotests/sveltejs-examples
+          CDXGEN_DEBUG_MODE=verbose ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l js --with-data-flow -p repotests/sveltejs-examples
+          CDXGEN_DEBUG_MODE=verbose ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l js --with-reachables -p repotests/sveltejs-examples
         shell: bash
       - name: repotests shiftleft-go-example
         run: |
