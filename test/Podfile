@@ -1,0 +1,19 @@
+pod 'Alamofire', '3.0'
+
+target 'cdxgenexpotest' do
+  use_frameworks!
+end
+
+target 'cdxgenexpotest copy' do
+  pod 'GoogleAnalytics', '~> 3.1'
+end
+
+target 'cdxgenexpotest copy 2' do
+  use_frameworks!
+  pod 'OCMock', '~> 2.0.1'
+  pod 'GoogleAnalytics'
+  target 'deep' do
+    pod 'boost'
+  end
+end
+
