@@ -591,6 +591,7 @@ jobs:
           COCOA_MERGE_SUBSPECS=true COCOA_RESOLVE_FROM_NODE=true GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full-npm.json
         env:
           CDXGEN_THINK_MODE: true
+          COCOA_FULL_SCAN: false
           COCOA_RESOLVE_FROM_NODE_EXCLUSION_DIRS: sdks,third-party-podspecs
           GRADLE_ARGS_DEPENDENCIES: "--configuration releaseRuntimeClasspath"
           GRADLE_INCLUDED_BUILDS: :gradle-plugin
