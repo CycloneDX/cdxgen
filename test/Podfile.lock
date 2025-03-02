@@ -1,0 +1,59 @@
+PODS:
+  - Alamofire (3.0.0)
+  - boost (1.59.0):
+    - boost/graph-includes (= 1.59.0)
+    - boost/math-includes (= 1.59.0)
+    - boost/numeric-includes (= 1.59.0)
+    - boost/pointer_cast-includes (= 1.59.0)
+    - boost/preprocessor-includes (= 1.59.0)
+    - boost/shared_ptr-includes (= 1.59.0)
+    - boost/string_algorithms-includes (= 1.59.0)
+  - boost/graph-includes (1.59.0)
+  - boost/math-includes (1.59.0)
+  - boost/numeric-includes (1.59.0)
+  - boost/pointer_cast-includes (1.59.0)
+  - boost/preprocessor-includes (1.59.0)
+  - boost/shared_ptr-includes (1.59.0)
+  - boost/string_algorithms-includes (1.59.0)
+  - GoogleAnalytics (3.23.0):
+    - GoogleUtilities/UserDefaults (~> 7.11)
+  - GoogleUtilities/Environment (7.13.3):
+    - GoogleUtilities/Privacy
+    - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleUtilities/Logger (7.13.3):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Privacy (7.13.3)
+  - GoogleUtilities/UserDefaults (7.13.3):
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Privacy
+  - OCMock (2.0.1)
+  - PromisesObjC (2.4.0)
+
+DEPENDENCIES:
+  - Alamofire (= 3.0)
+  - boost
+  - GoogleAnalytics
+  - GoogleAnalytics (~> 3.1)
+  - OCMock (~> 2.0.1)
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - boost
+    - GoogleAnalytics
+    - GoogleUtilities
+    - OCMock
+    - PromisesObjC
+
+SPEC CHECKSUMS:
+  Alamofire: b61782387f81bcc538a0284cf2bb5d7995cd0a80
+  boost: 30a15ffb6d9aa4646dd3caffc960753f4cb4ca4e
+  GoogleAnalytics: 9e360c5cfffa536ff64dc383bc468577b7ba5c5d
+  GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
+  OCMock: 7a839b55abfb78e8ec3bf6eaa3cdcc567ac71d2a
+  PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
+
+PODFILE CHECKSUM: d80831c18e908ee483ae2a7feca05936517b661b
+
+COCOAPODS: 1.16.2
