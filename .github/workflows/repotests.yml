@@ -312,6 +312,11 @@ jobs:
           repository: 'MaibornWolff/SecObserve'
           path: 'repotests/SecObserve'
           ref: 'v1.28.0'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'SeanyCash/TwinCAT_CNC'
+          path: 'repotests/TwinCAT_CNC'
+          ref: '0e1020338c10cf77249aeaff34520f9516816167'
       - uses: dtolnay/rust-toolchain@stable
       - name: setup sdkman
         run: |
@@ -451,6 +456,9 @@ jobs:
       - name: repotests vulnerable_net_core
         run: |
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json --include-formulation
+      - name: repotests TwinCAT_CNC
+        run: |
+          bin/cdxgen.js -p -r -t tsproj repotests/TwinCAT_CNC -o bomresults/bom-TwinCAT_CNC.json
         shell: bash
       - name: repotests Goatly.NET
         run: |
