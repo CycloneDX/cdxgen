@@ -139,7 +139,7 @@ export function parsePkgLock(pkgLockFile: string, options?: object): Promise<{
     dependenciesList: any;
 }>;
 /**
- * Given a lock file this method would return an Object with the identiy as the key and parsed name and value
+ * Given a lock file this method would return an Object with the identity as the key and parsed name and value
  * eg: "@actions/core@^1.2.6", "@actions/core@^1.6.0":
  *        version "1.6.0"
  * would result in two entries
