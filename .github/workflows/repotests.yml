@@ -563,13 +563,13 @@ jobs:
         if: matrix.os == 'macos-15'
         run: |
           cd repotests/expo-test && npm ci --legacy-peer-deps && cd ios && pod install && cd ../../..
-                                                                                               bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods.json
-          COCOA_MERGE_SUBSPECS=true                                                            bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods-nosubs.json
-          COCOA_MERGE_SUBSPECS=true COCOA_RESOLVE_FROM_NODE=true                               bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods-npm.json
-                                                                                               bin/cdxgen.js -p              -t gradle        repotests/expo-test -o bomresults/bom-expo-gradle.json
-                                                                 GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p              -t gradle        repotests/expo-test -o bomresults/bom-expo-gradle-npm.json
-          COCOA_MERGE_SUBSPECS=true                                                            bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full.json
-          COCOA_MERGE_SUBSPECS=true COCOA_RESOLVE_FROM_NODE=true GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full-npm.json
+                                                                                                  bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods.json
+          COCOA_MERGE_SUBSPECS=false                                                              bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods-subs.json
+                                     COCOA_RESOLVE_FROM_NODE=false                                bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods-no-node.json
+                                                                                                  bin/cdxgen.js -p              -t gradle        repotests/expo-test -o bomresults/bom-expo-gradle.json
+                                                                   GRADLE_RESOLVE_FROM_NODE=false bin/cdxgen.js -p              -t gradle        repotests/expo-test -o bomresults/bom-expo-gradle-no-node.json
+                                                                                                  bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full.json
+                                     COCOA_RESOLVE_FROM_NODE=false GRADLE_RESOLVE_FROM_NODE=false bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full-no-node.json
         env:
           CDXGEN_THINK_MODE: true
           COCOA_PODSPEC_REPLACEMENTS: "/([\\s\\S]+)/=require File.join(File.dirname(`node --print \"require.resolve('expo/package.json')\"`), \"scripts/autolinking\")<NEWLINE>require File.join(File.dirname(`node --print \"require.resolve('react-native/package.json')\"`), \"scripts/react_native_pods\")<NEWLINE>$1"
@@ -582,13 +582,13 @@ jobs:
         if: matrix.os != 'macos-15'
         run: |
           cd repotests/expo-test && npm ci --legacy-peer-deps && cd ../..
-                                                                                               bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods.json
-          COCOA_MERGE_SUBSPECS=true                                                            bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods-nosubs.json
-          COCOA_MERGE_SUBSPECS=true COCOA_RESOLVE_FROM_NODE=true                               bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods-npm.json
-                                                                                               bin/cdxgen.js -p              -t gradle        repotests/expo-test -o bomresults/bom-expo-gradle.json
-                                                                 GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p              -t gradle        repotests/expo-test -o bomresults/bom-expo-gradle-npm.json
-          COCOA_MERGE_SUBSPECS=true                                                            bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full.json
-          COCOA_MERGE_SUBSPECS=true COCOA_RESOLVE_FROM_NODE=true GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full-npm.json
+                                                                                                  bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods.json
+          COCOA_MERGE_SUBSPECS=false                                                              bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods-subs.json
+                                     COCOA_RESOLVE_FROM_NODE=false                                bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods-no-node.json
+                                                                                                  bin/cdxgen.js -p              -t gradle        repotests/expo-test -o bomresults/bom-expo-gradle.json
+                                                                  GRADLE_RESOLVE_FROM_NODE=false  bin/cdxgen.js -p              -t gradle        repotests/expo-test -o bomresults/bom-expo-gradle-no-node.json
+                                                                                                  bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full.json
+                                     COCOA_RESOLVE_FROM_NODE=false GRADLE_RESOLVE_FROM_NODE=false bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full-no-node.json
         env:
           CDXGEN_THINK_MODE: true
           COCOA_FULL_SCAN: false
@@ -600,11 +600,11 @@ jobs:
       - name: repotests cocoapods
         if: matrix.os != 'windows-latest'
         run: |
-          COCOA_FULL_SCAN=false                                                                               bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-simple.json
-                                                                                                              bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-full.json
-                                COCOA_MERGE_SUBSPECS=true                                                     bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-full-nosubs.json
-                                COCOA_MERGE_SUBSPECS=true COCOA_INCLUDED_TARGETS=cdxgenexpotest               bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-target.json
-                                COCOA_MERGE_SUBSPECS=true COCOA_INCLUDED_TARGETS="cdxgenexpotest copy 2/deep" bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-target_deep.json
+          COCOA_FULL_SCAN=false                                                                                bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-simple.json
+                                COCOA_MERGE_SUBSPECS=false                                                     bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-full-subs.json
+                                                                                                               bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-full.json
+                                                           COCOA_INCLUDED_TARGETS=cdxgenexpotest               bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-target.json
+                                                           COCOA_INCLUDED_TARGETS="cdxgenexpotest copy 2/deep" bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-target-deep.json
         shell: bash
       - name: repotests elasticsearch
         run: |
