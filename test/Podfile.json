@@ -1,0 +1,25 @@
+{
+  "target_definitions": [
+    {
+      "name": "Pods",
+      "abstract": true,
+      "dependencies": [{ "Alamofire": ["3.0"] }],
+      "children": [
+        {
+          "name": "cdxgenexpotest",
+          "uses_frameworks": { "linkage": "dynamic", "packaging": "framework" }
+        },
+        {
+          "name": "cdxgenexpotest copy",
+          "dependencies": [{ "GoogleAnalytics": ["~\u003e 3.1"] }]
+        },
+        {
+          "name": "cdxgenexpotest copy 2",
+          "uses_frameworks": { "linkage": "dynamic", "packaging": "framework" },
+          "dependencies": [{ "OCMock": ["~\u003e 2.0.1"] }, "GoogleAnalytics"],
+          "children": [{ "name": "deep", "dependencies": ["boost"] }]
+        }
+      ]
+    }
+  ]
+}
