@@ -1142,6 +1142,48 @@ export function buildGradleCommandArguments(gradleArguments: string[], gradleSub
  */
 export function splitOutputByGradleProjects(rawOutput: string, relevantTasks: string[]): map;
 /**
+ * Parse the contents of a 'Podfile.lock'
+ *
+ * @param {Object} podfileLock The content of the podfile.lock as an Object
+ * @param {String} projectPath The path to the project root
+ * @returns {Map} Map of all dependencies with their direct dependencies
+ */
+export function parsePodfileLock(podfileLock: any, projectPath: string): Map<any, any>;
+/**
+ * Parse all targets and their direct dependencies from the 'Podfile'
+ *
+ * @param {Object} target A JSON-object representing a target
+ * @param {Map} allDependencies The map containing all parsed direct dependencies for a target
+ * @param {String} [prefix=undefined] Prefix to add to the targets name
+ */
+export function parsePodfileTargets(target: any, allDependencies: Map<any, any>, prefix?: string): void;
+/**
+ * Parse a single line representing a dependency
+ *
+ * @param {String} dependencyLine The line that should be parsed as a dependency
+ * @param {boolean} [parseVersion=true] Include parsing the version of the dependency
+ * @returns {Object} Object representing a dependency
+ */
+export function parseCocoaDependency(dependencyLine: string, parseVersion?: boolean): any;
+/**
+ * Execute the 'pod'-command with parameters
+ *
+ * @param {String[]} parameters The parameters for the command
+ * @param {String} path The path where the command should be executed
+ * @param {Object} options CLI options
+ * @returns {Object} The result of running the command
+ */
+export function executePodCommand(parameters: string[], path: string, options: any): any;
+/**
+ * Method that handles object creation for cocoa pods.
+ *
+ * @param {Object} dependency The dependency that is to be transformed into an SBOM object
+ * @param {Object} options CLI options
+ * @param {String} [type="library"] The type of Object to create
+ * @returns {Object} An object representing the pod in SBOM-format
+ */
+export function buildObjectForCocoaPod(dependency: any, options: any, type?: string): any;
+/**
  * Method that handles object creation for gradle modules.
  *
  * @param {string} name The simple name of the module
@@ -1437,6 +1479,7 @@ export const PROJECT_TYPE_ALIASES: {
     swift: string[];
     binary: string[];
     oci: string[];
+    cocoa: string[];
 };
 export namespace PACKAGE_MANAGER_ALIASES {
     let scala: string[];

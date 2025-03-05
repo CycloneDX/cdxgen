@@ -130,7 +130,7 @@ RUN set -e; \
     && echo 'extension=timezonedb.so' >> /etc/php.ini \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && php composer-setup.php \
     && mv composer.phar /usr/local/bin/composer \
-    && gem install bundler \
+    && gem install bundler cocoapods \
     && gem --version \
     && bundler --version \
     && chmod a-w -R /opt \
