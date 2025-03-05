@@ -164,6 +164,13 @@ export function createHelmBom(path: string, options: any): any;
  */
 export function createSwiftBom(path: string, options: any): Promise<any>;
 /**
+ * Function to create bom string for cocoa projects
+ *
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
+ */
+export function createCocoaBom(path: string, options: any): Promise<any>;
+/**
  * Function to create bom string for docker compose
  *
  * @param {string} path to the project
