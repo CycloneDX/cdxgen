@@ -17,29 +17,65 @@ concurrency:
   group: "${{ github.workflow }}-${{ github.head_ref || github.run_id }}"
   cancel-in-progress: true
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
+
+  pregen:
+    runs-on: ubuntu-latest
+    outputs:
+      venv_path: ${{ steps.set_env.outputs.venv_path }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create venv and install prerequisites
+        id: set_env
+        run: |
+          python3.12 -m venv .venv
+          echo "venv_path=$(pwd)/.venv" >> $GITHUB_OUTPUT
+          source .venv/bin/activate
+          pip install setuptools wheel
+
+      - name: Cache venv
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            venv-${{ runner.os }}-
 
   test_non_dotnet:
     runs-on: ["snapshot-test"]
+    needs: pregen
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/checkout@v4
+      - name: Restore venv
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            venv-${{ runner.os }}-
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
 
-      -  name: cdxgen, custom-json-diff installs
-         shell: bash
-         env:
-           SHELL: bash
-         run: |
-           rm -rf original_snapshots new_snapshots src_repos
-           cdxgen_tarball=$(pnpm pack | tail -1)
-           sudo npm install -g "$cdxgen_tarball"
-           git clone https://github.com/appthreat/cdxgen-samples.git original_snapshots
-           python3.12 -m venv .venv
-           source .venv/bin/activate && pip install setuptools wheel
-           source .venv/bin/activate && pip install -r test/diff/requirements.txt
+      - name: cdxgen, custom-json-diff installs
+        shell: bash
+        env:
+          SHELL: bash
+        run: |
+          rm -rf original_snapshots new_snapshots src_repos
+          cdxgen_tarball=$(pnpm pack | tail -1)
+          sudo npm install -g "$cdxgen_tarball"
+          git clone https://github.com/appthreat/cdxgen-samples.git original_snapshots
+          source .venv/bin/activate
+          pip install -r test/diff/requirements.txt
 
       - name: Generate scripts
         run: |
@@ -47,6 +83,7 @@ jobs:
           python test/diff/generate.py
         env:
           ATOM_JAVA_HOME: /usr/lib/jvm/java-21-openjdk-amd64
+
       - name: Upload shell scripts generated as artifact
         uses: actions/upload-artifact@v4
         with:
@@ -72,7 +109,7 @@ jobs:
           source .venv/bin/activate
           python test/diff/diff_tests.py --migrate-legacy
           if test -f new_snapshots/diffs.json; then
-            echo "status=FAILED" >> "$GITHUB_ENV"
+            echo "status=FAILED" >> $GITHUB_ENV
           fi
 
       - name: Upload diff
