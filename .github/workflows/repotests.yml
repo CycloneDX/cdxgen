@@ -465,6 +465,7 @@ jobs:
       - name: repotests vulnerable_net_core
         run: |
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json --include-formulation
+        shell: bash
       - name: repotests TwinCAT_CNC
         run: |
           bin/cdxgen.js -p -r -t tsproj repotests/TwinCAT_CNC -o bomresults/bom-TwinCAT_CNC.json
