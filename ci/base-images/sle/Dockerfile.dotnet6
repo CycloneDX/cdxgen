@@ -19,8 +19,6 @@ RUN zypper refresh && zypper --non-interactive update && zypper --non-interactiv
     && chmod +x /usr/bin/nuget \
     && rm -rf /usr/lib/mono/nuget \
     && dotnet --list-sdks \
-    && dotnet workload install wasm-tools \
-    && dotnet workload list \
     && npm install -g corepack \
     && zypper clean -a
 COPY ci/base-images/nuget /usr/lib/mono/nuget
