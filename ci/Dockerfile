@@ -167,6 +167,8 @@ RUN set -e; \
     && gem install bundler cocoapods \
     && gem --version \
     && bundler --version \
+    && dotnet workload install wasm-tools \
+    && dotnet workload list \
     && cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy && corepack pnpm cache delete \
     && mkdir -p /opt/cdxgen-node-cache \
     && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
