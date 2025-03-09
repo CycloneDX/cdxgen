@@ -4,6 +4,7 @@ ARG SBT_VERSION=1.10.7
 ARG MAVEN_VERSION=3.9.9
 ARG GRADLE_VERSION=8.12.1
 ARG GCC_VERSION=13
+ARG SCALA_VERSION=3.6.4
 
 ENV SBT_VERSION=$SBT_VERSION \
     MAVEN_VERSION=$MAVEN_VERSION \
@@ -12,11 +13,13 @@ ENV SBT_VERSION=$SBT_VERSION \
     MAVEN_HOME="/opt/maven/${MAVEN_VERSION}" \
     GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}" \
     SBT_HOME="/opt/sbt/${SBT_VERSION}" \
+    SCALA_VERSION=$SCALA_VERSION \
+    SBT_HOME="/opt/scala/${SCALA_VERSION}" \
     ANDROID_HOME=/opt/android-sdk-linux \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
-ENV PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:
+ENV PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:
 
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
@@ -40,6 +43,7 @@ RUN set -e; \
     && source "$HOME/.sdkman/bin/sdkman-init.sh" \
     && sdk install maven $MAVEN_VERSION \
     && sdk install gradle $GRADLE_VERSION \
+    && sdk install scala $SCALA_VERSION \
     && sdk install sbt $SBT_VERSION \
     && mv /root/.sdkman/candidates/* /opt/ \
     && mkdir -p ${ANDROID_HOME}/cmdline-tools \

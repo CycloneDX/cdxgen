@@ -24,6 +24,7 @@ ARG GO_VERSION=1.24.0
 ARG NODE_VERSION=23.8.0
 ARG PYTHON_VERSION=3.12
 ARG RUBY_VERSION=3.4.2
+ARG SCALA_VERSION=3.6.4
 
 ENV GOPATH=/opt/app-root/go \
     JAVA_VERSION=$JAVA_VERSION \
@@ -35,6 +36,8 @@ ENV GOPATH=/opt/app-root/go \
     MAVEN_HOME="/root/.sdkman/candidates/maven/${MAVEN_VERSION}" \
     GRADLE_HOME="/root/.sdkman/candidates/gradle/${GRADLE_VERSION}" \
     SBT_HOME="/root/.sdkman/candidates/sbt/${SBT_VERSION}" \
+    SCALA_VERSION=$SCALA_VERSION \
+    SCALA_HOME="/root/.sdkman/candidates/scala/${SCALA_VERSION}" \
     PYTHON_VERSION=3.12 \
     PYTHON_CMD=/usr/bin/python3.12 \
     RUBY_VERSION=$RUBY_VERSION \
@@ -64,7 +67,7 @@ ENV GOPATH=/opt/app-root/go \
     RUBYOPT="--yjit" \
     RUBY_BUILD_BUILD_PATH="/tmp/rbenv" \
     RUBY_BUILD_HTTP_CLIENT=curl
-ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/root/.cargo/bin:/opt/pypi/bin:/root/.rbenv/bin:/root/.rbenv/versions/3.4.1/bin:
+ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/root/.cargo/bin:/opt/pypi/bin:/root/.rbenv/bin:/root/.rbenv/versions/3.4.1/bin:
 
 COPY . /opt/cdxgen
 
@@ -120,6 +123,7 @@ RUN set -e; \
     && sdk install java $JAVA_VERSION \
     && sdk install maven $MAVEN_VERSION \
     && sdk install gradle $GRADLE_VERSION \
+    && sdk install scala $SCALA_VERSION \
     && sdk install sbt $SBT_VERSION \
     && SWIFT_WEBDIR="$SWIFT_WEBROOT/$SWIFT_BRANCH/$(echo $SWIFT_PLATFORM | tr -d .)$OS_ARCH_SUFFIX" \
     && SWIFT_BIN_URL="$SWIFT_WEBDIR/$SWIFT_VERSION/$SWIFT_VERSION-$SWIFT_PLATFORM$OS_ARCH_SUFFIX.tar.gz" \
