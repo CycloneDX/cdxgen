@@ -1733,7 +1733,7 @@ jobs:
 
   opensuse-lang-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04-arm'
+    runs-on: 'ubuntu-24.04'
     permissions:
       contents: read
       packages: write
@@ -1769,7 +1769,7 @@ jobs:
 
   cdxgen-rolling-image:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: 'ubuntu-24.04-arm'
+    runs-on: 'ubuntu-24.04'
     needs: opensuse-lang-image
     permissions:
       packages: write

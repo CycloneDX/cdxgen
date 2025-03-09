@@ -4,6 +4,7 @@ ARG MAVEN_VERSION=4.0.0-rc-2
 ARG SBT_VERSION=1.10.7
 ARG GRADLE_VERSION=8.12.1
 ARG DOTNET_SDK_VERSION=9.0.100
+ARG SCALA_VERSION=3.6.4
 
 ENV SBT_VERSION=$SBT_VERSION \
     MAVEN_VERSION=$MAVEN_VERSION \
@@ -17,13 +18,15 @@ ENV SBT_VERSION=$SBT_VERSION \
     MAVEN_HOME="/opt/maven/${MAVEN_VERSION}" \
     GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}" \
     SBT_HOME="/opt/sbt/${SBT_VERSION}" \
+    SCALA_VERSION=$SCALA_VERSION \
+    SCALA_HOME="/opt/scala/${SCALA_VERSION}" \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     DOTNET_ROOT=/usr/share/dotnet \
     PYTHONPATH=/opt/pypi
 
-ENV PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:/usr/local/bin:/opt/pypi/bin:/usr/share/dotnet:
+ENV PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:/usr/local/bin:/opt/pypi/bin:/usr/share/dotnet:
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     url=; \
@@ -50,6 +53,7 @@ RUN set -e; \
     && source "$HOME/.sdkman/bin/sdkman-init.sh" \
     && sdk install maven $MAVEN_VERSION \
     && sdk install gradle $GRADLE_VERSION \
+    && sdk install scala $SCALA_VERSION \
     && sdk install sbt $SBT_VERSION \
     && sdk offline enable \
     && mv /root/.sdkman/candidates/* /opt/ \
