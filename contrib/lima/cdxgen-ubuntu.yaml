@@ -17,8 +17,8 @@ containerd:
   user: true
 env:
   MAVEN_VERSION: 3.9.9
-  SBT_VERSION: 1.10.5
-  GRADLE_VERSION: 8.11
+  SBT_VERSION: 1.10.10
+  GRADLE_VERSION: 8.12.1
   MAVEN_HOME: /.sdkman/candidates/maven/current
   MAVEN_CMD: /.sdkman/candidates/maven/current/bin/mvn
   GRADLE_HOME: /.sdkman/candidates/gradle/current
@@ -42,7 +42,7 @@ provision:
     #!/bin/bash
     set -e -o pipefail
     export MAVEN_VERSION=3.9.9
-    export SBT_VERSION=1.10.7
+    export SBT_VERSION=1.10.10
     export GRADLE_VERSION=8.12.1
     export MAVEN_HOME="/.sdkman/candidates/maven/${MAVEN_VERSION}"
     export GRADLE_HOME="/.sdkman/candidates/gradle/${GRADLE_VERSION}"
