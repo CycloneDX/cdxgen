@@ -1,6 +1,6 @@
 FROM registry.suse.com/bci/openjdk-devel:17
 
-ARG SBT_VERSION=1.10.7
+ARG SBT_VERSION=1.10.10
 ARG MAVEN_VERSION=3.9.9
 ARG GRADLE_VERSION=8.12.1
 
