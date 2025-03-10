@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash b
 COPY ci/base-images/nuget /usr/lib/nuget
 RUN mv /usr/lib/nuget/nuget.exe /usr/lib/nuget/NuGet.exe \
     && dotnet --list-sdks \
-    && dotnet workload install wasm-tools \
+    && dotnet workload install android wasm-tools wasm-tools-net6 wasm-tools-net7 \
     && dotnet workload list \
     && nuget help
 CMD ["/bin/bash"]
