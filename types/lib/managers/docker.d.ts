@@ -37,6 +37,7 @@ export function exportArchive(fullImageName: any, options?: {}): Promise<{
     allLayersExplodedDir: any;
     lastLayerConfig: {};
     lastWorkingDir: string;
+    binPaths: any;
 }>;
 export function extractFromManifest(manifestFile: any, localData: any, tempDir: any, allLayersExplodedDir: any, options: any): Promise<{
     inspectData: any;
@@ -45,6 +46,7 @@ export function extractFromManifest(manifestFile: any, localData: any, tempDir: 
     allLayersExplodedDir: any;
     lastLayerConfig: {};
     lastWorkingDir: string;
+    binPaths: any;
 }>;
 export function exportImage(fullImageName: any, options: any): Promise<any>;
 export function getPkgPathList(exportData: any, lastWorkingDir: any): any[];

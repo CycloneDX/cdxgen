@@ -1420,6 +1420,20 @@ export function isPartialTree(dependencies: any[], componentsCount?: number): bo
  * @returns {Array} Updated list
  */
 export function recomputeScope(pkgList: any[], dependencies: any[]): any[];
+/**
+ * Function to parse a list of environment variables to identify the paths containing executable binaries
+ *
+ * @param envValues {Array[String]} Environment variables list
+ * @returns {Array[String]} Binary Paths identified from the environment variables
+ */
+export function extractPathEnv(envValues: any): any;
+/**
+ * Collect all executable files from the given list of binary paths
+ *
+ * @param binPaths {Array[String]} Paths containing potential binaries
+ * @return {Array[String]} List of executables
+ */
+export function collectExecutables(binPaths: any): any;
 export const dirNameStr: string;
 export const isSecureMode: any;
 export const isWin: boolean;
