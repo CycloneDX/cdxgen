@@ -1485,5 +1485,5 @@ export namespace PACKAGE_MANAGER_ALIASES {
     let scala: string[];
 }
 export const RUBY_PLATFORM_PREFIXES: string[];
-export let cdxgenAgent: any;
+export const cdxgenAgent: any;
 //# sourceMappingURL=utils.d.ts.map
