@@ -28,8 +28,19 @@ RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash b
 COPY ci/base-images/nuget /usr/lib/nuget
 RUN mv /usr/lib/nuget/nuget.exe /usr/lib/nuget/NuGet.exe \
     && dotnet --list-sdks \
-    && dotnet workload install wasm-tools \
-    && dotnet workload list \
+    && set -e; \
+           ARCH_NAME="$(dpkg --print-architecture)"; \
+           url=; \
+           case "${ARCH_NAME##*-}" in \
+                'amd64') \
+                    dotnet workload install android wasm-tools wasm-tools-net6 wasm-tools-net7 \
+                    ;; \
+                'arm64') \
+                    dotnet workload install wasm-tools \
+                    ;; \
+                *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
+           esac; \
+    dotnet workload list \
     && nuget help
 CMD ["/bin/bash"]
 
