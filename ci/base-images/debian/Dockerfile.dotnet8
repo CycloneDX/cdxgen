@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0
 
 ARG JAVA_VERSION=23.0.2-tem
-ARG NODE_VERSION=23.8.0
+ARG NODE_VERSION=23.9.0
 
 ENV JAVA_VERSION=$JAVA_VERSION \
     JAVA_HOME="/opt/java/${JAVA_VERSION}" \
