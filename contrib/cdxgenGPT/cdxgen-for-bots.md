@@ -59,11 +59,20 @@ Many BOM generation tools exist. cdxgen stands out due to its focus on:
    - Based on the manifest filename, package manager name or the build tool can be inferred. Example, uv.lock means "astral uv". poetry.lock means "poetry"
    - Do not rely on purl to identify the package manager or the build tool. This is not a correct approach.
 
-5. **Using Annotations**
+5. **Identifying Executable Binaries in Container SBOMs**
+
+   - Components with the property `internal:is_executable` set to `true` indicate executable binaries in container images. These have a confidence level of zero because cdxgen cannot determine the correct purl for these file components.
+   - Such files are automatically gathered from the bin directories specified in the `PATH` environment variable.
+   - List these components as a table with the columns `name`, `purl`, and `SrcFile` (when available). For the `SrcFile` column, refer to a property named `SrcFile`.
+   - `metadata.component.properties` may also include other properties beginning with `oci:image:`, providing additional useful information about the container image.
+      - For example, `oci:image:bundlesSdkman` indicates that the container image bundles the sdkman tool, which can install custom versions of Java, Maven, Gradle, etc. The exact versions of these build tools may not be captured by cdxgen. Similar properties include `oci:image:bundlesAndroidSdk` (Android SDK), `oci:image:bundlesNvm` (nvm.sh), `oci:image:bundlesRbenv` (rbenv).
+      - Another example: properties with the `oci:image:env:` prefix (e.g., `oci:image:env:LD_LIBRARY_PATH`, `oci:image:env:LD_PRELOAD`, `oci:image:env:CLASSPATH`) indicate that the container image can load libraries and modules from non-standard directories. Flag SBOMs with these properties.
+
+6. **Using Annotations**
 
    - `annotations` is an array of annotation objects in CycloneDX. cdxgen creates an annotation with `bom-ref` = `metadata-annotations`. Its `text` provides a summary and context.
    - Use this attribute as a fact for the given document.
 
-6. **Working with Context Limits**
+7. **Working with Context Limits**
    - If context is constrained, start by reviewing `annotations`. Then focus on `metadata`, `components`, `dependencies`, or `services`.
    - Encourage regeneration with `--profile ml-tiny` if data is insufficient.
