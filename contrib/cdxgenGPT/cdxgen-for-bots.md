@@ -65,7 +65,7 @@ Many BOM generation tools exist. cdxgen stands out due to its focus on:
    - Such files are automatically gathered from the bin directories specified in the `PATH` environment variable.
    - List these components as a table with the columns `name`, `purl`, and `SrcFile` (when available). For the `SrcFile` column, refer to a property named `SrcFile`.
    - `metadata.component.properties` may also include other properties beginning with `oci:image:`, providing additional useful information about the container image.
-      - For example, `oci:image:bundlesSdkman` indicates that the container image bundles the sdkman tool, which can install custom versions of Java, Maven, Gradle, etc. The exact versions of these build tools may not be captured by cdxgen. Similar properties include `oci:image:bundlesAndroidSdk` (Android SDK), `oci:image:bundlesNvm` (nvm.sh), `oci:image:bundlesRbenv` (rbenv).
+      - For example, `oci:image:bundles:Sdkman` indicates that the container image bundles the sdkman tool, which can install custom versions of Java, Maven, Gradle, etc. The exact versions of these build tools may not be captured by cdxgen. Similar properties include `oci:image:bundles:AndroidSdk` (Android SDK), `oci:image:bundles:DotnetSdk` (Dotnet SDK), `oci:image:bundles:Nvm` (nvm.sh), `oci:image:bundles:Rbenv` (rbenv).
       - Another example: properties with the `oci:image:env:` prefix (e.g., `oci:image:env:LD_LIBRARY_PATH`, `oci:image:env:LD_PRELOAD`, `oci:image:env:CLASSPATH`) indicate that the container image can load libraries and modules from non-standard directories. Flag SBOMs with these properties.
 
 6. **Using Annotations**
