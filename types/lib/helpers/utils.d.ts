@@ -1430,10 +1430,19 @@ export function extractPathEnv(envValues: any): any;
 /**
  * Collect all executable files from the given list of binary paths
  *
+ * @param basePath Base directory
  * @param binPaths {Array[String]} Paths containing potential binaries
  * @return {Array[String]} List of executables
  */
-export function collectExecutables(binPaths: any): any;
+export function collectExecutables(basePath: any, binPaths: any): any;
+/**
+ * Collect all shared library files from the given list of paths
+ *
+ * @param basePath Base directory
+ * @param libPaths {Array[String]} Paths containing potential libraries
+ * @return {Array[String]} List of executables
+ */
+export function collectSharedLibs(basePath: any, libPaths: any): any;
 export const dirNameStr: string;
 export const isSecureMode: any;
 export const isWin: boolean;

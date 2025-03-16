@@ -173,12 +173,12 @@ RUN set -e; \
     && bundler --version \
     && dotnet workload install wasm-tools \
     && dotnet workload list \
-    && cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy && corepack pnpm cache delete \
+    && cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
     && mkdir -p /opt/cdxgen-node-cache \
     && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
     && chmod a-w -R /opt \
     && node /opt/cdxgen/bin/cdxgen.js --help \
-    && rm -rf /var/cache/yum /root/.cache/pypoetry \
+    && rm -rf /var/cache/yum /root/.cache/pypoetry /root/.cache/node \
     && microdnf clean all
 WORKDIR /app
 ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]
