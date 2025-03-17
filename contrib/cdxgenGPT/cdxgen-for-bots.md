@@ -76,3 +76,151 @@ Many BOM generation tools exist. cdxgen stands out due to its focus on:
 7. **Working with Context Limits**
    - If context is constrained, start by reviewing `annotations`. Then focus on `metadata`, `components`, `dependencies`, or `services`.
    - Encourage regeneration with `--profile ml-tiny` if data is insufficient.
+
+------------------------------
+
+# Generating CycloneDX json documents like cdxgen
+
+## Converting csv files to CycloneDX format
+
+When the user asks for help generating a CycloneDX JSON document from an uploaded CSV file, do the following:
+
+1. **CSV Parsing and Column Matching**
+   - Process the CSV file and identify column names in a case-insensitive manner.
+   - Map the CSV columns to the corresponding values:
+      - **component_purl**: Mandatory. This is the package URL for the component. If it is missing or empty, output a clear error message.
+      - **component_bom_ref**: Optional. Use this value if present; if missing or empty, default to the value of **component_purl**.
+      - **component_group**: Optional. Default to an empty string (`""`) if not provided.
+      - **component_name**: Mandatory. If missing or empty, output a clear error message.
+      - **component_version**: Optional. Default to an empty string (`""`) if not provided.
+      - **licenses**: Optional. If a column named "licenses" (or a case variation) exists, use its value under the `expression` field in the JSON template. If not, omit the `licenses` attribute.
+      - **hashes**: Optional. Look for columns corresponding to hash algorithms and their contents. If present, construct a valid JSON array of objects (each with an `alg` and `content` field), ensuring correct comma separation. If no hash-related columns are found, omit the `hashes` attribute.
+   - For the metadata.component section (i.e., the parent component), look for CSV columns such as `parent_component_name`, `parent_component_version`, and `parent_component_type`; if they are not provided, use the default values shown in the template.
+
+2. **Substitute dynamic values**
+   - **random_guid**: Mandatory. Generating a value using the regex `[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`
+   - **timestamp**: Mandatory. This is a string in `date-time` format. Use the python datetime pattern `%Y-%m-%dT%H:%M:%SZ` to construct this value.
+
+3. **Handling Missing or Empty Values**
+   - If a field has a None or NaN value, convert it to an empty string ("") instead of "None".
+   - If a JSON field is optional (such as licenses or hashes), omit it completely when empty.
+
+4. **Validation and Error Handling**
+   - Verify that both mandatory columns (**component_purl** and **component_name**) exist and contain values.
+   - If any mandatory column is missing or its value is empty, return an error message listing the missing field(s) and do not proceed with generating the JSON document.
+
+5. **JSON Generation Using the Jinja Template**
+   - Use the provided Jinja template to substitute values from the CSV. Strictly adhere to this template while retaining the `metadata`, `compositions`, and the `annotations` attributes.
+   - Ensure dynamic fields (like `{{ random_guid }}` and the timestamp using `{{ datetime.now():%Y-%m-%dT%H:%M:%SZ }}`) are correctly generated. 
+   - Convert all None or NaN values to empty strings ("") before rendering.
+   - Follow the template exactly so that the output is valid JSON conforming to the CycloneDX specification.
+   - Omit the `licenses` or `hashes` attributes entirely if their corresponding columns are not present in the CSV.
+   - Handle list formatting (e.g., for the `hashes` array) carefully to ensure proper JSON syntax.
+
+6. **Output Requirements**
+   - The final output must be a valid CycloneDX JSON document that exactly matches the provided Jinja template structure.
+   - All substitutions must honor the defaults and error-handling rules described above.
+   - Report any errors clearly and do not generate a document if errors are present.
+
+```jinja
+{
+    "bomFormat": "CycloneDX",
+    "specVersion": "1.6",
+    "serialNumber": "urn:uuid:{{ random_guid }}",
+    "version": 1,
+    "metadata": {
+        "timestamp": "{{ datetime.now():%Y-%m-%dT%H:%M:%SZ }}",
+        "tools": {
+            "services": [
+                {
+                    "group": "cyclonedx",
+                    "name": "cdxgenGPT",
+                    "version": "1.0.0",
+                    "description: "cdxgenGPT - I'm a CycloneDX and xBOM expert available on ChatGPT store.",
+                    "publisher": "OWASP Foundation",
+                    "authors": [
+                        {
+                            "name": "OWASP Foundation"
+                        }
+                    ],
+                    "authenticated": false,
+                    "x-trust-boundary": true,
+                    "endpoints": [
+                        "https://chatgpt.com/g/g-673bfeb4037481919be8a2cd1bf868d2-cyclonedx-generator-cdxgen"
+                    ],
+                    "externalReferences": [
+                        {"url": "https://chatgpt.com/g/g-673bfeb4037481919be8a2cd1bf868d2-cyclonedx-generator-cdxgen", "type": "chat"}
+                    ]
+                }
+            ]
+        },
+        "authors": [
+            {
+                "name": "OWASP Foundation"
+            }
+        ],
+        "component": {
+            "name": "{{ parent_component_name | default('app') }}",
+            "version": "{{ parent_component_version | default('latest') }}",
+            "type": "{{ parent_component_type | default('application') }}",
+            "purl": "pkg:{{ parent_component_type }}/{{ parent_component_name }}@{{ parent_component_version }}",
+            "bom-ref": "pkg:{{ parent_component_type }}/{{ parent_component_name }}@{{ parent_component_version }}"
+        },
+    },
+    "components": [
+        {
+            "bom-ref": "{{ component_bom_ref or component_purl }}",
+            "type": "{{ component_type | default('library') }}",
+            "name": "{{ component_name }}",
+            "version": "{{ component_version | default('') }}",
+            {% if row['hashes'] %}
+            "hashes": [
+                {% for alg, content in hashes.items() %}
+                {
+                    "alg": "{{ alg }}",
+                    "content": "{{ content }}"
+                }
+                {% endfor %}
+            ],
+            {% endif %}
+            {% if row['licenses'] %}
+            "licenses": [{"expression": "{{ row['licenses'] }}"}],
+            {% endif %}
+            "purl": "{{ component_purl }}",
+            "group": "{{ component_group | default('') }}"
+        }
+    ],
+    "compositions": [
+        {"aggregate": "incomplete"}
+    ],
+    "annotations": [
+        {
+            "subjects": {{ serialNumber }},
+            "annotator": {
+                "service": {
+                    "group": "@cyclonedx",
+                    "name": "cdxgenGPT",
+                    "version": "1.0.0",
+                    "description: "cdxgenGPT",
+                    "publisher": "OWASP Foundation",
+                    "authors": [
+                        {
+                            "name": "OWASP Foundation"
+                        }
+                    ],
+                    "authenticated": false,
+                    "x-trust-boundary": true,
+                    "endpoints": [
+                        "https://chatgpt.com/g/g-673bfeb4037481919be8a2cd1bf868d2-cyclonedx-generator-cdxgen"
+                    ],
+                    "externalReferences": [
+                        {"url": "https://chatgpt.com/g/g-673bfeb4037481919be8a2cd1bf868d2-cyclonedx-generator-cdxgen", "type": "chat"}
+                    ]
+                }
+            },
+            "timestamp": "{{ datetime.now():%Y-%m-%dT%H:%M:%SZ }}",
+            "text": "This CycloneDX xBOM was interactively generated using cdxgenGPT."
+        }
+    ]
+}
+```
