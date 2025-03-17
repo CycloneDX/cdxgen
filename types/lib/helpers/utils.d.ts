@@ -1440,9 +1440,12 @@ export function collectExecutables(basePath: any, binPaths: any): any;
  *
  * @param basePath Base directory
  * @param libPaths {Array[String]} Paths containing potential libraries
+ * @param ldConf {String} Config file used by ldconfig to locate additional paths
+ * @param ldConfDirPattern {String} Config directory that can contain more .conf files for ldconfig
+ *
  * @return {Array[String]} List of executables
  */
-export function collectSharedLibs(basePath: any, libPaths: any): any;
+export function collectSharedLibs(basePath: any, libPaths: any, ldConf: string, ldConfDirPattern: string): any;
 export const dirNameStr: string;
 export const isSecureMode: any;
 export const isWin: boolean;
