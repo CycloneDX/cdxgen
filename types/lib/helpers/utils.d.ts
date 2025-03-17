@@ -1057,9 +1057,9 @@ export function checksumFile(hashName: string, path: string): Promise<string>;
  *
  * @param {Array[String]} algorithms Array of algorithms
  * @param {string} path path to file
- * @returns {Promise<String>} hex value of hash
+ * @returns {Promise<Object>} hashes object
  */
-export function multiChecksumFile(algorithms: any, path: string): Promise<string>;
+export function multiChecksumFile(algorithms: any, path: string): Promise<any>;
 /**
  * Method to extract a war or ear file
  *
