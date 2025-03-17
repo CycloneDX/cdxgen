@@ -320,8 +320,8 @@
       {
         "browser": [
           "^(edge)",
-          "(firefox|chrome|opera|brave|mullvad|tor|chromium)",
-          "(microsoft+edge|microsoft+edge+webview2|microsoft+html)"
+          "^(firefox|chrome|opera|brave|mullvad|tor|chromium)",
+          "^(microsoft+edge|microsoft+edge+webview2|microsoft+html)"
         ]
       },
       {
