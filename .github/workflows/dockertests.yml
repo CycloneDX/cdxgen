@@ -60,8 +60,6 @@ jobs:
           docker rmi alpine:latest
           bin/cdxgen.js almalinux:9.4-minimal -t docker -o bomresults/bom-almalinux.json --fail-on-error
           docker rmi almalinux:9.4-minimal
-          bin/cdxgen.js centos:latest -t oci -o bomresults/bom-centos.json --fail-on-error
-          docker rmi centos:latest
           bin/cdxgen.js phpmyadmin@sha256:1092481630056189e43cc0fe66fd01defcc9334d78ab4611b22f65e9a39869bd -o bomresults/bom-phpmyadmin.json --fail-on-error
           docker rmi phpmyadmin@sha256:1092481630056189e43cc0fe66fd01defcc9334d78ab4611b22f65e9a39869bd
           bin/cdxgen.js shiftleft/scan-slim -o bomresults/bom-scanslim.json -t container --fail-on-error
@@ -93,8 +91,6 @@ jobs:
           docker rmi alpine:latest
           bin/cdxgen.js almalinux:9.4-minimal -t docker -o bomresults/bom-almalinux.json --fail-on-error
           docker rmi almalinux:9.4-minimal
-          bin/cdxgen.js centos:latest -t oci -o bomresults/bom-centos.json --fail-on-error
-          docker rmi centos:latest
           ls -ltr bomresults
         env:
           CDXGEN_DEBUG_MODE: verbose
