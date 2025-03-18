@@ -1053,6 +1053,14 @@ export function getPomPropertiesFromMavenDir(mavenDir: string): {};
  */
 export function checksumFile(hashName: string, path: string): Promise<string>;
 /**
+ * Computes multiple checksum for a file path using the given hash algorithms
+ *
+ * @param {Array[String]} algorithms Array of algorithms
+ * @param {string} path path to file
+ * @returns {Promise<Object>} hashes object
+ */
+export function multiChecksumFile(algorithms: any, path: string): Promise<any>;
+/**
  * Method to extract a war or ear file
  *
  * @param {string} jarFile Path to jar file
