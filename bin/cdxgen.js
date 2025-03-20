@@ -1003,6 +1003,7 @@ const checkPermissions = (filePath, options) => {
       await submitBom(options, bomNSData.bomJson);
     } catch (err) {
       console.log(err);
+      process.exit(1);
     }
   }
   // Protobuf serialization

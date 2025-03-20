@@ -279,11 +279,10 @@ export function createBom(path: string, options: any): any;
  *
  * @param {Object} args CLI args
  * @param {Object} bomContents BOM Json
- * @return {Promise<{ token: string } | { errors: string[] } | undefined>} a promise with a token (if request was successful), a body with errors (if request failed) or undefined (in case of invalid arguments)
+ * @return {Promise<{ token: string } | undefined>} a promise with a token (if request was successful) or undefined (in case of invalid arguments)
+ * @throws {Error} if the request fails
  */
 export function submitBom(args: any, bomContents: any): Promise<{
     token: string;
-} | {
-    errors: string[];
 } | undefined>;
 //# sourceMappingURL=index.d.ts.map
