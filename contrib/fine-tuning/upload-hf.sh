@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 export HF_HUB_ENABLE_HF_TRANSFER=0
+export HF_HUB_DISABLE_TELEMETRY=1
+export HF_HUB_DISABLE_PROGRESS_BARS=1
 HF_ORG=CycloneDX
 TUNING_TOOL=mlx
 TOOL_BASE_MODEL=cdx1
