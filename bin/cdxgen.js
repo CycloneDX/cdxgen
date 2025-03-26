@@ -24,6 +24,7 @@ import {
 import { thoughtEnd, thoughtLog } from "../lib/helpers/logger.js";
 import {
   ATOM_DB,
+  DEBUG_MODE,
   dirNameStr,
   getTmpDir,
   isMac,
@@ -302,6 +303,11 @@ const args = yargs(hideBin(process.argv))
     hidden: true,
     description:
       "Do not show the donation banner. Set this attribute if you are an active sponsor for OWASP CycloneDX.",
+  })
+  .option("json-pretty", {
+    type: "boolean",
+    default: DEBUG_MODE,
+    description: "Pretty-print the generated BOM json.",
   })
   .option("feature-flags", {
     description: "Experimental feature flags to enable. Advanced users only.",
@@ -798,7 +804,11 @@ const checkPermissions = (filePath, options) => {
         fs.writeFileSync(jsonFile, bomNSData.bomJson);
         jsonPayload = bomNSData.bomJson;
       } else {
-        jsonPayload = JSON.stringify(bomNSData.bomJson, null, null);
+        jsonPayload = JSON.stringify(
+          bomNSData.bomJson,
+          null,
+          options.jsonPretty ? 2 : null,
+        );
         fs.writeFileSync(jsonFile, jsonPayload);
         if (jsonFile.endsWith("bom.json")) {
           thoughtLog(
@@ -900,7 +910,11 @@ const checkPermissions = (filePath, options) => {
             bomJsonUnsignedObj.signature = signatureBlock;
             fs.writeFileSync(
               jsonFile,
-              JSON.stringify(bomJsonUnsignedObj, null, null),
+              JSON.stringify(
+                bomJsonUnsignedObj,
+                null,
+                options.jsonPretty ? 2 : null,
+              ),
             );
             thoughtLog(`Signing the BOM file "${jsonFile}".`);
             if (publicKeyFile) {
@@ -937,7 +951,9 @@ const checkPermissions = (filePath, options) => {
     }
   } else if (!options.print) {
     if (bomNSData.bomJson) {
-      console.log(JSON.stringify(bomNSData.bomJson, null, 2));
+      console.log(
+        JSON.stringify(bomNSData.bomJson, null, options.jsonPretty ? 2 : null),
+      );
     } else {
       console.log("Unable to produce BOM for", filePath);
       console.log("Try running the command with -t <type> or -r argument");
@@ -967,6 +983,7 @@ const checkPermissions = (filePath, options) => {
       includeCrypto: options.includeCrypto,
       specVersion: options.specVersion,
       profile: options.profile,
+      jsonPretty: options.jsonPretty,
     };
     const dbObjMap = await evinserModule.prepareDB(evinseOptions);
     if (dbObjMap) {
