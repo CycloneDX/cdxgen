@@ -147,7 +147,8 @@ Options:
       --server-host            Listen address                                                     [default: "127.0.0.1"]
       --server-port            Listen port                                                             [default: "9090"]
       --install-deps           Install dependencies automatically for some projects. Defaults to true but disabled for c
-                               ontainers and oci scans. Use --no-install-deps to disable this feature.         [boolean]
+                               ontainers and oci scans. Use --no-install-deps to disable this feature.
+                                                                                               [boolean] [default: true]
       --validate               Validate the generated SBOM using json schema. Defaults to true. Pass --no-validate to di
                                sable.                                                          [boolean] [default: true]
       --evidence               Generate SBOM with evidence for supported languages.           [boolean] [default: false]
@@ -170,6 +171,7 @@ Options:
                                luated against or attested to.
   [array] [choices: "asvs-5.0", "asvs-4.0.3", "bsimm-v13", "masvs-2.0.0", "nist_ssdf-1.1", "pcissc-secure-slc-1.1", "scv
                                                                                          s-1.0.0", "ssaf-DRAFT-2023-11"]
+      --json-pretty            Pretty-print the generated BOM json.                           [boolean] [default: false]
       --min-confidence         Minimum confidence needed for the identity of a component from 0 - 1, where 1 is 100% con
                                fidence.                                                            [number] [default: 0]
       --technique              Analysis technique to use
