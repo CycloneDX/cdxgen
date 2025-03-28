@@ -56,10 +56,6 @@ if (configPath) {
   }
 }
 
-let url = import.meta.url;
-if (!url.startsWith("file://")) {
-  url = new URL(`file://${import.meta.url}`).toString();
-}
 const dirName = dirNameStr;
 
 import yargs from "yargs";
