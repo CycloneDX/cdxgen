@@ -16,11 +16,11 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { getTmpDir } from "../../lib/helpers/utils.js";
 
-let url = import.meta.url;
-if (!url.startsWith("file://")) {
+let url = import.meta?.url;
+if (url && !url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
 }
-const dirName = import.meta ? dirname(fileURLToPath(url)) : __dirname;
+const dirName = url ? dirname(fileURLToPath(url)) : __dirname;
 
 const DOCKER_CMD = process.env.DOCKER_CMD || "docker";
 
