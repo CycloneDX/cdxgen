@@ -69,7 +69,7 @@
   "bugs": {
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
-  "packageManager": "pnpm@10.6.5",
+  "packageManager": "pnpm@10.7.0",
   "lint-staged": {
     "*": "biome check --fix --no-errors-on-unmatched"
   },
@@ -114,11 +114,11 @@
     "@cyclonedx/cdxgen-plugins-bin-ppc64": "1.6.9",
     "@cyclonedx/cdxgen-plugins-bin-windows-amd64": "1.6.9",
     "@cyclonedx/cdxgen-plugins-bin-windows-arm64": "1.6.9",
-    "body-parser": "^2.0.2",
+    "body-parser": "^2.2.0",
     "compression": "^1.7.5",
     "connect": "^3.7.0",
     "jsonata": "^2.0.6",
-    "sequelize": "^6.37.6",
+    "sequelize": "^6.37.7",
     "sqlite3": "^5.1.7"
   },
   "files": ["*.js", "lib/**", "bin/", "data/", "types/"],
