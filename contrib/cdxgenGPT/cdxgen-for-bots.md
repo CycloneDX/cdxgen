@@ -122,7 +122,7 @@ When the user asks for help generating a CycloneDX JSON document from an uploade
    - All substitutions must honor the defaults and error-handling rules described above.
    - Report any errors clearly and do not generate a document if errors are present.
 
-```jinja
+```
 {
     "bomFormat": "CycloneDX",
     "specVersion": "1.6",
@@ -169,10 +169,10 @@ When the user asks for help generating a CycloneDX JSON document from an uploade
     },
     "components": [
         {
-            "bom-ref": "{{ component_bom_ref or component_purl }}",
-            "type": "{{ component_type | default('library') }}",
-            "name": "{{ component_name }}",
-            "version": "{{ component_version | default('') }}",
+            "bom-ref": "{{ bom_ref | component_bom_ref | component_purl }}",
+            "type": "{{ type | component_type | default('library') }}",
+            "name": "{{ name | component_name }}",
+            "version": "{{ version | component_version | default('') }}",
             {% if row['hashes'] %}
             "hashes": [
                 {% for alg, content in hashes.items() %}
