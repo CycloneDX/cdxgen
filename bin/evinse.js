@@ -128,7 +128,10 @@ const args = yargs(hideBin(process.argv))
   .option("semantics-slices-file", {
     description: "Use an existing semantics slices file.",
     default: "semantics.slices.json",
-    hidden: true,
+  })
+  .option("openapi-spec-file", {
+    description: "Use an existing openapi specification file (SaaSBOM).",
+    default: "openapi.json",
   })
   .option("print", {
     alias: "p",
