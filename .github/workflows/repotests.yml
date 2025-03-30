@@ -767,8 +767,8 @@ jobs:
       - name: npm install, build and test
         run: |
           npm install --global corepack@latest
-          corepack enable
-          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
+          corepack enable pnpm
+          pnpm install --config.strict-dep-builds=true --package-import-method copy
           mkdir -p repotests
           mkdir -p bomresults
         env:
