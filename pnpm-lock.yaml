@@ -125,6 +125,9 @@ importers:
       '@cyclonedx/cdxgen-plugins-bin-darwin-arm64':
         specifier: 1.6.10
         version: 1.6.10
+      '@cyclonedx/cdxgen-plugins-bin-linux-amd64':
+        specifier: 1.6.10
+        version: 1.6.10
       '@cyclonedx/cdxgen-plugins-bin-linux-arm':
         specifier: 1.6.10
         version: 1.6.10
@@ -400,6 +403,11 @@ packages:
     resolution: {integrity: sha512-KMgZGQmrwNkejkE9K7QJ2y3+wyhlLkfDOa3U7Fml77UdsLDwMZteZFHXQ++ORXMvko/EJCGa3ZC0mQJRUHFgAw==}
     cpu: [arm64]
     os: [darwin]
+
+  '@cyclonedx/cdxgen-plugins-bin-linux-amd64@1.6.10':
+    resolution: {integrity: sha512-pDFWAQEoxiUC4UjYzFVI0+XYyZ/z1WHamIH4c64f+p3nM1KFM0vWyLNVsk7Ew/VzA7vNOr2TvNq5QVwZPoD5IA==}
+    cpu: [x64]
+    os: [linux]
 
   '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.6.10':
     resolution: {integrity: sha512-uWXnBu6svOr9McqnNppQ6qZ5nObaAW05RVx+CGRNziBF3RocjoWIqcqiajn7D1zokN52/ibiw2qLpGI6htaImw==}
@@ -2892,6 +2900,9 @@ snapshots:
     optional: true
 
   '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.6.10':
+    optional: true
+
+  '@cyclonedx/cdxgen-plugins-bin-linux-amd64@1.6.10':
     optional: true
 
   '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.6.10':

@@ -222,6 +222,7 @@ const args = yargs(hideBin(process.argv))
     description: "CycloneDX Specification version to use. Defaults to 1.6",
     default: 1.6,
     type: "number",
+    choices: [1.4, 1.5, 1.6],
   })
   .option("filter", {
     description:
