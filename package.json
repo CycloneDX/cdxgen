@@ -39,7 +39,8 @@
   "type": "module",
   "exports": {
     "import": "./lib/cli/index.js",
-    "types": "./types/lib/cli/index.d.ts"
+    "types": "./types/lib/cli/index.d.ts",
+    "require": "./index.cjs"
   },
   "types": "./types/lib/cli/index.d.ts",
   "bin": {
