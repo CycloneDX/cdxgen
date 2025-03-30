@@ -1,0 +1,9 @@
+├─ bar
+│  ├─ net.sourceforge.argparse4j:argparse4j:0.9.0
+│  └─ org.thymeleaf:thymeleaf:3.1.1.RELEASE
+│     ├─ ognl:ognl:3.3.4
+│     │  └─ org.javassist:javassist:3.29.0-GA
+│     ├─ org.attoparser:attoparser:2.0.6.RELEASE
+│     ├─ org.slf4j:slf4j-api:2.0.5
+│     └─ org.unbescape:unbescape:1.1.6.RELEASE
+└─ net.sourceforge.argparse4j:argparse4j:0.9.0
