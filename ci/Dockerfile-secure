@@ -181,8 +181,9 @@ RUN set -e; \
     && gem install bundler cocoapods \
     && gem --version \
     && bundler --version \
-    && cd /opt/cdxgen && corepack enable && corepack pnpm config set global-bin-dir /opt/bin \
-    && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm link --global && corepack pnpm cache delete \
+    && cd /opt/cdxgen && corepack enable pnpm && pnpm config set global-bin-dir /opt/bin \
+    && pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && pnpm link && pnpm cache delete \
+    && pnpm bin && pnpm bin -g \
     && mkdir -p /opt/cdxgen-node-cache \
     && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
     && chmod a-w -R /opt \
