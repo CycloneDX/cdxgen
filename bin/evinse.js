@@ -73,6 +73,7 @@ const args = yargs(hideBin(process.argv))
       "swift",
       "ios",
       "ruby",
+      "scala",
     ],
   })
   .option("db-path", {

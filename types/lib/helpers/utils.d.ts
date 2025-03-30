@@ -1210,7 +1210,7 @@ export function getMavenCommand(srcPath: string, rootPath: string): string;
  * Retrieves the atom command by referring to various environment variables
  */
 export function getAtomCommand(): any;
-export function executeAtom(src: any, args: any): boolean;
+export function executeAtom(src: any, args: any, extra_env?: {}): boolean;
 /**
  * Find the imported modules in the application with atom parsedeps command
  *
