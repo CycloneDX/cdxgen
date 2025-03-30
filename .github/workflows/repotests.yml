@@ -769,6 +769,7 @@ jobs:
           npm install --global corepack@latest
           corepack enable pnpm
           pnpm install --config.strict-dep-builds=true --package-import-method copy
+          ls -al node_modules/@cyclonedx/cdxgen-plugins-bin*
           mkdir -p repotests
           mkdir -p bomresults
         env:
