@@ -799,19 +799,6 @@ jobs:
           repository: 'aws-solutions/iot-device-simulator'
           path: 'repotests/iot-device-simulator'
           ref: 'v3.0.9'
-      - name: setup sdkman
-        run: |
-          curl -s "https://get.sdkman.io" | bash
-        if: runner.os != 'Windows'
-      - name: setup rbenv
-        run: |
-          git clone https://github.com/rbenv/rbenv.git --depth=1 ~/.rbenv
-          echo 'export PATH="~/.rbenv/bin:$PATH"' >> ~/.bashrc
-          echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.bashrc
-          source ~/.bashrc
-          mkdir -p "~/.rbenv/plugins"
-          git clone https://github.com/rbenv/ruby-build.git --depth=1 "~/.rbenv/plugins/ruby-build"
-        if: runner.os != 'Windows'
       - name: repotests - no exec
         run: |
           bin/cdxgen.js -p -t pnpm ${GITHUB_WORKSPACE} --no-recurse -o ${GITHUB_WORKSPACE}/bomresults/bom-self.json --fail-on-error
