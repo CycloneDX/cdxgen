@@ -66,6 +66,11 @@ jobs:
           corepack enable
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
           corepack pnpm test
+          echo "$(pwd)/node_modules/.bin" >> $GITHUB_PATH
+          which atom
+          which scalasem
+          which rbastgen
+          which phpastgen
           mkdir -p repotests
           mkdir -p bomresults
           mkdir -p denoresults
@@ -567,7 +572,7 @@ jobs:
       - name: scala tests
         run: |
           python -m pip install atom-tools
-          npm install -g @appthreat/atom
+          which atom-tools
           cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
           sbt clean stage
           cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example
@@ -801,6 +806,11 @@ jobs:
           npm install --global corepack@latest
           corepack enable pnpm
           pnpm install --config.strict-dep-builds=true --package-import-method copy
+          echo "$(pwd)/node_modules/.bin" >> $GITHUB_PATH
+          which atom
+          which scalasem
+          which rbastgen
+          which phpastgen
           ls -al node_modules/@cyclonedx/cdxgen-plugins-bin*
           mkdir -p repotests
           mkdir -p bomresults
