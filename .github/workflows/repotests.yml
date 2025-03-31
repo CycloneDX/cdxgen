@@ -24,10 +24,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '23'
-      - uses: sbt/setup-sbt@v1
-      - uses: coursier/setup-action@v1
-        with:
-          apps: scala3 scalac
       - uses: actions/setup-go@v5
         with:
           go-version: '1.23'
@@ -564,9 +560,20 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+      - uses: sbt/setup-sbt@v1
+      - uses: coursier/setup-action@v1
+        with:
+          apps: scala3 scalac
       - name: scala tests
         run: |
           python -m pip install atom-tools
+          cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
+          sbt clean stage
+          cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example
+          sbt clean stage
+          cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example
+          sbt clean stage
+          cd $GITHUB_WORKSPACE
           bin/cdxgen.js -p -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example -o bomresults/bom-simple-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
           bin/cdxgen.js -p -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example --profile research -o bomresults/bom-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
           bin/cdxgen.js -p -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example --profile research -o bomresults/bom-play-scala-rest-api-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example
