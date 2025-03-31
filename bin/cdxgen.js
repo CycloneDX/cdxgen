@@ -218,11 +218,6 @@ const args = yargs(hideBin(process.argv))
     default: "semantics.slices.json",
     hidden: true,
   })
-  .option("openapi-spec-file", {
-    description: "Use an existing openapi specification file (SaaSBOM).",
-    default: "openapi.json",
-    hidden: true,
-  })
   .option("spec-version", {
     description: "CycloneDX Specification version to use. Defaults to 1.6",
     default: 1.6,
@@ -716,7 +711,6 @@ const checkPermissions = (filePath, options) => {
       "deps-slices-file",
       "usages-slices-file",
       "reachables-slices-file",
-      "openapi-spec-file",
     ];
     if (options?.type?.includes("swift") || options?.type?.includes("scala")) {
       slicesFilesKeys.push("semantics-slices-file");
@@ -999,7 +993,6 @@ const checkPermissions = (filePath, options) => {
       dataFlowSlicesFile: options.dataFlowSlicesFile,
       reachablesSlicesFile: options.reachablesSlicesFile,
       semanticsSlicesFile: options.semanticsSlicesFile,
-      openapiSpecFile: options.openapiSpecFile,
       includeCrypto: options.includeCrypto,
       specVersion: options.specVersion,
       profile: options.profile,

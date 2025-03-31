@@ -128,3 +128,5 @@ build/
 
 # Ignore IntelliJ IDEA module file
 cdxgen.iml
+
+.theia/

@@ -1514,6 +1514,7 @@ export const PROJECT_TYPE_ALIASES: {
     binary: string[];
     oci: string[];
     cocoa: string[];
+    scala: string[];
 };
 export namespace PACKAGE_MANAGER_ALIASES {
     let scala: string[];
