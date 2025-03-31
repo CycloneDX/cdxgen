@@ -47,6 +47,7 @@
     "cdxgen-secure": "bin/cdxgen.js",
     "obom": "bin/cdxgen.js",
     "cbom": "bin/cdxgen.js",
+    "saasbom": "bin/cdxgen.js",
     "cdxi": "bin/repl.js",
     "evinse": "bin/evinse.js",
     "cdx-verify": "bin/verify.js"
