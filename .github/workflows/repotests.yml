@@ -24,6 +24,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '23'
+      - uses: sbt/setup-sbt@v1
+      - uses: coursier/setup-action@v1
+        with:
+          apps: scala3 scalac
       - uses: actions/setup-go@v5
         with:
           go-version: '1.23'
@@ -108,10 +112,6 @@ jobs:
         with:
           repository: 'ShiftLeftSecurity/shiftleft-go-example'
           path: 'repotests/shiftleft-go-example'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'prabhu/shiftleft-scala-example'
-          path: 'repotests/shiftleft-scala-example'
       - uses: actions/checkout@v4
         with:
           repository: 'HooliCorp/vulnerable_net_core'
@@ -326,6 +326,11 @@ jobs:
           repository: 'SeanyCash/TwinCAT_CNC'
           path: 'repotests/TwinCAT_CNC'
           ref: '0e1020338c10cf77249aeaff34520f9516816167'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'playframework/play-samples'
+          path: 'repotests/play-samples'
+          ref: '0dccba17856e89dbb5e457ab760efb14cc691395'
       - uses: dtolnay/rust-toolchain@stable
       - name: setup sdkman
         run: |
@@ -554,6 +559,18 @@ jobs:
           bin/cdxgen.js -p -r -t dotnet-framework repotests/SimpleFrameworkApp -o bomresults/bom-dotnet-framework.json
           bin/cdxgen.js -p -r -t dotnet-framework repotests/Reporting-Windows-Application -o bomresults/bom-dotnet-framework-reporting.json --deep
         shell: bash
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - name: scala tests
+        run: |
+          bin/cdxgen.js -p -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example -o bomresults/bom-simple-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
+          bin/cdxgen.js -p -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example --profile research -o bomresults/bom-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
+          bin/cdxgen.js -p -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example --profile research -o bomresults/bom-play-scala-rest-api-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example
+          bin/cdxgen.js -p -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example --profile research -o bomresults/bom-pplay-scala-grpc-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example
+        shell: bash
       - name: repotests blint
         run: |
           bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint.json --fail-on-error
@@ -732,6 +749,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '23'
+      - uses: sbt/setup-sbt@v1
+      - uses: coursier/setup-action@v1
+        with:
+          apps: scala3 scalac
       - uses: actions/setup-go@v5
         with:
           go-version: '1.23'
