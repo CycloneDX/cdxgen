@@ -66,11 +66,6 @@ jobs:
           corepack enable
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
           corepack pnpm test
-          echo "${{github.workspace}}/node_modules/.bin" >> $GITHUB_PATH
-          which atom
-          which scalasem
-          which rbastgen
-          which phpastgen
           mkdir -p repotests
           mkdir -p bomresults
           mkdir -p denoresults
@@ -806,11 +801,6 @@ jobs:
           npm install --global corepack@latest
           corepack enable pnpm
           pnpm install --config.strict-dep-builds=true --package-import-method copy
-          echo "${{github.workspace}}/node_modules/.bin" >> $GITHUB_PATH
-          which atom
-          which scalasem
-          which rbastgen
-          which phpastgen
           ls -al node_modules/@cyclonedx/cdxgen-plugins-bin*
           mkdir -p repotests
           mkdir -p bomresults
