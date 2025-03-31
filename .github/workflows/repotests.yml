@@ -567,6 +567,7 @@ jobs:
       - name: scala tests
         run: |
           python -m pip install atom-tools
+          npm install -g @appthreat/atom
           cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
           sbt clean stage
           cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example
