@@ -66,7 +66,7 @@ jobs:
           corepack enable
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
           corepack pnpm test
-          echo "$(pwd)/node_modules/.bin" >> $GITHUB_PATH
+          echo "${{github.workspace}}/node_modules/.bin" >> $GITHUB_PATH
           which atom
           which scalasem
           which rbastgen
@@ -806,7 +806,7 @@ jobs:
           npm install --global corepack@latest
           corepack enable pnpm
           pnpm install --config.strict-dep-builds=true --package-import-method copy
-          echo "$(pwd)/node_modules/.bin" >> $GITHUB_PATH
+          echo "${{github.workspace}}/node_modules/.bin" >> $GITHUB_PATH
           which atom
           which scalasem
           which rbastgen
