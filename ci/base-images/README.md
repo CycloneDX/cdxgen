@@ -11,8 +11,10 @@ Below table summarizes all available container image versions. These images incl
 | Java     | 24                           | ghcr.io/cyclonedx/cdxgen:master                                                                | Default all-in-one container image with all the latest and greatest tools with Node 23 runtime. Permission model is opt-in.               |
 | Java     | 24                           | ghcr.io/cyclonedx/cdxgen-deno:master                                                           | Default all-in-one container image with all the latest and greatest tools with deno runtime. Uses deno permissions model by default.      |
 | Java     | 24                           | ghcr.io/cyclonedx/cdxgen-secure:master                                                         | Secure all-in-one container image with all the latest and greatest tools with Node 23 runtime. Uses Node.js permissions model by default. |
+| Java     | 8                            | ghcr.io/cyclonedx/cdxgen-temurin-java8:v11                                                     | Java 8 version.                                                                                                                           |
 | Java     | 11                           | ghcr.io/cyclonedx/cdxgen-java11-slim:v11, ghcr.io/cyclonedx/cdxgen-java11:v11                  | Java 11 version with and without Android 33 SDK.                                                                                          |
 | Java     | 17                           | ghcr.io/cyclonedx/cdxgen-java17-slim:v11, ghcr.io/cyclonedx/cdxgen-java17:v11                  | Java 17 version with and without Android 34 SDK.                                                                                          |
+| Java     | 21                           | ghcr.io/cyclonedx/cdxgen-temurin-java21:v11                                                    | Java 21 version with Android 34 SDK.                                                                                                      |
 | Dotnet   | .Net Framework 4.6 - 4.8     | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11                                                    | .Net Framework                                                                                                                            |
 | Dotnet   | .Net Core 2.1, 3.1, .Net 5.0 | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11                                                    | Invoke with --platform=linux/amd64 for better compatibility.                                                                              |
 | Dotnet   | .Net 6                       | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11                                                    | .Net 6                                                                                                                                    |
@@ -57,10 +59,8 @@ docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2
 
 Java 8
 
-Use the java 11 image but pass `-t java8`.
-
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java11-slim:v11 -r /app -o /app/bom.json -t java8
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-temurin-java8:v11 -r /app -o /app/bom.json -t java
 ```
 
 Java 17 version
@@ -73,6 +73,12 @@ Java 17 version with Android 34 SDK and gcc
 
 ```shell
 docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java17:v11 -r /app -o /app/bom.json -t java
+```
+
+Java 21 version with Android 34 SDK
+
+```shell
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-temurin-java21:v11 -r /app -o /app/bom.json -t java
 ```
 
 ### .Net Framework, .Net Core 3.1, and .Net 6.0 applications
