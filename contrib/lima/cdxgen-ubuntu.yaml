@@ -42,7 +42,7 @@ provision:
     #!/bin/bash
     set -e -o pipefail
     export MAVEN_VERSION=3.9.9
-    export SBT_VERSION=1.10.10
+    export SBT_VERSION=1.10.11
     export GRADLE_VERSION=8.13
     export MAVEN_HOME="/.sdkman/candidates/maven/${MAVEN_VERSION}"
     export GRADLE_HOME="/.sdkman/candidates/gradle/${GRADLE_VERSION}"
