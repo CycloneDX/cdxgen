@@ -39,7 +39,8 @@
   "type": "module",
   "exports": {
     "import": "./lib/cli/index.js",
-    "types": "./types/lib/cli/index.d.ts"
+    "types": "./types/lib/cli/index.d.ts",
+    "require": "./index.cjs"
   },
   "types": "./types/lib/cli/index.d.ts",
   "bin": {
@@ -123,7 +124,7 @@
     "sequelize": "^6.37.7",
     "sqlite3": "^5.1.7"
   },
-  "files": ["*.js", "lib/**", "bin/", "data/", "types/"],
+  "files": ["*.js", "lib/**", "bin/", "data/", "types/", "index.cjs"],
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "jest": "^29.7.0",

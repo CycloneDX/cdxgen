@@ -9,10 +9,6 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { dirNameStr } from "../lib/helpers/utils.js";
 
-let url = import.meta.url;
-if (!url.startsWith("file://")) {
-  url = new URL(`file://${import.meta.url}`).toString();
-}
 const dirName = dirNameStr;
 
 const args = yargs(hideBin(process.argv))
