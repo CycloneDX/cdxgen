@@ -73,7 +73,7 @@ ENV GOPATH=/opt/app-root/go \
     RUBY_BUILD_BUILD_PATH="/tmp/rbenv" \
     RUBY_BUILD_HTTP_CLIENT=curl \
     RBENV_ROOT=/opt/.rbenv
-ENV PATH=${PATH}:/opt/bin:/opt/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/opt/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/opt/pypi/bin:/opt/.rbenv/bin:/opt/.rbenv/versions/3.4.1/bin:
+ENV PATH=${PATH}:/opt/bin:/opt/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/opt/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/opt/pypi/bin:/opt/.rbenv/bin:/opt/.rbenv/versions/3.4.2/bin:
 
 COPY . /opt/cdxgen
 
