@@ -124,13 +124,13 @@ jobs:
         run: |
           mkdir -p $GITHUB_WORKSPACE/scalaresults/play-scala-rest-api-example
           cd repotests/play-samples/play-scala-rest-api-example
-          docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen:master -r /app -o /app/bom.json -t scala --profile research
+          docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-temurin-java21:v11 -r /app -o /app/bom.json -t scala --profile research
           cp bom.json *.slices.json $GITHUB_WORKSPACE/scalaresults/play-scala-rest-api-example
       - name: generate reachables sbom - play-scala-slick-example
         run: |
           mkdir -p $GITHUB_WORKSPACE/scalaresults/play-scala-slick-example
           cd repotests/play-samples/play-scala-slick-example
-          docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen:master -r /app -o /app/bom.json -t scala --profile research
+          docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-temurin-java21:v11 -r /app -o /app/bom.json -t scala --profile research
           cp bom.json *.slices.json $GITHUB_WORKSPACE/scalaresults/play-scala-slick-example
       - uses: actions/upload-artifact@v4
         with:
