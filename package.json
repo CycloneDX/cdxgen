@@ -48,6 +48,7 @@
     "cdxgen-secure": "bin/cdxgen.js",
     "obom": "bin/cdxgen.js",
     "cbom": "bin/cdxgen.js",
+    "saasbom": "bin/cdxgen.js",
     "cdxi": "bin/repl.js",
     "evinse": "bin/evinse.js",
     "cdx-verify": "bin/verify.js"
@@ -70,7 +71,7 @@
   "bugs": {
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
-  "packageManager": "pnpm@10.6.5",
+  "packageManager": "pnpm@10.7.0",
   "lint-staged": {
     "*": "biome check --fix --no-errors-on-unmatched"
   },
@@ -107,19 +108,20 @@
   "optionalDependencies": {
     "@appthreat/atom": "2.1.14",
     "@appthreat/cdx-proto": "1.0.1",
-    "@cyclonedx/cdxgen-plugins-bin": "1.6.9",
-    "@cyclonedx/cdxgen-plugins-bin-arm": "1.6.9",
-    "@cyclonedx/cdxgen-plugins-bin-arm64": "1.6.9",
-    "@cyclonedx/cdxgen-plugins-bin-darwin-amd64": "1.6.9",
-    "@cyclonedx/cdxgen-plugins-bin-darwin-arm64": "1.6.9",
-    "@cyclonedx/cdxgen-plugins-bin-ppc64": "1.6.9",
-    "@cyclonedx/cdxgen-plugins-bin-windows-amd64": "1.6.9",
-    "@cyclonedx/cdxgen-plugins-bin-windows-arm64": "1.6.9",
-    "body-parser": "^2.0.2",
+    "@cyclonedx/cdxgen-plugins-bin": "1.6.10",
+    "@cyclonedx/cdxgen-plugins-bin-linux-arm": "1.6.10",
+    "@cyclonedx/cdxgen-plugins-bin-linux-amd64": "1.6.10",
+    "@cyclonedx/cdxgen-plugins-bin-linux-arm64": "1.6.10",
+    "@cyclonedx/cdxgen-plugins-bin-darwin-amd64": "1.6.10",
+    "@cyclonedx/cdxgen-plugins-bin-darwin-arm64": "1.6.10",
+    "@cyclonedx/cdxgen-plugins-bin-linux-ppc64": "1.6.10",
+    "@cyclonedx/cdxgen-plugins-bin-windows-amd64": "1.6.10",
+    "@cyclonedx/cdxgen-plugins-bin-windows-arm64": "1.6.10",
+    "body-parser": "^2.2.0",
     "compression": "^1.7.5",
     "connect": "^3.7.0",
     "jsonata": "^2.0.6",
-    "sequelize": "^6.37.6",
+    "sequelize": "^6.37.7",
     "sqlite3": "^5.1.7"
   },
   "files": ["*.js", "lib/**", "bin/", "data/", "types/", "index.cjs"],

@@ -102,3 +102,43 @@ jobs:
         with:
           name: rubyresults
           path: rubyresults
+
+  scala-samples:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-24.04"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: 'playframework/play-samples'
+          path: 'repotests/play-samples'
+          ref: '0dccba17856e89dbb5e457ab760efb14cc691395'
+      - name: setup paths
+        run: |
+          mkdir -p repotests
+          mkdir -p scalaresults
+      - name: generate reachables sbom - play-scala-rest-api-example
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/scalaresults/play-scala-rest-api-example
+          cd repotests/play-samples/play-scala-rest-api-example
+          docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-temurin-java21:v11 -r /app -o /app/bom.json -t scala --profile research
+          cp *.json $GITHUB_WORKSPACE/scalaresults/play-scala-rest-api-example
+      - name: generate reachables sbom - play-scala-slick-example
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/scalaresults/play-scala-slick-example
+          cd repotests/play-samples/play-scala-slick-example
+          docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-temurin-java21:v11 -r /app -o /app/bom.json -t scala --profile research
+          cp *.json $GITHUB_WORKSPACE/scalaresults/play-scala-slick-example
+      - name: generate reachables sbom - play-scala-starter-example/
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/scalaresults/play-scala-starter-example
+          cd repotests/play-samples/play-scala-starter-example
+          docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-temurin-java21:v11 -r /app -o /app/bom.json -t scala --profile research
+          cp *.json $GITHUB_WORKSPACE/scalaresults/play-scala-starter-example
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scalaresults
+          path: scalaresults

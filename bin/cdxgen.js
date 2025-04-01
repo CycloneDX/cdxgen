@@ -218,6 +218,7 @@ const args = yargs(hideBin(process.argv))
     description: "CycloneDX Specification version to use. Defaults to 1.6",
     default: 1.6,
     type: "number",
+    choices: [1.4, 1.5, 1.6],
   })
   .option("filter", {
     description:
@@ -444,11 +445,23 @@ if (!options.projectType) {
     "Ok, the user wants me to identify all the project types and generate a consolidated BOM document.",
   );
 }
-if (process.argv[1].includes("cbom")) {
-  thoughtLog(
-    "Ok, the user wants to generate Cryptographic Bill-of-Materials (CBOM).",
-  );
-  options.includeCrypto = true;
+// Handle dedicated cbom and saasbom commands
+if (["cbom", "saasbom"].includes(process.argv[1])) {
+  if (process.argv[1].includes("cbom")) {
+    thoughtLog(
+      "Ok, the user wants to generate Cryptographic Bill-of-Materials (CBOM).",
+    );
+    options.includeCrypto = true;
+  } else if (process.argv[1].includes("saasbom")) {
+    thoughtLog(
+      "Ok, the user wants to generate a Software as a Service Bill-of-Materials (SaaSBOM). I should carefully collect the services, endpoints, and data flows.",
+    );
+    if (process.env?.CDXGEN_IN_CONTAINER !== "true") {
+      thoughtLog(
+        "Wait, I'm not running in a container. This means the chances of successfully collecting this inventory are quite low. Perhaps this is an advanced user who has set up atom and atom-tools already 🤔?",
+      );
+    }
+  }
   options.evidence = true;
   options.specVersion = 1.6;
   options.deep = true;
@@ -695,7 +708,7 @@ const checkPermissions = (filePath, options) => {
       "usages-slices-file",
       "reachables-slices-file",
     ];
-    if (options?.type?.includes("swift")) {
+    if (options?.type?.includes("swift") || options?.type?.includes("scala")) {
       slicesFilesKeys.push("semantics-slices-file");
     }
     for (const sf of slicesFilesKeys) {

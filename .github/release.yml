@@ -1,5 +1,9 @@
 changelog:
   categories:
+    - title: Breaking Changes 🛠
+      labels:
+        - breaking
+        - possibly breaking
     - title: 🚀 Features
       labels:
         - enhancement
@@ -21,6 +25,9 @@ changelog:
     - title: 📦 Dependency Updates
       labels:
         - dependency
+    - title: 💳 Sponsored Work
+      labels:
+        - sponsored
     - title: Other Changes
       labels:
         - "*"

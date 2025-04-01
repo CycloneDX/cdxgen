@@ -110,10 +110,6 @@ jobs:
           path: 'repotests/shiftleft-go-example'
       - uses: actions/checkout@v4
         with:
-          repository: 'prabhu/shiftleft-scala-example'
-          path: 'repotests/shiftleft-scala-example'
-      - uses: actions/checkout@v4
-        with:
           repository: 'HooliCorp/vulnerable_net_core'
           path: 'repotests/vulnerable_net_core'
       - uses: actions/checkout@v4
@@ -326,6 +322,11 @@ jobs:
           repository: 'SeanyCash/TwinCAT_CNC'
           path: 'repotests/TwinCAT_CNC'
           ref: '0e1020338c10cf77249aeaff34520f9516816167'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'playframework/play-samples'
+          path: 'repotests/play-samples'
+          ref: '0dccba17856e89dbb5e457ab760efb14cc691395'
       - uses: dtolnay/rust-toolchain@stable
       - name: setup sdkman
         run: |
@@ -554,6 +555,33 @@ jobs:
           bin/cdxgen.js -p -r -t dotnet-framework repotests/SimpleFrameworkApp -o bomresults/bom-dotnet-framework.json
           bin/cdxgen.js -p -r -t dotnet-framework repotests/Reporting-Windows-Application -o bomresults/bom-dotnet-framework-reporting.json --deep
         shell: bash
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - uses: sbt/setup-sbt@v1
+      - uses: coursier/setup-action@v1
+        with:
+          apps: scala3 scalac
+      - name: scala tests
+        run: |
+          python -m pip install atom-tools
+          which atom-tools
+          cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
+          sbt clean stage
+          cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example
+          sbt clean stage
+          cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example
+          sbt clean stage
+          cd $GITHUB_WORKSPACE
+          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example -o bomresults/bom-simple-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
+          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example --profile research -o bomresults/bom-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
+          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example --profile research -o bomresults/bom-play-scala-rest-api-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example
+          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example --profile research -o bomresults/bom-pplay-scala-grpc-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example
+        shell: bash
+        env:
+          CDXGEN_DEBUG_MODE: debug
       - name: repotests blint
         run: |
           bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint.json --fail-on-error
@@ -732,6 +760,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '23'
+      - uses: sbt/setup-sbt@v1
+      - uses: coursier/setup-action@v1
+        with:
+          apps: scala3 scalac
       - uses: actions/setup-go@v5
         with:
           go-version: '1.23'
@@ -767,8 +799,9 @@ jobs:
       - name: npm install, build and test
         run: |
           npm install --global corepack@latest
-          corepack enable
-          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
+          corepack enable pnpm
+          pnpm install --config.strict-dep-builds=true --package-import-method copy
+          ls -al node_modules/@cyclonedx/cdxgen-plugins-bin*
           mkdir -p repotests
           mkdir -p bomresults
         env:
@@ -799,19 +832,6 @@ jobs:
           repository: 'aws-solutions/iot-device-simulator'
           path: 'repotests/iot-device-simulator'
           ref: 'v3.0.9'
-      - name: setup sdkman
-        run: |
-          curl -s "https://get.sdkman.io" | bash
-        if: runner.os != 'Windows'
-      - name: setup rbenv
-        run: |
-          git clone https://github.com/rbenv/rbenv.git --depth=1 ~/.rbenv
-          echo 'export PATH="~/.rbenv/bin:$PATH"' >> ~/.bashrc
-          echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.bashrc
-          source ~/.bashrc
-          mkdir -p "~/.rbenv/plugins"
-          git clone https://github.com/rbenv/ruby-build.git --depth=1 "~/.rbenv/plugins/ruby-build"
-        if: runner.os != 'Windows'
       - name: repotests - no exec
         run: |
           bin/cdxgen.js -p -t pnpm ${GITHUB_WORKSPACE} --no-recurse -o ${GITHUB_WORKSPACE}/bomresults/bom-self.json --fail-on-error

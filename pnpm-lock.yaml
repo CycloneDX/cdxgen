@@ -105,7 +105,7 @@ importers:
         version: 1.9.4
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@22.13.13)
+        version: 29.7.0(@types/node@22.13.14)
       typescript:
         specifier: ^5.8.2
         version: 5.8.2
@@ -117,32 +117,35 @@ importers:
         specifier: 1.0.1
         version: 1.0.1
       '@cyclonedx/cdxgen-plugins-bin':
-        specifier: 1.6.9
-        version: 1.6.9
-      '@cyclonedx/cdxgen-plugins-bin-arm':
-        specifier: 1.6.9
-        version: 1.6.9
-      '@cyclonedx/cdxgen-plugins-bin-arm64':
-        specifier: 1.6.9
-        version: 1.6.9
+        specifier: 1.6.10
+        version: 1.6.10
       '@cyclonedx/cdxgen-plugins-bin-darwin-amd64':
-        specifier: 1.6.9
-        version: 1.6.9
+        specifier: 1.6.10
+        version: 1.6.10
       '@cyclonedx/cdxgen-plugins-bin-darwin-arm64':
-        specifier: 1.6.9
-        version: 1.6.9
-      '@cyclonedx/cdxgen-plugins-bin-ppc64':
-        specifier: 1.6.9
-        version: 1.6.9
+        specifier: 1.6.10
+        version: 1.6.10
+      '@cyclonedx/cdxgen-plugins-bin-linux-amd64':
+        specifier: 1.6.10
+        version: 1.6.10
+      '@cyclonedx/cdxgen-plugins-bin-linux-arm':
+        specifier: 1.6.10
+        version: 1.6.10
+      '@cyclonedx/cdxgen-plugins-bin-linux-arm64':
+        specifier: 1.6.10
+        version: 1.6.10
+      '@cyclonedx/cdxgen-plugins-bin-linux-ppc64':
+        specifier: 1.6.10
+        version: 1.6.10
       '@cyclonedx/cdxgen-plugins-bin-windows-amd64':
-        specifier: 1.6.9
-        version: 1.6.9
+        specifier: 1.6.10
+        version: 1.6.10
       '@cyclonedx/cdxgen-plugins-bin-windows-arm64':
-        specifier: 1.6.9
-        version: 1.6.9
+        specifier: 1.6.10
+        version: 1.6.10
       body-parser:
-        specifier: ^2.0.2
-        version: 2.1.0
+        specifier: ^2.2.0
+        version: 2.2.0
       compression:
         specifier: ^1.7.5
         version: 1.8.0
@@ -153,8 +156,8 @@ importers:
         specifier: ^2.0.6
         version: 2.0.6
       sequelize:
-        specifier: ^6.37.6
-        version: 6.37.6(sqlite3@5.1.7)
+        specifier: ^6.37.7
+        version: 6.37.7(sqlite3@5.1.7)
       sqlite3:
         specifier: ^5.1.7
         version: 5.1.7
@@ -391,43 +394,48 @@ packages:
   '@bufbuild/protobuf@1.7.2':
     resolution: {integrity: sha512-i5GE2Dk5ekdlK1TR7SugY4LWRrKSfb5T1Qn4unpIMbfxoeGKERKQ59HG3iYewacGD10SR7UzevfPnh6my4tNmQ==}
 
-  '@cyclonedx/cdxgen-plugins-bin-arm64@1.6.9':
-    resolution: {integrity: sha512-Cmab5i0cqDMNBPBbtqmezHboY8w+a0slTFEahBlO6NWF5Zp9KGF8XdGLkhh7BAKzHrOvoEYqsLum/XRIiptx/A==}
+  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.10':
+    resolution: {integrity: sha512-hELVleECcNxl69gep3HGDNrN+IqG2xNr8mHU2RKZpUa1h/H+32hohRRqkZwOXTTha+/MJnLe78KrZ0QeoXZddA==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.6.10':
+    resolution: {integrity: sha512-KMgZGQmrwNkejkE9K7QJ2y3+wyhlLkfDOa3U7Fml77UdsLDwMZteZFHXQ++ORXMvko/EJCGa3ZC0mQJRUHFgAw==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@cyclonedx/cdxgen-plugins-bin-linux-amd64@1.6.10':
+    resolution: {integrity: sha512-pDFWAQEoxiUC4UjYzFVI0+XYyZ/z1WHamIH4c64f+p3nM1KFM0vWyLNVsk7Ew/VzA7vNOr2TvNq5QVwZPoD5IA==}
+    cpu: [x64]
+    os: [linux]
+
+  '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.6.10':
+    resolution: {integrity: sha512-uWXnBu6svOr9McqnNppQ6qZ5nObaAW05RVx+CGRNziBF3RocjoWIqcqiajn7D1zokN52/ibiw2qLpGI6htaImw==}
     cpu: [arm64]
     os: [linux]
 
-  '@cyclonedx/cdxgen-plugins-bin-arm@1.6.9':
-    resolution: {integrity: sha512-33rCgOEq+YwPeXw1RsqCUm0HwM3SB693FFL/lRvBxeIoO2WJSokDFTKNX1qFbLhpWbcyjktYPOybi9E4eLfKZA==}
+  '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.6.10':
+    resolution: {integrity: sha512-H3o368Qc2aaUqhFYuDM/r3AwzZJYRbmdMGUKTueTHU5TUcUC07cKIlYalejMkHV2ku7Koh6yAAJI4U9M3Aoa8Q==}
     cpu: [arm]
     os: [linux]
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.9':
-    resolution: {integrity: sha512-q+UJFfsIjnKJK/gi2JGDEgNIx/NlZ+GyKi4eN+KfOoQ89oiw1LeP3NeWbFuq65s7RMjE14JR7fk7mHKwY7/j4Q==}
-    cpu: [x64]
-    os: [darwin]
-
-  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.6.9':
-    resolution: {integrity: sha512-MhpS7l6mjLRbk5/qMkAOU52l7D9Zu+FRYcwMAjK07LyJQPtCQ3woh75nmLWDJBYGoC0HGtruqW5injsRB3U43g==}
-    cpu: [arm64]
-    os: [darwin]
-
-  '@cyclonedx/cdxgen-plugins-bin-ppc64@1.6.9':
-    resolution: {integrity: sha512-+UOV66PilNNWCAqlicpANDs/RfUeAqfsQL1jmKrrIlcmoUzh4YmXHvGu9zYJpOBUiY03dlJMUuzvV2HjCS9V+w==}
+  '@cyclonedx/cdxgen-plugins-bin-linux-ppc64@1.6.10':
+    resolution: {integrity: sha512-tLmRkt4JyIOCqnpwqC75qxZxgOqpvbjz8XOyr+/1ZQ3X+oAjob7KuwIZ2x5Yv7FDz17FoqHjE6NTbJ4/fs1abQ==}
     cpu: [ppc64]
     os: [linux]
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.9':
-    resolution: {integrity: sha512-O6AHve3MS8n6ND2jQ3ZqOjuMiMCyrpKmQ0MjAOpWhUH2dEcvFV4uEdb9BY1um6RtqfVtoUodMx/49x4m9q0z+A==}
+  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.10':
+    resolution: {integrity: sha512-RNOFI9JYsTu8EfJOX5GSf/sVaqlMY2MV1CByCH7ibey7HqL3Ub9l65/F1kvn1TYZX21FXwYp5RmcaISicq/pIA==}
     cpu: [x64]
     os: [win32]
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.6.9':
-    resolution: {integrity: sha512-8OK5G1wczb8yf5vhmYWjueKdWq2G4SEogUb86lwuemz1bTOZkuLl4oRYwAp79+fzF/lMKJmxK4pTWmf+2zhdZQ==}
+  '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.6.10':
+    resolution: {integrity: sha512-gnrce5rt1jMR5Aj62X125iouJBU6sekUafJWf/5r2emXAPGzjeWyAS3lhax8hKmhCuKAsVA9iZdqVt30wSF1Bw==}
     cpu: [arm64]
     os: [win32]
 
-  '@cyclonedx/cdxgen-plugins-bin@1.6.9':
-    resolution: {integrity: sha512-WGXpmuokvkCblmvvPxH8tvk5bC/Jq2Zgy/RVXrYYt51uW9vtA++GmPeWpMewMfgg/jto9pJY+twnDS2l4t/bCQ==}
+  '@cyclonedx/cdxgen-plugins-bin@1.6.10':
+    resolution: {integrity: sha512-be+vIIpd8bU3YhAYaWv/6aPoC99huwOVv4jcnoJHlvliM6kFWEaNVmvrJR7BaPyynpq/Bgx5zCp2dHMdY1bi7w==}
     cpu: [x64]
 
   '@iarna/toml@2.2.5':
@@ -687,8 +695,8 @@ packages:
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
-  '@types/node@22.13.13':
-    resolution: {integrity: sha512-ClsL5nMwKaBRwPcCvH8E7+nU4GxHVx1axNvMZTFHMEfNI7oahimt26P5zjVCRrjiIWj6YFXfE1v3dEp94wLcGQ==}
+  '@types/node@22.13.14':
+    resolution: {integrity: sha512-Zs/Ollc1SJ8nKUAgc7ivOEdIBM8JAKgrqqUYi2J997JuKO7/tpQC+WCetQ1sypiKCQWHdvdg9wBNpUPEWZae7w==}
 
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
@@ -808,8 +816,8 @@ packages:
   bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
 
-  body-parser@2.1.0:
-    resolution: {integrity: sha512-/hPxh61E+ll0Ujp24Ilm64cykicul1ypfwjVttduAiEdtnJFvLePSrIPk+HMImtNv5270wOGCb1Tns2rybMkoQ==}
+  body-parser@2.2.0:
+    resolution: {integrity: sha512-02qvAaxv8tp7fBa/mw1ga98OGm+eCbqzJOKoRt70sLmfEEi+jyBYVTDGfCL/k06/4EMk/z01gCe7HoCH/f2LTg==}
     engines: {node: '>=18'}
 
   boolbase@1.0.0:
@@ -1095,8 +1103,8 @@ packages:
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  electron-to-chromium@1.5.124:
-    resolution: {integrity: sha512-riELkpDUqBi00gqreV3RIGoowxGrfueEKBd6zPdOk/I8lvuFpBGNkYoHof3zUHbiTBsIU8oxdIIL/WNrAG1/7A==}
+  electron-to-chromium@1.5.128:
+    resolution: {integrity: sha512-bo1A4HH/NS522Ws0QNFIzyPcyUUNV/yyy70Ho1xqfGYzPUme2F/xr4tlEOuM6/A538U1vDA7a4XfCd1CKRegKQ==}
 
   emittery@0.13.1:
     resolution: {integrity: sha512-DeWwawk6r5yR9jFgnDKYt4sLS0LmHJJi3ZOnb5/JdbYwj3nW+FxQnHIjhBKz8YLC7oRNPVM9NQ47I3CVx34eqQ==}
@@ -1353,10 +1361,6 @@ packages:
   human-signals@2.1.0:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
-
-  iconv-lite@0.5.2:
-    resolution: {integrity: sha512-kERHXvpSaB4aU3eANwidg79K8FlrN77m8G9V+0vOR3HYaRifrlwMEpT7ZBJqLSEIHnEgJTHcWK82wwLwwKwtag==}
-    engines: {node: '>=0.10.0'}
 
   iconv-lite@0.6.3:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
@@ -1737,8 +1741,8 @@ packages:
     resolution: {integrity: sha512-aU5EJuIN2WDemCcAp2vFBfp/m4EAhWJnUNSSw0ixs7/kXbd6Pg64EmwJkNdFhB8aWt1sH2CTXrLxo/iAGV3oPQ==}
     engines: {node: '>= 0.6'}
 
-  mime-types@3.0.0:
-    resolution: {integrity: sha512-XqoSHeCGjVClAmoGFG3lVFqQFRIrTVw2OH3axRqAcfaw+gHWIfnASS92AV+Rl/mk0MupgZTRHQOjxY6YVnzK5w==}
+  mime-types@3.0.1:
+    resolution: {integrity: sha512-xRc4oEhT6eaBpU1XF7AjpOFD+xQmXNB5OVKwp4tqCuBpHLS/ZbBDrc07mYTDqVMg6PfxUjjNp85O6Cd2Z/5HWA==}
     engines: {node: '>= 0.6'}
 
   mimic-fn@2.1.0:
@@ -2045,8 +2049,8 @@ packages:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
 
-  pirates@4.0.6:
-    resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
+  pirates@4.0.7:
+    resolution: {integrity: sha512-TfySrs/5nm8fQJDcBDuUng3VOUKsd7S+zqvbOTiGXHfxX4wK31ard+hoNuvkicM/2YFzlpDgABOevKSsB4G/FA==}
     engines: {node: '>= 6'}
 
   pkg-dir@4.2.0:
@@ -2208,8 +2212,8 @@ packages:
     resolution: {integrity: sha512-G9c0qlIWQSK29pR/5U2JF5dDQeqqHRragoyahj/Nx4KOOQ3CPPfzxnfqFPCSB7x5UgjOgnZ61nSxz+fjDpRlJg==}
     engines: {node: '>= 10.0.0'}
 
-  sequelize@6.37.6:
-    resolution: {integrity: sha512-4Slqjqpktofs7AVqWviFOInzP9w8ZRQDhF+DnRtm4WKIdIATpyzGgedyseP3xbgpBxapvfQcJv6CeIdZe4ZL2A==}
+  sequelize@6.37.7:
+    resolution: {integrity: sha512-mCnh83zuz7kQxxJirtFD7q6Huy6liPanI67BSlbzSYgVNl5eXVdE2CN1FuAeZwG1SNpGsNRCV+bJAVVnykZAFA==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       ibm_db: '*'
@@ -2475,8 +2479,8 @@ packages:
     resolution: {integrity: sha512-2dBz5D5ycHIoliLYLi0Q2V7KRaDlH0uWIvmk7TYlAg5slqwiPv1ezJdZm1QEM0xgk29oYWMCbIG7E6gHpvChlg==}
     engines: {node: '>=16'}
 
-  type-is@2.0.0:
-    resolution: {integrity: sha512-gd0sGezQYCbWSbkZr75mln4YBidWUN60+devscpLF5mtRDUpiaTvKpBNrdaCvel1NdR2k6vclXybU5fBd2i+nw==}
+  type-is@2.0.1:
+    resolution: {integrity: sha512-OZs6gsjF4vMp32qrCbiVSkrFmXtG/AZhY3t0iAMrMBiAZyV9oALtXO8hsrHbMXF9x6L3grlFuwW2oAz7cav+Gw==}
     engines: {node: '>= 0.6'}
 
   typescript@5.8.2:
@@ -2892,28 +2896,31 @@ snapshots:
   '@bufbuild/protobuf@1.7.2':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-arm64@1.6.9':
+  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.10':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-arm@1.6.9':
+  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.6.10':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.9':
+  '@cyclonedx/cdxgen-plugins-bin-linux-amd64@1.6.10':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.6.9':
+  '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.6.10':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-ppc64@1.6.9':
+  '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.6.10':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.9':
+  '@cyclonedx/cdxgen-plugins-bin-linux-ppc64@1.6.10':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.6.9':
+  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.10':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin@1.6.9':
+  '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.6.10':
+    optional: true
+
+  '@cyclonedx/cdxgen-plugins-bin@1.6.10':
     optional: true
 
   '@iarna/toml@2.2.5': {}
@@ -2946,7 +2953,7 @@ snapshots:
   '@jest/console@29.7.0':
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
       chalk: 4.1.2
       jest-message-util: 29.7.0
       jest-util: 29.7.0
@@ -2959,14 +2966,14 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       ci-info: 3.9.0
       exit: 0.1.2
       graceful-fs: 4.2.11
       jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@22.13.13)
+      jest-config: 29.7.0(@types/node@22.13.14)
       jest-haste-map: 29.7.0
       jest-message-util: 29.7.0
       jest-regex-util: 29.6.3
@@ -2991,7 +2998,7 @@ snapshots:
     dependencies:
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
       jest-mock: 29.7.0
 
   '@jest/expect-utils@29.7.0':
@@ -3009,7 +3016,7 @@ snapshots:
     dependencies:
       '@jest/types': 29.6.3
       '@sinonjs/fake-timers': 10.3.0
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
       jest-message-util: 29.7.0
       jest-mock: 29.7.0
       jest-util: 29.7.0
@@ -3031,7 +3038,7 @@ snapshots:
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
       '@jridgewell/trace-mapping': 0.3.25
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
       chalk: 4.1.2
       collect-v8-coverage: 1.0.2
       exit: 0.1.2
@@ -3090,7 +3097,7 @@ snapshots:
       jest-regex-util: 29.6.3
       jest-util: 29.7.0
       micromatch: 4.0.8
-      pirates: 4.0.6
+      pirates: 4.0.7
       slash: 3.0.0
       write-file-atomic: 4.0.2
     transitivePeerDependencies:
@@ -3101,7 +3108,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
       '@types/yargs': 17.0.33
       chalk: 4.1.2
 
@@ -3342,7 +3349,7 @@ snapshots:
 
   '@types/graceful-fs@4.1.9':
     dependencies:
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
 
   '@types/http-cache-semantics@4.0.4': {}
 
@@ -3359,7 +3366,7 @@ snapshots:
   '@types/ms@2.1.0':
     optional: true
 
-  '@types/node@22.13.13':
+  '@types/node@22.13.14':
     dependencies:
       undici-types: 6.20.0
 
@@ -3505,17 +3512,17 @@ snapshots:
       readable-stream: 3.6.2
     optional: true
 
-  body-parser@2.1.0:
+  body-parser@2.2.0:
     dependencies:
       bytes: 3.1.2
       content-type: 1.0.5
       debug: 4.4.0
       http-errors: 2.0.0
-      iconv-lite: 0.5.2
+      iconv-lite: 0.6.3
       on-finished: 2.4.1
       qs: 6.14.0
       raw-body: 3.0.0
-      type-is: 2.0.0
+      type-is: 2.0.1
     transitivePeerDependencies:
       - supports-color
     optional: true
@@ -3540,7 +3547,7 @@ snapshots:
   browserslist@4.24.4:
     dependencies:
       caniuse-lite: 1.0.30001707
-      electron-to-chromium: 1.5.124
+      electron-to-chromium: 1.5.128
       node-releases: 2.0.19
       update-browserslist-db: 1.1.3(browserslist@4.24.4)
 
@@ -3721,13 +3728,13 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
-  create-jest@29.7.0(@types/node@22.13.13):
+  create-jest@29.7.0(@types/node@22.13.14):
     dependencies:
       '@jest/types': 29.6.3
       chalk: 4.1.2
       exit: 0.1.2
       graceful-fs: 4.2.11
-      jest-config: 29.7.0(@types/node@22.13.13)
+      jest-config: 29.7.0(@types/node@22.13.14)
       jest-util: 29.7.0
       prompts: 2.4.2
     transitivePeerDependencies:
@@ -3839,7 +3846,7 @@ snapshots:
   ee-first@1.1.1:
     optional: true
 
-  electron-to-chromium@1.5.124: {}
+  electron-to-chromium@1.5.128: {}
 
   emittery@0.13.1: {}
 
@@ -4125,11 +4132,6 @@ snapshots:
 
   human-signals@2.1.0: {}
 
-  iconv-lite@0.5.2:
-    dependencies:
-      safer-buffer: 2.1.2
-    optional: true
-
   iconv-lite@0.6.3:
     dependencies:
       safer-buffer: 2.1.2
@@ -4245,7 +4247,7 @@ snapshots:
       '@jest/expect': 29.7.0
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
       chalk: 4.1.2
       co: 4.6.0
       dedent: 1.5.3
@@ -4265,16 +4267,16 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-cli@29.7.0(@types/node@22.13.13):
+  jest-cli@29.7.0(@types/node@22.13.14):
     dependencies:
       '@jest/core': 29.7.0
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
       chalk: 4.1.2
-      create-jest: 29.7.0(@types/node@22.13.13)
+      create-jest: 29.7.0(@types/node@22.13.14)
       exit: 0.1.2
       import-local: 3.2.0
-      jest-config: 29.7.0(@types/node@22.13.13)
+      jest-config: 29.7.0(@types/node@22.13.14)
       jest-util: 29.7.0
       jest-validate: 29.7.0
       yargs: 17.7.2
@@ -4284,7 +4286,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  jest-config@29.7.0(@types/node@22.13.13):
+  jest-config@29.7.0(@types/node@22.13.14):
     dependencies:
       '@babel/core': 7.26.10
       '@jest/test-sequencer': 29.7.0
@@ -4309,7 +4311,7 @@ snapshots:
       slash: 3.0.0
       strip-json-comments: 3.1.1
     optionalDependencies:
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -4338,7 +4340,7 @@ snapshots:
       '@jest/environment': 29.7.0
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
       jest-mock: 29.7.0
       jest-util: 29.7.0
 
@@ -4348,7 +4350,7 @@ snapshots:
     dependencies:
       '@jest/types': 29.6.3
       '@types/graceful-fs': 4.1.9
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
       anymatch: 3.1.3
       fb-watchman: 2.0.2
       graceful-fs: 4.2.11
@@ -4387,7 +4389,7 @@ snapshots:
   jest-mock@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
       jest-util: 29.7.0
 
   jest-pnp-resolver@1.2.3(jest-resolve@29.7.0):
@@ -4422,7 +4424,7 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
       chalk: 4.1.2
       emittery: 0.13.1
       graceful-fs: 4.2.11
@@ -4450,7 +4452,7 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
       chalk: 4.1.2
       cjs-module-lexer: 1.4.3
       collect-v8-coverage: 1.0.2
@@ -4496,7 +4498,7 @@ snapshots:
   jest-util@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -4515,7 +4517,7 @@ snapshots:
     dependencies:
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.13.1
@@ -4524,17 +4526,17 @@ snapshots:
 
   jest-worker@29.7.0:
     dependencies:
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
-  jest@29.7.0(@types/node@22.13.13):
+  jest@29.7.0(@types/node@22.13.14):
     dependencies:
       '@jest/core': 29.7.0
       '@jest/types': 29.6.3
       import-local: 3.2.0
-      jest-cli: 29.7.0(@types/node@22.13.13)
+      jest-cli: 29.7.0(@types/node@22.13.14)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -4684,7 +4686,7 @@ snapshots:
   mime-db@1.54.0:
     optional: true
 
-  mime-types@3.0.0:
+  mime-types@3.0.1:
     dependencies:
       mime-db: 1.54.0
     optional: true
@@ -5009,7 +5011,7 @@ snapshots:
 
   picomatch@2.3.1: {}
 
-  pirates@4.0.6: {}
+  pirates@4.0.7: {}
 
   pkg-dir@4.2.0:
     dependencies:
@@ -5172,7 +5174,7 @@ snapshots:
   sequelize-pool@7.1.0:
     optional: true
 
-  sequelize@6.37.6(sqlite3@5.1.7):
+  sequelize@6.37.7(sqlite3@5.1.7):
     dependencies:
       '@types/debug': 4.1.12
       '@types/validator': 13.12.3
@@ -5479,11 +5481,11 @@ snapshots:
 
   type-fest@4.38.0: {}
 
-  type-is@2.0.0:
+  type-is@2.0.1:
     dependencies:
       content-type: 1.0.5
       media-typer: 1.1.0
-      mime-types: 3.0.0
+      mime-types: 3.0.1
     optional: true
 
   typescript@5.8.2: {}
@@ -5576,7 +5578,7 @@ snapshots:
 
   wkx@0.5.0:
     dependencies:
-      '@types/node': 22.13.13
+      '@types/node': 22.13.14
     optional: true
 
   wrap-ansi@7.0.0:

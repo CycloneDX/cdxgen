@@ -1,4 +1,3 @@
-export function getGoBuildInfo(src: any): string;
 export function getCargoAuditableInfo(src: any): string;
 /**
  * Execute sourcekitten plugin with the given arguments

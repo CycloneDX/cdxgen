@@ -1,8 +1,8 @@
 FROM registry.suse.com/bci/openjdk-devel:17
 
-ARG SBT_VERSION=1.10.10
+ARG SBT_VERSION=1.10.11
 ARG MAVEN_VERSION=3.9.9
-ARG GRADLE_VERSION=8.12.1
+ARG GRADLE_VERSION=8.13
 ARG GCC_VERSION=13
 ARG SCALA_VERSION=3.6.4
 
@@ -14,7 +14,7 @@ ENV SBT_VERSION=$SBT_VERSION \
     GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}" \
     SBT_HOME="/opt/sbt/${SBT_VERSION}" \
     SCALA_VERSION=$SCALA_VERSION \
-    SBT_HOME="/opt/scala/${SCALA_VERSION}" \
+    SCALA_HOME="/opt/scala/${SCALA_VERSION}" \
     ANDROID_HOME=/opt/android-sdk-linux \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \

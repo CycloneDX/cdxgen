@@ -8,11 +8,13 @@ Below table summarizes all available container image versions. These images incl
 
 | Language | Version                      | Container Image Tags                                                                           | Comments                                                                                                                                  |
 | -------- | ---------------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Java     | 23                           | ghcr.io/cyclonedx/cdxgen:master                                                                | Default all-in-one container image with all the latest and greatest tools with Node 23 runtime. Permission model is opt-in.               |
-| Java     | 23                           | ghcr.io/cyclonedx/cdxgen-deno:master                                                           | Default all-in-one container image with all the latest and greatest tools with deno runtime. Uses deno permissions model by default.      |
-| Java     | 23                           | ghcr.io/cyclonedx/cdxgen-secure:master                                                         | Secure all-in-one container image with all the latest and greatest tools with Node 23 runtime. Uses Node.js permissions model by default. |
+| Java     | 24                           | ghcr.io/cyclonedx/cdxgen:master                                                                | Default all-in-one container image with all the latest and greatest tools with Node 23 runtime. Permission model is opt-in.               |
+| Java     | 24                           | ghcr.io/cyclonedx/cdxgen-deno:master                                                           | Default all-in-one container image with all the latest and greatest tools with deno runtime. Uses deno permissions model by default.      |
+| Java     | 24                           | ghcr.io/cyclonedx/cdxgen-secure:master                                                         | Secure all-in-one container image with all the latest and greatest tools with Node 23 runtime. Uses Node.js permissions model by default. |
+| Java     | 8                            | ghcr.io/cyclonedx/cdxgen-temurin-java8:v11                                                     | Java 8 version.                                                                                                                           |
 | Java     | 11                           | ghcr.io/cyclonedx/cdxgen-java11-slim:v11, ghcr.io/cyclonedx/cdxgen-java11:v11                  | Java 11 version with and without Android 33 SDK.                                                                                          |
 | Java     | 17                           | ghcr.io/cyclonedx/cdxgen-java17-slim:v11, ghcr.io/cyclonedx/cdxgen-java17:v11                  | Java 17 version with and without Android 34 SDK.                                                                                          |
+| Java     | 21                           | ghcr.io/cyclonedx/cdxgen-temurin-java21:v11                                                    | Java 21 version with Android 34 SDK.                                                                                                      |
 | Dotnet   | .Net Framework 4.6 - 4.8     | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11                                                    | .Net Framework                                                                                                                            |
 | Dotnet   | .Net Core 2.1, 3.1, .Net 5.0 | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11                                                    | Invoke with --platform=linux/amd64 for better compatibility.                                                                              |
 | Dotnet   | .Net 6                       | ghcr.io/cyclonedx/cdxgen-debian-dotnet6:v11                                                    | .Net 6                                                                                                                                    |
@@ -27,7 +29,7 @@ Below table summarizes all available container image versions. These images incl
 | Node.js  | 20                           | ghcr.io/cyclonedx/cdxgen-node20:v11                                                            | Use `--platform=linux/amd64` in case of `npm install` errors.                                                                             |
 | Node.js  | 23                           | ghcr.io/cyclonedx/cdxgen:master                                                                | Supports automatic node installation. Example: Pass `-t node20` to install node 20.                                                       |
 | Ruby     | 3.3.6                        | ghcr.io/cyclonedx/cdxgen-debian-ruby33:v11                                                     | Supports automatic Ruby installation for 3.3.x. Example: Pass `-t ruby3.3.1` to install Ruby 3.3.1.                                       |
-| Ruby     | 3.4.1                        | ghcr.io/cyclonedx/cdxgen-debian-ruby34:v11                                                     | Supports automatic Ruby installation for 3.4.x. Example: Pass `-t ruby3.4.0` to install Ruby 3.4.0.                                       |
+| Ruby     | 3.4.x                        | ghcr.io/cyclonedx/cdxgen-debian-ruby34:v11                                                     | Supports automatic Ruby installation for 3.4.x. Example: Pass `-t ruby3.4.0` to install Ruby 3.4.0.                                       |
 | Ruby     | 2.5.0                        | ghcr.io/cyclonedx/cdxgen-ruby25:v11                                                            | Supports automatic Ruby installation for 2.5.x. Example: Pass `-t ruby2.5.1` to install Ruby 2.5.1.                                       |
 | Ruby     | 2.6.10                       | ghcr.io/cyclonedx/cdxgen-debian-ruby26:v11                                                     | Supports automatic Ruby installation for 2.6.x. Example: Pass `-t ruby2.6.1` to install Ruby 2.6.1.                                       |
 | Ruby     | 1.8.x                        | ghcr.io/cyclonedx/debian-ruby18:master                                                         | Base image for `bundle install` only. No cdxgen equivalent with Ruby 1.8.x. `--deep` mode and research profile unsupported.               |
@@ -57,10 +59,8 @@ docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2
 
 Java 8
 
-Use the java 11 image but pass `-t java8`.
-
 ```shell
-docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java11-slim:v11 -r /app -o /app/bom.json -t java8
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-temurin-java8:v11 -r /app -o /app/bom.json -t java
 ```
 
 Java 17 version
@@ -73,6 +73,12 @@ Java 17 version with Android 34 SDK and gcc
 
 ```shell
 docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java17:v11 -r /app -o /app/bom.json -t java
+```
+
+Java 21 version with Android 34 SDK
+
+```shell
+docker run --rm -e CDXGEN_DEBUG_MODE=verbose -v /tmp:/tmp -v $HOME/.m2:$HOME/.m2 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-temurin-java21:v11 -r /app -o /app/bom.json -t java
 ```
 
 ### .Net Framework, .Net Core 3.1, and .Net 6.0 applications

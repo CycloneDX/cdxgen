@@ -1210,7 +1210,7 @@ export function getMavenCommand(srcPath: string, rootPath: string): string;
  * Retrieves the atom command by referring to various environment variables
  */
 export function getAtomCommand(): any;
-export function executeAtom(src: any, args: any): boolean;
+export function executeAtom(src: any, args: any, extra_env?: {}): boolean;
 /**
  * Find the imported modules in the application with atom parsedeps command
  *
@@ -1514,6 +1514,7 @@ export const PROJECT_TYPE_ALIASES: {
     binary: string[];
     oci: string[];
     cocoa: string[];
+    scala: string[];
 };
 export namespace PACKAGE_MANAGER_ALIASES {
     let scala: string[];

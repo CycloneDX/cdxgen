@@ -16,12 +16,12 @@ ARG SWIFT_PLATFORM=ubi9
 ARG SWIFT_BRANCH=swift-6.0.3-release
 ARG SWIFT_VERSION=swift-6.0.3-RELEASE
 ARG SWIFT_WEBROOT=https://download.swift.org
-ARG JAVA_VERSION=23.0.2-tem
-ARG SBT_VERSION=1.10.10
+ARG JAVA_VERSION=24-tem
+ARG SBT_VERSION=1.10.11
 ARG MAVEN_VERSION=3.9.9
-ARG GRADLE_VERSION=8.12.1
+ARG GRADLE_VERSION=8.13
 ARG GO_VERSION=1.24.1
-ARG NODE_VERSION=23.9.0
+ARG NODE_VERSION=23.10.0
 ARG PYTHON_VERSION=3.12
 ARG RUBY_VERSION=3.4.2
 ARG SCALA_VERSION=3.6.4
@@ -45,7 +45,7 @@ ENV GOPATH=/opt/app-root/go \
     PYTHONIOENCODING="utf-8" \
     COMPOSER_ALLOW_SUPERUSER=1 \
     ANDROID_HOME=/opt/android-sdk-linux \
-    JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8" \
+    JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8 --enable-native-access=ALL-UNNAMED" \
     SWIFT_SIGNING_KEY=$SWIFT_SIGNING_KEY \
     SWIFT_PLATFORM=$SWIFT_PLATFORM \
     SWIFT_BRANCH=$SWIFT_BRANCH \
@@ -67,7 +67,7 @@ ENV GOPATH=/opt/app-root/go \
     RUBYOPT="--yjit" \
     RUBY_BUILD_BUILD_PATH="/tmp/rbenv" \
     RUBY_BUILD_HTTP_CLIENT=curl
-ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/root/.cargo/bin:/opt/pypi/bin:/root/.rbenv/bin:/root/.rbenv/versions/3.4.1/bin:
+ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/root/.cargo/bin:/opt/pypi/bin:/root/.rbenv/bin:/root/.rbenv/versions/3.4.2/bin:
 
 COPY . /opt/cdxgen
 
@@ -94,7 +94,7 @@ RUN set -e; \
     && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 10 \
     && alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYTHON_VERSION} 10 \
     && /usr/bin/python${PYTHON_VERSION} --version \
-    && /usr/bin/python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade setuptools wheel pip virtualenv \
+    && /usr/bin/python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade setuptools==77.0.3 wheel pip virtualenv \
     && /usr/bin/python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade pipenv poetry blint atom-tools uv --target /opt/pypi \
     && /opt/pypi/bin/poetry --version \
     && /opt/pypi/bin/pipenv --version \

@@ -1,6 +1,6 @@
 FROM registry.suse.com/bci/python:3.11
 
-ARG JAVA_VERSION=23.0.2-tem
+ARG JAVA_VERSION=24-tem
 ARG MAVEN_VERSION=3.9.9
 ARG GCC_VERSION=13
 ARG NODE_VERSION=20.18.3
@@ -48,7 +48,7 @@ RUN set -e; \
     && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
     && rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
     && go telemetry off \
-    && python3 -m pip install --no-cache-dir --upgrade setuptools pip virtualenv \
+    && python3 -m pip install --no-cache-dir --upgrade setuptools==77.0.3 pip virtualenv \
     && python3 -m pip install --no-cache-dir --upgrade pipenv poetry uv --target /opt/pypi \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
     && source /root/.nvm/nvm.sh \
