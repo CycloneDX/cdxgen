@@ -1,15 +1,28 @@
 images:
-- location: "https://cloud-images.ubuntu.com/releases/24.10/release-20241109/ubuntu-24.10-server-cloudimg-amd64.img"
+- location: "https://cloud-images.ubuntu.com/releases/noble/release-20250313/ubuntu-24.04-server-cloudimg-amd64.img"
   arch: "x86_64"
-  digest: "sha256:05bbfe57d7701c685d8c65f4d34cebe947bc89e3509c4d8a2b9c77f39e91f3ca"
-- location: "https://cloud-images.ubuntu.com/releases/24.10/release-20241109/ubuntu-24.10-server-cloudimg-arm64.img"
+  digest: "sha256:eacac65efe9e9bae0cbcb3f9d5c2b5e8c5313fa78a3bc401c3fb28b2d48cefc0"
+- location: "https://cloud-images.ubuntu.com/releases/noble/release-20250313/ubuntu-24.04-server-cloudimg-arm64.img"
   arch: "aarch64"
-  digest: "sha256:0f1d5b8318342201e4200f592ff46c23ce29d486025b5b12b2036a6a009c93d8"
-- location: "https://cloud-images.ubuntu.com/releases/24.10/release/ubuntu-24.10-server-cloudimg-amd64.img"
+  digest: "sha256:103f31c5a5b7f031a60ce3555c8fbd56317fd8ffbaaa7e17002879e6157d546d"
+- location: "https://cloud-images.ubuntu.com/releases/noble/release-20250313/ubuntu-24.04-server-cloudimg-riscv64.img"
+  arch: "riscv64"
+  digest: "sha256:bfd6a91a7ee84e26f33ce6b2df2e415b038214db67f009206b40cf2e9158fc3f"
+- location: "https://cloud-images.ubuntu.com/releases/noble/release-20250313/ubuntu-24.04-server-cloudimg-armhf.img"
+  arch: "armv7l"
+  digest: "sha256:0b862b6a4811f23c76e292ffe5a7cd90a4f03db9f48f664a2a943b02f83621c3"
+# Fallback to the latest release image.
+# Hint: run `limactl prune` to invalidate the cache
+- location: "https://cloud-images.ubuntu.com/releases/noble/release/ubuntu-24.04-server-cloudimg-amd64.img"
   arch: "x86_64"
-- location: "https://cloud-images.ubuntu.com/releases/24.10/release/ubuntu-24.10-server-cloudimg-arm64.img"
+- location: "https://cloud-images.ubuntu.com/releases/noble/release/ubuntu-24.04-server-cloudimg-arm64.img"
   arch: "aarch64"
+- location: "https://cloud-images.ubuntu.com/releases/noble/release/ubuntu-24.04-server-cloudimg-riscv64.img"
+  arch: "riscv64"
+- location: "https://cloud-images.ubuntu.com/releases/noble/release/ubuntu-24.04-server-cloudimg-armhf.img"
+  arch: "armv7l"
 mounts:
+- location: "~"
 - location: "/tmp/cdxgen"
   writable: true
 containerd:
@@ -34,7 +47,7 @@ provision:
     #!/bin/bash
     set -eux -o pipefail
     apt update -y
-    apt install -y zip unzip wget binutils git gnupg2 curl tar libc6-dev libcurl4-openssl-dev libedit2 libgcc-13-dev libpython3-dev libsqlite3-0 libstdc++-13-dev libxml2-dev libncurses-dev libz3-dev pkg-config tzdata zlib1g-dev python3.12 python3.12-venv python3.12-dev openjdk-21-jdk-headless gcc-13 build-essential cargo-1.81 rust-1.81-all golang-1.23 software-properties-common ruby-full ruby-bundler docker.io docker-buildx docker-compose-v2 podman android-sdk android-sdk-build-tools android-sdk-platform-23 android-sdk-platform-tools
+    apt install -y zip unzip wget binutils git gnupg2 curl tar libc6-dev libcurl4-openssl-dev libedit2 libgcc-13-dev libpython3-dev libsqlite3-0 libstdc++-13-dev libxml2-dev libncurses-dev libz3-dev pkg-config tzdata zlib1g-dev python3.12 python3.12-venv python3.12-dev openjdk-21-jdk-headless gcc-13 build-essential cargo golang-1.23 software-properties-common ruby-full ruby-bundler docker.io docker-buildx docker-compose-v2 podman android-sdk android-sdk-build-tools android-sdk-platform-23 android-sdk-platform-tools
     python3 -m pip install --no-cache-dir --upgrade pip virtualenv
     python3 -m pip install --no-cache-dir poetry pipenv blint custom-json-diff owasp-depscan uv
 - mode: system
@@ -68,8 +81,8 @@ provision:
     cdxgen --version
     export SWIFT_SIGNING_KEY=52BB7E3DE28A71BE22EC05FFEF80A866B47A981F
     export SWIFT_PLATFORM=ubuntu24.04
-    export SWIFT_BRANCH=swift-6.0.3-release
-    export SWIFT_VERSION=swift-6.0.3-RELEASE
+    export SWIFT_BRANCH=swift-6.1-release
+    export SWIFT_VERSION=swift-6.1-RELEASE
     export SWIFT_WEBROOT=https://download.swift.org
     export OS_ARCH_SUFFIX='-aarch64'
     export SWIFT_WEBDIR="$SWIFT_WEBROOT/$SWIFT_BRANCH/$(echo $SWIFT_PLATFORM | tr -d .)$OS_ARCH_SUFFIX"

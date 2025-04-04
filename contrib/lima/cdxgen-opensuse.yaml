@@ -5,6 +5,7 @@ images:
 - location: "https://download.opensuse.org/distribution/leap/15.6/appliances/openSUSE-Leap-15.6-Minimal-VM.aarch64-Cloud.qcow2"
   arch: "aarch64"
 mounts:
+- location: "~"
 - location: "/tmp/cdxgen"
   writable: true
 containerd:

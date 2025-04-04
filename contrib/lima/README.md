@@ -30,8 +30,14 @@ limactl start --name=cdxgen contrib/lima/cdxgen-opensuse.yaml --tty=false
 
 For ubuntu, use the below command.
 
-```
+```shell
 limactl start --name=cdxgen contrib/lima/cdxgen-ubuntu.yaml --tty=false
+```
+
+Settings used for a recent Mac.
+
+```shell
+limactl start --name=cdxgen-ubuntu contrib/lima/cdxgen-ubuntu.yaml --tty=false --cpus 10 --disk 320 --memory 32 --vm-type vz --rosetta --mount-type virtiofs
 ```
 
 Sample output
@@ -88,5 +94,5 @@ limactl shell cdxgen sudo tail -f /var/log/cloud-init-output.log
 ```
 
 ```shell
-limactl shell cdxgen-aarch64 sudo tail -f /var/log/cloud-init-output.log
+limactl shell cdxgen-ubuntu sudo tail -f /var/log/cloud-init-output.log
 ```
