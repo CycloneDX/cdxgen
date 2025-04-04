@@ -5,7 +5,6 @@ ARG SWIFT_PLATFORM=debian12
 ARG SWIFT_BRANCH=swift-6.1-release
 ARG SWIFT_VERSION=swift-6.1-RELEASE
 ARG SWIFT_WEBROOT=https://download.swift.org
-ARG SWIFT_STATIC_SDK_CHECKSUM=67f765e0030e661a7450f7e4877cfe008db4f57f177d5a08a6e26fd661cdd0bd
 ARG JAVA_VERSION=24-tem
 ARG NODE_VERSION=22.14.0
 
@@ -64,8 +63,6 @@ RUN set -e; \
     && rm -rf "$GNUPGHOME" swift.tar.gz.sig swift.tar.gz \
     && rm -rf /var/lib/apt/lists/* \
     && swift --version \
-    && swift sdk install ${SWIFT_WEBROOT}/${SWIFT_BRANCH}/static-sdk/${SWIFT_VERSION}/${SWIFT_VERSION}_static-linux-0.0.1.artifactbundle.tar.gz --checksum ${SWIFT_STATIC_SDK_CHECKSUM} \
-    && swift sdk list \
     && chmod +x /tmp/install.sh \
     && ./tmp/install.sh && rm /tmp/install.sh \
     && node -v \
