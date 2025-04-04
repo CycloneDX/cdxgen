@@ -26,7 +26,7 @@ mounts:
 - location: "/tmp/cdxgen"
   writable: true
 containerd:
-  system: false
+  system: true
   user: true
 env:
   MAVEN_VERSION: 3.9.9
@@ -94,3 +94,9 @@ provision:
     gpg --batch --verify swift.tar.gz.sig swift.tar.gz
     tar -xzf swift.tar.gz --directory / --strip-components=1
     chmod -R o+r /usr/lib/swift
+    ARCH_NAME="$(dpkg --print-architecture)"
+    curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.3.0/nydus-static-v2.3.0-linux-${ARCH_NAME}.tgz
+    tar -xvf nydus-static-v2.3.0-linux-${ARCH_NAME}.tgz
+    chmod +x nydus-static/*
+    mv nydus-static/* /usr/local/bin/
+    rm -rf nydus-static-v2.3.0-linux-${ARCH_NAME}.tgz nydus-static
