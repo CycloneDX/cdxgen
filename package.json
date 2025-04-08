@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "11.2.3",
+  "version": "11.2.4",
   "description": "Creates CycloneDX Software Bill of Materials (SBOM) from source or container image",
   "homepage": "http://github.com/cyclonedx/cdxgen",
   "author": "Prabhu Subramanian <prabhu@appthreat.com>",
@@ -71,7 +71,7 @@
   "bugs": {
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
-  "packageManager": "pnpm@10.7.0",
+  "packageManager": "pnpm@10.8.0",
   "lint-staged": {
     "*": "biome check --fix --no-errors-on-unmatched"
   },
@@ -87,7 +87,7 @@
     "find-up": "7.0.0",
     "glob": "^11.0.0",
     "global-agent": "^3.0.0",
-    "got": "^14.4.5",
+    "got": "^14.4.7",
     "iconv-lite": "^0.6.3",
     "js-yaml": "^4.1.0",
     "jws": "^4.0.0",
@@ -128,7 +128,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "jest": "^29.7.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   },
   "pnpm": {
     "onlyBuiltDependencies": ["sqlite3", "@biomejs/biome"],
