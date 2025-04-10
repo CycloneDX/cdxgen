@@ -88,7 +88,6 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4'
-          bundler-cache: true
       - name: setup-cocoapods # Not using an action, as it is not implemented for windows!
         run: |
           gem install cocoapods -v 1.16.2 --no-document
@@ -814,7 +813,6 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4'
-          bundler-cache: true
       - name: pip install custom-json-diff
         run: |
           pip install custom-json-diff
