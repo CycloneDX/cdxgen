@@ -227,6 +227,17 @@ export function parsePom(pomFile: string): any;
  */
 export function parseMavenTree(rawOutput: string, pomFile: string): any;
 /**
+ * Parse mill dependencies from file
+ *
+ * @param {string} module name of the module
+ * @param {map} dependencies the parsed dependencies
+ * @param {map} relations a map containing all relations
+ * @param {string} millRootPath root of the project
+ *
+ * @returns the bom-ref of the module
+ */
+export function parseMillDependency(module: string, dependencies: map, relations: map, millRootPath: string): any;
+/**
  * Parse gradle dependencies output
  * @param {string} rawOutput Raw string output
  * @param {string} rootProjectName Root project name
@@ -1131,6 +1142,12 @@ export function getJarClasses(jarFile: string): Promise<any[]>;
  * @param {string|null} rootPath Root directory to look for gradlew wrapper
  */
 export function getGradleCommand(srcPath: string, rootPath: string | null): string;
+/**
+ * Method to return the mill command to use.
+ *
+ * @param {string} srcPath Path to look for mill wrapper
+ */
+export function getMillCommand(srcPath: string): string;
 /**
  * Method to combine the general gradle arguments, the sub-commands and the sub-commands' arguments in the correct way
  *
