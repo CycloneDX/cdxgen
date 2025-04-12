@@ -326,6 +326,11 @@ jobs:
           repository: 'playframework/play-samples'
           path: 'repotests/play-samples'
           ref: '0dccba17856e89dbb5e457ab760efb14cc691395'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'com-lihaoyi/mill'
+          path: 'repotests/mill'
+          ref: '0.12.10'
       - uses: dtolnay/rust-toolchain@stable
       - name: setup sdkman
         run: |
@@ -645,6 +650,11 @@ jobs:
       - name: repotests SecObserve
         run: |
           bin/cdxgen.js repotests/SecObserve -o bomresults/bom-SecObserve.json --fail-on-error
+        shell: bash
+      - name: repotests mill
+        run: |
+          bin/cdxgen.js -p -t mill repotests/mill -o bomresults/bom-mill.json
+          MILL_EXCLUDE_TEST=true bin/cdxgen.js -p -t mill repotests/mill -o bomresults/bom-mill-without-test.json
         shell: bash
       - name: jenkins plugins
         run: |

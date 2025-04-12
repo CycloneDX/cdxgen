@@ -124,6 +124,12 @@ These variables are specifically for a single language or tool.
 | MVN_CMD                      | Set to override maven command                                                                                                                         |
 | PREFER_MAVEN_DEPS_TREE       | Use maven `dependency:tree` command instead of the cyclonedx maven plugin. Defaults to true from v11. Set to false to use the cyclonedx-maven-plugin. |
 
+### Mill
+
+| Variable          | Description                                                                                |
+| ----------------- | ------------------------------------------------------------------------------------------ |
+| MILL_EXCLUDE_TEST | Should the test-modules and their dependencies be excluded from the SBOM? Default: `false` |
+
 ### NodeJS
 
 | Variable                 | Description                                                                                                                                            |
