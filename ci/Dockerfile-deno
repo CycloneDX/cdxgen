@@ -92,10 +92,12 @@ RUN set -e; \
     && python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade setuptools==77.0.3 wheel pip virtualenv \
     && python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade pipenv poetry blint atom-tools uv --target /opt/pypi \
     && curl -fsSL https://deno.land/x/install/install.sh | sh \
-    && deno install -g --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net -n cdxgen --node-modules-dir=auto "npm:@cyclonedx/cdxgen/cdxgen" --allow-scripts=npm:sqlite3@5.1.7 \
+    && deno install -g --node-modules-dir=auto --allow-scripts=npm:sqlite3@5.1.7 --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net -n cdxgen "npm:@cyclonedx/cdxgen/cdxgen" \
     && deno install -g --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write -n atom "npm:@appthreat/atom/atom" \
     && deno install -g --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write -n astgen "npm:@appthreat/atom/astgen" \
     && deno install -g --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write -n phpastgen "npm:@appthreat/atom/phpastgen" \
+    && deno install -g --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write -n rbastgen "npm:@appthreat/atom/rbastgen" \
+    && deno install -g --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write -n scalasem "npm:@appthreat/atom/scalasem" \
     && ln -s /root/.deno/bin/deno /usr/bin/node \
     && cdxgen --version \
     && atom --help \

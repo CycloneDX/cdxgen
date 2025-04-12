@@ -169,7 +169,7 @@ jobs:
         with:
           context: .
           file: ci/Dockerfile-secure
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta2.outputs.tags }}
           labels: ${{ steps.meta2.outputs.labels }}
@@ -233,7 +233,7 @@ jobs:
       with:
         context: .
         file: ci/Dockerfile-deno
-        platforms: linux/amd64
+        platforms: linux/amd64,linux/arm64
         push: true
         tags: ${{ steps.meta2.outputs.tags }}
         labels: ${{ steps.meta2.outputs.labels }}
