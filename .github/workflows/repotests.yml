@@ -5,11 +5,39 @@ on:
   pull_request:
     paths-ignore:
       - 'docs/**'
+      - 'ci/**'
+      - 'contrib/**'
       - '*.md'
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 jobs:
+  cli-tests-js:
+    strategy:
+      fail-fast: true
+    runs-on: ["self-hosted", "ubuntu"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: 'aws-solutions/iot-device-simulator'
+          path: 'repotests/iot-device-simulator'
+          ref: 'v3.0.9'
+      - name: npm install, build and test
+        run: |
+          npm install --global corepack@latest
+          corepack enable
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
+          corepack pnpm test
+          mkdir -p bomresults
+        env:
+          CI: true
+          CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-repotests
+      - name: repotests iot-device-simulator
+        run: |
+          bin/cdxgen.js -p -t js -o bomresults/bom-iot.json repotests/iot-device-simulator --fail-on-error
+          bin/cdxgen.js -p -t js -o bomresults/bom-iot15.json repotests/iot-device-simulator --spec-version 1.5 --fail-on-error
+        shell: bash
   cli-tests:
     strategy:
       fail-fast: true
@@ -388,11 +416,6 @@ jobs:
         run: |
           bin/cdxgen.js -p -r -t quarkus repotests/quarkus-quickstarts -o bomresults/bom-quarkus-quickstarts-quarkus.json --no-recurse --fail-on-error
           bin/cdxgen.js -p -r -t quarkus repotests/quarkus-quickstarts -o bomresults/bom-quarkus-quickstarts-quarkus.json --no-recurse --spec-version 1.5 --fail-on-error
-        shell: bash
-      - name: repotests iot-device-simulator
-        run: |
-          bin/cdxgen.js -p -t js -o bomresults/bom-iot.json repotests/iot-device-simulator --fail-on-error
-          bin/cdxgen.js -p -t js -o bomresults/bom-iot15.json repotests/iot-device-simulator --spec-version 1.5 --fail-on-error
         shell: bash
       - name: repotests evidence
         run: |
