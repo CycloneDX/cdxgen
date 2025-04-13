@@ -5,11 +5,79 @@ on:
   pull_request:
     paths-ignore:
       - 'docs/**'
+      - 'ci/**'
+      - 'contrib/**'
       - '*.md'
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 jobs:
+  cli-tests-quick:
+    strategy:
+      fail-fast: true
+    runs-on: ["self-hosted", "ubuntu"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'aws-solutions/iot-device-simulator'
+          path: 'repotests/iot-device-simulator'
+          ref: 'v3.0.9'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'ollama/ollama'
+          path: 'repotests/ollama'
+          ref: 'v0.5.7'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'caddyserver/caddy'
+          path: 'repotests/caddy'
+          ref: 'v2.9.1'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'flutter/gallery'
+          ref: 'v2.10.2'
+          path: 'repotests/gallery'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'ShiftLeftSecurity/shiftleft-go-example'
+          path: 'repotests/shiftleft-go-example'
+      - name: npm install
+        run: |
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
+          mkdir -p bomresults
+        env:
+          CI: true
+          CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-repotests
+      - name: repotests iot-device-simulator
+        run: |
+          bin/cdxgen.js -t js -o bomresults/bom-iot.json repotests/iot-device-simulator --fail-on-error
+          bin/cdxgen.js -t js -o bomresults/bom-iot15.json repotests/iot-device-simulator --spec-version 1.5 --fail-on-error
+        shell: bash
+      - name: repotests ollama
+        run: |
+          bin/cdxgen.js -r -t go repotests/ollama -o bomresults/bom-ollama.json --fail-on-error
+          bin/cdxgen.js -r -t go repotests/caddy -o bomresults/bom-caddy.json --fail-on-error
+        shell: bash
+      - name: repotests go mod tests
+        run: |
+          mkdir -p gomod-example
+          cd gomod-example
+          curl -LO https://raw.githubusercontent.com/anchore/syft/main/go.mod
+          cd ..
+          bin/cdxgen.js -r -t go gomod-example -o bomresults/bom-gomod.json
+        shell: bash
+      - name: repotests shiftleft-go-example
+        run: |
+          FETCH_LICENSE=false bin/cdxgen.js -r -t golang repotests/shiftleft-go-example -o bomresults/bom-go.json --fail-on-error --export-proto
+        shell: bash
+      - name: repotests gallery
+        run: |
+          bin/cdxgen.js -r -t dart repotests/gallery -o bomresults/bom-pub.json --fail-on-error
+        shell: bash
   cli-tests:
     strategy:
       fail-fast: true
@@ -105,10 +173,6 @@ jobs:
           path: 'repotests/shiftleft-ts-example'
       - uses: actions/checkout@v4
         with:
-          repository: 'ShiftLeftSecurity/shiftleft-go-example'
-          path: 'repotests/shiftleft-go-example'
-      - uses: actions/checkout@v4
-        with:
           repository: 'HooliCorp/vulnerable_net_core'
           path: 'repotests/vulnerable_net_core'
       - uses: actions/checkout@v4
@@ -132,11 +196,6 @@ jobs:
           repository: 'bazelbuild/examples'
           path: 'repotests/bazel-examples'
           ref: 'b51e3bdd468ce8c4a516d7dca993909dcc84af32'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'flutter/gallery'
-          ref: 'v2.10.2'
-          path: 'repotests/gallery'
       - uses: actions/checkout@v4
         with:
           repository: 'gojek/ziggurat'
@@ -303,16 +362,6 @@ jobs:
           ref: '5ada8b5f4a5f68561a7195e2badc2f744dc4676e'
       - uses: actions/checkout@v4
         with:
-          repository: 'ollama/ollama'
-          path: 'repotests/ollama'
-          ref: 'v0.5.7'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'caddyserver/caddy'
-          path: 'repotests/caddy'
-          ref: 'v2.9.1'
-      - uses: actions/checkout@v4
-        with:
           repository: 'MaibornWolff/SecObserve'
           path: 'repotests/SecObserve'
           ref: 'v1.28.0'
@@ -389,11 +438,6 @@ jobs:
           bin/cdxgen.js -p -r -t quarkus repotests/quarkus-quickstarts -o bomresults/bom-quarkus-quickstarts-quarkus.json --no-recurse --fail-on-error
           bin/cdxgen.js -p -r -t quarkus repotests/quarkus-quickstarts -o bomresults/bom-quarkus-quickstarts-quarkus.json --no-recurse --spec-version 1.5 --fail-on-error
         shell: bash
-      - name: repotests iot-device-simulator
-        run: |
-          bin/cdxgen.js -p -t js -o bomresults/bom-iot.json repotests/iot-device-simulator --fail-on-error
-          bin/cdxgen.js -p -t js -o bomresults/bom-iot15.json repotests/iot-device-simulator --spec-version 1.5 --fail-on-error
-        shell: bash
       - name: repotests evidence
         run: |
           bin/cdxgen.js -p -t js --no-recurse -o bomresults/bom.json --evidence .
@@ -450,23 +494,6 @@ jobs:
           CDXGEN_DEBUG_MODE=verbose ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l js --with-data-flow -p repotests/sveltejs-examples
           CDXGEN_DEBUG_MODE=verbose ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l js --with-reachables -p repotests/sveltejs-examples
         shell: bash
-      - name: repotests shiftleft-go-example
-        run: |
-          FETCH_LICENSE=false bin/cdxgen.js -p -r -t golang repotests/shiftleft-go-example -o bomresults/bom-go.json --fail-on-error --export-proto
-        shell: bash
-      - name: repotests ollama
-        run: |
-          bin/cdxgen.js -p -r -t go repotests/ollama -o bomresults/bom-ollama.json --fail-on-error
-          bin/cdxgen.js -p -r -t go repotests/caddy -o bomresults/bom-caddy.json --fail-on-error
-        shell: bash
-      - name: repotests go mod tests
-        run: |
-          mkdir -p gomod-example
-          cd gomod-example
-          curl -LO https://raw.githubusercontent.com/anchore/syft/main/go.mod
-          cd ..
-          bin/cdxgen.js -p -r -t go gomod-example -o bomresults/bom-gomod.json -p
-        shell: bash
       - name: repotests vulnerable_net_core
         run: |
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json --include-formulation
@@ -499,10 +526,6 @@ jobs:
       - name: repotests bazel-examples
         run: |
           bin/cdxgen.js -p -r -t java17 repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json
-        shell: bash
-      - name: repotests gallery
-        run: |
-          bin/cdxgen.js -p -r -t dart repotests/gallery -o bomresults/bom-pub.json --fail-on-error
         shell: bash
       - name: repotests ziggurat
         run: |
