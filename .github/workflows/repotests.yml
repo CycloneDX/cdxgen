@@ -38,6 +38,11 @@ jobs:
           ref: 'v2.9.1'
       - uses: actions/checkout@v4
         with:
+          repository: 'flutter/gallery'
+          ref: 'v2.10.2'
+          path: 'repotests/gallery'
+      - uses: actions/checkout@v4
+        with:
           repository: 'ShiftLeftSecurity/shiftleft-go-example'
           path: 'repotests/shiftleft-go-example'
       - name: npm install
@@ -67,7 +72,11 @@ jobs:
         shell: bash
       - name: repotests shiftleft-go-example
         run: |
-          FETCH_LICENSE=false bin/cdxgen.js -p -r -t golang repotests/shiftleft-go-example -o bomresults/bom-go.json --fail-on-error --export-proto
+          FETCH_LICENSE=false bin/cdxgen.js -r -t golang repotests/shiftleft-go-example -o bomresults/bom-go.json --fail-on-error --export-proto
+        shell: bash
+      - name: repotests gallery
+        run: |
+          bin/cdxgen.js -r -t dart repotests/gallery -o bomresults/bom-pub.json --fail-on-error
         shell: bash
   cli-tests:
     strategy:
@@ -187,11 +196,6 @@ jobs:
           repository: 'bazelbuild/examples'
           path: 'repotests/bazel-examples'
           ref: 'b51e3bdd468ce8c4a516d7dca993909dcc84af32'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'flutter/gallery'
-          ref: 'v2.10.2'
-          path: 'repotests/gallery'
       - uses: actions/checkout@v4
         with:
           repository: 'gojek/ziggurat'
@@ -522,10 +526,6 @@ jobs:
       - name: repotests bazel-examples
         run: |
           bin/cdxgen.js -p -r -t java17 repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json
-        shell: bash
-      - name: repotests gallery
-        run: |
-          bin/cdxgen.js -p -r -t dart repotests/gallery -o bomresults/bom-pub.json --fail-on-error
         shell: bash
       - name: repotests ziggurat
         run: |
