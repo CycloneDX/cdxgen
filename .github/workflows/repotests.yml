@@ -68,7 +68,7 @@ jobs:
           cd gomod-example
           curl -LO https://raw.githubusercontent.com/anchore/syft/main/go.mod
           cd ..
-          bin/cdxgen.js -r -t go gomod-example -o bomresults/bom-gomod.json -p
+          bin/cdxgen.js -r -t go gomod-example -o bomresults/bom-gomod.json
         shell: bash
       - name: repotests shiftleft-go-example
         run: |
