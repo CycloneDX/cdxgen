@@ -18,6 +18,9 @@ jobs:
     runs-on: ["self-hosted", "ubuntu"]
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
       - uses: actions/checkout@v4
         with:
           repository: 'aws-solutions/iot-device-simulator'
@@ -37,10 +40,9 @@ jobs:
         with:
           repository: 'ShiftLeftSecurity/shiftleft-go-example'
           path: 'repotests/shiftleft-go-example'
-      - name: npm install, build and test
+      - name: npm install
         run: |
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
-          corepack pnpm test
           mkdir -p bomresults
         env:
           CI: true
