@@ -1154,10 +1154,11 @@ export function getMillCommand(srcPath: string): string;
  * @param {string[]} gradleArguments The general gradle arguments, which must only be added once
  * @param {string[]} gradleSubCommands The sub-commands that are to be executed by gradle
  * @param {string[]} gradleSubCommandArguments The arguments specific to the sub-command(s), which much be added PER sub-command
+ * @param {int} gradleCommandLength The length of the full gradle-command
  *
- * @returns {string[]} Array of arguments to be added to the gradle command
+ * @returns {string[]} Array of arrays of arguments to be added to the gradle command
  */
-export function buildGradleCommandArguments(gradleArguments: string[], gradleSubCommands: string[], gradleSubCommandArguments: string[]): string[];
+export function buildGradleCommandArguments(gradleArguments: string[], gradleSubCommands: string[], gradleSubCommandArguments: string[], gradleCommandLength: int): string[];
 /**
  * Method to split the output produced by Gradle using parallel processing by project
  *

@@ -103,6 +103,22 @@ data = {
 response = requests.post(url=cdxgen_server_url, json=data, allowed_retries=0)
 ```
 
+To limit access based on host names, use the environment variable `CDXGEN_SERVER_ALLOWED_HOSTS`.
+
+```shell
+export CDXGEN_SERVER_ALLOWED_HOSTS="github.com,gitlab.com"
+cdxgen --server
+curl "http://127.0.0.1:9090/sbom?url=https://github.com/HooliCorp/vulnerable-aws-koa-app.git&multiProject=true&type=js"
+```
+
+For local paths, use the environment variable `CDXGEN_SERVER_ALLOWED_HOSTS`
+
+```shell
+export CDXGEN_SERVER_ALLOWED_PATHS="/mnt/work,/mnt/work2"
+cdxgen --server
+curl "http://127.0.0.1:9090/sbom?path=/mnt/work/vulnerable-aws-koa-app&multiProject=true&type=js"
+```
+
 ### Health endpoint
 
 Use the /health endpoint to check if the SBOM server is up and running.
