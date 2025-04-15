@@ -631,7 +631,6 @@ jobs:
           COCOA_PODSPEC_REPLACEMENTS: "/([\\s\\S]+)/=require File.join(File.dirname(`node --print \"require.resolve('expo/package.json')\"`), \"scripts/autolinking\")<NEWLINE>require File.join(File.dirname(`node --print \"require.resolve('react-native/package.json')\"`), \"scripts/react_native_pods\")<NEWLINE>$1"
           COCOA_RESOLVE_FROM_NODE_EXCLUSION_DIRS: sdks,third-party-podspecs
           GRADLE_ARGS_DEPENDENCIES: "--configuration releaseRuntimeClasspath"
-          GRADLE_INCLUDED_BUILDS: :gradle-plugin
           GRADLE_SKIP_MODULES: root
         shell: bash
       - name: repotests expo not mac
@@ -650,7 +649,6 @@ jobs:
           COCOA_FULL_SCAN: false
           COCOA_RESOLVE_FROM_NODE_EXCLUSION_DIRS: sdks,third-party-podspecs
           GRADLE_ARGS_DEPENDENCIES: "--configuration releaseRuntimeClasspath"
-          GRADLE_INCLUDED_BUILDS: :gradle-plugin
           GRADLE_SKIP_MODULES: root
         shell: bash
       - name: repotests cocoapods
@@ -665,8 +663,6 @@ jobs:
       - name: repotests elasticsearch
         run: |
           bin/cdxgen.js -t gradle repotests/elasticsearch -o bomresults/bom-elasticsearch.json
-          bin/cdxgen.js -t gradle repotests/elasticsearch -o bomresults/bom-elasticsearch-with-included-builds.json
-          custom-json-diff -i bomresults/bom-elasticsearch.json bomresults/bom-elasticsearch-with-included-builds.json -o bomresults/diff-elasticsearch preset-diff
         shell: bash
         env:
           CDXGEN_THINK_MODE: true

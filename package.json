@@ -34,6 +34,10 @@
     {
       "name": "Adam Setch",
       "url": "https://github.com/setchy"
+    },
+    {
+      "name": "Roland Asmann",
+      "url": "https://github.com/malice00"
     }
   ],
   "type": "module",
@@ -54,7 +58,7 @@
     "cdx-verify": "bin/verify.js"
   },
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false lib/managers/docker.test.js lib/helpers/package_specific/gradleutils.test.js lib/helpers/utils.test.js lib/helpers/display.test.js lib/stages/postgen/postgen.test.js lib/evinser/swiftsem.test.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false lib/managers/docker.test.js lib/helpers/utils.test.js lib/helpers/display.test.js lib/stages/postgen/postgen.test.js lib/evinser/swiftsem.test.js",
     "watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --inject-globals false",
     "lint:check": "biome check",
     "lint": "biome check --fix",

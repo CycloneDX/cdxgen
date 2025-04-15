@@ -1,0 +1,5 @@
+gradle.taskGraph.whenReady {
+    gradle.includedBuilds.each { includedBuild ->
+        println "<CDXGEN:includedBuild>:${includedBuild.name}"
+    }
+}
