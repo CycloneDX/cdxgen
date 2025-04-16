@@ -27,6 +27,13 @@ jobs:
           repository: 'wix/greyhound'
           path: 'repotests/greyhound'
           ref: '385bb84a6f712ee18064a3b5ecb8d9dcbc1c75f3'
+      - name: npm install
+        run: |
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
+          mkdir -p bomresults
+        env:
+          CI: true
+          CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-repotests
       - name: repotests java-sec-code
         run: |
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-1.json --include-formulation --include-crypto --fail-on-error
