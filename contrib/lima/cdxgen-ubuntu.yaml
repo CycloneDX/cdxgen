@@ -94,11 +94,11 @@ provision:
     chmod -R o+r /usr/lib/swift
     rm -rf "$GNUPGHOME" swift.tar.gz.sig swift.tar.gz
     ARCH_NAME="$(dpkg --print-architecture)"
-    curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.3.0/nydus-static-v2.3.0-linux-${ARCH_NAME}.tgz
-    tar -xvf nydus-static-v2.3.0-linux-${ARCH_NAME}.tgz
+    curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.3.1/nydus-static-v2.3.1-linux-${ARCH_NAME}.tgz
+    tar -xvf nydus-static-v2.3.1-linux-${ARCH_NAME}.tgz
     chmod +x nydus-static/*
     mv nydus-static/* /usr/local/bin/
-    rm -rf nydus-static-v2.3.0-linux-${ARCH_NAME}.tgz nydus-static
+    rm -rf nydus-static-v2.3.1-linux-${ARCH_NAME}.tgz nydus-static
 - mode: system
   script: |
     #!/bin/bash
