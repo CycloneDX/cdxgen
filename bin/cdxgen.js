@@ -214,6 +214,10 @@ const args = yargs(hideBin(process.argv))
     default: "semantics.slices.json",
     hidden: true,
   })
+  .option("openapi-spec-file", {
+    description: "Path for the openapi specification file (SaaSBOM).",
+    hidden: true,
+  })
   .option("spec-version", {
     description: "CycloneDX Specification version to use. Defaults to 1.6",
     default: 1.6,
@@ -989,6 +993,7 @@ const checkPermissions = (filePath, options) => {
       dataFlowSlicesFile: options.dataFlowSlicesFile,
       reachablesSlicesFile: options.reachablesSlicesFile,
       semanticsSlicesFile: options.semanticsSlicesFile,
+      openapiSpecFile: options.openapiSpecFile,
       includeCrypto: options.includeCrypto,
       specVersion: options.specVersion,
       profile: options.profile,
