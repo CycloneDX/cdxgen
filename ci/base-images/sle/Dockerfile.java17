@@ -15,11 +15,10 @@ ENV SBT_VERSION=$SBT_VERSION \
     SBT_HOME="/opt/sbt/${SBT_VERSION}" \
     SCALA_VERSION=$SCALA_VERSION \
     SCALA_HOME="/opt/scala/${SCALA_VERSION}" \
-    ANDROID_HOME=/opt/android-sdk-linux \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
-ENV PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:
+ENV PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:
 
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
@@ -46,15 +45,6 @@ RUN set -e; \
     && sdk install scala $SCALA_VERSION \
     && sdk install sbt $SBT_VERSION \
     && mv /root/.sdkman/candidates/* /opt/ \
-    && mkdir -p ${ANDROID_HOME}/cmdline-tools \
-    && curl -L https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o ${ANDROID_HOME}/cmdline-tools/android_tools.zip \
-    && unzip ${ANDROID_HOME}/cmdline-tools/android_tools.zip -d ${ANDROID_HOME}/cmdline-tools/ \
-    && rm ${ANDROID_HOME}/cmdline-tools/android_tools.zip \
-    && mv ${ANDROID_HOME}/cmdline-tools/cmdline-tools ${ANDROID_HOME}/cmdline-tools/latest \
-    && yes | /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager --licenses --sdk_root=/opt/android-sdk-linux \
-    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'platform-tools' --sdk_root=/opt/android-sdk-linux \
-    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'platforms;android-34' --sdk_root=/opt/android-sdk-linux \
-    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'build-tools;34.0.0' --sdk_root=/opt/android-sdk-linux \
     && curl -L --output /usr/bin/bazel https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
     && chmod +x /usr/bin/bazel \
     && bazel --version \

@@ -20,7 +20,6 @@ ENV SBT_VERSION=$SBT_VERSION \
     PYTHON_CMD=/usr/bin/python3.12 \
     PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING="utf-8" \
-    ANDROID_HOME=/opt/android-sdk-linux \
     JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8" \
     NVM_DIR="/root/.nvm" \
     TMPDIR=/tmp \
@@ -30,7 +29,7 @@ ENV SBT_VERSION=$SBT_VERSION \
     SDKMAN_DIR=/root/.sdkman \
     SDKMAN_CANDIDATES_DIR=/root/.sdkman/candidates \
     npm_config_python=/usr/bin/python3.12
-ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/opt/pypi/bin:
+ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:/usr/local/bin/:/root/.local/bin:/opt/pypi/bin:
 
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
@@ -62,15 +61,6 @@ RUN set -e; \
     && sdk install gradle $GRADLE_VERSION \
     && sdk install scala $SCALA_VERSION \
     && sdk install sbt $SBT_VERSION \
-    && mkdir -p ${ANDROID_HOME}/cmdline-tools \
-    && curl -L https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o ${ANDROID_HOME}/cmdline-tools/android_tools.zip \
-    && unzip ${ANDROID_HOME}/cmdline-tools/android_tools.zip -d ${ANDROID_HOME}/cmdline-tools/ \
-    && rm ${ANDROID_HOME}/cmdline-tools/android_tools.zip \
-    && mv ${ANDROID_HOME}/cmdline-tools/cmdline-tools ${ANDROID_HOME}/cmdline-tools/latest \
-    && yes | /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager --licenses --sdk_root=/opt/android-sdk-linux \
-    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'platform-tools' --sdk_root=/opt/android-sdk-linux \
-    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'platforms;android-34' --sdk_root=/opt/android-sdk-linux \
-    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'build-tools;34.0.0' --sdk_root=/opt/android-sdk-linux \
     && useradd -ms /bin/bash cyclonedx \
     && npm install -g npm \
     && npm install -g node-gyp corepack \
