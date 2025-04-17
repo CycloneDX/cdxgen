@@ -12,10 +12,51 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 jobs:
-  cli-tests-quick:
+  cli-tests-quick-amd64:
     strategy:
       fail-fast: true
-    runs-on: ["self-hosted", "ubuntu"]
+    runs-on: ["self-hosted", "ubuntu", "amd64"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: 'hoolicorp/java-sec-code'
+          path: 'repotests/java-sec-code'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'wix/greyhound'
+          path: 'repotests/greyhound'
+          ref: '385bb84a6f712ee18064a3b5ecb8d9dcbc1c75f3'
+      - name: npm install
+        run: |
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
+          mkdir -p bomresults
+        env:
+          CI: true
+          CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-repotests
+      - name: repotests java-sec-code
+        run: |
+          bin/cdxgen.js -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-1.json --include-formulation --include-crypto --fail-on-error
+          bin/cdxgen.js -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-2.json --author foo --author bar --standard asvs-4.0.3
+          bin/cdxgen.js -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-3.json --required-only --fail-on-error
+          bin/cdxgen.js -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-4.json --filter postgres --filter json
+          bin/cdxgen.js -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-5.json --only spring --fail-on-error
+          bin/cdxgen.js -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-6.json --deep --evidence
+          bin/cdxgen.js -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-7.json --profile research --export-proto
+          bin/cdxgen.js -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-8.json --profile license-compliance
+          bin/cdxgen.js -t java -t github repotests/java-sec-code -o bomresults/bom-java-sec-code-9.json
+          bin/cdxgen.js -t java -exclude-type js repotests/java-sec-code -o bomresults/bom-java-sec-code-10.json
+        shell: bash
+      - name: repotests greyhound
+        run: |
+          bin/cdxgen.js -r -t java11 repotests/greyhound -o bomresults/bom-greyhound-java.json
+          bin/cdxgen.js -r -t gradle repotests/greyhound -o bomresults/bom-greyhound-gradle.json
+          bin/cdxgen.js -r -t java11 --exclude-type bazel --exclude-type sbt repotests/greyhound -o bomresults/bom-greyhound-wobazel.json
+        shell: bash
+  cli-tests-quick-arm64:
+    strategy:
+      fail-fast: true
+    runs-on: ["self-hosted", "ubuntu", "arm64"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5

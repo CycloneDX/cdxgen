@@ -92,6 +92,7 @@ provision:
     gpg --batch --verify swift.tar.gz.sig swift.tar.gz
     tar -xzf swift.tar.gz --directory / --strip-components=1
     chmod -R o+r /usr/lib/swift
+    rm -rf "$GNUPGHOME" swift.tar.gz.sig swift.tar.gz
     ARCH_NAME="$(dpkg --print-architecture)"
     curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.3.0/nydus-static-v2.3.0-linux-${ARCH_NAME}.tgz
     tar -xvf nydus-static-v2.3.0-linux-${ARCH_NAME}.tgz
