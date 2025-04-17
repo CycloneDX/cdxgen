@@ -158,3 +158,13 @@ runcmd:
   - tar -xzf swift.tar.gz --directory / --strip-components=1
   - chmod -R o+r /usr/lib/swift
   - apt-get autoremove -y
+  - curl -fsSL https://deb.nodesource.com/setup_23.x -o nodesource_setup.sh
+  - bash nodesource_setup.sh
+  - apt install -y nodejs
+  - rm nodesource_setup.sh
+  - export ARCH_NAME="$(dpkg --print-architecture)"
+  - curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.3.1/nydus-static-v2.3.1-linux-${ARCH_NAME}.tgz
+  - tar -xvf nydus-static-v2.3.1-linux-${ARCH_NAME}.tgz
+  - chmod +x nydus-static/*
+  - mv nydus-static/* /usr/local/bin/
+  - rm -rf nydus-static-v2.3.1-linux-${ARCH_NAME}.tgz nydus-static
