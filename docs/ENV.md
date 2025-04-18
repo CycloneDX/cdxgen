@@ -8,6 +8,7 @@ These variables are used either by cdxgen itself or by multiple scanners.
 
 | Variable                                    | Description                                                                                                                                                                                                                                 |
 | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ANDROID_MAVEN_URL                           | Specify URL of Android Maven Repository for metadata fetching (e.g. when private repo is used). This is used by all Java-based scanners (Gradle, Maven, etc).                                                                               |
 | ASTGEN_IGNORE_DIRS                          | Comma-separated list of directories to ignore during abstract syntax tree (AST) generation. Defaults to a predefined list such as `venv` to avoid unnecessary parsing of certain directories.                                               |
 | ASTGEN_IGNORE_FILE_PATTERN                  | Ignore regex to use                                                                                                                                                                                                                         |
 | CDXGEN_DEBUG_MODE                           | Set to `debug` to enable debug messages. Set to `verbose` to also enable the think mode.                                                                                                                                                    |
@@ -32,6 +33,7 @@ These variables are used either by cdxgen itself or by multiple scanners.
 | JAVA22_TOOL                                 | Specifies the Java 22 toolchain version to use. Defaults to `22.0.2-tem` if not explicitly set. Can be overridden to point to a custom Java 22 version.                                                                                     |
 | JAVA23_TOOL                                 | Specifies the Java 23 toolchain version to use. Defaults to `23.0.2-tem` if not explicitly set. Can be overridden to point to a custom Java 23 version.                                                                                     |
 | JAVA24_TOOL                                 | Specifies the Java 24 toolchain version to use. Defaults to `24-tem` if not explicitly set. Can be overridden to point to a custom Java 24 version.                                                                                         |
+| MAVEN_CENTRAL_URL                           | Specify URL of Maven Central for metadata fetching (e.g. when private repo is used). This is used by all Java-based scanners (Gradle, Maven, etc).                                                                                          |
 | NODE_NO_READLINE                            | Set to `1` to disable canonical terminal settings and enable custom readline behavior for Node.js REPL or command-line tools.                                                                                                               |
 | SBOM_SIGN_ALGORITHM                         | Signature algorithm. Some valid values are RS256, RS384, RS512, PS256, PS384, PS512, ES256 etc                                                                                                                                              |
 | SBOM_SIGN_PRIVATE_KEY                       | Private key to use for signing                                                                                                                                                                                                              |
@@ -118,11 +120,9 @@ These variables are specifically for a single language or tool.
 
 | Variable                     | Description                                                                                                                                           |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ANDROID_MAVEN_URL            | Specify URL of Android Maven Repository for metadata fetching (e.g. when private repo is used)                                                        |
 | CDX_MAVEN_PLUGIN             | CycloneDX Maven plugin to use. Default "org.cyclonedx:cyclonedx-maven-plugin:2.9.1"                                                                   |
 | CDX_MAVEN_GOAL               | CycloneDX Maven plugin goal to use. Default makeAggregateBom. Other options: makeBom, makePackageBom                                                  |
 | CDX_MAVEN_INCLUDE_TEST_SCOPE | Whether test scoped dependencies should be included from Maven projects, Default: true                                                                |
-| MAVEN_CENTRAL_URL            | Specify URL of Maven Central for metadata fetching (e.g. when private repo is used)                                                                   |
 | MAVEN_HOME                   | Specify maven home                                                                                                                                    |
 | MVN_ARGS                     | Set to pass additional arguments such as profile or settings to maven                                                                                 |
 | MVN_CMD                      | Set to override maven command                                                                                                                         |
@@ -130,9 +130,11 @@ These variables are specifically for a single language or tool.
 
 ### Mill
 
-| Variable          | Description                                                                                |
-| ----------------- | ------------------------------------------------------------------------------------------ |
-| MILL_EXCLUDE_TEST | Should the test-modules and their dependencies be excluded from the SBOM? Default: `false` |
+| Variable             | Description                                                                                         |
+| -------------------- | --------------------------------------------------------------------------------------------------- |
+| MILL_EXCLUDE_TEST    | Should the test-modules and their dependencies be excluded from the SBOM? Default: `false`.         |
+| MILL_SHUTDOWN_SERVER | Shutdown the mill server after running cdxgen. Defaults to `true` when 'MILL_USE_SERVER' is 'true'. |
+| MILL_USE_SERVER      | Control usage of the server. Defaults to `false`.                                                   |
 
 ### NodeJS
 
