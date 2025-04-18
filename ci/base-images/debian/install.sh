@@ -9,7 +9,7 @@ mkdir -p "$(rbenv root)/plugins"
 git clone https://github.com/rbenv/ruby-build.git --depth=1 "$(rbenv root)/plugins/ruby-build"
 
 if [ x"${ATOM_RUBY_VERSION}" != "x" ]; then
-  rbenv install $ATOM_RUBY_VERSION
+  rbenv install $ATOM_RUBY_VERSION -- --disable-install-doc
 fi
 
 curl -s "https://get.sdkman.io" | bash

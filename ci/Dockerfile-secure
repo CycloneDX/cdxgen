@@ -23,7 +23,7 @@ ARG GRADLE_VERSION=8.13
 ARG GO_VERSION=1.24.1
 ARG NODE_VERSION=23.11.0
 ARG PYTHON_VERSION=3.12
-ARG RUBY_VERSION=3.4.2
+ARG RUBY_VERSION=3.4.3
 ARG JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
 ARG SCALA_VERSION=3.6.4
 
@@ -119,7 +119,7 @@ RUN set -e; \
     && source ~/.bashrc \
     && mkdir -p "/opt/.rbenv/plugins" \
     && git clone https://github.com/rbenv/ruby-build.git --depth=1 "/opt/.rbenv/plugins/ruby-build" \
-    && rbenv install ${RUBY_VERSION} \
+    && rbenv install ${RUBY_VERSION} -- --disable-install-doc \
     && rbenv global ${RUBY_VERSION} \
     && rm -rf /opt/.rbenv/cache $RUBY_BUILD_BUILD_PATH \
     && ruby --version \

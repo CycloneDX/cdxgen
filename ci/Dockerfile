@@ -23,7 +23,7 @@ ARG GRADLE_VERSION=8.13
 ARG GO_VERSION=1.24.1
 ARG NODE_VERSION=23.11.0
 ARG PYTHON_VERSION=3.12
-ARG RUBY_VERSION=3.4.2
+ARG RUBY_VERSION=3.4.3
 ARG SCALA_VERSION=3.6.4
 
 ENV GOPATH=/opt/app-root/go \
@@ -111,7 +111,7 @@ RUN set -e; \
     && source ~/.bashrc \
     && mkdir -p "$(rbenv root)/plugins" \
     && git clone https://github.com/rbenv/ruby-build.git --depth=1 "$(rbenv root)/plugins/ruby-build" \
-    && rbenv install ${RUBY_VERSION} \
+    && rbenv install ${RUBY_VERSION} -- --disable-install-doc \
     && rbenv global ${RUBY_VERSION} \
     && ruby --version \
     && which ruby \
