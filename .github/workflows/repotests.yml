@@ -53,6 +53,7 @@ jobs:
           bin/cdxgen.js -r -t gradle repotests/greyhound -o bomresults/bom-greyhound-gradle.json
           bin/cdxgen.js -r -t java11 --exclude-type bazel --exclude-type sbt repotests/greyhound -o bomresults/bom-greyhound-wobazel.json
         shell: bash
+
   cli-tests-quick-arm64:
     strategy:
       fail-fast: true
@@ -119,56 +120,33 @@ jobs:
         run: |
           bin/cdxgen.js -r -t dart repotests/gallery -o bomresults/bom-pub.json --fail-on-error
         shell: bash
-  cli-tests:
+
+  cli-tests-spec:
     strategy:
       fail-fast: true
       matrix:
-        node-version: ['23.x']
+        java-version: ['21'] # LTS
+        node-version: ['22.x'] # LTS
+        spec-version: ['1.4', '1.5', '1.6'] # latest 3
         os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'windows-latest', 'macos-15']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '23'
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.23'
+      ### Setup the container
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: denoland/setup-deno@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v4
         with:
-          deno-version: v2.x
-      - uses: oven-sh/setup-bun@v1
-      - name: Trim CI agent
-        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm'
-        run: |
-          chmod +x contrib/free_disk_space.sh
-          ./contrib/free_disk_space.sh
-      - uses: sbt/setup-sbt@v1
-      - name: Install bazelisk - linux
-        if: matrix.os == 'ubuntu-24.04'
-        run: |
-          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.20.0/bazelisk-linux-amd64"
-          sudo mv bazelisk-linux-amd64 /usr/local/bin/bazel
-          chmod +x /usr/local/bin/bazel
-      - name: Install bazelisk - linux arm
-        if: matrix.os == 'ubuntu-24.04-arm'
-        run: |
-          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.20.0/bazelisk-linux-arm64"
-          sudo mv bazelisk-linux-arm64 /usr/local/bin/bazel
-          chmod +x /usr/local/bin/bazel
-      - name: Install bazelisk - mac
-        if: matrix.os == 'macos-15'
-        run: |
-          brew install bazelisk
-      - name: Install bazelisk - windows
-        if: matrix.os == 'windows-latest'
-        run: choco install -y bazel
+          distribution: 'temurin'
+          java-version: ${{ matrix.java-version }}
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      ### Build cdxgen
+      - uses: actions/checkout@v4
       - name: npm install, build and test
         run: |
           npm install --global corepack@latest
@@ -177,33 +155,10 @@ jobs:
           corepack pnpm test
           mkdir -p repotests
           mkdir -p bomresults
-          mkdir -p denoresults
         env:
           CI: true
           CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-repotests
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          packages: 'platform-tools'
-      - run: sdkmanager --uninstall "build-tools;30.0.3"
-      - uses: swift-actions/setup-swift@v2
-        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-15'
-        with:
-          swift-version: '6.0'
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.4'
-      - name: setup-cocoapods # Not using an action, as it is not implemented for windows!
-        run: |
-          gem install cocoapods -v 1.16.2 --no-document
-        shell: bash
-      - name: pip install custom-json-diff
-        run: |
-          pip install custom-json-diff
+      ### The test
       - uses: actions/checkout@v4
         with:
           repository: 'ShiftLeftSecurity/shiftleft-java-example'
@@ -228,65 +183,651 @@ jobs:
         with:
           repository: 'prabhu/Vulnerable-Web-Application'
           path: 'repotests/Vulnerable-Web-Application'
-      - uses: actions/checkout@v4
+      - name: spec-test
+        run: |
+          bin/cdxgen.js -r -t java repotests/shiftleft-java-example -o bomresults/${{ matrix.spec-version }}-bom-java.json --generate-key-and-sign --spec-version ${{ matrix.spec-version }}
+          SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/${{ matrix.spec-version }}-bom-github.json --spec-version ${{ matrix.spec-version }}
+          FETCH_LICENSE=0 bin/cdxgen.js -r -t js repotests/shiftleft-ts-example -o bomresults/${{ matrix.spec-version }}-bom-ts-1.json --fail-on-error --spec-version ${{ matrix.spec-version }}
+          FETCH_LICENSE=1 bin/cdxgen.js -r -t javascript repotests/shiftleft-ts-example --required-only -o bomresults/${{ matrix.spec-version }}-bom-ts-2.json --fail-on-error --spec-version ${{ matrix.spec-version }}
+          FETCH_LICENSE=true bin/cdxgen.js -r -t csharp repotests/vulnerable_net_core -o bomresults/${{ matrix.spec-version }}-bom-csharp2.json --spec-version ${{ matrix.spec-version }}
+          FETCH_LICENSE=false bin/cdxgen.js -r repotests/Goatly.NET -o bomresults/${{ matrix.spec-version }}-bom-csharp3.json --spec-version ${{ matrix.spec-version }}
+          FETCH_LICENSE=true bin/cdxgen.js -r -t python repotests/DjanGoat -o bomresults/${{ matrix.spec-version }}-bom-python.json --fail-on-error --spec-version ${{ matrix.spec-version }}
+          bin/cdxgen.js -r -t php repotests/Vulnerable-Web-Application -o bomresults/${{ matrix.spec-version }}-bom-php.json --fail-on-error --spec-version ${{ matrix.spec-version }}
+        shell: bash
+      # Post actions
+      - name: list repotest bomresults
+        run: |
+          ls -ltr bomresults
+        shell: bash
+      - uses: actions/upload-artifact@v4
+        if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-24.04-arm'
         with:
-          repository: 'prabhu/railsgoat'
-          path: 'repotests/railsgoat'
+          name: bomresults
+          path: bomresults
+
+  cli-tests-sdkman:
+    strategy:
+      fail-fast: true
+      matrix:
+        node-version: ['23.x']
+        os: ['ubuntu-24.04', 'ubuntu-24.04-arm']
+    runs-on: ${{ matrix.os }}
+    steps:
+      ### Setup the container
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: setup sdkman
+        run: |
+          curl -s "https://get.sdkman.io" | bash
+      - name: Install bazelisk - linux
+        if: matrix.os == 'ubuntu-24.04'
+        run: |
+          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.20.0/bazelisk-linux-amd64"
+          sudo mv bazelisk-linux-amd64 /usr/local/bin/bazel
+          chmod +x /usr/local/bin/bazel
+      - name: Install bazelisk - linux arm
+        if: matrix.os == 'ubuntu-24.04-arm'
+        run: |
+          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.20.0/bazelisk-linux-arm64"
+          sudo mv bazelisk-linux-arm64 /usr/local/bin/bazel
+          chmod +x /usr/local/bin/bazel
+      ### Build cdxgen
+      - uses: actions/checkout@v4
+      - name: Trim CI agent
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm'
+        run: |
+          chmod +x contrib/free_disk_space.sh
+          ./contrib/free_disk_space.sh
+      - name: npm install and build
+        run: |
+          npm install --global corepack@latest
+          corepack enable
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
+          mkdir -p repotests
+          mkdir -p bomresults
+        env:
+          CI: true
+          CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-repotests
+      ### The tests
       - uses: actions/checkout@v4
         with:
           repository: 'bazelbuild/examples'
           path: 'repotests/bazel-examples'
           ref: 'b51e3bdd468ce8c4a516d7dca993909dcc84af32'
+      - name: repotests bazel-examples
+        run: |
+          bin/cdxgen.js -p -r -t java17 repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'wix/greyhound'
+          path: 'repotests/greyhound'
+          ref: '385bb84a6f712ee18064a3b5ecb8d9dcbc1c75f3'
+      - name: repotests greyhound
+        run: |
+          bin/cdxgen.js -p -r -t java11 repotests/greyhound -o bomresults/bom-greyhound-java.json
+          bin/cdxgen.js -p -r -t gradle repotests/greyhound -o bomresults/bom-greyhound-gradle.json
+          bin/cdxgen.js -p -r -t java11 --exclude-type bazel --exclude-type sbt repotests/greyhound -o bomresults/bom-greyhound-wobazel.json
+        shell: bash
+        env:
+          JAVA_HOME: ""
+      # Post actions
+      - name: list repotest bomresults
+        run: |
+          ls -ltr bomresults
+        shell: bash
+      - uses: actions/upload-artifact@v4
+        if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-24.04-arm'
+        with:
+          name: bomresults
+          path: bomresults
+
+  cli-tests-deno-bun-java-ruby-cocoa:
+    strategy:
+      fail-fast: true
+      matrix:
+        java-version: ['21', '23']
+        node-version: ['23.x']
+        os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'windows-latest', 'macos-15']
+    runs-on: ${{ matrix.os }}
+    steps:
+      ### Setup the container
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - uses: oven-sh/setup-bun@v1
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java-version }}
+      - name: Install bazelisk - linux
+        if: matrix.os == 'ubuntu-24.04'
+        run: |
+          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.20.0/bazelisk-linux-amd64"
+          sudo mv bazelisk-linux-amd64 /usr/local/bin/bazel
+          chmod +x /usr/local/bin/bazel
+      - name: Install bazelisk - linux arm
+        if: matrix.os == 'ubuntu-24.04-arm'
+        run: |
+          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.20.0/bazelisk-linux-arm64"
+          sudo mv bazelisk-linux-arm64 /usr/local/bin/bazel
+          chmod +x /usr/local/bin/bazel
+      - name: Install bazelisk - mac
+        if: matrix.os == 'macos-15'
+        run: |
+          brew install bazelisk
+      - name: Install bazelisk - windows
+        if: matrix.os == 'windows-latest'
+        run: choco install -y bazel
+      - uses: sbt/setup-sbt@v1
+      - uses: coursier/setup-action@v1
+        with:
+          apps: scala3 scalac
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+      - name: setup rbenv
+        if: runner.os != 'Windows'
+        run: |
+          git clone https://github.com/rbenv/rbenv.git --depth=1 ~/.rbenv
+          echo 'export PATH="~/.rbenv/bin:$PATH"' >> ~/.bashrc
+          echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.bashrc
+          source ~/.bashrc
+          mkdir -p "~/.rbenv/plugins"
+          git clone https://github.com/rbenv/ruby-build.git --depth=1 "~/.rbenv/plugins/ruby-build"
+      - name: setup-cocoapods # Not using an action, as it is not implemented for windows!
+        run: |
+          gem install cocoapods -v 1.16.2 --no-document
+        shell: bash
+      - name: pip install custom-json-diff
+        run: |
+          pip install custom-json-diff
+      ### Build cdxgen
+      - uses: actions/checkout@v4
+      - name: Trim CI agent
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm'
+        run: |
+          chmod +x contrib/free_disk_space.sh
+          ./contrib/free_disk_space.sh
+      - name: npm install and build
+        run: |
+          npm install --global corepack@latest
+          corepack enable
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
+          mkdir -p repotests
+          mkdir -p bomresults
+          mkdir -p denoresults
+        env:
+          CI: true
+          CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-repotests
+      ### The tests
+      - uses: actions/checkout@v4
+        with:
+          repository: 'ShiftLeftSecurity/shiftleft-java-example'
+          path: 'repotests/shiftleft-java-example'
+      - name: repotests shiftleft-java-example
+        run: |
+          bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
+          node bin/evinse.js -i bomresults/bom-java.json -o bomresults/bom-java.evinse.json -l java --with-data-flow -p repotests/shiftleft-java-example
+          SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/bom-github.json
+        shell: bash
+
       - uses: actions/checkout@v4
         with:
           repository: 'gojek/ziggurat'
           ref: '4.9.4'
           path: 'repotests/ziggurat'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'apple/swift-markdown'
-          ref: '0.3.0'
-          path: 'repotests/swift-markdown'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'GoogleCloudPlatform/microservices-demo'
-          ref: 'v0.8.1'
-          path: 'repotests/microservices-demo'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'zoom/meetingsdk-vuejs-sample'
-          ref: 'v2.18.0'
-          path: 'repotests/meetingsdk-vuejs-sample'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'kriasoft/react-app'
-          path: 'repotests/react-app'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'patrickjuchli/basic-ftp'
-          path: 'repotests/basic-ftp'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'Atome-FE/llama-node'
-          path: 'repotests/llama-node'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'DIYgod/RSSHub'
-          path: 'repotests/RSSHub'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'sveltejs/examples'
-          path: 'repotests/sveltejs-examples'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'openpbs/openpbs'
-          ref: 'v23.06.06'
-          path: 'repotests/openpbs'
+      - name: repotests ziggurat
+        run: |
+          CDXGEN_DEBUG_MODE=verbose bin/cdxgen.js -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json --fail-on-error
+        shell: bash
+
       - uses: actions/checkout@v4
         with:
           repository: 'home-assistant/android'
           ref: '2023.11.3'
           path: 'repotests/ha-android'
+      - name: repotests ha-android
+        run: |
+          cd repotests/ha-android && ./gradlew assembleDebug || true && cd ../..
+          bin/cdxgen.js -r -t java repotests/ha-android -o bomresults/bom-android.json
+          CDXGEN_DEBUG_MODE=verbose bin/evinse.js -i bomresults/bom-android.json -o bomresults/bom-android.evinse.json -l java repotests/ha-android
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'hoolicorp/java-sec-code'
+          path: 'repotests/java-sec-code'
+      - name: repotests java-sec-code
+        run: |
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-1.json --include-formulation --include-crypto --fail-on-error
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-2.json --author foo --author bar --standard asvs-4.0.3
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-3.json --required-only --fail-on-error
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-4.json --filter postgres --filter json
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-5.json --only spring --fail-on-error
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-6.json --deep --evidence
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-7.json --profile research --export-proto
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-8.json --profile license-compliance
+          bin/cdxgen.js -p -t java -t github repotests/java-sec-code -o bomresults/bom-java-sec-code-9.json
+          bin/cdxgen.js -p -t java -exclude-type js repotests/java-sec-code -o bomresults/bom-java-sec-code-10.json
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'malice00/cdxgen-expo-test'
+          ref: 'main'
+          path: 'repotests/expo-test'
+      - name: repotests expo mac
+        if: matrix.os == 'macos-15'
+        run: |
+          cd repotests/expo-test && npm ci --legacy-peer-deps && cd ios && pod install && cd ../../..
+          bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods.json
+          bin/cdxgen.js -p              -t gradle        repotests/expo-test -o bomresults/bom-expo-gradle.json
+          bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full.json
+        env:
+          CDXGEN_THINK_MODE: true
+          COCOA_PODSPEC_REPLACEMENTS: "/([\\s\\S]+)/=require File.join(File.dirname(`node --print \"require.resolve('expo/package.json')\"`), \"scripts/autolinking\")<NEWLINE>require File.join(File.dirname(`node --print \"require.resolve('react-native/package.json')\"`), \"scripts/react_native_pods\")<NEWLINE>$1"
+          COCOA_RESOLVE_FROM_NODE_EXCLUSION_DIRS: sdks,third-party-podspecs
+          GRADLE_ARGS_DEPENDENCIES: "--configuration releaseRuntimeClasspath"
+          GRADLE_SKIP_MODULES: root
+        shell: bash
+      - name: repotests expo not mac
+        if: matrix.os != 'macos-15'
+        run: |
+          cd repotests/expo-test && npm ci --legacy-peer-deps && cd ../..
+          bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods.json
+          bin/cdxgen.js -p              -t gradle        repotests/expo-test -o bomresults/bom-expo-gradle.json
+          bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full.json
+        env:
+          CDXGEN_THINK_MODE: true
+          COCOA_FULL_SCAN: false
+          COCOA_RESOLVE_FROM_NODE_EXCLUSION_DIRS: sdks,third-party-podspecs
+          GRADLE_ARGS_DEPENDENCIES: "--configuration releaseRuntimeClasspath"
+          GRADLE_SKIP_MODULES: root
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'malice00/cdxgen-cocoapods-test'
+          ref: 'main'
+          path: 'repotests/cocoapods-test'
+      - name: repotests cocoapods
+        if: matrix.os != 'windows-latest'
+        run: |
+          COCOA_FULL_SCAN=false                                       bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-simple.json
+                                                                      bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-full.json
+                                COCOA_INCLUDED_TARGETS=cdxgenexpotest bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-target.json
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'elastic/elasticsearch'
+          path: 'repotests/elasticsearch'
+      - name: repotests elasticsearch
+        run: |
+          bin/cdxgen.js -t gradle repotests/elasticsearch -o bomresults/bom-elasticsearch.json
+        shell: bash
+        env:
+          CDXGEN_THINK_MODE: true
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'quarkusio/quarkus-quickstarts'
+          path: 'repotests/quarkus-quickstarts'
+          ref: '3.17.3'
+      - name: repotests quarkus-quickstarts
+        run: |
+          bin/cdxgen.js -p -r -t quarkus repotests/quarkus-quickstarts -o bomresults/bom-quarkus-quickstarts-quarkus.json --no-recurse --fail-on-error
+          bin/cdxgen.js -p -r -t quarkus repotests/quarkus-quickstarts -o bomresults/bom-quarkus-quickstarts-quarkus.json --no-recurse --spec-version 1.5 --fail-on-error
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'bionomia/bionomia'
+          path: 'repotests/bionomia'
+          ref: '5ada8b5f4a5f68561a7195e2badc2f744dc4676e'
+      - name: repotests bionomia
+        run: |
+          bin/cdxgen.js -r -t ruby repotests/bionomia -o bomresults/bom-bionomia.json --fail-on-error
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'prabhu/railsgoat'
+          path: 'repotests/railsgoat'
+      - name: repotests railsgoat
+        run: |
+          bin/cdxgen.js -r -t ruby repotests/railsgoat -o bomresults/bom-ruby.json --fail-on-error
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'playframework/play-samples'
+          path: 'repotests/play-samples'
+          ref: '0dccba17856e89dbb5e457ab760efb14cc691395'
+      - name: scala tests
+        run: |
+          python -m pip install atom-tools
+          which atom-tools
+          cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
+          sbt clean stage
+          cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example
+          sbt clean stage
+          cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example
+          sbt clean stage
+          cd $GITHUB_WORKSPACE
+          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example -o bomresults/bom-simple-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
+          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example --profile research -o bomresults/bom-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
+          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example --profile research -o bomresults/bom-play-scala-rest-api-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example
+          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example --profile research -o bomresults/bom-pplay-scala-grpc-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example
+        shell: bash
+        env:
+          CDXGEN_DEBUG_MODE: debug
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'hritik14/broken-mvn-wrapper'
+          path: 'repotests/broken-mvn-wrapper'
+      - name: repotests mvn-wrapper
+        run: |
+          bin/cdxgen.js -p -t java repotests/broken-mvn-wrapper -o bomresults/bom-broken-mvn-wrapper.json
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'com-lihaoyi/mill'
+          path: 'repotests/mill'
+          ref: '0.12.10'
+      - name: repotests mill
+        run: |
+          bin/cdxgen.js -p -t mill repotests/mill -o bomresults/bom-mill.json
+          MILL_EXCLUDE_TEST=true bin/cdxgen.js -p -t mill repotests/mill -o bomresults/bom-mill-without-test.json
+        shell: bash
+
+      - name: jenkins plugins
+        run: |
+          mkdir -p jenkins
+          curl -LO https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
+          curl -LO https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi
+          curl -LO https://updates.jenkins.io/download/plugins/jsch/0.1.55.61.va_e9ee26616e7/jsch.hpi
+          curl -LO https://updates.jenkins.io/download/plugins/momentjs/1.1.1/momentjs.hpi
+          mv *.hpi jenkins
+          CDXGEN_DEBUG_MODE=verbose bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --fail-on-error
+        shell: bash
+
+      - name: standalone jar files
+        run: |
+          mkdir -p standalone-jar-files
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/org/jacoco/org.jacoco.report/0.8.8/org.jacoco.report-0.8.8.jar
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/org/apache/ws/xmlschema/xmlschema-core/2.2.5/xmlschema-core-2.2.5.jar
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.16.0/jackson-core-2.16.0.jar
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/junit/junit/4.13.2/junit-4.13.2.jar
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/wsdl4j/wsdl4j/1.6.3/wsdl4j-1.6.3.jar
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/org/apache/maven/maven-core/3.9.2/maven-core-3.9.2.jar
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/displaytag/displaytag/1.2/displaytag-1.2.jar
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/org/apache/poi/poi/3.17/poi-3.17.jar
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/org/jacoco/org.jacoco.agent/0.8.8/org.jacoco.agent-0.8.8.jar
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/javax/jws/javax.jws-api/1.1/javax.jws-api-1.1.jar
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/org/jrobin/jrobin/1.5.9/jrobin-1.5.9.jar
+          FETCH_LICENSE=true bin/cdxgen.js -p standalone-jar-files -o bomresults/bom-standalone-jar-files.json --fail-on-error
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'DefectDojo/django-DefectDojo'
+          ref: '2.28.2'
+          path: 'repotests/django-DefectDojo'
+      - name: denotests
+        run: |
+          deno info bin/cdxgen.js
+          deno info bin/evinse.js
+          deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-deno.json --deep
+          deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net bin/cdxgen.js -p -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo-deno.json --deep
+        env:
+          FETCH_LICENSE: true
+        shell: bash
+
+      - name: buntests
+        run: |
+          rm -rf node_modules
+          bun install
+          bun --bun bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-bun.json --deep
+          bun --bun bin/cdxgen.js -p -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo-bun.json
+        continue-on-error: true
+        shell: bash
+      # Post actions
+      - name: list repotest bomresults
+        run: |
+          ls -ltr bomresults
+        shell: bash
+      - uses: actions/upload-artifact@v4
+        if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-24.04-arm'
+        with:
+          name: bomresults
+          path: bomresults
+
+  cli-tests-others:
+    strategy:
+      fail-fast: true
+      matrix:
+        node-version: ['23.x']
+        os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'windows-latest', 'macos-15']
+    runs-on: ${{ matrix.os }}
+    steps:
+      ### Setup the container
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: pip install custom-json-diff
+        run: |
+          pip install custom-json-diff
+      - uses: swift-actions/setup-swift@v2
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-15'
+        with:
+          swift-version: '6.0'
+      - uses: dtolnay/rust-toolchain@stable
+      ### Build cdxgen
+      - uses: actions/checkout@v4
+      - name: Trim CI agent
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm'
+        run: |
+          chmod +x contrib/free_disk_space.sh
+          ./contrib/free_disk_space.sh
+      - name: npm install and build
+        run: |
+          npm install --global corepack@latest
+          corepack enable
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
+          mkdir -p repotests
+          mkdir -p bomresults
+        env:
+          CI: true
+          CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-repotests
+      - name: repotests evidence
+        run: |
+          bin/cdxgen.js -p -t js --no-recurse -o bomresults/bom.json --evidence .
+        shell: bash
+      ### The tests
+      - uses: actions/checkout@v4
+        with:
+          repository: 'ShiftLeftSecurity/shiftleft-ts-example'
+          path: 'repotests/shiftleft-ts-example'
+      - name: repotests shiftleft-ts-example
+        run: |
+          FETCH_LICENSE=false bin/cdxgen.js -p -t javascript repotests/shiftleft-ts-example -o bomresults/bom-ts-1.json --include-formulation
+          node bin/evinse.js -i bomresults/bom-ts-1.json -o bomresults/bom-ts.evinse.json -l js --with-data-flow -p repotests/shiftleft-ts-example
+          FETCH_LICENSE=true bin/cdxgen.js -p -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts-2.json --fail-on-error
+          FETCH_LICENSE=1 bin/cdxgen.js -p -r -t javascript repotests/shiftleft-ts-example -o bomresults/bom-ts-3.json --fail-on-error
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'HooliCorp/vulnerable_net_core'
+          path: 'repotests/vulnerable_net_core'
+      - name: repotests vulnerable_net_core
+        run: |
+          FETCH_LICENSE=true bin/cdxgen.js -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json --include-formulation
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'DefectDojo/django-DefectDojo'
+          ref: '2.28.2'
+          path: 'repotests/django-DefectDojo'
+      - name: repotests django-DefectDojo
+        run: |
+          bin/cdxgen.js -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo-safe.json --feature-flags safe-pip-install --fail-on-error
+          bin/cdxgen.js -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo.json --deep --include-crypto --spec-version 1.6
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'HooliCorp/Goatly.NET'
+          path: 'repotests/Goatly.NET'
+      - name: repotests Goatly.NET
+        run: |
+          FETCH_LICENSE=false bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json --include-formulation
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'HooliCorp/DjanGoat'
+          path: 'repotests/DjanGoat'
+      - name: repotests DjanGoat
+        run: |
+          FETCH_LICENSE=true bin/cdxgen.js -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json --fail-on-error
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'prabhu/Vulnerable-Web-Application'
+          path: 'repotests/Vulnerable-Web-Application'
+      - name: repotests Vulnerable-Web-Application
+        run: |
+          bin/cdxgen.js -p -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php-1.json --fail-on-error
+          bin/cdxgen.js -p -t php --no-recurse repotests/Vulnerable-Web-Application -o bomresults/bom-php-2.json --fail-on-error --profile research -p
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'apple/swift-markdown'
+          ref: '0.3.0'
+          path: 'repotests/swift-markdown'
+      - name: repotests swift-markdown
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-15'
+        run: |
+          CDXGEN_DEBUG_MODE=verbose bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json
+          CDXGEN_DEBUG_MODE=verbose bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json --profile research
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'GoogleCloudPlatform/microservices-demo'
+          ref: 'v0.8.1'
+          path: 'repotests/microservices-demo'
+      - name: repotests microservices-demo
+        if: matrix.os == 'windows-latest'
+        run: |
+          bin/cdxgen.js -p --no-recurse repotests/microservices-demo -o bomresults/bom-msd-1.json
+          bin/cdxgen.js -p -r repotests/microservices-demo -o bomresults/bom-msd-2.json
+          bin/cdxgen.js -p -r -t universal repotests/microservices-demo -o bomresults/bom-yaml.json
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'zoom/meetingsdk-vuejs-sample'
+          ref: 'v2.18.0'
+          path: 'repotests/meetingsdk-vuejs-sample'
+      - name: repotests meetingsdk-vuejs-sample
+        run: |
+          FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/meetingsdk-vuejs-sample -o bomresults/bom-vue.json
+          node bin/evinse.js -i bomresults/bom-vue.json -o bomresults/bom-vue.evinse.json -l js --with-data-flow -p repotests/meetingsdk-vuejs-sample
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'kriasoft/react-app'
+          path: 'repotests/react-app'
+      - name: repotests react-app
+        run: |
+          FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs8 repotests/react-app -o bomresults/react-app.json --fail-on-error
+          node bin/evinse.js -i bomresults/react-app.json -o bomresults/react-app.evinse.json -l js --with-data-flow -p repotests/react-app
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'patrickjuchli/basic-ftp'
+          path: 'repotests/basic-ftp'
+      - name: repotests basic-ftp
+        run: |
+          FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs10 repotests/basic-ftp -o bomresults/basic-ftp.json --fail-on-error
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'Atome-FE/llama-node'
+          path: 'repotests/llama-node'
+      - name: repotests llama-node
+        run: |
+          FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs16 repotests/llama-node -o bomresults/llama-node.json --fail-on-error
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'DIYgod/RSSHub'
+          path: 'repotests/RSSHub'
+      - name: repotests RSSHub
+        run: |
+          FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs22 repotests/RSSHub -o bomresults/RSSHub.json --fail-on-error
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'sveltejs/examples'
+          path: 'repotests/sveltejs-examples'
+      - name: repotests sveltejs-examples
+        run: |
+          CDXGEN_DEBUG_MODE=verbose ASTGEN_IGNORE_DIRS="" FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/sveltejs-examples -o bomresults/bom-svelte.json
+          CDXGEN_DEBUG_MODE=verbose ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l js --with-data-flow -p repotests/sveltejs-examples
+          CDXGEN_DEBUG_MODE=verbose ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l js --with-reachables -p repotests/sveltejs-examples
+        shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'openpbs/openpbs'
+          ref: 'v23.06.06'
+          path: 'repotests/openpbs'
+      - name: repotests openpbs
+        run: |
+          bin/cdxgen.js -p -r -t c repotests/openpbs -o bomresults/bom-openpbs.json
+          bin/cdxgen.js -p -r -t c repotests/openpbs -o bomresults/bom-openpbs.json --min-confidence 0.4
+          bin/cdxgen.js -p -r -t c repotests/openpbs -o bomresults/bom-openpbs.json --technique manifest-analysis
+        shell: bash
+
       - uses: actions/checkout@v4
         with:
           repository: 'rust-lang/rust'
@@ -307,300 +848,6 @@ jobs:
           repository: 'tokio-rs/axum'
           ref: 'axum-v0.6.20'
           path: 'repotests/rs-axum'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'fsprojects/FAKE'
-          ref: '6.0.0'
-          path: 'repotests/dotnet-paket'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'timheuer/SimpleFrameworkApp'
-          ref: 'master'
-          path: 'repotests/SimpleFrameworkApp'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'chabbasaad/Reporting-Windows-Application'
-          ref: 'master'
-          path: 'repotests/Reporting-Windows-Application'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'appthreat/blint'
-          ref: 'v1.0.34'
-          path: 'repotests/blint'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'hoolicorp/java-sec-code'
-          path: 'repotests/java-sec-code'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'DefectDojo/django-DefectDojo'
-          ref: '2.28.2'
-          path: 'repotests/django-DefectDojo'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'googleprojectzero/Jackalope'
-          path: 'repotests/Jackalope'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'hritik14/broken-mvn-wrapper'
-          path: 'repotests/broken-mvn-wrapper'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'microsoft/dotnet-podcasts'
-          path: 'repotests/dotnet-podcasts'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'microsoft/react-native-windows'
-          path: 'repotests/react-native-windows'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'oracle/dbt-oracle'
-          path: 'repotests/dbt-oracle'
-          ref: 'v1.7.6'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'fortra/impacket'
-          path: 'repotests/impacket'
-          ref: 'impacket_0_9_20'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'wix/greyhound'
-          path: 'repotests/greyhound'
-          ref: '385bb84a6f712ee18064a3b5ecb8d9dcbc1c75f3'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'owasp-dep-scan/blint'
-          path: 'repotests/blint'
-          ref: 'v2.2.2'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'malice00/cdxgen-expo-test'
-          ref: 'main'
-          path: 'repotests/expo-test'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'malice00/cdxgen-cocoapods-test'
-          ref: 'main'
-          path: 'repotests/cocoapods-test'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'elastic/elasticsearch'
-          path: 'repotests/elasticsearch'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'quarkusio/quarkus-quickstarts'
-          path: 'repotests/quarkus-quickstarts'
-          ref: '3.17.3'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'aws-solutions/iot-device-simulator'
-          path: 'repotests/iot-device-simulator'
-          ref: 'v3.0.9'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'bionomia/bionomia'
-          path: 'repotests/bionomia'
-          ref: '5ada8b5f4a5f68561a7195e2badc2f744dc4676e'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'MaibornWolff/SecObserve'
-          path: 'repotests/SecObserve'
-          ref: 'v1.28.0'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'SeanyCash/TwinCAT_CNC'
-          path: 'repotests/TwinCAT_CNC'
-          ref: '0e1020338c10cf77249aeaff34520f9516816167'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'playframework/play-samples'
-          path: 'repotests/play-samples'
-          ref: '0dccba17856e89dbb5e457ab760efb14cc691395'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'com-lihaoyi/mill'
-          path: 'repotests/mill'
-          ref: '0.12.10'
-      - uses: dtolnay/rust-toolchain@stable
-      - name: setup sdkman
-        run: |
-          curl -s "https://get.sdkman.io" | bash
-        if: runner.os != 'Windows'
-      - name: setup rbenv
-        run: |
-          git clone https://github.com/rbenv/rbenv.git --depth=1 ~/.rbenv
-          echo 'export PATH="~/.rbenv/bin:$PATH"' >> ~/.bashrc
-          echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.bashrc
-          source ~/.bashrc
-          mkdir -p "~/.rbenv/plugins"
-          git clone https://github.com/rbenv/ruby-build.git --depth=1 "~/.rbenv/plugins/ruby-build"
-        if: runner.os != 'Windows'
-      - name: repotests react-app
-        run: |
-          FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs8 repotests/react-app -o bomresults/react-app.json --fail-on-error
-          node bin/evinse.js -i bomresults/react-app.json -o bomresults/react-app.evinse.json -l js --with-data-flow -p repotests/react-app
-        shell: bash
-      - name: repotests basic-ftp
-        run: |
-          FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs10 repotests/basic-ftp -o bomresults/basic-ftp.json --fail-on-error
-        shell: bash
-      - name: repotests llama-node
-        run: |
-          FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs16 repotests/llama-node -o bomresults/llama-node.json --fail-on-error
-        shell: bash
-      - name: repotests RSSHub
-        run: |
-          FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs22 repotests/RSSHub -o bomresults/RSSHub.json --fail-on-error
-        shell: bash
-      - name: repotests java-sec-code
-        run: |
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-1.json --include-formulation --include-crypto --fail-on-error
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-2.json --author foo --author bar --standard asvs-4.0.3
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-3.json --required-only --fail-on-error
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-4.json --filter postgres --filter json
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-5.json --only spring --fail-on-error
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-6.json --deep --evidence
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-7.json --profile research --export-proto
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-8.json --profile license-compliance
-          bin/cdxgen.js -p -t java -t github repotests/java-sec-code -o bomresults/bom-java-sec-code-9.json
-          bin/cdxgen.js -p -t java -exclude-type js repotests/java-sec-code -o bomresults/bom-java-sec-code-10.json
-        shell: bash
-      - name: repotests greyhound
-        if: matrix.os == 'ubuntu-24.04'
-        run: |
-          bin/cdxgen.js -p -r -t java11 repotests/greyhound -o bomresults/bom-greyhound-java.json
-          bin/cdxgen.js -p -r -t gradle repotests/greyhound -o bomresults/bom-greyhound-gradle.json
-          bin/cdxgen.js -p -r -t java11 --exclude-type bazel --exclude-type sbt repotests/greyhound -o bomresults/bom-greyhound-wobazel.json
-        shell: bash
-        env:
-          JAVA_HOME: ""
-      - name: repotests quarkus-quickstarts
-        run: |
-          bin/cdxgen.js -p -r -t quarkus repotests/quarkus-quickstarts -o bomresults/bom-quarkus-quickstarts-quarkus.json --no-recurse --fail-on-error
-          bin/cdxgen.js -p -r -t quarkus repotests/quarkus-quickstarts -o bomresults/bom-quarkus-quickstarts-quarkus.json --no-recurse --spec-version 1.5 --fail-on-error
-        shell: bash
-      - name: repotests evidence
-        run: |
-          bin/cdxgen.js -p -t js --no-recurse -o bomresults/bom.json --evidence .
-        shell: bash
-      - name: repotests django-DefectDojo
-        run: |
-          bin/cdxgen.js -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo-safe.json --feature-flags safe-pip-install --fail-on-error
-          bin/cdxgen.js -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo.json --deep --include-crypto --spec-version 1.6
-        shell: bash
-      - name: repotests blint
-        run: |
-          python -m pip install poetry
-          bin/cdxgen.js -t python repotests/blint -o bomresults/blint-req.json --required-only -p --fail-on-error
-          bin/cdxgen.js -t python repotests/blint -o bomresults/blint-research.json --profile research -p --fail-on-error
-        shell: bash
-      - name: repotests dbt-oracle
-        run: |
-          bin/cdxgen.js -t python repotests/dbt-oracle -o bomresults/dbt-oracle.json --deep --spec-version 1.6 --fail-on-error
-        shell: bash
-      - name: repotests impacket
-        run: |
-          bin/cdxgen.js -t python repotests/impacket -o bomresults/impacket.json --fail-on-error
-        shell: bash
-      - name: repotests pixi
-        run: |
-          mkdir pixi-sample
-          cd pixi-sample
-          curl -LO https://raw.githubusercontent.com/prefix-dev/pixi/main/pixi.lock
-          curl -LO https://raw.githubusercontent.com/prefix-dev/pixi/main/pixi.toml
-          cd ..
-          bin/cdxgen.js -t python pixi-sample -o bomresults/bom-pixi.json -p --fail-on-error
-        shell: bash
-      - name: repotests shiftleft-java-example
-        run: |
-          bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
-          node bin/evinse.js -i bomresults/bom-java.json -o bomresults/bom-java.evinse.json -l java --with-data-flow -p repotests/shiftleft-java-example
-          SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/bom-github.json
-        shell: bash
-      - name: repotests shiftleft-ts-example
-        run: |
-          FETCH_LICENSE=false bin/cdxgen.js -p -t javascript repotests/shiftleft-ts-example -o bomresults/bom-ts-1.json --include-formulation
-          node bin/evinse.js -i bomresults/bom-ts-1.json -o bomresults/bom-ts.evinse.json -l js --with-data-flow -p repotests/shiftleft-ts-example
-          FETCH_LICENSE=true bin/cdxgen.js -p -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts-2.json --fail-on-error
-          FETCH_LICENSE=1 bin/cdxgen.js -p -r -t javascript repotests/shiftleft-ts-example -o bomresults/bom-ts-3.json --fail-on-error
-        shell: bash
-      - name: repotests meetingsdk-vuejs-sample
-        run: |
-          FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/meetingsdk-vuejs-sample -o bomresults/bom-vue.json
-          node bin/evinse.js -i bomresults/bom-vue.json -o bomresults/bom-vue.evinse.json -l js --with-data-flow -p repotests/meetingsdk-vuejs-sample
-        shell: bash
-      - name: repotests sveltejs-examples
-        run: |
-          CDXGEN_DEBUG_MODE=verbose ASTGEN_IGNORE_DIRS="" FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/sveltejs-examples -o bomresults/bom-svelte.json
-          CDXGEN_DEBUG_MODE=verbose ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l js --with-data-flow -p repotests/sveltejs-examples
-          CDXGEN_DEBUG_MODE=verbose ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l js --with-reachables -p repotests/sveltejs-examples
-        shell: bash
-      - name: repotests vulnerable_net_core
-        run: |
-          FETCH_LICENSE=true bin/cdxgen.js -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json --include-formulation
-        shell: bash
-      - name: repotests TwinCAT_CNC
-        run: |
-          bin/cdxgen.js -p -r -t tsproj repotests/TwinCAT_CNC -o bomresults/bom-TwinCAT_CNC.json
-        shell: bash
-      - name: repotests Goatly.NET
-        run: |
-          FETCH_LICENSE=false bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json --include-formulation
-        shell: bash
-      - name: repotests DjanGoat
-        run: |
-          FETCH_LICENSE=true bin/cdxgen.js -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json --fail-on-error
-        shell: bash
-      - name: repotests Vulnerable-Web-Application
-        run: |
-          bin/cdxgen.js -p -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php-1.json --fail-on-error
-          bin/cdxgen.js -p -t php --no-recurse repotests/Vulnerable-Web-Application -o bomresults/bom-php-2.json --fail-on-error --profile research -p
-        shell: bash
-      - name: repotests railsgoat
-        run: |
-          bin/cdxgen.js -r -t ruby repotests/railsgoat -o bomresults/bom-ruby.json --fail-on-error
-        shell: bash
-      - name: repotests bionomia
-        run: |
-          bin/cdxgen.js -r -t ruby repotests/bionomia -o bomresults/bom-bionomia.json --fail-on-error
-        shell: bash
-      - name: repotests bazel-examples
-        run: |
-          bin/cdxgen.js -p -r -t java17 repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json
-        shell: bash
-      - name: repotests ziggurat
-        run: |
-          CDXGEN_DEBUG_MODE=verbose bin/cdxgen.js -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json --fail-on-error
-        shell: bash
-      - name: repotests swift-markdown
-        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-15'
-        run: |
-          CDXGEN_DEBUG_MODE=verbose bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json
-          CDXGEN_DEBUG_MODE=verbose bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json --profile research
-        shell: bash
-      - name: repotests microservices-demo
-        if: matrix.os == 'windows-latest'
-        run: |
-          bin/cdxgen.js -p --no-recurse repotests/microservices-demo -o bomresults/bom-msd-1.json
-          bin/cdxgen.js -p -r repotests/microservices-demo -o bomresults/bom-msd-2.json
-          bin/cdxgen.js -p -r -t universal repotests/microservices-demo -o bomresults/bom-yaml.json
-        shell: bash
-      - name: repotests openpbs
-        run: |
-          bin/cdxgen.js -p -r -t c repotests/openpbs -o bomresults/bom-openpbs.json
-          bin/cdxgen.js -p -r -t c repotests/openpbs -o bomresults/bom-openpbs.json --min-confidence 0.4
-          bin/cdxgen.js -p -r -t c repotests/openpbs -o bomresults/bom-openpbs.json --technique manifest-analysis
-        shell: bash
-      - name: repotests Jackalope
-        run: |
-          bin/cdxgen.js -p -r -t c repotests/Jackalope -o bomresults/bom-Jackalope.json
-        shell: bash
-      - name: repotests ha-android
-        run: |
-          cd repotests/ha-android && ./gradlew assembleDebug || true && cd ../..
-          bin/cdxgen.js -r -t java repotests/ha-android -o bomresults/bom-android.json
-          CDXGEN_DEBUG_MODE=verbose bin/evinse.js -i bomresults/bom-android.json -o bomresults/bom-android.evinse.json -l java repotests/ha-android
-        shell: bash
       - name: repotests rust
         run: |
           bin/cdxgen.js -p -r -t rust repotests/rs-rust -o bomresults/bom-rs-rust.json --exclude "**/tests/**" --fail-on-error
@@ -611,137 +858,127 @@ jobs:
         shell: bash
         env:
           CDXGEN_THINK_MODE: true
-      - name: repotests dotnet-paket
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'fsprojects/FAKE'
+          ref: '6.0.0'
+          path: 'repotests/dotnet-paket'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'microsoft/dotnet-podcasts'
+          path: 'repotests/dotnet-podcasts'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'microsoft/react-native-windows'
+          path: 'repotests/react-native-windows'
+      - name: repotests dotnet
         run: |
           bin/cdxgen.js -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket.json --deep
           FETCH_LICENSE=true bin/cdxgen.js -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket-2.json --fail-on-error
           bin/cdxgen.js -r -t dotnet repotests/dotnet-podcasts -o bomresults/bom-dotnet-podcasts.json --profile research --export-proto
           bin/cdxgen.js -r -t dotnet repotests/react-native-windows -o bomresults/bom-react-native-windows.json
         shell: bash
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'timheuer/SimpleFrameworkApp'
+          ref: 'master'
+          path: 'repotests/SimpleFrameworkApp'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'chabbasaad/Reporting-Windows-Application'
+          ref: 'master'
+          path: 'repotests/Reporting-Windows-Application'
       - name: repotests SimpleFrameworkApp
         run: |
           bin/cdxgen.js -p -r -t dotnet-framework repotests/SimpleFrameworkApp -o bomresults/bom-dotnet-framework.json
           bin/cdxgen.js -p -r -t dotnet-framework repotests/Reporting-Windows-Application -o bomresults/bom-dotnet-framework-reporting.json --deep
         shell: bash
-      - name: Set up JDK
-        uses: actions/setup-java@v4
+
+      - uses: actions/checkout@v4
         with:
-          distribution: 'temurin'
-          java-version: '21'
-      - uses: sbt/setup-sbt@v1
-      - uses: coursier/setup-action@v1
+          repository: 'googleprojectzero/Jackalope'
+          path: 'repotests/Jackalope'
+      - name: repotests Jackalope
+        run: |
+          bin/cdxgen.js -p -r -t c repotests/Jackalope -o bomresults/bom-Jackalope.json
+        shell: bash
+
+      - uses: actions/checkout@v4
         with:
-          apps: scala3 scalac
-      - name: scala tests
+          repository: 'oracle/dbt-oracle'
+          path: 'repotests/dbt-oracle'
+          ref: 'v1.7.6'
+      - name: repotests dbt-oracle
         run: |
-          python -m pip install atom-tools
-          which atom-tools
-          cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
-          sbt clean stage
-          cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example
-          sbt clean stage
-          cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example
-          sbt clean stage
-          cd $GITHUB_WORKSPACE
-          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example -o bomresults/bom-simple-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
-          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example --profile research -o bomresults/bom-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
-          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example --profile research -o bomresults/bom-play-scala-rest-api-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example
-          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example --profile research -o bomresults/bom-pplay-scala-grpc-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example
+          bin/cdxgen.js -t python repotests/dbt-oracle -o bomresults/dbt-oracle.json --deep --spec-version 1.6 --fail-on-error
         shell: bash
-        env:
-          CDXGEN_DEBUG_MODE: debug
-      - name: repotests blint
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'fortra/impacket'
+          path: 'repotests/impacket'
+          ref: 'impacket_0_9_20'
+      - name: repotests impacket
         run: |
-          bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint.json --fail-on-error
-          bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint-deep.json --deep
-          bin/cdxgen.js -p -t java repotests/broken-mvn-wrapper -o bomresults/bom-broken-mvn-wrapper.json
+          bin/cdxgen.js -t python repotests/impacket -o bomresults/impacket.json --fail-on-error
         shell: bash
-      - name: repotests expo mac
-        if: matrix.os == 'macos-15'
-        run: |
-          cd repotests/expo-test && npm ci --legacy-peer-deps && cd ios && pod install && cd ../../..
-                                                                                                  bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods.json
-          COCOA_MERGE_SUBSPECS=false                                                              bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods-subs.json
-                                     COCOA_RESOLVE_FROM_NODE=false                                bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods-no-node.json
-                                                                                                  bin/cdxgen.js -p              -t gradle        repotests/expo-test -o bomresults/bom-expo-gradle.json
-                                                                   GRADLE_RESOLVE_FROM_NODE=false bin/cdxgen.js -p              -t gradle        repotests/expo-test -o bomresults/bom-expo-gradle-no-node.json
-                                                                                                  bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full.json
-                                     COCOA_RESOLVE_FROM_NODE=false GRADLE_RESOLVE_FROM_NODE=false bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full-no-node.json
-        env:
-          CDXGEN_THINK_MODE: true
-          COCOA_PODSPEC_REPLACEMENTS: "/([\\s\\S]+)/=require File.join(File.dirname(`node --print \"require.resolve('expo/package.json')\"`), \"scripts/autolinking\")<NEWLINE>require File.join(File.dirname(`node --print \"require.resolve('react-native/package.json')\"`), \"scripts/react_native_pods\")<NEWLINE>$1"
-          COCOA_RESOLVE_FROM_NODE_EXCLUSION_DIRS: sdks,third-party-podspecs
-          GRADLE_ARGS_DEPENDENCIES: "--configuration releaseRuntimeClasspath"
-          GRADLE_SKIP_MODULES: root
-        shell: bash
-      - name: repotests expo not mac
-        if: matrix.os != 'macos-15'
-        run: |
-          cd repotests/expo-test && npm ci --legacy-peer-deps && cd ../..
-                                                                                                  bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods.json
-          COCOA_MERGE_SUBSPECS=false                                                              bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods-subs.json
-                                     COCOA_RESOLVE_FROM_NODE=false                                bin/cdxgen.js -p -t cocoapods                  repotests/expo-test -o bomresults/bom-expo-cocoapods-no-node.json
-                                                                                                  bin/cdxgen.js -p              -t gradle        repotests/expo-test -o bomresults/bom-expo-gradle.json
-                                                                  GRADLE_RESOLVE_FROM_NODE=false  bin/cdxgen.js -p              -t gradle        repotests/expo-test -o bomresults/bom-expo-gradle-no-node.json
-                                                                                                  bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full.json
-                                     COCOA_RESOLVE_FROM_NODE=false GRADLE_RESOLVE_FROM_NODE=false bin/cdxgen.js -p -t cocoapods -t gradle -t npm repotests/expo-test -o bomresults/bom-expo-full-no-node.json
-        env:
-          CDXGEN_THINK_MODE: true
-          COCOA_FULL_SCAN: false
-          COCOA_RESOLVE_FROM_NODE_EXCLUSION_DIRS: sdks,third-party-podspecs
-          GRADLE_ARGS_DEPENDENCIES: "--configuration releaseRuntimeClasspath"
-          GRADLE_SKIP_MODULES: root
-        shell: bash
-      - name: repotests cocoapods
-        if: matrix.os != 'windows-latest'
-        run: |
-          COCOA_FULL_SCAN=false                                                                                bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-simple.json
-                                COCOA_MERGE_SUBSPECS=false                                                     bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-full-subs.json
-                                                                                                               bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-full.json
-                                                           COCOA_INCLUDED_TARGETS=cdxgenexpotest               bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-target.json
-                                                           COCOA_INCLUDED_TARGETS="cdxgenexpotest copy 2/deep" bin/cdxgen.js -p repotests/cocoapods-test -o bomresults/bom-cocoapods-target-deep.json
-        shell: bash
-      - name: repotests elasticsearch
-        run: |
-          bin/cdxgen.js -t gradle repotests/elasticsearch -o bomresults/bom-elasticsearch.json
-        shell: bash
-        env:
-          CDXGEN_THINK_MODE: true
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'MaibornWolff/SecObserve'
+          path: 'repotests/SecObserve'
+          ref: 'v1.28.0'
       - name: repotests SecObserve
         run: |
           bin/cdxgen.js repotests/SecObserve -o bomresults/bom-SecObserve.json --fail-on-error
         shell: bash
-      - name: repotests mill
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'SeanyCash/TwinCAT_CNC'
+          path: 'repotests/TwinCAT_CNC'
+          ref: '0e1020338c10cf77249aeaff34520f9516816167'
+      - name: repotests TwinCAT_CNC
         run: |
-          bin/cdxgen.js -p -t mill repotests/mill -o bomresults/bom-mill.json
-          MILL_EXCLUDE_TEST=true bin/cdxgen.js -p -t mill repotests/mill -o bomresults/bom-mill-without-test.json
+          bin/cdxgen.js -p -r -t tsproj repotests/TwinCAT_CNC -o bomresults/bom-TwinCAT_CNC.json
         shell: bash
-      - name: jenkins plugins
+
+      - name: repotests pixi
         run: |
-          mkdir -p jenkins
-          curl -LO https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
-          curl -LO https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi
-          curl -LO https://updates.jenkins.io/download/plugins/jsch/0.1.55.61.va_e9ee26616e7/jsch.hpi
-          curl -LO https://updates.jenkins.io/download/plugins/momentjs/1.1.1/momentjs.hpi
-          mv *.hpi jenkins
-          CDXGEN_DEBUG_MODE=verbose bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --fail-on-error
+          mkdir pixi-sample
+          cd pixi-sample
+          curl -LO https://raw.githubusercontent.com/prefix-dev/pixi/main/pixi.lock
+          curl -LO https://raw.githubusercontent.com/prefix-dev/pixi/main/pixi.toml
+          cd ..
+          bin/cdxgen.js -t python pixi-sample -o bomresults/bom-pixi.json -p --fail-on-error
         shell: bash
-      - name: standalone jar files
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'owasp-dep-scan/blint'
+          path: 'repotests/blint_v2'
+          ref: 'v2.2.2'
+      - name: repotests blint_v2
         run: |
-          mkdir -p standalone-jar-files
-          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/org/jacoco/org.jacoco.report/0.8.8/org.jacoco.report-0.8.8.jar
-          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/org/apache/ws/xmlschema/xmlschema-core/2.2.5/xmlschema-core-2.2.5.jar
-          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.16.0/jackson-core-2.16.0.jar
-          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/junit/junit/4.13.2/junit-4.13.2.jar
-          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/wsdl4j/wsdl4j/1.6.3/wsdl4j-1.6.3.jar
-          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/org/apache/maven/maven-core/3.9.2/maven-core-3.9.2.jar
-          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/displaytag/displaytag/1.2/displaytag-1.2.jar
-          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/org/apache/poi/poi/3.17/poi-3.17.jar
-          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/org/jacoco/org.jacoco.agent/0.8.8/org.jacoco.agent-0.8.8.jar
-          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/javax/jws/javax.jws-api/1.1/javax.jws-api-1.1.jar
-          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/org/jrobin/jrobin/1.5.9/jrobin-1.5.9.jar
-          FETCH_LICENSE=true bin/cdxgen.js -p standalone-jar-files -o bomresults/bom-standalone-jar-files.json --fail-on-error
+          python -m pip install poetry
+          bin/cdxgen.js -t python repotests/blint_v2 -o bomresults/blint-req.json --required-only -p --fail-on-error
+          bin/cdxgen.js -t python repotests/blint_v2 -o bomresults/blint-research.json --profile research -p --fail-on-error
         shell: bash
+
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'appthreat/blint'
+          ref: 'v1.0.34'
+          path: 'repotests/blint_v1'
+      - name: repotests blint_v1
+        run: |
+          bin/cdxgen.js -p -t python repotests/blint_v1 -o bomresults/bom-blint.json --fail-on-error
+          bin/cdxgen.js -p -t python repotests/blint_v1 -o bomresults/bom-blint-deep.json --deep
+        shell: bash
+      # Post actions
       - name: post-build lifecycle tests
         run: |
           pip install blint
@@ -763,48 +1000,9 @@ jobs:
           cd ..
           bin/cdxgen.js -p -t go --lifecycle post-build -o bomresults/bom-go-binary.json gobintests
         shell: bash
-      - name: repotests 1.6
-        run: |
-          bin/cdxgen.js -r -t java repotests/shiftleft-java-example -o bomresults/1.6-bom-java.json --generate-key-and-sign --spec-version 1.6
-          SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/1.6-bom-github.json --spec-version 1.6
-          FETCH_LICENSE=0 bin/cdxgen.js -r -t js repotests/shiftleft-ts-example -o bomresults/1.6-bom-ts-1.json --fail-on-error --spec-version 1.6
-          FETCH_LICENSE=1 bin/cdxgen.js -r -t javascript repotests/shiftleft-ts-example --required-only -o bomresults/1.6-bom-ts-2.json --fail-on-error --spec-version 1.6
-          FETCH_LICENSE=true bin/cdxgen.js -r -t csharp repotests/vulnerable_net_core -o bomresults/1.6-bom-csharp2.json --spec-version 1.6
-          FETCH_LICENSE=false bin/cdxgen.js -r repotests/Goatly.NET -o bomresults/1.6-bom-csharp3.json --spec-version 1.6
-          FETCH_LICENSE=true bin/cdxgen.js -r -t python repotests/DjanGoat -o bomresults/1.6-bom-python.json --fail-on-error --spec-version 1.6
-          bin/cdxgen.js -r -t php repotests/Vulnerable-Web-Application -o bomresults/1.6-bom-php.json --fail-on-error --spec-version 1.6
-        shell: bash
-      - name: repotests 1.4
-        run: |
-          bin/cdxgen.js -r -t java repotests/shiftleft-java-example -o bomresults/1.4-bom-java.json --generate-key-and-sign --spec-version 1.4
-          SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/1.4-bom-github.json --spec-version 1.4
-          FETCH_LICENSE=0 bin/cdxgen.js -r -t js repotests/shiftleft-ts-example -o bomresults/1.4-bom-ts-1.json --fail-on-error --spec-version 1.4
-          FETCH_LICENSE=1 bin/cdxgen.js -r -t javascript repotests/shiftleft-ts-example --required-only -o bomresults/1.4-bom-ts-2.json --fail-on-error --spec-version 1.4
-          FETCH_LICENSE=true bin/cdxgen.js -r -t csharp repotests/vulnerable_net_core -o bomresults/1.4-bom-csharp2.json --spec-version 1.4
-          FETCH_LICENSE=false bin/cdxgen.js -r repotests/Goatly.NET -o bomresults/1.4-bom-csharp3.json --spec-version 1.4
-          FETCH_LICENSE=true bin/cdxgen.js -r -t python repotests/DjanGoat -o bomresults/1.4-bom-python.json --fail-on-error --spec-version 1.4
-          bin/cdxgen.js -p -r -t php repotests/Vulnerable-Web-Application -o bomresults/1.4-bom-php.json --fail-on-error --spec-version 1.4
-        shell: bash
       - name: list repotest bomresults
         run: |
           ls -ltr bomresults
-        shell: bash
-      - name: denotests
-        run: |
-          deno info bin/cdxgen.js
-          deno info bin/evinse.js
-          deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-deno.json --deep
-          deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net bin/cdxgen.js -p -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo-deno.json --deep
-        env:
-          FETCH_LICENSE: true
-        shell: bash
-      - name: buntests
-        run: |
-          rm -rf node_modules
-          bun install
-          bun --bun bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-bun.json --deep
-          bun --bun bin/cdxgen.js -p -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo-bun.json
-        continue-on-error: true
         shell: bash
       - uses: actions/upload-artifact@v4
         if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-24.04-arm'
@@ -865,7 +1063,7 @@ jobs:
       - name: Install bazelisk - windows
         if: matrix.os == 'windows-latest'
         run: choco install -y bazel
-      - name: npm install, build and test
+      - name: npm install and build
         run: |
           npm install --global corepack@latest
           corepack enable pnpm
