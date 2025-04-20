@@ -4,7 +4,7 @@ ENV LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     npm_config_python=/usr/bin/python3.9 \
-    PYTHONPATH=/opt/pypi
+    PYTHONPATH=/opt/pypi:${PYTHONPATH}
 
 ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:
 RUN set -e; \

@@ -13,7 +13,7 @@ LABEL maintainer="CycloneDX" \
 
 ENV CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
-    PYTHONPATH=/opt/pypi
+    PYTHONPATH=/opt/pypi:${PYTHONPATH}
 ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:/opt/cdxgen/node_modules/.bin:
 
 COPY . /opt/cdxgen
