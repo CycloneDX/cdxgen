@@ -15,6 +15,7 @@ ENV CDXGEN_IN_CONTAINER=true \
     SAFE_PIP_INSTALL=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
+    PYTHONPATH=/opt/pypi \
     PATH=${PATH}:/opt/pypi/bin:/opt/cdxgen/node_modules/.bin:
 
 COPY . /opt/cdxgen
