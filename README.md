@@ -516,7 +516,7 @@ Please check out our [contribute to CycloneDX/cdxgen documentation][github-contr
 
 Before raising a PR, please run the following commands.
 
-```bash
+```shell
 corepack enable pnpm
 pnpm install --config.strict-dep-builds=true
 # Generate types using jsdoc syntax
@@ -525,6 +525,17 @@ pnpm run gen-types
 pnpm run lint
 # Run jest tests
 pnpm test
+```
+
+### Testing main branch
+
+Use `pnpm add -g` command to quickly test the main branch.
+
+```shell
+corepack pnpm bin -g
+corepack pnpm setup
+corepack pnpm add -g --allow-build sqlite3 https://github.com/CycloneDX/cdxgen
+cdxgen --help
 ```
 
 ## Sponsors
