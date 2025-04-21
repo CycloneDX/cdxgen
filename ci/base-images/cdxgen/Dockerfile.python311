@@ -23,6 +23,7 @@ ENV NVM_DIR="/root/.nvm" \
     CDXGEN_IN_CONTAINER=true \
     SAFE_PIP_INSTALL=true \
     CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
+    PYTHONPATH=/opt/pypi:${PYTHONPATH} \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/opt/pypi/bin:/opt/cdxgen/node_modules/.bin:
 

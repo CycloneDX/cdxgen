@@ -196,17 +196,14 @@ const args = yargs(hideBin(process.argv))
   })
   .option("usages-slices-file", {
     description: "Path for the usages slices file created by atom.",
-    default: "usages.slices.json",
     hidden: true,
   })
   .option("data-flow-slices-file", {
     description: "Path for the data-flow slices file created by atom.",
-    default: "data-flow.slices.json",
     hidden: true,
   })
   .option("reachables-slices-file", {
     description: "Path for the reachables slices file created by atom.",
-    default: "reachables.slices.json",
     hidden: true,
   })
   .option("semantics-slices-file", {
