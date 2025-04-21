@@ -7,7 +7,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 jobs:
-  java-sample1:
+  java-js-sample-tests:
     strategy:
       fail-fast: false
       matrix:
@@ -37,17 +37,25 @@ jobs:
           repository: 'DependencyTrack/dependency-track'
           path: 'repotests/dependency-track'
           ref: '4.11.1'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'DependencyTrack/frontend'
+          path: 'repotests/frontend'
+          ref: '4.13.0'
       - name: compile
         run: |
           cd repotests/dependency-track
           mvn -q clean compile -DskipTests -Dmaven.test.skip=true
-      - name: repotests
+      - name: reachables tests - java
         run: |
           node bin/cdxgen.js -p -t java --profile research -o repotests/dependency-track/bom.json repotests/dependency-track
           ls -ltr repotests/dependency-track/
           cp -rf repotests/dependency-track/*.json bomresults/
         env:
           CDXGEN_DEBUG_MODE: verbose
+      - name: reachables tests - js
+        run: |
+          node bin/cdxgen.js -p -t js --profile research -o repotests/frontend/bom.json repotests/frontend
       - uses: actions/upload-artifact@v4
         with:
           name: bomresults
