@@ -129,17 +129,15 @@ jobs:
       - name: dockertests
         if: matrix.os == 'ubuntu-24.04'
         run: |
-          docker pull ubuntu:latest
-          docker save -o /tmp/ubuntu.tar ubuntu:latest
-          docker rmi ubuntu:latest
-          bin/cdxgen.js /tmp/ubuntu.tar -t docker -o bomresults/bom-ubuntu.tar.json --fail-on-error
+          docker pull elasticsearch:latest
+          docker save -o /tmp/elasticsearch.tar elasticsearch:latest
+          docker rmi elasticsearch:latest
+          bin/cdxgen.js /tmp/elasticsearch.tar -t docker -o bomresults/bom-elasticsearch.tar.json --fail-on-error
           docker pull alpine:latest
           docker save -o /tmp/alpine.tar alpine:latest
           docker rmi alpine:latest
           bin/cdxgen.js /tmp/alpine.tar -t docker -o bomresults/bom-alpine.tar.json --fail-on-error
           ls -ltr bomresults
-        env:
-          CDXGEN_DEBUG_MODE: debug
   os-tests:
     strategy:
       fail-fast: true
