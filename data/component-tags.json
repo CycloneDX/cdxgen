@@ -231,7 +231,7 @@
     "sbom": [
       {
         "test": [
-          "(junit|xmlunit|testng|mocha|jest|test4j|xunit|coverlet|Test\\.Sdk)",
+          "(junit|xmlunit|testng|mocha|jest|test4j|xunit|coverlet|Test\\.Sdk|Moq)",
           "^(chai)$"
         ]
       },

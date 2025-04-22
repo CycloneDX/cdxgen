@@ -76,12 +76,8 @@ jobs:
           docker save shiftleft/scan-slim:latest -o /tmp/scanslim.tar
           docker rmi shiftleft/scan-slim:latest
           bin/cdxgen.js /tmp/scanslim.tar -o bomresults/bom-scanarch.json --fail-on-error
-          bin/cdxgen.js -t docker-compose test/data -o bomresults/bom-dc.json --fail-on-error
-          bin/cdxgen.js -t operator repotests/grafana-operator -o bomresults/bom-op.json --fail-on-error
           rm /tmp/scanslim.tar
           ls -ltr bomresults
-        env:
-          CDXGEN_DEBUG_MODE: verbose
       - name: dockertests arm
         if: matrix.os == 'ubuntu-24.04-arm'
         run: |
@@ -91,9 +87,9 @@ jobs:
           docker rmi alpine:latest
           bin/cdxgen.js almalinux:9.4-minimal -t docker -o bomresults/bom-almalinux.json --fail-on-error
           docker rmi almalinux:9.4-minimal
+          bin/cdxgen.js -t docker-compose test/data -o bomresults/bom-dc.json --fail-on-error
+          bin/cdxgen.js -t operator repotests/grafana-operator --exclude "**/tests/**" -o bomresults/bom-op.json --fail-on-error          
           ls -ltr bomresults
-        env:
-          CDXGEN_DEBUG_MODE: verbose
   linux-dockertar-tests:
     strategy:
       fail-fast: true
@@ -130,24 +126,20 @@ jobs:
           mkdir -p bomresults repotests
         env:
           CI: true
-      - uses: actions/checkout@v4
-        with:
-          repository: 'grafana-operator/grafana-operator'
-          path: 'repotests/grafana-operator'
       - name: dockertests
         if: matrix.os == 'ubuntu-24.04'
         run: |
-          docker pull elasticsearch@sha256:3686a5757ed46c9dbcf00f6f71fce48ffc5413b193a80d1c46a21e7aad4c53ad
-          docker save -o /tmp/elastic.tar elasticsearch@sha256:3686a5757ed46c9dbcf00f6f71fce48ffc5413b193a80d1c46a21e7aad4c53ad
-          docker rmi elasticsearch@sha256:3686a5757ed46c9dbcf00f6f71fce48ffc5413b193a80d1c46a21e7aad4c53ad
-          bin/cdxgen.js /tmp/elastic.tar -t docker -o bomresults/bom-elastic.tar.json --fail-on-error
+          docker pull ubuntu:latest
+          docker save -o /tmp/ubuntu.tar ubuntu:latest
+          docker rmi ubuntu:latest
+          bin/cdxgen.js /tmp/ubuntu.tar -t docker -o bomresults/bom-ubuntu.tar.json --fail-on-error
           docker pull alpine:latest
           docker save -o /tmp/alpine.tar alpine:latest
           docker rmi alpine:latest
           bin/cdxgen.js /tmp/alpine.tar -t docker -o bomresults/bom-alpine.tar.json --fail-on-error
           ls -ltr bomresults
         env:
-          CDXGEN_DEBUG_MODE: verbose
+          CDXGEN_DEBUG_MODE: debug
   os-tests:
     strategy:
       fail-fast: true
@@ -186,8 +178,6 @@ jobs:
       - name: ostests
         run: |
           bin/cdxgen.js -t os -o bomresults/bom-os.json --fail-on-error
-        env:
-          CDXGEN_DEBUG_MODE: verbose
       - uses: actions/upload-artifact@v4
         if: matrix.os == 'ubuntu-24.04-arm'
         with:
@@ -229,8 +219,6 @@ jobs:
         run: |
           node bin/cdxgen.js -t os -o bomresults/bom-win.json --fail-on-error
           dir bomresults
-        env:
-          CDXGEN_DEBUG_MODE: verbose
       - uses: actions/upload-artifact@v4
         with:
           name: bomresults-win
