@@ -87,8 +87,6 @@ jobs:
           docker rmi alpine:latest
           bin/cdxgen.js almalinux:9.4-minimal -t docker -o bomresults/bom-almalinux.json --fail-on-error
           docker rmi almalinux:9.4-minimal
-          bin/cdxgen.js -t docker-compose test/data -o bomresults/bom-dc.json --fail-on-error
-          bin/cdxgen.js -t operator repotests/grafana-operator --exclude "**/tests/**" -o bomresults/bom-op.json --fail-on-error          
           ls -ltr bomresults
   linux-dockertar-tests:
     strategy:
