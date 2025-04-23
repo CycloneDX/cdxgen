@@ -338,6 +338,10 @@ components:
           $ref: '#/components/schemas/Services'
         dependencies:
           $ref: '#/components/schemas/Dependencies'
+        annotations:
+          $ref: '#/components/schemas/Annotations'
+        formulation:
+          $ref: '#/components/schemas/Formulation'
 
     ErrorResponse:
       type: object
@@ -362,5 +366,9 @@ components:
 
     Dependencies:
       type: object
-      xml:
-        name: pet
+
+    Annotations:
+      type: object
+
+    Formulation:
+      type: object
