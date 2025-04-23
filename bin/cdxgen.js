@@ -658,6 +658,11 @@ const checkPermissions = (filePath, options) => {
   }
   // Secure mode checks
   if (isSecureMode) {
+    if (process.env?.GITHUB_TOKEN) {
+      console.log(
+        "Ensure that the GitHub token provided to cdxgen is restricted to read-only scopes.",
+      );
+    }
     if (process.permission.has("fs.read", "*")) {
       console.log(
         "\x1b[1;35mSECURE MODE: DO NOT run cdxgen with FileSystemRead permission set to wildcard.\x1b[0m",
