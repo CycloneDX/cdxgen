@@ -1144,6 +1144,7 @@
   "uwsgidecorators": "uwsgi",
   "valentine": "ab",
   "validate": "configobj",
+  "vdb": "appthreat-vulnerability-db",
   "version": "chartio",
   "virtualenvapi": "ar-virtualenv-api",
   "vyatta": "brocade-plugins",
