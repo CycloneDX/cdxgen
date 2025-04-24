@@ -58,7 +58,7 @@
     "cheerio": "npm:cheerio@^1.0.0-rc.12",
     "edn-data": "npm:edn-data@1.1.2",
     "find-up": "npm:find-up@7.0.0",
-    "glob": "npm:glob@^11.0.0",
+    "glob": "npm:glob@^11.0.2",
     "global-agent": "npm:global-agent@^3.0.0",
     "got": "npm:got@^14.4.5",
     "iconv-lite": "npm:iconv-lite@^0.6.3",
