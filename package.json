@@ -75,7 +75,7 @@
   "bugs": {
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
-  "packageManager": "pnpm@10.8.1",
+  "packageManager": "pnpm@10.9.0",
   "lint-staged": {
     "*": "biome check --fix --no-errors-on-unmatched"
   },
@@ -89,7 +89,7 @@
     "cheerio": "^1.0.0",
     "edn-data": "1.1.2",
     "find-up": "7.0.0",
-    "glob": "^11.0.0",
+    "glob": "^11.0.2",
     "global-agent": "^3.0.0",
     "got": "^14.4.7",
     "iconv-lite": "^0.6.3",
@@ -110,7 +110,7 @@
     "yoctocolors": "^2.1.1"
   },
   "optionalDependencies": {
-    "@appthreat/atom": "2.1.16",
+    "@appthreat/atom": "2.1.17",
     "@appthreat/cdx-proto": "1.0.1",
     "@cyclonedx/cdxgen-plugins-bin": "1.6.10",
     "@cyclonedx/cdxgen-plugins-bin-linux-arm": "1.6.10",
@@ -137,7 +137,7 @@
   "pnpm": {
     "onlyBuiltDependencies": ["sqlite3", "@biomejs/biome"],
     "overrides": {
-      "glob": "^11.0.0",
+      "glob": "^11.0.2",
       "node-gyp": "^10.2.0",
       "prebuild": "^13.0.0",
       "pacote": "^20.0.0",
@@ -145,7 +145,7 @@
     }
   },
   "overrides": {
-    "glob": "^11.0.0",
+    "glob": "^11.0.2",
     "node-gyp": "^10.2.0",
     "prebuild": "^13.0.0",
     "pacote": "^20.0.0",

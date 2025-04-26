@@ -61,6 +61,7 @@ ENV GOPATH=/opt/app-root/go \
     SDKMAN_DIR=/root/.sdkman \
     SDKMAN_CANDIDATES_DIR=/root/.sdkman/candidates \
     npm_config_python=/usr/bin/python3.12 \
+    DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     MALLOC_CONF="dirty_decay_ms:2000,narenas:2,background_thread:true" \
     RUBY_CONFIGURE_OPTS="--with-jemalloc --enable-yjit" \
     RUBYOPT="--yjit" \
