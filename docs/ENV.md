@@ -140,7 +140,7 @@ These variables are specifically for a single language or tool.
 
 | Variable                 | Description                                                                                                                                            |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| CDXGEN_NODE_OPTIONS      | Addtional, NODE_OPTIONS to pass to the node runtime dynamically.                                                                                       |
+| CDXGEN_NODE_OPTIONS      | Additional, NODE_OPTIONS to pass to the node runtime dynamically.                                                                                       |
 | GLOBAL_NODE_MODULES_PATH | Specifies the path to the global `node_modules` directory. Used when a local plugins directory is not provided.                                        |
 | NODE_OPTIONS             | If you are experiencing Out Of Memory issues, consider increase the node heap (ie: `--max-old-space-size=8192`)                                        |
 | NPM_INSTALL_ARGS         | Set to pass additional arguments such as `--package-lock` or `--legacy-peer-deps` to the npm install command                                           |
