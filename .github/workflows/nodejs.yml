@@ -12,6 +12,23 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 jobs:
+  depscan:
+    runs-on: ["self-hosted", "ubuntu", "arm64"]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: pnpm install
+        run: |
+          pnpm install --config.strict-dep-builds=true
+      - name: check sbom for vulns
+        run: |
+          mkdir -p $VDB_HOME
+          node bin/cdxgen.js -t js -o reports/sbom-build-js.cdx.json --no-recurse --required-only $(pwd)
+          docker run -q --rm -v $(pwd):/app ghcr.io/owasp-dep-scan/dep-scan:master depscan --src /app --bom-dir /app/reports --reports-dir /app/reports --reachability-analyzer SemanticReachability --explain
+        if: github.ref == 'refs/heads/master'
+        env:
+          COLUMNS: 140
   build:
     runs-on: ubuntu-24.04
     permissions:
@@ -35,7 +52,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '23'
-      - name: npm install, build and test
+      - name: pnpm install, build and test
         run: |
           npm install --global corepack@latest
           corepack enable
@@ -44,19 +61,6 @@ jobs:
           NPM_CONFIG_PROVENANCE=true corepack pnpm publish --access=public --dry-run --no-git-checks
         env:
           CI: true
-      - name: Trim CI agent
-        run: |
-          chmod +x contrib/free_disk_space.sh
-          ./contrib/free_disk_space.sh
-      - name: check sbom for vulns
-        run: |
-          mkdir -p $VDB_HOME
-          node bin/cdxgen.js -t js -o reports/sbom-build-js.cdx.json --no-recurse --required-only $(pwd)
-          docker run -q --rm -v $(pwd):/app ghcr.io/owasp-dep-scan/dep-scan:master depscan --src /app --bom-dir /app/reports --reports-dir /app/reports --reachability-analyzer SemanticReachability --explain
-        if: github.ref == 'refs/heads/master' && matrix.node-version == '23.x'
-        env:
-          COLUMNS: 140
-          VDB_HOME: ${{ runner.temp }}/vdb
   deno-build:
     strategy:
       matrix:
