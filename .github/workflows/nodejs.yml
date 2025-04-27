@@ -18,17 +18,23 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '23'
       - name: pnpm install
         run: |
-          pnpm install --config.strict-dep-builds=true
+          corepack pnpm install --config.strict-dep-builds=true
+          python -m pip install atom-tools blint
       - name: check sbom for vulns
         run: |
-          mkdir -p $VDB_HOME
-          node bin/cdxgen.js -t js -o reports/sbom-build-js.cdx.json --no-recurse --required-only $(pwd)
+          node bin/cdxgen.js -t js -o reports/sbom-build-js.cdx.json --no-recurse --profile research $(pwd)
+          node bin/cdxgen.js -t docker -o reports/sbom-container-js.cdx.json ghcr.io/cyclonedx/cdxgen:master
           docker run -q --rm -v $(pwd):/app ghcr.io/owasp-dep-scan/dep-scan:master depscan --src /app --bom-dir /app/reports --reports-dir /app/reports --reachability-analyzer SemanticReachability --explain
-        if: github.ref == 'refs/heads/master'
         env:
           COLUMNS: 140
+          JAVA_TOOL_OPTIONS: "-XX:UseSVE=0 -Dfile.encoding=UTF-8"
   build:
     runs-on: ubuntu-24.04
     permissions:
