@@ -18,6 +18,10 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -26,7 +30,7 @@ jobs:
       - name: pnpm install
         run: |
           corepack pnpm install --config.strict-dep-builds=true
-          python -m pip install atom-tools blint
+          python3 -m pip install atom-tools blint
       - name: check sbom for vulns
         run: |
           node bin/cdxgen.js -t js -o reports/sbom-build-js.cdx.json --no-recurse --profile research $(pwd)
