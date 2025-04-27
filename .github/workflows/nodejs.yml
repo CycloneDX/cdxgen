@@ -81,7 +81,7 @@ jobs:
               shasum -a 256 cdxgenx > cdxgenx.sha256
               chmod + cdxgenx
               ./cdxgenx --help
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --include=./data --include=./package.json --output evinse bin/evinse.js
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --node-modules-dir=auto --allow-ffi --allow-scripts=npm:sqlite3 --include=./data --include=./package.json --include=node_modules/.deno/sqlite3@5.1.7/node_modules/sqlite3 --output evinse bin/evinse.js
               shasum -a 256 evinse > evinse.sha256
               chmod + evinse
               ./evinse --help
