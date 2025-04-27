@@ -41,10 +41,10 @@ jobs:
           CI: true
       - name: check sbom for vulns
         run: |
-          node bin/cdxgen.js -t js -o bom.json --no-recurse --required-only
-          pip install appthreat-vulnerability-db[all]
-          vdb --download-image
-          vdb --bom bom.json
+          node bin/cdxgen.js -t js -o reports/sbom-build-js.cdx.json --no-recurse --profile research $(pwd)
+          node bin/cdxgen.js -t docker -o reports/sbom-container-js.cdx.json ghcr.io/cyclonedx/cdxgen:master
+          docker run --rm -v $(pwd):/app ghcr.io/owasp-dep-scan/dep-scan:master --src /app --bom-dir /app/reports --reports-dir /app/reports --reachability-analyzer SemanticReachability --explain
+        if: github.ref == 'refs/heads/master'
         env:
           COLUMNS: 140
   deno-build:
@@ -55,24 +55,36 @@ jobs:
         include:
           - os: windows
             build: |
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,osRelease,homedir --allow-write --allow-net --output cdxgenx.exe bin/cdxgen.js
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,osRelease,homedir --allow-write --allow-net --include=./data --include=./package.json --output cdxgenx.exe bin/cdxgen.js
               .\cdxgenx.exe --help
               (Get-FileHash .\cdxgenx.exe).hash | Out-File -FilePath .\cdxgenx.exe.sha256
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,osRelease,homedir --allow-write --allow-net --include=./data --include=./package.json --output evinse.exe bin/evinse.js
+              .\evinse.exe --help
+              (Get-FileHash .\evinse.exe).hash | Out-File -FilePath .\evinse.exe.sha256
             artifact: cdxgenx.exe
           - os: macos
             build: |
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --target x86_64-apple-darwin --output cdxgenx-darwin-amd64 bin/cdxgen.js
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --include=./data --include=./package.json --target x86_64-apple-darwin --output cdxgenx-darwin-amd64 bin/cdxgen.js
               ./cdxgenx-darwin-amd64 --help
               shasum -a 256 cdxgenx-darwin-amd64 > cdxgenx-darwin-amd64.sha256
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --target aarch64-apple-darwin --output cdxgenx-darwin-arm64 bin/cdxgen.js
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --include=./data --include=./package.json --target aarch64-apple-darwin --output cdxgenx-darwin-arm64 bin/cdxgen.js
               shasum -a 256 cdxgenx-darwin-arm64 > cdxgenx-darwin-arm64.sha256
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --include=./data --include=./package.json --target x86_64-apple-darwin --output evinse-darwin-amd64 bin/evinse.js
+              ./evinse-darwin-amd64 --help
+              shasum -a 256 evinse-darwin-amd64 > evinse-darwin-amd64.sha256
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --include=./data --include=./package.json --target aarch64-apple-darwin --output evinse-darwin-arm64 bin/evinse.js
+              shasum -a 256 evinse-darwin-arm64 > evinse-darwin-arm64.sha256
             artifact: cdxgenx-darwin-amd64
           - os: ubuntu
             build: |
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --output cdxgenx bin/cdxgen.js
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --include=./data --include=./package.json --output cdxgenx bin/cdxgen.js
               shasum -a 256 cdxgenx > cdxgenx.sha256
               chmod + cdxgenx
               ./cdxgenx --help
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --include=./data --include=./package.json --output evinse bin/evinse.js
+              shasum -a 256 evinse > evinse.sha256
+              chmod + evinse
+              ./evinse --help
             artifact: cdxgenx
     runs-on: ${{ matrix.os }}-latest
     steps:

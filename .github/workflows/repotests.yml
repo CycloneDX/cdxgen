@@ -186,10 +186,22 @@ jobs:
         with:
           packages: 'platform-tools'
       - run: sdkmanager --uninstall "build-tools;30.0.3"
-      - uses: swift-actions/setup-swift@v2
-        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-15'
-        with:
-          swift-version: '6.0'
+      - name: Setup swift
+        if: matrix.os == 'ubuntu-24.04'
+        run: |
+          curl -O "https://download.swift.org/swiftly/linux/swiftly-$(uname -m).tar.gz" && \
+          tar zxf "swiftly-$(uname -m).tar.gz" && \
+          ./swiftly init --quiet-shell-followup && \
+          . ~/.local/share/swiftly/env.sh && \
+          hash -r
+      - name: Setup swift
+        if: matrix.os == 'macos-15'
+        run: |
+          curl -O https://download.swift.org/swiftly/darwin/swiftly.pkg && \
+          installer -pkg swiftly.pkg -target CurrentUserHomeDirectory && \
+          ~/.swiftly/bin/swiftly init --quiet-shell-followup && \
+          . ~/.swiftly/env.sh && \
+          hash -r
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
