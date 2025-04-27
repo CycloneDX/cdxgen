@@ -39,12 +39,16 @@ jobs:
           NPM_CONFIG_PROVENANCE=true corepack pnpm publish --access=public --dry-run --no-git-checks
         env:
           CI: true
+      - name: Trim CI agent
+        run: |
+          chmod +x contrib/free_disk_space.sh
+          ./contrib/free_disk_space.sh
       - name: check sbom for vulns
         run: |
           node bin/cdxgen.js -t js -o reports/sbom-build-js.cdx.json --no-recurse --profile research $(pwd)
           node bin/cdxgen.js -t docker -o reports/sbom-container-js.cdx.json ghcr.io/cyclonedx/cdxgen:master
           docker run --rm -v $(pwd):/app ghcr.io/owasp-dep-scan/dep-scan:master --src /app --bom-dir /app/reports --reports-dir /app/reports --reachability-analyzer SemanticReachability --explain
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master' && matrix.node-version == '23.x'
         env:
           COLUMNS: 140
   deno-build:
