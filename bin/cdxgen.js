@@ -437,6 +437,15 @@ const options = Object.assign({}, args, {
       ? resolve(join(filePath, args.output))
       : args.output,
 });
+// Should we create the output directory?
+const outputDirectory = dirname(options.output);
+if (
+  outputDirectory &&
+  outputDirectory !== process.cwd() &&
+  !safeExistsSync(outputDirectory)
+) {
+  fs.mkdirSync(outputDirectory, { recursive: true });
+}
 // Filter duplicate types. Eg: -t gradle -t gradle
 if (options.projectType && Array.isArray(options.projectType)) {
   options.projectType = Array.from(new Set(options.projectType));
@@ -789,10 +798,6 @@ const checkPermissions = (filePath, options) => {
       process.exit(1);
     }
     return;
-  }
-  // This will prevent people from accidentally using the usages slices belonging to a different project
-  if (!options.usagesSlicesFile) {
-    options.usagesSlicesFile = `${options.projectName}-usages.json`;
   }
   prepareEnv(filePath, options);
   thoughtLog("Getting ready to generate the BOM ⚡️.");
