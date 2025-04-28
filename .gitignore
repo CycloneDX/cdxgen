@@ -130,3 +130,4 @@ build/
 cdxgen.iml
 
 .theia/
+reports/
