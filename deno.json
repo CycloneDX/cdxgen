@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "11.2.7",
+  "version": "11.2.8",
   "exports": "./lib/cli/index.js",
   "compilerOptions": {
     "lib": ["deno.window"],
@@ -53,7 +53,7 @@
   "imports": {
     "@appthreat/atom": "npm:@appthreat/atom@2.1.18",
     "@appthreat/cdx-proto": "npm:@appthreat/cdx-proto@1.0.1",
-    "@babel/parser": "npm:@babel/parser@^7.27.1",
+    "@babel/parser": "npm:@babel/parser@^7.27.2",
     "@babel/traverse": "npm:@babel/traverse@^7.27.1",
     "@npmcli/arborist": "npm:@npmcli/arborist@9.0.2",
     "ajv": "npm:ajv@^8.16.0",

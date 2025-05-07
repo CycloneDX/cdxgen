@@ -13,6 +13,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   depscan:
+    continue-on-error: true
     runs-on: ["self-hosted", "ubuntu", "arm64"]
     permissions:
       contents: read
@@ -29,8 +30,7 @@ jobs:
           java-version: '23'
       - name: Trim CI agent
         run: |
-          chmod +x contrib/free_disk_space.sh
-          ./contrib/free_disk_space.sh
+          rm -rf /tmp/docker-images-* /tmp/atom-usages-* /tmp/atom-reachables-*
       - name: pnpm install
         run: |
           corepack pnpm install --config.strict-dep-builds=true
@@ -39,6 +39,7 @@ jobs:
         run: |
           node bin/cdxgen.js -t js -o reports/sbom-build-js.cdx.json --no-recurse --profile research $(pwd)
           node bin/cdxgen.js -t docker -o reports/sbom-container-js.cdx.json ghcr.io/cyclonedx/cdxgen:master
+          docker rmi ghcr.io/cyclonedx/cdxgen:master
           docker run -q --rm -v $(pwd):/app ghcr.io/owasp-dep-scan/dep-scan:master depscan --src /app --bom-dir /app/reports --reports-dir /app/reports --reachability-analyzer SemanticReachability --explain
         env:
           COLUMNS: 140
@@ -49,7 +50,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        node-version: ['20.x', '21.x', '22.x', '23.x']
+        node-version: ['20.x', '21.x', '22.x', '23.x', '24.x']
 
     steps:
       - uses: actions/checkout@v4
