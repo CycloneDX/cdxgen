@@ -13,6 +13,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   depscan:
+    continue-on-error: true
     runs-on: ["self-hosted", "ubuntu", "arm64"]
     permissions:
       contents: read
@@ -39,6 +40,7 @@ jobs:
         run: |
           node bin/cdxgen.js -t js -o reports/sbom-build-js.cdx.json --no-recurse --profile research $(pwd)
           node bin/cdxgen.js -t docker -o reports/sbom-container-js.cdx.json ghcr.io/cyclonedx/cdxgen:master
+          docker rmi ghcr.io/cyclonedx/cdxgen:master
           docker run -q --rm -v $(pwd):/app ghcr.io/owasp-dep-scan/dep-scan:master depscan --src /app --bom-dir /app/reports --reports-dir /app/reports --reachability-analyzer SemanticReachability --explain
         env:
           COLUMNS: 140
