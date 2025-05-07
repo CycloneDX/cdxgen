@@ -80,7 +80,7 @@
     "*": "biome check --fix --no-errors-on-unmatched"
   },
   "dependencies": {
-    "@babel/parser": "^7.27.1",
+    "@babel/parser": "^7.27.2",
     "@babel/traverse": "^7.27.1",
     "@iarna/toml": "2.2.5",
     "@npmcli/arborist": "9.0.2",
@@ -137,6 +137,7 @@
   "pnpm": {
     "onlyBuiltDependencies": ["sqlite3", "@biomejs/biome"],
     "overrides": {
+      "jwa": "^2.0.1",
       "glob": "^11.0.2",
       "node-gyp": "^10.2.0",
       "prebuild": "^13.0.0",
@@ -145,6 +146,7 @@
     }
   },
   "overrides": {
+    "jwa": "^2.0.1",
     "glob": "^11.0.2",
     "node-gyp": "^10.2.0",
     "prebuild": "^13.0.0",
