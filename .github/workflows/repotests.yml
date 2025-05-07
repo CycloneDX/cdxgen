@@ -27,10 +27,14 @@ jobs:
           repository: 'wix/greyhound'
           path: 'repotests/greyhound'
           ref: '385bb84a6f712ee18064a3b5ecb8d9dcbc1c75f3'
+      - name: Trim CI agent
+        run: |
+          rm -rf /tmp/docker-images-* /tmp/atom-usages-* /tmp/atom-reachables-*
       - name: npm install
         run: |
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
           mkdir -p bomresults
+          rm -rf $CDXGEN_TEMP_DIR && mkdir -p $CDXGEN_TEMP_DIR
         env:
           CI: true
           CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-repotests
@@ -86,10 +90,14 @@ jobs:
         with:
           repository: 'ShiftLeftSecurity/shiftleft-go-example'
           path: 'repotests/shiftleft-go-example'
+      - name: Trim CI agent
+        run: |
+          rm -rf /tmp/docker-images-* /tmp/atom-usages-* /tmp/atom-reachables-*
       - name: npm install
         run: |
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
           mkdir -p bomresults
+          rm -rf $CDXGEN_TEMP_DIR && mkdir -p $CDXGEN_TEMP_DIR
         env:
           CI: true
           CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-repotests

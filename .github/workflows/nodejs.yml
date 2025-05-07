@@ -30,8 +30,7 @@ jobs:
           java-version: '23'
       - name: Trim CI agent
         run: |
-          chmod +x contrib/free_disk_space.sh
-          ./contrib/free_disk_space.sh
+          rm -rf /tmp/docker-images-* /tmp/atom-usages-* /tmp/atom-reachables-*
       - name: pnpm install
         run: |
           corepack pnpm install --config.strict-dep-builds=true
