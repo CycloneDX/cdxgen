@@ -4,7 +4,7 @@ LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
       org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
       org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
-      org.opencontainers.image.version="11.2.x" \
+      org.opencontainers.image.version="11.3.x" \
       org.opencontainers.image.vendor="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
@@ -13,8 +13,8 @@ LABEL maintainer="cyclonedx" \
 
 ARG SBT_VERSION=1.10.11
 ARG MAVEN_VERSION=3.9.9
-ARG GRADLE_VERSION=8.13
-ARG GO_VERSION=1.24.1
+ARG GRADLE_VERSION=8.14
+ARG GO_VERSION=1.24.3
 ARG PYTHON_VERSION=3.12
 
 ENV GOPATH=/opt/app-root/go \

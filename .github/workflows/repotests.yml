@@ -132,7 +132,7 @@ jobs:
       fail-fast: true
       matrix:
         node-version: ['23.x']
-        os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'windows-latest', 'macos-15']
+        os: ['self-hosted-ubuntu', 'ubuntu-24.04-arm', 'windows-latest', 'macos-15']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -486,7 +486,7 @@ jobs:
           bin/cdxgen.js -p -t java -exclude-type js repotests/java-sec-code -o bomresults/bom-java-sec-code-10.json
         shell: bash
       - name: repotests greyhound
-        if: matrix.os == 'ubuntu-24.04'
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'self-hosted-ubuntu'
         run: |
           bin/cdxgen.js -p -r -t java11 repotests/greyhound -o bomresults/bom-greyhound-java.json
           bin/cdxgen.js -p -r -t gradle repotests/greyhound -o bomresults/bom-greyhound-gradle.json
@@ -593,7 +593,7 @@ jobs:
           CDXGEN_DEBUG_MODE=verbose bin/cdxgen.js -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json --fail-on-error
         shell: bash
       - name: repotests swift-markdown
-        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-15'
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-15' || matrix.os == 'self-hosted-ubuntu'
         run: |
           CDXGEN_DEBUG_MODE=verbose bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json
           CDXGEN_DEBUG_MODE=verbose bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json --profile research
