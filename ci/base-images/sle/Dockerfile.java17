@@ -3,8 +3,6 @@ FROM registry.suse.com/bci/openjdk-devel:17
 ARG SBT_VERSION=1.10.11
 ARG MAVEN_VERSION=3.9.9
 ARG GRADLE_VERSION=8.14
-ARG GCC_VERSION=13
-ARG SCALA_VERSION=3.6.4
 
 ENV SBT_VERSION=$SBT_VERSION \
     MAVEN_VERSION=$MAVEN_VERSION \
@@ -13,12 +11,10 @@ ENV SBT_VERSION=$SBT_VERSION \
     MAVEN_HOME="/opt/maven/${MAVEN_VERSION}" \
     GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}" \
     SBT_HOME="/opt/sbt/${SBT_VERSION}" \
-    SCALA_VERSION=$SCALA_VERSION \
-    SCALA_HOME="/opt/scala/${SCALA_VERSION}" \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
-ENV PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:
+ENV PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:
 
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
@@ -34,15 +30,12 @@ RUN set -e; \
             ;; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
     esac \
-    && zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends git-core nodejs20 npm20 python311 python311-pip wget zip unzip make gawk gcc${GCC_VERSION} gcc${GCC_VERSION}-c++ \
-    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_VERSION} 10 \
-    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION} 10 \
+    && zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends git-core nodejs20 npm20 python311 python311-pip wget zip unzip make gawk \
     && curl -s "https://get.sdkman.io" | bash \
     && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> $HOME/.sdkman/etc/config \
     && source "$HOME/.sdkman/bin/sdkman-init.sh" \
     && sdk install maven $MAVEN_VERSION \
     && sdk install gradle $GRADLE_VERSION \
-    && sdk install scala $SCALA_VERSION \
     && sdk install sbt $SBT_VERSION \
     && mv /root/.sdkman/candidates/* /opt/ \
     && curl -L --output /usr/bin/bazel https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
@@ -50,5 +43,14 @@ RUN set -e; \
     && bazel --version \
     && npm install -g corepack \
     && zypper clean -a
+
+ARG SCALA_VERSION=3.6.4
+
+ENV SCALA_VERSION=$SCALA_VERSION \
+    SCALA_HOME="/opt/scala/${SCALA_VERSION}"
+ENV PATH=${PATH}:${SCALA_HOME}/bin:
+
+RUN source "$HOME/.sdkman/bin/sdkman-init.sh" \
+    && sdk install scala $SCALA_VERSION
 
 CMD ["/bin/bash"]
