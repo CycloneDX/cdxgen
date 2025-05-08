@@ -35,26 +35,26 @@ jobs:
 #            cdxgen-image:
 #              additional-image: cdxgen-dotnet
 
-          - lang: dotnet6
-            distro: debian
-
-          - lang: dotnet7
-            skip-arm: true
-
-          - lang: dotnet8
-            skip-arm: true
-
-          - lang: dotnet8
-            distro: debian
-
-          - lang: dotnet9
-            skip-arm: true
-
-          - lang: dotnet9
-            distro: debian
-
-          - lang: java8
-            distro: temurin
+#          - lang: dotnet6
+#            distro: debian
+#
+#          - lang: dotnet7
+#            skip-arm: true
+#
+#          - lang: dotnet8
+#            skip-arm: true
+#
+#          - lang: dotnet8
+#            distro: debian
+#
+#          - lang: dotnet9
+#            skip-arm: true
+#
+#          - lang: dotnet9
+#            distro: debian
+#
+#          - lang: java8
+#            distro: temurin
 
           - lang: java11
             base-image:
@@ -68,62 +68,62 @@ jobs:
 
           - lang: java17-slim
 
-          - lang: java21
-            distro: temurin
-
-          - lang: node20
-            cdxgen-image:
-              additional-image: cdxgen-node
-
-          - lang: python36
-
-          - lang: python39
-            distro: opensuse
-
-          - lang: python310
-            distro: opensuse
-
-          - lang: python311
-
-          - lang: python312
-            base-image:
-              lang: lang
-            cdxgen-image:
-              additional-image: cdxgen-python
-
-          - lang: ruby25
-            fix-qemu: true
-            skip-arm: true
-            base-image:
-              name: sle
-
-          - lang: ruby26
-            distro: debian
-            runner: macos-hosted
-            skip-arm: true
-
-          - lang: ruby33
-            distro: debian
-            runner: macos-hosted
-
-          - lang: ruby34
-            distro: debian
-            runner: macos-hosted
-
-          - lang: swift6
-            distro: debian
-            runner: macos-hosted
-            base-image:
-              additional-image: debian-swift
-            cdxgen-image:
-              additional-image: cdxgen-debian-swift
-
-          - lang: rolling
-            distro: opensuse
-            base-image:
-              lang: lang
-            cdxgen-image:
-              skip-tags: true
+#          - lang: java21
+#            distro: temurin
+#
+#          - lang: node20
+#            cdxgen-image:
+#              additional-image: cdxgen-node
+#
+#          - lang: python36
+#
+#          - lang: python39
+#            distro: opensuse
+#
+#          - lang: python310
+#            distro: opensuse
+#
+#          - lang: python311
+#
+#          - lang: python312
+#            base-image:
+#              lang: lang
+#            cdxgen-image:
+#              additional-image: cdxgen-python
+#
+#          - lang: ruby25
+#            fix-qemu: true
+#            skip-arm: true
+#            base-image:
+#              name: sle
+#
+#          - lang: ruby26
+#            distro: debian
+#            runner: macos-hosted
+#            skip-arm: true
+#
+#          - lang: ruby33
+#            distro: debian
+#            runner: macos-hosted
+#
+#          - lang: ruby34
+#            distro: debian
+#            runner: macos-hosted
+#
+#          - lang: swift6
+#            distro: debian
+#            runner: macos-hosted
+#            base-image:
+#              additional-image: debian-swift
+#            cdxgen-image:
+#              additional-image: cdxgen-debian-swift
+#
+#          - lang: rolling
+#            distro: opensuse
+#            base-image:
+#              lang: lang
+#            cdxgen-image:
+#              skip-tags: true
 
     runs-on: ${{ matrix.image.runner || 'ubuntu-24.04' }}
     permissions:
@@ -189,7 +189,7 @@ jobs:
           labels: ${{ steps.cdxgen-metadata.outputs.labels }}
       - name: Build and push Docker cdxgen-image for tag
         uses: docker/build-push-action@v5
-        if: ${{ startsWith(github.ref, 'refs/tags/') && ! matrix.image.cdxgen-image.skip-tags }}
+#        if: ${{ startsWith(github.ref, 'refs/tags/') && ! matrix.image.cdxgen-image.skip-tags }}
         with:
           context: .
           file: ci/base-images/cdxgen/${{ matrix.image.distro }}/Dockerfile.${{ matrix.image.lang }}
