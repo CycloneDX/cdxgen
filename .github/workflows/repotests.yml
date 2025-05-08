@@ -454,7 +454,7 @@ jobs:
           source ~/.bashrc
           mkdir -p "~/.rbenv/plugins"
           git clone https://github.com/rbenv/ruby-build.git --depth=1 "~/.rbenv/plugins/ruby-build"
-        if: runner.os != 'Windows'
+        if: runner.os != 'Windows' && matrix.os != 'self-hosted-ubuntu'
       - name: repotests react-app
         run: |
           FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs8 repotests/react-app -o bomresults/react-app.json --fail-on-error
@@ -510,7 +510,7 @@ jobs:
         shell: bash
       - name: repotests blint
         run: |
-          python -m pip install poetry
+          python -m pip install poetry || true
           bin/cdxgen.js -t python repotests/blint -o bomresults/blint-req.json --required-only -p --fail-on-error
           bin/cdxgen.js -t python repotests/blint -o bomresults/blint-research.json --profile research -p --fail-on-error
         shell: bash
@@ -654,7 +654,7 @@ jobs:
           apps: scala3 scalac
       - name: scala tests
         run: |
-          python -m pip install atom-tools
+          python -m pip install atom-tools || true
           which atom-tools
           cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
           sbt clean stage
