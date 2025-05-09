@@ -34,50 +34,45 @@ jobs:
       - name: pnpm install
         run: |
           corepack pnpm install --config.strict-dep-builds=true
-          python3 -m pip install atom-tools blint
+          python3 -m pip install --pre owasp-depscan atom-tools
       - name: check sbom for vulns
         run: |
-          node bin/cdxgen.js -t js -o reports/sbom-build-js.cdx.json --no-recurse --profile research $(pwd)
-          node bin/cdxgen.js -t docker -o reports/sbom-container-js.cdx.json ghcr.io/cyclonedx/cdxgen:master
-          docker rmi ghcr.io/cyclonedx/cdxgen:master
-          docker run -q --rm -v $(pwd):/app ghcr.io/owasp-dep-scan/dep-scan:master depscan --src /app --bom-dir /app/reports --reports-dir /app/reports --reachability-analyzer SemanticReachability --explain
+          node bin/cdxgen.js -t js -o $(pwd)/reports/sbom-build-js.cdx.json --no-recurse --profile research $(pwd)
+          docker pull ghcr.io/cyclonedx/cdxgen:master
+          node bin/cdxgen.js -t docker -o $(pwd)/reports/sbom-container-js.cdx.json ghcr.io/cyclonedx/cdxgen:master
+          depscan --src $(pwd) --bom-dir $(pwd)/reports --reports-dir $(pwd)/reports --reachability-analyzer SemanticReachability --explain
         env:
           COLUMNS: 140
+          CDXGEN_DEBUG_MODE: debug
           JAVA_TOOL_OPTIONS: "-XX:UseSVE=0 -Dfile.encoding=UTF-8"
-  build:
-    runs-on: ubuntu-24.04
+  matrix-unit-test:
     permissions:
       contents: read
     strategy:
+      fail-fast: false
       matrix:
         node-version: ['20.x', '21.x', '22.x', '23.x', '24.x']
-
+        os: ['ubuntu-22.04', 'ubuntu-24.04', 'windows-latest', 'windows-11-arm', 'ubuntu-22.04-arm', 'ubuntu-24.04-arm', 'macos-latest', 'macos-13']
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.12
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '23'
       - name: pnpm install, build and test
         run: |
-          npm install --global corepack@latest
-          corepack enable pnpm
-          corepack pnpm install --config.strict-dep-builds=true
-          corepack pnpm test
-          NPM_CONFIG_PROVENANCE=true corepack pnpm publish --access=public --dry-run --no-git-checks
+          npm install -g pnpm@latest
+          pnpm install --config.strict-dep-builds=true
+          pnpm test
+          pnpm publish --access=public --dry-run --no-git-checks
         env:
           CI: true
+          NPM_CONFIG_PROVENANCE: true
+
   deno-build:
     strategy:
+      fail-fast: true
       matrix:
         os: [windows, macos, ubuntu]
         deno_version: [2.x]
@@ -87,7 +82,7 @@ jobs:
               deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,osRelease,homedir --allow-write --allow-net --include=./data --include=./package.json --output cdxgenx.exe bin/cdxgen.js
               .\cdxgenx.exe --help
               (Get-FileHash .\cdxgenx.exe).hash | Out-File -FilePath .\cdxgenx.exe.sha256
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,osRelease,homedir --allow-write --allow-net --include=./data --include=./package.json --output evinse.exe bin/evinse.js
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,osRelease,homedir --allow-write --allow-net --node-modules-dir=auto --allow-ffi --allow-scripts=npm:sqlite3@5.1.7 --include=./data --include=./package.json --include=node_modules/.deno/sqlite3@5.1.7/node_modules/sqlite3/build/Release --output evinse.exe bin/evinse.js
               .\evinse.exe --help
               (Get-FileHash .\evinse.exe).hash | Out-File -FilePath .\evinse.exe.sha256
             artifact: cdxgenx.exe
@@ -98,10 +93,10 @@ jobs:
               shasum -a 256 cdxgenx-darwin-amd64 > cdxgenx-darwin-amd64.sha256
               deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --include=./data --include=./package.json --target aarch64-apple-darwin --output cdxgenx-darwin-arm64 bin/cdxgen.js
               shasum -a 256 cdxgenx-darwin-arm64 > cdxgenx-darwin-arm64.sha256
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --include=./data --include=./package.json --target x86_64-apple-darwin --output evinse-darwin-amd64 bin/evinse.js
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --node-modules-dir=auto --allow-ffi --allow-scripts=npm:sqlite3@5.1.7 --include=./data --include=./package.json --include=node_modules/.deno/sqlite3@5.1.7/node_modules/sqlite3/build/Release --target x86_64-apple-darwin --output evinse-darwin-amd64 bin/evinse.js
               ./evinse-darwin-amd64 --help
               shasum -a 256 evinse-darwin-amd64 > evinse-darwin-amd64.sha256
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --include=./data --include=./package.json --target aarch64-apple-darwin --output evinse-darwin-arm64 bin/evinse.js
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --node-modules-dir=auto --allow-ffi --allow-scripts=npm:sqlite3@5.1.7 --include=./data --include=./package.json --include=node_modules/.deno/sqlite3@5.1.7/node_modules/sqlite3/build/Release --target aarch64-apple-darwin --output evinse-darwin-arm64 bin/evinse.js
               shasum -a 256 evinse-darwin-arm64 > evinse-darwin-arm64.sha256
             artifact: cdxgenx-darwin-amd64
           - os: ubuntu
