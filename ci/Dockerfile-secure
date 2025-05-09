@@ -66,7 +66,6 @@ ENV GOPATH=/opt/app-root/go \
     CDXGEN_TEMP_DIR=/tmp/cdxgen-temp \
     SDKMAN_DIR=/opt/.sdkman \
     SDKMAN_CANDIDATES_DIR=/opt/.sdkman/candidates \
-    npm_config_python=/usr/bin/python3.12 \
     MALLOC_CONF="dirty_decay_ms:2000,narenas:2,background_thread:true" \
     RUBY_CONFIGURE_OPTS="--with-jemalloc --enable-yjit" \
     RUBYOPT="--yjit" \
@@ -162,7 +161,7 @@ RUN set -e; \
     && mv /root/.bashrc /home/cyclonedx/.bashrc \
     && chown -R cyclonedx:cyclonedx /home/cyclonedx/.bashrc \
     && npm install --global corepack@latest \
-    && npm install --unsafe-perm -g node-gyp @microsoft/rush --omit=dev \
+    && npm install -g node-gyp @microsoft/rush --omit=dev \
     && npx node-gyp install \
     && pecl channel-update pecl.php.net \
     && pecl install timezonedb \
