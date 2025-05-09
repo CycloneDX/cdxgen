@@ -70,7 +70,7 @@ jobs:
       - name: pnpm install, build and test
         run: |
           npm install --global corepack@latest
-          corepack enable
+          corepack enable pnpm
           corepack pnpm install --config.strict-dep-builds=true
           corepack pnpm test
           NPM_CONFIG_PROVENANCE=true corepack pnpm publish --access=public --dry-run --no-git-checks
