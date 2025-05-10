@@ -57,7 +57,7 @@ jobs:
 #            distro: temurin
 
           - lang: java11
-            runner: [ 'self-hosted', 'Linux', 'ARM64' ]
+            runner: [ 'self-hosted', 'lima-cdxgen-asin-1' ]
             base-image:
               additional-image: java11-slim
             cdxgen-image:
@@ -66,10 +66,10 @@ jobs:
               additional-image3: cdxgen-java-slim
 
           - lang: java17
-            runner: [ 'self-hosted', 'Linux' ]
+            runner: [ 'self-hosted', 'lima-cdxgen-asin-1' ]
 
           - lang: java17-slim
-            runner: [ 'self-hosted', 'Linux' ]
+            runner: [ 'self-hosted', 'lima-cdxgen-asin-1' ]
 
 #          - lang: java21
 #            distro: temurin
