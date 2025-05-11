@@ -44,7 +44,7 @@ RUN set -e; \
     esac \
     && zypper refresh && zypper --non-interactive dup && zypper --non-interactive install -l --no-recommends gcc14 gcc14-c++ gcc14-fortran \
         bzip2 python312 python312-devel python312-pip findutils java-24-openjdk-devel \
-        libicu-devel git-core wget zip unzip make gawk nodejs22 npm22 rust1.81 cargo1.81 \
+        libicu-devel git-core wget zip unzip make gawk nodejs22 npm22 rust1.86 cargo1.86 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 10 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 10 \
     && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-14 10 \
