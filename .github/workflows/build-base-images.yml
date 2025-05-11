@@ -57,12 +57,12 @@ jobs:
             distro: temurin
 
           - lang: java11
+            base-image:
+              additional-image: java11-slim
             cdxgen-image:
               additional-image: cdxgen-java
-
-          - lang: java11-slim
-            cdxgen-image:
-              additional-image: cdxgen-java-slim
+              additional-image2: cdxgen-java11-slim
+              additional-image3: cdxgen-java-slim
 
           - lang: java17
 
@@ -171,6 +171,8 @@ jobs:
           images: |
             ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ matrix.image.distro && format('-{0}', matrix.image.distro) }}-${{ matrix.image.lang }}
             ${{ matrix.image.cdxgen-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, matrix.image.cdxgen-image.additional-image) || '' }}
+            ${{ matrix.image.cdxgen-image.additional-image2 && format('{0}/{1}/{2}', env.REPO, env.TEAM, matrix.image.cdxgen-image.additional-image2) || '' }}
+            ${{ matrix.image.cdxgen-image.additional-image3 && format('{0}/{1}/{2}', env.REPO, env.TEAM, matrix.image.cdxgen-image.additional-image3) || '' }}
       - name: Build and push Docker cdxgen-image for master
         uses: docker/build-push-action@v5
         if: github.ref == 'refs/heads/master'
@@ -179,7 +181,11 @@ jobs:
           file: ci/base-images/cdxgen/${{ matrix.image.distro }}/Dockerfile.${{ matrix.image.lang }}
           platforms: linux/amd64${{ ! matrix.image.skip-arm && ',linux/arm64' || '' }}
           push: true
-          tags: ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ matrix.image.distro && format('-{0}', matrix.image.distro) }}-${{ matrix.image.lang }}:${{ env.TAG }}${{ matrix.image.cdxgen-image.additional-image && format(',{0}/{1}/{2}:{3}', env.REPO, env.TEAM, matrix.image.cdxgen-image.additional-image, env.TAG) }}
+          tags: |
+            ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ matrix.image.distro && format('-{0}', matrix.image.distro) }}-${{ matrix.image.lang }}:${{ env.TAG }}
+            ${{ matrix.image.cdxgen-image.additional-image && format('{0}/{1}/{2}:{3}', env.REPO, env.TEAM, matrix.image.cdxgen-image.additional-image, env.TAG) }}
+            ${{ matrix.image.cdxgen-image.additional-image2 && format('{0}/{1}/{2}:{3}', env.REPO, env.TEAM, matrix.image.cdxgen-image.additional-image2, env.TAG) }}
+            ${{ matrix.image.cdxgen-image.additional-image3 && format('{0}/{1}/{2}:{3}', env.REPO, env.TEAM, matrix.image.cdxgen-image.additional-image3, env.TAG) }}
           labels: ${{ steps.cdxgen-metadata.outputs.labels }}
       - name: Build and push Docker cdxgen-image for tag
         uses: docker/build-push-action@v5
