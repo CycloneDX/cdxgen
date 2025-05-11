@@ -113,13 +113,6 @@ jobs:
             cdxgen-image:
               additional-image: cdxgen-debian-swift
 
-          - lang: rolling
-            distro: opensuse
-            base-image:
-              lang: lang
-            cdxgen-image:
-              skip-tags: true
-
     permissions:
       contents: read
       packages: write
