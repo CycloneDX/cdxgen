@@ -1,0 +1,35 @@
+name: Build rolling image
+
+on:
+  schedule:
+  - cron: "0 8 * * *"
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  image:
+    if: github.repository == 'CycloneDX/cdxgen'
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/image-build.yml
+    with:
+      image: |
+        image: {
+          "lang": "rolling",
+          "distro": "opensuse",
+          "base-image": {
+            "lang": "lang"
+          },
+          "cdxgen-image": {
+            "skip-tags": true
+          }
+        }
