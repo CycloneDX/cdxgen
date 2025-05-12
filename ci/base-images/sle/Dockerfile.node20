@@ -1,16 +1,13 @@
 FROM registry.suse.com/bci/nodejs:20
 
-ARG JAVA_VERSION=24-tem
 ARG GCC_VERSION=13
 
-ENV JAVA_VERSION=$JAVA_VERSION \
-    JAVA_HOME="/opt/java/${JAVA_VERSION}" \
-    NVM_DIR="/root/.nvm" \
+ENV NVM_DIR="/root/.nvm" \
     npm_config_python=/usr/bin/python3.11 \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
-ENV PATH=${PATH}:${JAVA_HOME}/bin:/usr/local/bin:
+ENV PATH=${PATH}:/usr/local/bin:
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     url=; \
@@ -33,13 +30,6 @@ RUN set -e; \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-${GCC_VERSION} 10 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_VERSION} 10 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION} 10 \
-    && curl -s "https://get.sdkman.io" | bash \
-    && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> $HOME/.sdkman/etc/config \
-    && source "$HOME/.sdkman/bin/sdkman-init.sh" \
-    && sdk install java $JAVA_VERSION \
-    && sdk offline enable \
-    && mv /root/.sdkman/candidates/* /opt/ \
-    && rm -rf /root/.sdkman \
     && npm install -g npm \
     && npm install -g node-gyp corepack \
     && npx node-gyp install \

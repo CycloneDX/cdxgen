@@ -1,25 +1,14 @@
 FROM registry.suse.com/bci/dotnet-sdk:7.0
 
-ARG JAVA_VERSION=24-tem
-
 ENV DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
     DOTNET_NOLOGO=true \
     DOTNET_USE_POLLING_FILE_WATCHER=false \
     NUGET_XMLDOC_MODE=skip \
     DOTNET_RUNNING_IN_CONTAINER=true \
-    DOTNET_CLI_TELEMETRY_OPTOUT=1 \
-    JAVA_VERSION=$JAVA_VERSION \
-    JAVA_HOME="/opt/java/${JAVA_VERSION}"
-ENV PATH=${PATH}:${JAVA_HOME}/bin:/usr/local/bin:
+    DOTNET_CLI_TELEMETRY_OPTOUT=1
+ENV PATH=${PATH}:/usr/local/bin:
 
 RUN zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends git-core nodejs20 npm20 python311 python311-pip wget zip unzip make gawk curl \
-    && curl -s "https://get.sdkman.io" | bash \
-    && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=60\nsdkman_curl_max_time=0" >> $HOME/.sdkman/etc/config \
-    && source "$HOME/.sdkman/bin/sdkman-init.sh" \
-    && sdk install java $JAVA_VERSION \
-    && sdk offline enable \
-    && mv /root/.sdkman/candidates/* /opt/ \
-    && rm -rf /root/.sdkman \
     && npm install -g corepack \
     && zypper clean -a
 

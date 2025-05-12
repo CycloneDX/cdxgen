@@ -1,21 +1,17 @@
 FROM debian:jessie
 
-ARG JAVA_VERSION=21.0.6-tem
 ARG ATOM_RUBY_VERSION=3.4.3
 ARG BUNDLER_VERSION=1.17.3
 ARG RAKE_VERSION=0.7.3
 ARG RMAGICK_VERSION=2.16.0
 ARG NOKOGIRI_VERSION=1.5.11
 
-ENV JAVA_VERSION=$JAVA_VERSION \
-    JAVA_HOME="/opt/java/${JAVA_VERSION}" \
-    ATOM_RUBY_VERSION=$ATOM_RUBY_VERSION \
+ENV ATOM_RUBY_VERSION=$ATOM_RUBY_VERSION \
     RUBY_VERSION=1.8.7-p374 \
     BUNDLER_VERSION=$BUNDLER_VERSION \
     RAKE_VERSION=$RAKE_VERSION \
     RMAGICK_VERSION=$RMAGICK_VERSION \
-    BUNDLE_SILENCE_ROOT_WARNING=true \
-    JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
+    BUNDLE_SILENCE_ROOT_WARNING=true
 ENV PATH=/usr/local/rvm/gems/ruby-${RUBY_VERSION}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION}@global/bin:/usr/local/rvm/rubies/ruby-${RUBY_VERSION}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/rvm/bin:${PATH}:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:
 
 COPY ci/base-images/debian/install.sh /tmp/
