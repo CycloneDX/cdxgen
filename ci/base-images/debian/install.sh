@@ -27,8 +27,10 @@ if [ x"${MAVEN_VERSION}" != "x" ]; then
   sdk install maven ${MAVEN_VERSION}
 fi
 sdk offline enable
-mv /root/.sdkman/candidates/* /opt/
-rm -rf /root/.sdkman
+if [ -e /root/.sdkman/candidates ]; then
+  mv /root/.sdkman/candidates/* /opt/
+  rm -rf /root/.sdkman
+fi
 
 if [ x"${SKIP_PYTHON}" != "xyes" ]; then
   python3 --version
