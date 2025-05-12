@@ -22,16 +22,13 @@ source $HOME/.sdkman/bin/sdkman-init.sh
 echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> $HOME/.sdkman/etc/config
 if [ x"${JAVA_VERSION}" != "x" ]; then
   sdk install java ${JAVA_VERSION}
-fi
-if [ x"${MAVEN_VERSION}" != "x" ]; then
-  sdk install maven ${MAVEN_VERSION}
-fi
-sdk offline enable
-if [ -e /root/.sdkman/candidates ]; then
+  if [ x"${MAVEN_VERSION}" != "x" ]; then
+    sdk install maven ${MAVEN_VERSION}
+  fi
+  sdk offline enable
   mv /root/.sdkman/candidates/* /opt/
   rm -rf /root/.sdkman
 fi
-
 if [ x"${SKIP_PYTHON}" != "xyes" ]; then
   python3 --version
   python3 -m pip install --no-cache-dir --upgrade pip virtualenv --break-system-packages
