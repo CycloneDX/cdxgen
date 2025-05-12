@@ -3,7 +3,6 @@ FROM registry.suse.com/bci/nodejs:20
 ARG GCC_VERSION=13
 
 ENV NVM_DIR="/root/.nvm" \
-    npm_config_python=/usr/bin/python3.11 \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
@@ -13,11 +12,9 @@ RUN set -e; \
     url=; \
     case "${ARCH_NAME##*-}" in \
         'x86_64') \
-            OS_ARCH_SUFFIX=''; \
             GOBIN_VERSION='amd64'; \
             ;; \
         'aarch64') \
-            OS_ARCH_SUFFIX='-aarch64'; \
             GOBIN_VERSION='arm64'; \
             ;; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
