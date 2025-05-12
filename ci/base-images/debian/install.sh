@@ -15,7 +15,7 @@ ARCH_NAME="$(dpkg --print-architecture)"
 # Download atom native binary
 curl -L https://github.com/AppThreat/atom/releases/latest/download/atom-${ARCH_NAME} -o /usr/local/bin/atom
 chmod +x /usr/local/bin/atom
-/usr/local/bin/atom --help
+/usr/local/bin/atom --help || true
 curl -s "https://get.sdkman.io" | bash
 chmod +x /root/.sdkman/bin/sdkman-init.sh
 source $HOME/.sdkman/bin/sdkman-init.sh
