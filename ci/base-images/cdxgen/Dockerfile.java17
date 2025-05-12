@@ -38,6 +38,8 @@ RUN set -e; \
     && /usr/local/bin/atom --help \
     && mkdir -p /opt/cdxgen-node-cache \
     && node /opt/cdxgen/bin/cdxgen.js --help \
+    && pip install --upgrade --no-cache-dir atom-tools --target /opt/pypi \
+    && atom-tools --help \
     && rm -rf /root/.cache/node \
     && chmod a-w -R /opt
 WORKDIR /app
