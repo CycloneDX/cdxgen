@@ -35,6 +35,7 @@ jobs:
         with:
           repository: 'scipy/scipy'
           path: 'repotests/scipy'
+          ref: 'v1.15.2'
       - uses: actions/checkout@v4
         with:
           repository: 'psf/black'

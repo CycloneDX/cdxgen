@@ -1,18 +1,15 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0-bookworm-slim
 
-ARG JAVA_VERSION=24-tem
 ARG NODE_VERSION=22.14.0
 
-ENV JAVA_VERSION=$JAVA_VERSION \
-    JAVA_HOME="/opt/java/${JAVA_VERSION}" \
-    DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
+ENV DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
     DOTNET_NOLOGO=true \
     DOTNET_USE_POLLING_FILE_WATCHER=false \
     NUGET_XMLDOC_MODE=skip \
     DOTNET_RUNNING_IN_CONTAINER=true \
     DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     NVM_DIR="/root/.nvm"
-ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:/usr/local/bin:/root/.local/bin:
+ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:/usr/local/bin:/root/.local/bin:
 
 COPY ci/base-images/debian/install.sh /tmp/
 

@@ -21,7 +21,6 @@ COPY . /opt/cdxgen
 
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
-    url=; \
     case "${ARCH_NAME##*-}" in \
         'x86_64') \
             DOSAI_ARCH_SUFFIX='-full'; \

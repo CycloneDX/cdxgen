@@ -12,14 +12,34 @@ LABEL maintainer="CycloneDX" \
       org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java17:v11 -r /app --server"
 
 ENV CDXGEN_IN_CONTAINER=true \
+    ATOM_CMD=/usr/local/bin/atom \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache"
 ENV PATH=${PATH}:/usr/local/bin:/opt/cdxgen/node_modules/.bin:
 
 COPY . /opt/cdxgen
 
-RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
+RUN set -e; \
+    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
+    case "${ARCH_NAME##*-}" in \
+        'x86_64') \
+            ATOM_ARCH_SUFFIX='amd64'; \
+            ;; \
+        'arm64') \
+            ATOM_ARCH_SUFFIX='arm64'; \
+            ;; \
+        'aarch64') \
+            ATOM_ARCH_SUFFIX='arm64'; \
+            ;; \
+        *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
+    esac \
+    && cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
+    && curl -L https://github.com/AppThreat/atom/releases/latest/download/atom-${ATOM_ARCH_SUFFIX} -o /usr/local/bin/atom \
+    && chmod +x /usr/local/bin/atom \
+    && /usr/local/bin/atom --help \
     && mkdir -p /opt/cdxgen-node-cache \
     && node /opt/cdxgen/bin/cdxgen.js --help \
+    && pip install --upgrade --no-cache-dir atom-tools --target /opt/pypi \
+    && atom-tools --help \
     && rm -rf /root/.cache/node \
     && chmod a-w -R /opt
 WORKDIR /app
