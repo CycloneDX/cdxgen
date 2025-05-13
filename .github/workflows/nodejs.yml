@@ -65,7 +65,6 @@ jobs:
           npm install -g pnpm@latest
           pnpm install --config.strict-dep-builds=true
           pnpm test
-          pnpm publish --access=public --dry-run --no-git-checks
         env:
           CI: true
           NPM_CONFIG_PROVENANCE: true
