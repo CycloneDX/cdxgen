@@ -126,7 +126,7 @@ jobs:
       continue-on-error: true
     - name: Attach cdx sbom
       run: |
-        corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
+        corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
         node bin/cdxgen.js -t docker -o cdxgen-oci-image.cdx.json ghcr.io/cyclonedx/cdxgen:latest
         oras attach --artifact-type sbom/cyclonedx ghcr.io/cyclonedx/cdxgen:latest ./cdxgen-oci-image.cdx.json:application/json
         oras discover --format tree ghcr.io/cyclonedx/cdxgen:latest
@@ -176,7 +176,7 @@ jobs:
           labels: ${{ steps.meta2.outputs.labels }}
       - name: Attach cdx sbom
         run: |
-          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
           node bin/cdxgen.js -t docker -o cdxgen-secure-oci-image.cdx.json ghcr.io/cyclonedx/cdxgen-secure:latest
           oras attach --artifact-type sbom/cyclonedx ghcr.io/cyclonedx/cdxgen-secure:latest ./cdxgen-secure-oci-image.cdx.json:application/json
           oras discover --format tree ghcr.io/cyclonedx/cdxgen-secure:latest
@@ -235,6 +235,22 @@ jobs:
         push: true
         tags: ${{ steps.meta2.outputs.tags }}
         labels: ${{ steps.meta2.outputs.labels }}
+    - name: Attach cdx sbom
+      run: |
+        corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
+        node bin/cdxgen.js -t docker -o cdxgen-deno-oci-image.cdx.json ghcr.io/cyclonedx/cdxgen-deno:latest
+        oras attach --artifact-type sbom/cyclonedx ghcr.io/cyclonedx/cdxgen-deno:latest ./cdxgen-deno-oci-image.cdx.json:application/json
+        oras discover --format tree ghcr.io/cyclonedx/cdxgen-deno:latest
+      continue-on-error: true
+      if: startsWith(github.ref, 'refs/tags/')
+    - name: Attach cdx deno sbom to release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          cdxgen-deno-oci-image.cdx.json
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   containers-ppc64:
     if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
@@ -326,3 +342,19 @@ jobs:
         push: true
         tags: ${{ steps.meta5.outputs.tags }}
         labels: ${{ steps.meta5.outputs.labels }}
+    - name: Attach cdx sbom
+      run: |
+        corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
+        node bin/cdxgen.js -t docker -o cdxgen-bun-oci-image.cdx.json ghcr.io/cyclonedx/cdxgen-bun:latest
+        oras attach --artifact-type sbom/cyclonedx ghcr.io/cyclonedx/cdxgen-bun:latest ./cdxgen-bun-oci-image.cdx.json:application/json
+        oras discover --format tree ghcr.io/cyclonedx/cdxgen-bun:latest
+      continue-on-error: true
+      if: startsWith(github.ref, 'refs/tags/')
+    - name: Attach cdx bun sbom to release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          cdxgen-bun-oci-image.cdx.json
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
