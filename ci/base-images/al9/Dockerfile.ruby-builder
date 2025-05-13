@@ -1,0 +1,39 @@
+FROM almalinux:9.5-minimal AS ruby-builder
+
+LABEL maintainer="cyclonedx" \
+      org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
+      org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
+      org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
+      org.opencontainers.image.version="11.3.x" \
+      org.opencontainers.image.vendor="cyclonedx" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.title="cdxgen" \
+      org.opencontainers.image.description="Base Ruby builder. Do not use directly."
+
+ARG RUBY_VERSION=3.4.3
+
+ENV RUBY_VERSION=$RUBY_VERSION \
+    RBENV_ROOT=/opt/.rbenv \
+    MAKEFLAGS="-j$(nproc --ignore=2)" \
+    PATH=/opt/bin:/opt/vendor/bin:${PATH}:/usr/local/bin/:/root/.local/bin:/root/.rbenv/bin:/root/.rbenv/versions/3.4.3/bin:
+
+RUN microdnf install -y \
+          gcc gcc-c++ make autoconf automake bison libtool \
+          wget git-core bash glibc-common glibc-all-langpacks \
+          openssl-devel readline-devel zlib-devel \
+          ncurses-devel libffi-devel pcre2-devel rust \
+    && microdnf clean all \
+    && microdnf install -y epel-release \
+    && microdnf install --enablerepo=crb -y libyaml-devel \
+    && git clone https://github.com/rbenv/rbenv.git --depth=1 /opt/.rbenv \
+    && echo 'export PATH="/opt/.rbenv/bin:$PATH"' >> ~/.bashrc \
+    && echo 'eval "$(/opt/.rbenv/bin/rbenv init - bash)"' >> ~/.bashrc \
+    && echo 'export RBENV_ROOT=/opt/.rbenv' >> ~/.bashrc \
+    && echo 'export NVM_DIR=/opt/.nvm' >> ~/.bashrc \
+    && source ~/.bashrc \
+    && mkdir -p "/opt/.rbenv/plugins" \
+    && git clone https://github.com/rbenv/ruby-build.git --depth=1 "/opt/.rbenv/plugins/ruby-build" \
+    && rbenv install ${RUBY_VERSION} -- --disable-install-doc \
+    && rbenv global ${RUBY_VERSION} \
+    && rm -rf /opt/.rbenv/cache \
+    && ruby --version
