@@ -88,8 +88,8 @@ jobs:
       - name: Attach cdx sbom to base
         run: |
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
-          node bin/cdxgen.js -t docker -o sbom-oci-image.cdx.json ${{ steps.base-metadata.outputs.tags[0] }}
-          oras attach --artifact-type sbom/cyclonedx ${{ steps.base-metadata.outputs.tags[0] }} ./sbom-oci-image.cdx.json:application/json
+          node bin/cdxgen.js -t docker -o sbom-oci-base-image.cdx.json ${{ steps.base-metadata.outputs.tags[0] }}
+          oras attach --artifact-type sbom/cyclonedx ${{ steps.base-metadata.outputs.tags[0] }} ./sbom-oci-base-image.cdx.json:application/json
           oras discover --format tree ${{ steps.base-metadata.outputs.tags[0] }}
         continue-on-error: true
         if: github.ref == 'refs/heads/master'
