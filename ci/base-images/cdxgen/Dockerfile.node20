@@ -33,7 +33,7 @@ RUN set -e; \
             ;; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
     esac \
-    && cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --no-optional --frozen-lockfile && corepack pnpm cache delete \
+    && cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
     && curl -L https://github.com/AppThreat/atom/releases/latest/download/atom-${ATOM_ARCH_SUFFIX} -o /usr/local/bin/atom \
     && chmod +x /usr/local/bin/atom \
     && /usr/local/bin/atom --help \
