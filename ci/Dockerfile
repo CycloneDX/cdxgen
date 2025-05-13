@@ -1,4 +1,4 @@
-FROM almalinux:9.5-minimal
+FROM ghcr.io/cyclonedx/cdxgen-ruby-builder:master
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
@@ -61,12 +61,8 @@ ENV GOPATH=/opt/app-root/go \
     SDKMAN_DIR=/root/.sdkman \
     SDKMAN_CANDIDATES_DIR=/root/.sdkman/candidates \
     DOTNET_CLI_TELEMETRY_OPTOUT=1 \
-    MALLOC_CONF="dirty_decay_ms:2000,narenas:2,background_thread:true" \
-    RUBY_CONFIGURE_OPTS="--with-jemalloc --enable-yjit" \
-    RUBYOPT="--yjit" \
-    RUBY_BUILD_BUILD_PATH="/tmp/rbenv" \
-    RUBY_BUILD_HTTP_CLIENT=curl
-ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:/root/.cargo/bin:/opt/pypi/bin:/root/.rbenv/bin:/root/.rbenv/versions/3.4.2/bin:
+    RBENV_ROOT=/opt/.rbenv
+ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:/root/.cargo/bin:/opt/pypi/bin:/opt/.rbenv/bin:/opt/.rbenv/versions/3.4.3/bin:
 
 COPY . /opt/cdxgen
 
@@ -88,8 +84,8 @@ RUN set -e; \
         python${PYTHON_VERSION} python${PYTHON_VERSION}-devel python${PYTHON_VERSION}-pip glibc-common glibc-all-langpacks \
         openssl-devel libffi-devel libyaml zlib-devel \
         pcre2 which tar gzip zip unzip bzip2 sudo ncurses ncurses-devel sqlite-devel gnupg2 dotnet-sdk-9.0 \
-    && microdnf install -y epel-release \
-    && microdnf install --enablerepo=crb -y libyaml-devel jemalloc-devel \
+    && ruby --version \
+    && which ruby \
     && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 10 \
     && alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYTHON_VERSION} 10 \
     && /usr/bin/python${PYTHON_VERSION} --version \
@@ -105,17 +101,6 @@ RUN set -e; \
     && source /root/.nvm/nvm.sh \
     && nvm install ${NODE_VERSION} \
     && node --version \
-    && git clone https://github.com/rbenv/rbenv.git --depth=1 ~/.rbenv \
-    && echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc \
-    && echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.bashrc \
-    && source ~/.bashrc \
-    && mkdir -p "$(rbenv root)/plugins" \
-    && git clone https://github.com/rbenv/ruby-build.git --depth=1 "$(rbenv root)/plugins/ruby-build" \
-    && rbenv install ${RUBY_VERSION} -- --disable-install-doc \
-    && rbenv global ${RUBY_VERSION} \
-    && ruby --version \
-    && which ruby \
-    && rm -rf /root/.rbenv/cache $RUBY_BUILD_BUILD_PATH \
     && curl -s "https://get.sdkman.io" | bash \
     && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> $HOME/.sdkman/etc/config \
     && source "$HOME/.sdkman/bin/sdkman-init.sh" \
