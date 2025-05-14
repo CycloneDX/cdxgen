@@ -1,10 +1,9 @@
 #!/usr/bin/env node
-
+import { Buffer } from "node:buffer";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import process from "node:process";
-import { URL } from "node:url";
 import { findUpSync } from "find-up";
 import globalAgent from "global-agent";
 import { load as _load } from "js-yaml";
@@ -781,6 +780,13 @@ const checkPermissions = (filePath, options) => {
   return true;
 };
 
+const needsBomSigning = ({ generateKeyAndSign }) =>
+  generateKeyAndSign ||
+  (process.env.SBOM_SIGN_ALGORITHM &&
+    process.env.SBOM_SIGN_ALGORITHM !== "none" &&
+    process.env.SBOM_SIGN_PRIVATE_KEY &&
+    safeExistsSync(process.env.SBOM_SIGN_PRIVATE_KEY));
+
 /**
  * Method to start the bom creation process
  */
@@ -838,14 +844,7 @@ const checkPermissions = (filePath, options) => {
           thoughtLog(`Let's save the file to "${jsonFile}".`);
         }
       }
-      if (
-        jsonPayload &&
-        (options.generateKeyAndSign ||
-          (process.env.SBOM_SIGN_ALGORITHM &&
-            process.env.SBOM_SIGN_ALGORITHM !== "none" &&
-            process.env.SBOM_SIGN_PRIVATE_KEY &&
-            safeExistsSync(process.env.SBOM_SIGN_PRIVATE_KEY)))
-      ) {
+      if (jsonPayload && needsBomSigning(options)) {
         let alg = process.env.SBOM_SIGN_ALGORITHM || "RS512";
         if (alg.includes("none")) {
           alg = "RS512";
@@ -857,6 +856,7 @@ const checkPermissions = (filePath, options) => {
           const jdirName = dirname(jsonFile);
           publicKeyFile = join(jdirName, "public.key");
           const privateKeyFile = join(jdirName, "private.key");
+          const privateKeyB64File = join(jdirName, "private.key.base64");
           const { privateKey, publicKey } = crypto.generateKeyPairSync("rsa", {
             modulusLength: 4096,
             publicKeyEncoding: {
@@ -870,10 +870,15 @@ const checkPermissions = (filePath, options) => {
           });
           fs.writeFileSync(publicKeyFile, publicKey);
           fs.writeFileSync(privateKeyFile, privateKey);
+          fs.writeFileSync(
+            privateKeyB64File,
+            Buffer.from(privateKey, "utf8").toString("base64"),
+          );
           console.log(
             "Created public/private key pairs for testing purposes",
             publicKeyFile,
             privateKeyFile,
+            privateKeyB64File,
           );
           privateKeyToUse = privateKey;
           jwkPublicKey = crypto
