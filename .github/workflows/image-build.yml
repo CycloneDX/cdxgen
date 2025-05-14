@@ -88,8 +88,8 @@ jobs:
           labels: ${{ steps.cdxgen-metadata.outputs.labels }}
       - name: save private key to file
         run: |
-          echo "${SBOM_SIGN_PRIVATE_KEY}" > $GITHUB_WORKSPACE/private.key.b64
-          echo "${SBOM_SIGN_PRIVATE_KEY}" | base64 -d > $GITHUB_WORKSPACE/private.key
+          echo $SBOM_SIGN_PRIVATE_KEY > $GITHUB_WORKSPACE/private.key.b64
+          echo $SBOM_SIGN_PRIVATE_KEY | base64 -d > $GITHUB_WORKSPACE/private.key
           ls -lh $GITHUB_WORKSPACE/private.key $GITHUB_WORKSPACE/private.key.b64
         env:
           SBOM_SIGN_PRIVATE_KEY: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
