@@ -88,16 +88,16 @@ jobs:
       - name: Attach cdx sbom to base
         run: |
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
-          node bin/cdxgen.js -t docker -o sbom-oci-base-image.cdx.json ${{ steps.base-metadata.outputs.json.tags[0] }}
-          oras attach --artifact-type sbom/cyclonedx ${{ steps.base-metadata.outputs.json.tags[0] }} ./sbom-oci-base-image.cdx.json:application/json
-          oras discover --format tree ${{ steps.base-metadata.outputs.json.tags[0] }}
+          node bin/cdxgen.js -t docker -o sbom-oci-base-image.cdx.json ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }}
+          oras attach --artifact-type sbom/cyclonedx ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }} ./sbom-oci-base-image.cdx.json:application/json
+          oras discover --format tree ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }}
         continue-on-error: true
         if: github.ref == 'refs/heads/master'
       - name: Attach cdx sbom
         run: |
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
-          node bin/cdxgen.js -t docker -o sbom-oci-image.cdx.json ${{ steps.cdxgen-metadata.outputs.json.tags[0] }}
-          oras attach --artifact-type sbom/cyclonedx ${{ steps.cdxgen-metadata.outputs.json.tags[0] }} ./sbom-oci-image.cdx.json:application/json
-          oras discover --format tree ${{ steps.cdxgen-metadata.outputs.json.tags[0] }}
+          node bin/cdxgen.js -t docker -o sbom-oci-image.cdx.json ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }}
+          oras attach --artifact-type sbom/cyclonedx ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }} ./sbom-oci-image.cdx.json:application/json
+          oras discover --format tree ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }}
         continue-on-error: true
         if: ${{ startsWith(github.ref, 'refs/tags/') && ! fromJSON(inputs.image).cdxgen-image.skip-tags }}
