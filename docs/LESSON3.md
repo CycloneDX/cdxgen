@@ -44,3 +44,11 @@ cdxgen --generate-key-and-sign -t docker -o bom.json docker.io/<repo>/sign-test:
 oras attach --artifact-type sbom/cyclonedx docker.io/<repo>/sign-test:latest ./bom.json:application/json
 oras discover -o tree docker.io/<repo>/sign-test:latest
 ```
+
+To download the SBOM attachment from the OCI image, use the `oras pull` command with the correct digest from the `discover` command.
+
+```shell
+IMAGE_REF=$(oras discover --format json --artifact-type sbom/cyclonedx docker.io/<repo>/sign-test:latest | jq -r '.manifests[0].reference')
+oras pull $IMAGE_REF -o sbom_output_dir
+ls -l sbom_output_dir/bom.json
+```
