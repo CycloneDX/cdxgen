@@ -34,7 +34,7 @@ jobs:
       - name: pnpm install
         run: |
           corepack pnpm install --config.strict-dep-builds=true
-          python3 -m pip install --pre owasp-depscan atom-tools
+          python3 -m pip install --pre owasp-depscan[all] atom-tools
       - name: check sbom for vulns
         run: |
           node bin/cdxgen.js -t js -o $(pwd)/reports/sbom-build-js.cdx.json --no-recurse --profile research $(pwd)
