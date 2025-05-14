@@ -8,3 +8,5 @@ export SBOM_SIGN_PUBLIC_KEY=public.key
 
 cdx-verify -i bom.json --public-key /path/to/public.key
 ```
+
+NOTE: This is not a security feature. We might rotate the keys now and then, but have no plans to implement default signing with a global key, etc.
