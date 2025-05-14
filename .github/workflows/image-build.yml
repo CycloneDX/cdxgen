@@ -86,19 +86,32 @@ jobs:
           push: true
           tags: ${{ steps.cdxgen-metadata.outputs.tags }}
           labels: ${{ steps.cdxgen-metadata.outputs.labels }}
+      - name: save private key to file
+        run: |
+          echo $SBOM_SIGN_PRIVATE_KEY_DATA > private.key
+        env:
+          SBOM_SIGN_PRIVATE_KEY_DATA: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
       - name: Attach cdx sbom to base
         run: |
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
           node bin/cdxgen.js -t docker -o sbom-oci-base-image.cdx.json ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }}
+          node bin/verify.js -i sbom-oci-base-image.cdx.json --public-key contrib/bom-signer/public.key
           oras attach --artifact-type sbom/cyclonedx ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }} ./sbom-oci-base-image.cdx.json:application/json
           oras discover --format tree ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }}
         continue-on-error: true
         if: github.ref == 'refs/heads/master'
+        env:
+          SBOM_SIGN_ALGORITHM: ${{ secrets.SBOM_SIGN_ALGORITHM }}
+          SBOM_SIGN_PRIVATE_KEY: private.key
       - name: Attach cdx sbom
         run: |
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
           node bin/cdxgen.js -t docker -o sbom-oci-image.cdx.json ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }}
+          node bin/verify.js -i sbom-oci-base-image.cdx.json --public-key contrib/bom-signer/public.key
           oras attach --artifact-type sbom/cyclonedx ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }} ./sbom-oci-image.cdx.json:application/json
           oras discover --format tree ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }}
         continue-on-error: true
         if: ${{ startsWith(github.ref, 'refs/tags/') && ! fromJSON(inputs.image).cdxgen-image.skip-tags }}
+        env:
+          SBOM_SIGN_ALGORITHM: ${{ secrets.SBOM_SIGN_ALGORITHM }}
+          SBOM_SIGN_PRIVATE_KEY: private.key
