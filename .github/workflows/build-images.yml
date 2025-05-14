@@ -120,3 +120,4 @@ jobs:
     with:
       image: ${{ toJSON(matrix.image) }}
       runner: ${{ matrix.image.runner }}
+    secrets: inherit
