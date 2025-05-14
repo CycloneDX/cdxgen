@@ -67,7 +67,6 @@ jobs:
             distro: temurin
 
           - lang: node20
-            runner: macos-hosted
             cdxgen-image:
               additional-image: cdxgen-node
 
