@@ -88,7 +88,7 @@ jobs:
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3) || '' }}
       - name: Build and push Docker cdxgen-image for master
         uses: docker/build-push-action@v5
-        if: github.ref == 'refs/heads/master'
+#        if: github.ref == 'refs/heads/master'
         with:
           context: .
           file: ci/base-images/cdxgen/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
@@ -101,7 +101,7 @@ jobs:
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}:{3}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3, env.TAG) }}
           labels: ${{ steps.cdxgen-metadata.outputs.labels }}
       - name: Attach cdx sbom for master
-        if: github.ref == 'refs/heads/master'
+#        if: github.ref == 'refs/heads/master'
         run: |
           mkdir -p $RUNNER_TEMP/cdxgen-sboms
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
