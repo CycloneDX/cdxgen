@@ -1,0 +1,62 @@
+name: Build Docker image, generate & attach SBOM
+description: |
+  Build and push a multi-platform (always AMD64, configurably ARM64) Docker
+  image and generate and attach an SBOM for all configured platforms.
+
+inputs:
+  build-arm:
+    description: Whether or not to build the arm image
+    required: true
+  clean-cache:
+    description: Whether or not to clean the build-cache at the end
+    required: true
+  dockerfile:
+    description: Dockerfile that describes the image
+    required: true
+  images:
+    description: The name(s) of the image(s) to load metadata for
+    required: true
+  main-tag:
+    description: The tag to attach the SBOMs to, defaults to the first tag returned from the metadata extraction
+  signing-key:
+    description: The key to use for signing the SBOM, base64 encoded
+    required: true
+  tags:
+    description: All tags to set for this image, defaults to all tags returned from the metadata extraction
+
+runs:
+  using: composite
+  steps:
+  - name: Extract metadata (tags, labels) for Docker image
+    id: metadata
+    uses: docker/metadata-action@v5
+    with:
+      images: ${{ inputs.images }}
+  - name: Build and push image
+    uses: ./.github/actions/build-docker-image
+    with:
+      action: push
+      dockerfile: ${{ inputs.dockerfile }}
+      labels: ${{ steps.metadata.outputs.labels }}
+      platforms: linux/amd64${{ inputs.build-arm == 'true' && ',linux/arm64' || '' }}
+      tags: ${{ inputs.tags || steps.metadata.outputs.tags }}
+  - name: Generate and attach SBOM for amd64
+    uses: ./.github/actions/generate-attach-sbom
+    with:
+      dockerfile: ${{ inputs.dockerfile }}
+      platform: linux/amd64
+      signing-key: ${{ inputs.signing-key }}
+      tag: ${{ inputs.main-tag || fromJSON(steps.metadata.outputs.json).tags[0] }}
+  - name: Generate and attach SBOM for arm64
+    if: ${{ inputs.build-arm == 'true' }}
+    uses: ./.github/actions/generate-attach-sbom
+    with:
+      dockerfile: ${{ inputs.dockerfile }}
+      platform: linux/arm64
+      signing-key: ${{ inputs.signing-key }}
+      tag: ${{ inputs.main-tag || fromJSON(steps.metadata.outputs.json).tags[0] }}
+  - name: Clean buildx cache
+    if: ${{ inputs.clean-cache == 'true' && always() }}
+    shell: bash
+    run: |
+      docker buildx prune -af

@@ -1,12 +1,17 @@
 name: Image build
 
+# This workflow CAN NOT be called directly. It is currently used by:
+# - build-images.yml
+# - build-rolling-image.yml
+#
+# If any changes are made to this workflow, specifically with any inputs, make
+# sure to check/update the above workflows!
+
 on:
   workflow_call:
     inputs:
       image:
         required: true
-        type: string
-      runner:
         type: string
 
 env:
@@ -16,108 +21,83 @@ env:
 
 jobs:
   image:
-    runs-on: ${{ inputs.runner || 'ubuntu-24.04' }}
+    runs-on: ${{ fromJSON(inputs.image).runner || 'ubuntu-24.04' }}
     steps:
       - uses: actions/checkout@v4
-      - name: Trim CI agent
-        if: ${{ ! inputs.runner }}
+      - name: Free disk space
+        if: ${{ ! fromJSON(inputs.image).runner }}
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+      - name: Trim CI agent even more
+        if: ${{ ! fromJSON(inputs.image).runner }}
         run: |
           chmod +x contrib/free_disk_space.sh
           ./contrib/free_disk_space.sh
       - name: Set up QEMU
-        if: ${{ ! inputs.runner }}
+        if: ${{ ! fromJSON(inputs.image).runner }}
         uses: docker/setup-qemu-action@v3
-      - name: QEMU workaround
+      - name: Fix QEMU
         if: ${{ fromJSON(inputs.image).fix-qemu }}
         run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
-      - name: Set up Docker Buildx
+      - name: Set up Docker BuildX
+        if: ${{ ! fromJSON(inputs.image).runner }}
         uses: docker/setup-buildx-action@v3
-        if: ${{ ! inputs.runner }}
-      - uses: oras-project/setup-oras@v1
-      - name: Log in to the Container registry
+      - name: Setup ORAS
+        uses: oras-project/setup-oras@v1
+      - name: Install project dependencies
+        run: |
+          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
+          mkdir -p $RUNNER_TEMP/cdxgen-sboms
+      - name: Login to the Container registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       # Base image
-      - name: Extract metadata (tags, labels) for Docker base-image
-        id: base-metadata
-        uses: docker/metadata-action@v5
+      - name: Build base image
+        uses: ./.github/actions/build-docker-images-generate-attach-sboms
         with:
+          build-arm: ${{ ! fromJSON(inputs.image).skip-arm }}
+          clean-cache: ${{ ! fromJSON(inputs.image).runner }}
+          dockerfile: ci/base-images/${{ fromJSON(inputs.image).distro || 'sle' }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
           images: |
-            ${{ env.REPO }}/${{ env.TEAM }}/${{ fromJSON(inputs.image).base-image.name || fromJSON(inputs.image).distro || 'bci' }}-${{ fromJSON(inputs.image).base-image.lang || fromJSON(inputs.image).lang }}
-            ${{ fromJSON(inputs.image).base-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).base-image.additional-image) || '' }}
-      - name: Build and push Docker base-image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ci/base-images/${{ fromJSON(inputs.image).distro || 'sle' }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
-          platforms: linux/amd64${{ ! fromJSON(inputs.image).skip-arm && ',linux/arm64' || '' }}
-          push: true
-          tags: ${{ steps.base-metadata.outputs.tags }}
-          labels: ${{ steps.base-metadata.outputs.labels }}
+             ${{ env.REPO }}/${{ env.TEAM }}/${{ fromJSON(inputs.image).base-image.name || fromJSON(inputs.image).distro || 'bci' }}-${{ fromJSON(inputs.image).base-image.lang || fromJSON(inputs.image).lang }}
+             ${{ fromJSON(inputs.image).base-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).base-image.additional-image) || '' }}
+          signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
+
       # cdxgen image
-      - name: Extract metadata (tags, labels) for Docker cdxgen-image
-        id: cdxgen-metadata
-        uses: docker/metadata-action@v5
+      - name: Build cdxgen image - master-branch
+        if: github.ref == 'refs/heads/master'
+        uses: ./.github/actions/build-docker-images-generate-attach-sboms
         with:
+          build-arm: ${{ ! fromJSON(inputs.image).skip-arm }}
+          clean-cache: ${{ fromJSON(inputs.image).runner && true }}
+          dockerfile: ci/base-images/cdxgen/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
           images: |
             ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image) || '' }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image2 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image2) || '' }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3) || '' }}
-      - name: Build and push Docker cdxgen-image for master
-        uses: docker/build-push-action@v5
-        if: github.ref == 'refs/heads/master'
-        with:
-          context: .
-          file: ci/base-images/cdxgen/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
-          platforms: linux/amd64${{ ! fromJSON(inputs.image).skip-arm && ',linux/arm64' || '' }}
-          push: true
+          main-tag: ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }}
+          signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
           tags: |
             ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}:{3}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image, env.TAG) }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image2 && format('{0}/{1}/{2}:{3}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image2, env.TAG) }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}:{3}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3, env.TAG) }}
-          labels: ${{ steps.cdxgen-metadata.outputs.labels }}
-      - name: Build and push Docker cdxgen-image for tag
-        uses: docker/build-push-action@v5
+      - name: Build cdxgen image - tags
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        uses: ./.github/actions/build-docker-images-generate-attach-sboms
         with:
-          context: .
-          file: ci/base-images/cdxgen/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
-          platforms: linux/amd64${{ ! fromJSON(inputs.image).skip-arm && ',linux/arm64' || '' }}
-          push: true
-          tags: ${{ steps.cdxgen-metadata.outputs.tags }}
-          labels: ${{ steps.cdxgen-metadata.outputs.labels }}
-      - name: Attach cdx sbom to base
-        run: |
-          mkdir -p $RUNNER_TEMP/cdxgen-sboms
-          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
-          node bin/cdxgen.js -t docker -o sbom-oci-base-image.cdx.json ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }}
-          node bin/verify.js -i sbom-oci-base-image.cdx.json --public-key contrib/bom-signer/public.key
-          oras attach --artifact-type sbom/cyclonedx ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }} ./sbom-oci-base-image.cdx.json:application/json
-          oras discover --format tree ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }}
-          node bin/verify.js -i ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }} --public-key contrib/bom-signer/public.key
-        continue-on-error: true
-        if: github.ref == 'refs/heads/master'
-        env:
-          SBOM_SIGN_ALGORITHM: RS512
-          SBOM_SIGN_PRIVATE_KEY_BASE64: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
-          CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-sboms
-      - name: Attach cdx sbom
-        run: |
-          mkdir -p $RUNNER_TEMP/cdxgen-sboms
-          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
-          node bin/cdxgen.js -t docker -o sbom-oci-image.cdx.json ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }}
-          node bin/verify.js -i sbom-oci-image.cdx.json --public-key contrib/bom-signer/public.key
-          oras attach --artifact-type sbom/cyclonedx ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }} ./sbom-oci-image.cdx.json:application/json
-          oras discover --format tree ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }}
-          node bin/verify.js -i ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }} --public-key contrib/bom-signer/public.key
-        continue-on-error: true
-        if: ${{ startsWith(github.ref, 'refs/tags/') }}
-        env:
-          SBOM_SIGN_ALGORITHM: RS512
-          SBOM_SIGN_PRIVATE_KEY_BASE64: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
-          CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-sboms
+          build-arm: ${{ ! fromJSON(inputs.image).skip-arm }}
+          clean-cache: ${{ fromJSON(inputs.image).runner && true }}
+          dockerfile: ci/base-images/cdxgen/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
+          images: |
+            ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}
+            ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image) || '' }}
+            ${{ fromJSON(inputs.image).cdxgen-image.additional-image2 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image2) || '' }}
+            ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3) || '' }}
+          signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}

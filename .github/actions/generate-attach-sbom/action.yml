@@ -1,0 +1,44 @@
+name: Generate and attach SBOM
+description: |
+  Generate and attach an SBOM to the configured platform-version of an image
+  in its registry.
+
+inputs:
+  dockerfile:
+    description: Dockerfile that describes the image
+    required: true
+  platform:
+    description: The platforms for which to build the image
+    required: true
+  tag:
+    description: All tags for the image
+    required: true
+  signing-key:
+    description: The key to use for signing the SBOM, base64 encoded
+    required: true
+
+runs:
+  using: composite
+  steps:
+  - name: Build and load image
+    uses: ./.github/actions/build-docker-image
+    with:
+      action: load
+      dockerfile: ${{ inputs.dockerfile }}
+      platforms: ${{ inputs.platform }}
+      tags: ${{ inputs.tag }}
+  - name: Generate and attach SBOM
+    shell: bash
+    run: |
+      node bin/cdxgen.js -t docker -o sbom-oci-image.cdx.json ${{ inputs.tag }}
+      node bin/verify.js -i sbom-oci-image.cdx.json --public-key contrib/bom-signer/public.key
+      oras attach --artifact-type sbom/cyclonedx --platform ${{ inputs.platform }} ${{ inputs.tag }} ./sbom-oci-image.cdx.json:application/json
+      oras discover --format tree --platform ${{ inputs.platform }} ${{ inputs.tag }}
+      node bin/verify.js -i ${{ inputs.tag }} --platform ${{ inputs.platform }} --public-key contrib/bom-signer/public.key
+      docker rmi ${{ inputs.tag }}
+      rm sbom-oci-image.cdx.json
+    env:
+      CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-sboms
+      DOCKER_USE_CLI: true
+      SBOM_SIGN_ALGORITHM: RS512
+      SBOM_SIGN_PRIVATE_KEY_BASE64: ${{ inputs.signing-key }}

@@ -1,0 +1,35 @@
+name: Build a Docker image
+description: |
+  This action does the actual building of an image, based on the given
+  parameters. Depending on the configured 'action', the image is then pushed
+  to a registry or loaded into the local Docker.
+
+inputs:
+  action:
+    description: Action to run on completion of the build -- either 'load' or 'push''
+    required: true
+  dockerfile:
+    description: Dockerfile that describes the image
+    required: true
+  labels:
+    description: Labels to add to the image
+  platforms:
+    description: The platforms for which to build the image
+    required: true
+  tags:
+    description: All tags for the image
+    required: true
+
+runs:
+  using: composite
+  steps:
+  - name: Build Docker image
+    uses: docker/build-push-action@v5
+    with:
+      context: .
+      file: ${{ inputs.dockerfile }}
+      labels: ${{ inputs.labels }}
+      load: ${{ inputs.action == 'load' }}
+      platforms: ${{ inputs.platforms }}
+      push: ${{ inputs.action == 'push' }}
+      tags: ${{ inputs.tags }}
