@@ -1,4 +1,4 @@
-name: Release npm package and container image
+name: Release npm package and container images
 
 on:
   push:
@@ -132,12 +132,12 @@ jobs:
     - name: Attach cdx sbom
       run: |
         corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
-        node bin/cdxgen.js -t docker -o cdxgen-oci-image.cdx.json ghcr.io/cyclonedx/cdxgen:latest
+        node bin/cdxgen.js -t docker -o cdxgen-oci-image.cdx.json ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
         node bin/verify.js -i cdxgen-oci-image.cdx.json --public-key contrib/bom-signer/public.key
-        oras attach --artifact-type sbom/cyclonedx ghcr.io/cyclonedx/cdxgen:latest ./cdxgen-oci-image.cdx.json:application/json
-        oras discover --format tree ghcr.io/cyclonedx/cdxgen:latest
+        oras attach --artifact-type sbom/cyclonedx ${{ fromJSON(steps.meta.outputs.json).tags[0] }} ./cdxgen-oci-image.cdx.json:application/json
+        oras discover --format tree ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+        node bin/verify.js -i ${{ fromJSON(steps.meta.outputs.json).tags[0] }} --public-key contrib/bom-signer/public.key
       continue-on-error: true
-      if: startsWith(github.ref, 'refs/tags/')
       env:
         SBOM_SIGN_ALGORITHM: RS512
         SBOM_SIGN_PRIVATE_KEY: ${{ github.workspace }}/private.key
@@ -169,7 +169,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Extract metadata (tags, labels) for Docker
-        id: meta2
+        id: meta
         uses: docker/metadata-action@v5
         with:
           images: |
@@ -181,8 +181,8 @@ jobs:
           file: ci/Dockerfile-secure
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.meta2.outputs.tags }}
-          labels: ${{ steps.meta2.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
       - name: save private key to file
         run: |
           echo "$SBOM_SIGN_PRIVATE_KEY_DATA" | base64 -d > $GITHUB_WORKSPACE/private.key
@@ -191,12 +191,12 @@ jobs:
       - name: Attach cdx sbom
         run: |
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
-          node bin/cdxgen.js -t docker -o cdxgen-secure-oci-image.cdx.json ghcr.io/cyclonedx/cdxgen-secure:latest
+          node bin/cdxgen.js -t docker -o cdxgen-secure-oci-image.cdx.json ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
           node bin/verify.js -i cdxgen-secure-oci-image.cdx.json --public-key contrib/bom-signer/public.key
-          oras attach --artifact-type sbom/cyclonedx ghcr.io/cyclonedx/cdxgen-secure:latest ./cdxgen-secure-oci-image.cdx.json:application/json
-          oras discover --format tree ghcr.io/cyclonedx/cdxgen-secure:latest
+          oras attach --artifact-type sbom/cyclonedx ${{ fromJSON(steps.meta.outputs.json).tags[0] }} ./cdxgen-secure-oci-image.cdx.json:application/json
+          oras discover --format tree ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+          node bin/verify.js -i ${{ fromJSON(steps.meta.outputs.json).tags[0] }} --public-key contrib/bom-signer/public.key
         continue-on-error: true
-        if: startsWith(github.ref, 'refs/tags/')
         env:
           SBOM_SIGN_ALGORITHM: RS512
           SBOM_SIGN_PRIVATE_KEY: ${{ github.workspace }}/private.key
@@ -239,7 +239,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Extract metadata (tags, labels) for Docker
-      id: meta2
+      id: meta
       uses: docker/metadata-action@v5
       with:
         images: |
@@ -251,8 +251,8 @@ jobs:
         file: ci/Dockerfile-deno
         platforms: linux/amd64,linux/arm64
         push: true
-        tags: ${{ steps.meta2.outputs.tags }}
-        labels: ${{ steps.meta2.outputs.labels }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
     - name: save private key to file
       run: |
         echo "$SBOM_SIGN_PRIVATE_KEY_DATA" | base64 -d > $GITHUB_WORKSPACE/private.key
@@ -261,12 +261,12 @@ jobs:
     - name: Attach cdx sbom
       run: |
         corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
-        node bin/cdxgen.js -t docker -o cdxgen-deno-oci-image.cdx.json ghcr.io/cyclonedx/cdxgen-deno:latest
+        node bin/cdxgen.js -t docker -o cdxgen-deno-oci-image.cdx.json ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
         node bin/verify.js -i cdxgen-deno-oci-image.cdx.json --public-key contrib/bom-signer/public.key
-        oras attach --artifact-type sbom/cyclonedx ghcr.io/cyclonedx/cdxgen-deno:latest ./cdxgen-deno-oci-image.cdx.json:application/json
-        oras discover --format tree ghcr.io/cyclonedx/cdxgen-deno:latest
+        oras attach --artifact-type sbom/cyclonedx ${{ fromJSON(steps.meta.outputs.json).tags[0] }} ./cdxgen-deno-oci-image.cdx.json:application/json
+        oras discover --format tree ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+        node bin/verify.js -i ${{ fromJSON(steps.meta.outputs.json).tags[0] }} --public-key contrib/bom-signer/public.key
       continue-on-error: true
-      if: startsWith(github.ref, 'refs/tags/')
       env:
         SBOM_SIGN_ALGORITHM: RS512
         SBOM_SIGN_PRIVATE_KEY: ${{ github.workspace }}/private.key
@@ -308,7 +308,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Extract metadata (tags, labels) for Docker
-      id: meta3
+      id: meta
       uses: docker/metadata-action@v5
       with:
         images: |
@@ -320,8 +320,8 @@ jobs:
         file: ci/Dockerfile-ppc64
         platforms: linux/ppc64le
         push: true
-        tags: ${{ steps.meta3.outputs.tags }}
-        labels: ${{ steps.meta3.outputs.labels }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha,scope=cdxgen-ppc64
         cache-to: type=gha,mode=max,scope=cdxgen-ppc64
   containers-bun:
@@ -355,7 +355,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Extract metadata (tags, labels) for Docker
-      id: meta5
+      id: meta
       uses: docker/metadata-action@v5
       with:
         images: |
@@ -367,8 +367,8 @@ jobs:
         file: ci/Dockerfile-bun
         platforms: linux/amd64,linux/arm64
         push: true
-        tags: ${{ steps.meta5.outputs.tags }}
-        labels: ${{ steps.meta5.outputs.labels }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
     - name: save private key to file
       run: |
         echo "$SBOM_SIGN_PRIVATE_KEY_DATA" | base64 -d > $GITHUB_WORKSPACE/private.key
@@ -377,12 +377,12 @@ jobs:
     - name: Attach cdx sbom
       run: |
         corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
-        node bin/cdxgen.js -t docker -o cdxgen-bun-oci-image.cdx.json ghcr.io/cyclonedx/cdxgen-bun:latest
+        node bin/cdxgen.js -t docker -o cdxgen-bun-oci-image.cdx.json ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
         node bin/verify.js -i cdxgen-bun-oci-image.cdx.json --public-key contrib/bom-signer/public.key
-        oras attach --artifact-type sbom/cyclonedx ghcr.io/cyclonedx/cdxgen-bun:latest ./cdxgen-bun-oci-image.cdx.json:application/json
-        oras discover --format tree ghcr.io/cyclonedx/cdxgen-bun:latest
+        oras attach --artifact-type sbom/cyclonedx ${{ fromJSON(steps.meta.outputs.json).tags[0] }} ./cdxgen-bun-oci-image.cdx.json:application/json
+        oras discover --format tree ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+        node bin/verify.js -i ${{ fromJSON(steps.meta.outputs.json).tags[0] }} --public-key contrib/bom-signer/public.key
       continue-on-error: true
-      if: startsWith(github.ref, 'refs/tags/')
       env:
         SBOM_SIGN_ALGORITHM: RS512
         SBOM_SIGN_PRIVATE_KEY: ${{ github.workspace }}/private.key
