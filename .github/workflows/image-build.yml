@@ -26,11 +26,6 @@ jobs:
         if: ${{ ! inputs.runner }}
         uses: docker/setup-buildx-action@v3
       - uses: oras-project/setup-oras@v1
-      - name: Trim CI agent
-        run: |
-          chmod +x contrib/free_disk_space.sh
-          ./contrib/free_disk_space.sh
-        if: ${{ ! inputs.runner }}
       - name: QEMU workaround
         if: ${{ fromJSON(inputs.image).fix-qemu }}
         run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
@@ -96,6 +91,11 @@ jobs:
           echo $SBOM_SIGN_PRIVATE_KEY | base64 -d > $GITHUB_WORKSPACE/private.key
         env:
           SBOM_SIGN_PRIVATE_KEY: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
+      - name: Trim CI agent
+        run: |
+          chmod +x contrib/free_disk_space.sh
+          ./contrib/free_disk_space.sh
+        if: ${{ ! inputs.runner }}
       - name: Attach cdx sbom to base
         run: |
           mkdir -p $RUNNER_TEMP/cdxgen-sboms
