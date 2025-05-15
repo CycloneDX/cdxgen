@@ -27,7 +27,6 @@ RUN set -e; \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-${GCC_VERSION} 10 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_VERSION} 10 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION} 10 \
-    && npm install -g npm \
     && npm install -g node-gyp corepack \
     && npx node-gyp install \
     && node -v \
