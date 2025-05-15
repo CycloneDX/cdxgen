@@ -19,6 +19,11 @@ jobs:
     runs-on: ${{ inputs.runner || 'ubuntu-24.04' }}
     steps:
       - uses: actions/checkout@v4
+      - name: Trim CI agent
+        if: ${{ ! inputs.runner }}
+        run: |
+          chmod +x contrib/free_disk_space.sh
+          ./contrib/free_disk_space.sh
       - name: Set up QEMU
         if: ${{ ! inputs.runner }}
         uses: docker/setup-qemu-action@v3
@@ -91,11 +96,6 @@ jobs:
           echo $SBOM_SIGN_PRIVATE_KEY | base64 -d > $GITHUB_WORKSPACE/private.key
         env:
           SBOM_SIGN_PRIVATE_KEY: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
-      - name: Trim CI agent
-        run: |
-          chmod +x contrib/free_disk_space.sh
-          ./contrib/free_disk_space.sh
-        if: ${{ ! inputs.runner }}
       - name: Attach cdx sbom to base
         run: |
           mkdir -p $RUNNER_TEMP/cdxgen-sboms
