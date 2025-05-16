@@ -11,7 +11,7 @@ on:
 
 env:
   REPO: ghcr.io
-  TAG: v11
+  TAG: test-generate_attach_sbom
   TEAM: cyclonedx
 
 jobs:
