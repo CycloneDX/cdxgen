@@ -1,6 +1,15 @@
 module	 cdxgen/test
 
-go	 1.14
+go	 1.24
+
+toolchain go1.24
+
+tool github.com/spf13/cobra
+
+tool (
+    github.com/spf13/cobra
+    github.com/spf13/viper
+)
 
 require	 (
     google.golang.org/grpc	 v1.32.0
