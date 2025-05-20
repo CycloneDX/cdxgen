@@ -83,7 +83,7 @@
     "@babel/parser": "^7.27.2",
     "@babel/traverse": "^7.27.1",
     "@iarna/toml": "2.2.5",
-    "@npmcli/arborist": "9.0.2",
+    "@npmcli/arborist": "^9.1.0",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "cheerio": "^1.0.0",
