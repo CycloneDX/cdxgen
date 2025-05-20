@@ -6,8 +6,8 @@ import { basename, dirname, join, resolve } from "node:path";
 import process from "node:process";
 import { findUpSync } from "find-up";
 import globalAgent from "global-agent";
-import { load as _load } from "js-yaml";
 import jws from "jws";
+import { parse as _load } from "yaml";
 import { createBom, submitBom } from "../lib/cli/index.js";
 import {
   printCallStack,
