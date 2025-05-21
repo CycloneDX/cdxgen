@@ -81,6 +81,7 @@ jobs:
           file: ci/base-images/al9/Dockerfile.ruby-builder
           platforms: linux/amd64,linux/arm64
           push: true
+          load: true
           tags: ghcr.io/cyclonedx/cdxgen-ruby-builder:master
           cache-from: type=local,src=/tmp/ruby-builder-cache
           cache-to: type=local,dest=/tmp/ruby-builder-cache,mode=max
@@ -119,6 +120,7 @@ jobs:
         file: ci/Dockerfile
         platforms: linux/amd64,linux/arm64
         push: true
+        load: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=local,src=/tmp/containers-cache
@@ -189,6 +191,7 @@ jobs:
           file: ci/Dockerfile-secure
           platforms: linux/amd64,linux/arm64
           push: true
+          load: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=local,src=/tmp/containers-cache

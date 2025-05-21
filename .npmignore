@@ -110,3 +110,4 @@ dist
 .idea/
 test/
 .git/
+private.key

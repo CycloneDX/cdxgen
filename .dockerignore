@@ -6,3 +6,4 @@ test/
 docs/
 contrib/
 **/node_modules
+private.key
