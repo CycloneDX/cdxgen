@@ -3,7 +3,7 @@
 import fs from "node:fs";
 import process from "node:process";
 import { findUpSync } from "find-up";
-import { load as _load } from "js-yaml";
+import { parse as _load } from "yaml";
 // Evinse (Evinse Verification Is Nearly SBOM Evidence)
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
