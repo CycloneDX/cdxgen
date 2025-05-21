@@ -61,7 +61,7 @@ RUN set -e; \
     && rm -rf /var/lib/apt/lists/* \
     && swift --version \
     && chmod +x /tmp/install.sh \
-    && ./tmp/install.sh && rm /tmp/install.sh \
+    && /tmp/install.sh && rm /tmp/install.sh \
     && node -v \
     && npm -v \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \

@@ -575,6 +575,7 @@ export function getGoPkgComponent(group: any, name: any, version: any, hash: any
  * @returns {Object} Object containing parent component, rootList and packages list
  */
 export function parseGoModData(goModData: string, gosumMap: any): any;
+export function parseGoModulesTxt(txtFile: any, gosumMap: any): Promise<any[]>;
 /**
  * Parse go list output
  *
