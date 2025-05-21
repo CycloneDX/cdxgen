@@ -37,6 +37,7 @@ sudo apt-get remove --purge -y '^azure-.*'
 sudo apt-get remove --purge -y '^dotnet-.*'
 sudo apt-get remove --purge -y '^google-cloud-.*'
 sudo apt-get remove --purge -y '^libllvm.*'
+sudo apt-get remove --purge -y '^linux-.*-headers-.*'
 sudo apt-get remove --purge -y '^llvm-.*'
 sudo apt-get remove --purge -y '^microsoft-.*'
 sudo apt-get remove --purge -y '^mongodb-.*'
@@ -50,6 +51,7 @@ sudo apt-get remove --purge -y hhvm
 sudo apt-get remove --purge -y libgl1-mesa-dri
 sudo apt-get remove --purge -y mono-devel
 sudo apt-get remove --purge -y powershell
+sudo apt-get remove --purge -y snapd
 sudo apt-get autoremove -y
 sudo apt-get clean
 dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -nr | head -n 100

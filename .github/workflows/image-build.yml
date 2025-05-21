@@ -17,6 +17,12 @@ env:
 jobs:
   image:
     runs-on: ${{ inputs.runner || 'ubuntu-24.04' }}
+    outputs:
+      base-digest: ${{ steps.base-build.outputs.digest }}
+      base-tag: ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }}
+      cdxgen-digest-master: ${{ steps.cdxgen-master-build.outputs.digest }}
+      cdxgen-digest-tag: ${{ steps.cdxgen-tag-build.outputs.digest }}
+      cdxgen-tag: ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }}
     steps:
       - uses: actions/checkout@v4
       - name: Trim CI agent
@@ -30,7 +36,6 @@ jobs:
       - name: Set up Docker Buildx
         if: ${{ ! inputs.runner }}
         uses: docker/setup-buildx-action@v3
-      - uses: oras-project/setup-oras@v1
       - name: QEMU workaround
         if: ${{ fromJSON(inputs.image).fix-qemu }}
         run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
@@ -50,6 +55,7 @@ jobs:
             ${{ env.REPO }}/${{ env.TEAM }}/${{ fromJSON(inputs.image).base-image.name || fromJSON(inputs.image).distro || 'bci' }}-${{ fromJSON(inputs.image).base-image.lang || fromJSON(inputs.image).lang }}
             ${{ fromJSON(inputs.image).base-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).base-image.additional-image) || '' }}
       - name: Build and push Docker base-image
+        id: base-build
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -58,6 +64,12 @@ jobs:
           push: true
           tags: ${{ steps.base-metadata.outputs.tags }}
           labels: ${{ steps.base-metadata.outputs.labels }}
+      # clean cache
+      - name: Clean buildx cache
+        run: |
+          df -h
+#          yes | docker buildx prune -a
+#          df -h
 
       # cdxgen image
       - name: Extract metadata (tags, labels) for Docker cdxgen-image
@@ -70,6 +82,7 @@ jobs:
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image2 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image2) || '' }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3) || '' }}
       - name: Build and push Docker cdxgen-image for master
+        id: cdxgen-master-build
         uses: docker/build-push-action@v5
 #        if: github.ref == 'refs/heads/master'
         with:
@@ -84,6 +97,7 @@ jobs:
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}:{3}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3, env.TAG) }}
           labels: ${{ steps.cdxgen-metadata.outputs.labels }}
       - name: Build and push Docker cdxgen-image for tag
+        id: cdxgen-tag-build
         uses: docker/build-push-action@v5
         if: ${{ startsWith(github.ref, 'refs/tags/') && ! fromJSON(inputs.image).cdxgen-image.skip-tags }}
         with:
@@ -93,167 +107,144 @@ jobs:
           push: true
           tags: ${{ steps.cdxgen-metadata.outputs.tags }}
           labels: ${{ steps.cdxgen-metadata.outputs.labels }}
-
-      # Generate & attach SBOMs
+      # clean cache
+      - name: Clean buildx cache
+        run: |
+          df -h
+#          yes | docker buildx prune -a
+#          df -h
+  SBOM:
+    needs: image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trim CI agent
+#        if: ${{ ! inputs.runner }}
+        run: |
+          chmod +x contrib/free_disk_space.sh
+          ./contrib/free_disk_space.sh
       - name: Prepare
         run: |
           mkdir -p $RUNNER_TEMP/cdxgen-sboms
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
-          echo $SBOM_SIGN_PRIVATE_KEY | base64 -d > $GITHUB_WORKSPACE/private.key
+          echo $SBOM_SIGN_PRIVATE_KEY | base64 -d > $RUNNER_TEMP/private.key
           df -h
         env:
           SBOM_SIGN_PRIVATE_KEY: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
-
-      # Base image
-      - name: Export base-image adm64
-        uses: docker/build-push-action@v5
+      - uses: oras-project/setup-oras@v1
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
         with:
-          context: .
-          file: ci/base-images/${{ fromJSON(inputs.image).distro || 'sle' }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
-          load: true
-          platforms: linux/amd64
-          tags: ${{ steps.base-metadata.outputs.tags }}
-          labels: ${{ steps.base-metadata.outputs.labels }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+        # Base image
       - name: Attach cdx sbom to base-image amd64
         run: |
-          node bin/cdxgen.js -t docker -o sbom-oci-base-image.cdx.json ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }}
+          echo pull
+          docker pull --platform linux/amd64 ${{needs.image.outputs.base-tag}}@${{needs.image.outputs.base-digest}}
+          echo tag
+          docker tag ${{needs.image.outputs.base-tag}}@${{needs.image.outputs.base-digest}} ${{needs.image.outputs.base-tag}}
+          echo generate
+          node bin/cdxgen.js -t docker -o sbom-oci-base-image.cdx.json ${{needs.image.outputs.base-tag}}
+          echo verify
           node bin/verify.js -i sbom-oci-base-image.cdx.json --public-key contrib/bom-signer/public.key
-          oras attach --artifact-type sbom/cyclonedx --platform linux/amd64 ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }} ./sbom-oci-base-image.cdx.json:application/json
-          oras discover --format tree ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }} --platform linux/amd64
-          node bin/verify.js -i ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }} --platform linux/amd64 --public-key contrib/bom-signer/public.key
+          echo attach
+          oras attach --artifact-type sbom/cyclonedx --platform linux/amd64 ${{needs.image.outputs.base-tag}} ./sbom-oci-base-image.cdx.json:application/json
+          echo discover
+          oras discover --format tree ${{needs.image.outputs.base-tag}} --platform linux/amd64
+          echo verify2
+          node bin/verify.js -i ${{needs.image.outputs.base-tag}} --platform linux/amd64 --public-key contrib/bom-signer/public.key
+          echo cleanup
           rm -rf sbom-oci-base-image.cdx.json ${{ runner.temp }}/docker-images-*
+          docker rmi $(docker images -q)
           df -h
-        continue-on-error: true
         env:
           SBOM_SIGN_ALGORITHM: RS512
-          SBOM_SIGN_PRIVATE_KEY: ${{ github.workspace }}/private.key
+          SBOM_SIGN_PRIVATE_KEY: ${{ runner.temp }}/private.key
           CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-sboms
-      - name: Export base-image arm64
-        if: ${{ ! fromJSON(inputs.image).skip-arm }}
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ci/base-images/${{ fromJSON(inputs.image).distro || 'sle' }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
-          load: true
-          platforms: linux/arm64
-          tags: ${{ steps.base-metadata.outputs.tags }}
-          labels: ${{ steps.base-metadata.outputs.labels }}
       - name: Attach cdx sbom to base-image arm64
         if: ${{ ! fromJSON(inputs.image).skip-arm }}
         run: |
-          node bin/cdxgen.js -t docker -o sbom-oci-base-image.cdx.json ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }}
+          docker pull --platform linux/arm64 ${{needs.image.outputs.base-tag}}@${{needs.image.outputs.base-digest}}
+          docker tag ${{needs.image.outputs.base-tag}}@${{needs.image.outputs.base-digest}} ${{needs.image.outputs.base-tag}}
+          node bin/cdxgen.js -t docker -o sbom-oci-base-image.cdx.json ${{needs.image.outputs.base-tag}}
           node bin/verify.js -i sbom-oci-base-image.cdx.json --public-key contrib/bom-signer/public.key
-          oras attach --artifact-type sbom/cyclonedx --platform linux/arm64 ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }} ./sbom-oci-base-image.cdx.json:application/json
-          oras discover --format tree ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }} --platform linux/arm64
-          node bin/verify.js -i ${{ fromJSON(steps.base-metadata.outputs.json).tags[0] }} --platform linux/arm64 --public-key contrib/bom-signer/public.key
+          oras attach --artifact-type sbom/cyclonedx --platform linux/arm64 ${{needs.image.outputs.base-tag}} ./sbom-oci-base-image.cdx.json:application/json
+          oras discover --format tree ${{needs.image.outputs.base-tag}} --platform linux/arm64
+          node bin/verify.js -i ${{needs.image.outputs.base-tag}} --platform linux/arm64 --public-key contrib/bom-signer/public.key
           rm -rf sbom-oci-base-image.cdx.json ${{ runner.temp }}/docker-images-*
+          docker rmi $(docker images -q)
           df -h
-        continue-on-error: true
         env:
           SBOM_SIGN_ALGORITHM: RS512
-          SBOM_SIGN_PRIVATE_KEY: ${{ github.workspace }}/private.key
+          SBOM_SIGN_PRIVATE_KEY: ${{ runner.temp }}/private.key
           CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-sboms
 
-      # cdxgen image
-      - name: Export cdxgen-image amd64 for master
-#        if: github.ref == 'refs/heads/master'
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ci/base-images/cdxgen/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
-          load: true
-          platforms: linux/amd64
-          tags: ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }}
-          labels: ${{ steps.cdxgen-metadata.outputs.labels }}
+        # cdxgen image
       - name: Attach cdx sbom amd64 for master
 #        if: github.ref == 'refs/heads/master'
         run: |
+          docker pull --platform linux/amd64 ${{needs.image.outputs.cdxgen-tag}}@${{needs.image.outputs.cdxgen-digest-master}}
+          docker tag ${{needs.image.outputs.cdxgen-tag}}@${{needs.image.outputs.cdxgen-digest-master}} ${{needs.image.outputs.cdxgen-tag}}
           node bin/cdxgen.js -t docker -o sbom-oci-image.cdx.json ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }}
           node bin/verify.js -i sbom-oci-image.cdx.json --public-key contrib/bom-signer/public.key
           oras attach --artifact-type sbom/cyclonedx --platform linux/amd64 ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }} ./sbom-oci-image.cdx.json:application/json
           oras discover --format tree ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }} --platform linux/amd64
           node bin/verify.js -i ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }} --platform linux/amd64 --public-key contrib/bom-signer/public.key
           rm -rf sbom-oci-image.cdx.json ${{ runner.temp }}/docker-images-*
+          docker rmi $(docker images -q)
           df -h
-        continue-on-error: true
         env:
           SBOM_SIGN_ALGORITHM: RS512
           SBOM_SIGN_PRIVATE_KEY: ${{ github.workspace }}/private.key
           CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-sboms
-      - name: Export cdxgen-image arm64 for master
-#        if: ${{ github.ref == 'refs/heads/master' && ! fromJSON(inputs.image).skip-arm }}
-        if: ${{ ! fromJSON(inputs.image).skip-arm }}
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ci/base-images/cdxgen/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
-          load: true
-          platforms: linux/arm64
-          tags: ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }}
-          labels: ${{ steps.cdxgen-metadata.outputs.labels }}
       - name: Attach cdx sbom arm64 for master
 #        if: ${{ github.ref == 'refs/heads/master' && ! fromJSON(inputs.image).skip-arm }}
         if: ${{ ! fromJSON(inputs.image).skip-arm }}
         run: |
+          docker pull --platform linux/arm64 ${{needs.image.outputs.cdxgen-tag}}@${{needs.image.outputs.cdxgen-digest-master}}
+          docker tag ${{needs.image.outputs.cdxgen-tag}}@${{needs.image.outputs.cdxgen-digest-master}} ${{needs.image.outputs.cdxgen-tag}}
           node bin/cdxgen.js -t docker -o sbom-oci-image.cdx.json ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }}
           node bin/verify.js -i sbom-oci-image.cdx.json --public-key contrib/bom-signer/public.key
           oras attach --artifact-type sbom/cyclonedx --platform linux/arm64 ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }} ./sbom-oci-image.cdx.json:application/json
           oras discover --format tree ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }} --platform linux/arm64
           node bin/verify.js -i ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }} --platform linux/arm64 --public-key contrib/bom-signer/public.key
           rm -rf sbom-oci-image.cdx.json ${{ runner.temp }}/docker-images-*
+          docker rmi $(docker images -q)
           df -h
-        continue-on-error: true
         env:
           SBOM_SIGN_ALGORITHM: RS512
           SBOM_SIGN_PRIVATE_KEY: ${{ github.workspace }}/private.key
           CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-sboms
-      - name: Export cdxgen-image amd64 for tag
-        uses: docker/build-push-action@v5
-        if: ${{ startsWith(github.ref, 'refs/tags/') && ! fromJSON(inputs.image).cdxgen-image.skip-tags }}
-        with:
-          context: .
-          file: ci/base-images/cdxgen/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
-          platforms: linux/amd64
-          load: true
-          tags: ${{ steps.cdxgen-metadata.outputs.tags }}
-          labels: ${{ steps.cdxgen-metadata.outputs.labels }}
       - name: Attach cdx sbom amd64 for tag
         if: ${{ startsWith(github.ref, 'refs/tags/') && ! fromJSON(inputs.image).cdxgen-image.skip-tags }}
         run: |
-          node bin/cdxgen.js -t docker -o sbom-oci-image.cdx.json ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }}
+          node bin/cdxgen.js -t docker -o sbom-oci-image.cdx.json ${{needs.image.outputs.cdxgen-tag}}
           node bin/verify.js -i sbom-oci-image.cdx.json --public-key contrib/bom-signer/public.key
-          oras attach --artifact-type sbom/cyclonedx --platform linux/amd64 ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }} ./sbom-oci-image.cdx.json:application/json
-          oras discover --format tree ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }} --platform linux/amd64
-          node bin/verify.js -i ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }} --platform linux/amd64 --public-key contrib/bom-signer/public.key
+          oras attach --artifact-type sbom/cyclonedx --platform linux/amd64 ${{needs.image.outputs.cdxgen-tag}} ./sbom-oci-image.cdx.json:application/json
+          oras discover --format tree ${{needs.image.outputs.cdxgen-tag}} --platform linux/amd64
+          node bin/verify.js -i ${{needs.image.outputs.cdxgen-tag}} --platform linux/amd64 --public-key contrib/bom-signer/public.key
           rm -rf sbom-oci-image.cdx.json ${{ runner.temp }}/docker-images-*
+          docker rmi $(docker images -q)
           df -h
-        continue-on-error: true
         env:
           SBOM_SIGN_ALGORITHM: RS512
-          SBOM_SIGN_PRIVATE_KEY: ${{ github.workspace }}/private.key
+          SBOM_SIGN_PRIVATE_KEY: ${{ runner.temp }}/private.key
           CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-sboms
-      - name: Export cdxgen-image arm64 for tag
-        uses: docker/build-push-action@v5
-        if: ${{ startsWith(github.ref, 'refs/tags/') && ! fromJSON(inputs.image).skip-arm && ! fromJSON(inputs.image).cdxgen-image.skip-tags }}
-        with:
-          context: .
-          file: ci/base-images/cdxgen/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
-          platforms: linux/arm64
-          load: true
-          tags: ${{ steps.cdxgen-metadata.outputs.tags }}
-          labels: ${{ steps.cdxgen-metadata.outputs.labels }}
       - name: Attach cdx sbom arm64 for tag
         if: ${{ startsWith(github.ref, 'refs/tags/') && ! fromJSON(inputs.image).skip-arm && ! fromJSON(inputs.image).cdxgen-image.skip-tags }}
         run: |
-          node bin/cdxgen.js -t docker -o sbom-oci-image.cdx.json ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }}
+          node bin/cdxgen.js -t docker -o sbom-oci-image.cdx.json ${{needs.image.outputs.cdxgen-tag}}
           node bin/verify.js -i sbom-oci-image.cdx.json --public-key contrib/bom-signer/public.key
-          oras attach --artifact-type sbom/cyclonedx --platform linux/arm64 ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }} ./sbom-oci-image.cdx.json:application/json
-          oras discover --format tree ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }} --platform linux/arm64
-          node bin/verify.js -i ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }} --platform linux/arm64 --public-key contrib/bom-signer/public.key
+          oras attach --artifact-type sbom/cyclonedx --platform linux/arm64 ${{needs.image.outputs.cdxgen-tag}} ./sbom-oci-image.cdx.json:application/json
+          oras discover --format tree ${{needs.image.outputs.cdxgen-tag}} --platform linux/arm64
+          node bin/verify.js -i ${{needs.image.outputs.cdxgen-tag}} --platform linux/arm64 --public-key contrib/bom-signer/public.key
           rm -rf sbom-oci-image.cdx.json ${{ runner.temp }}/docker-images-*
+          docker rmi $(docker images -q)
           df -h
-        continue-on-error: true
         env:
           SBOM_SIGN_ALGORITHM: RS512
-          SBOM_SIGN_PRIVATE_KEY: ${{ github.workspace }}/private.key
+          SBOM_SIGN_PRIVATE_KEY: ${{ runner.temp }}/private.key
           CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-sboms

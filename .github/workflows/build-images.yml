@@ -32,6 +32,7 @@ jobs:
 
           - lang: dotnet6
             distro: debian
+            runner: macos-hosted
 
           - lang: dotnet7
             skip-arm: true
@@ -41,12 +42,14 @@ jobs:
 
           - lang: dotnet8
             distro: debian
+            runner: macos-hosted
 
           - lang: dotnet9
             skip-arm: true
 
           - lang: dotnet9
             distro: debian
+            runner: macos-hosted
 
           - lang: java8
             distro: temurin
@@ -71,6 +74,7 @@ jobs:
               additional-image: cdxgen-node
 
           - lang: python36
+            runner: macos-hosted
 
           - lang: python39
             distro: opensuse
@@ -81,6 +85,7 @@ jobs:
           - lang: python311
 
           - lang: python312
+            runner: macos-hosted
             base-image:
               lang: lang
             cdxgen-image:
