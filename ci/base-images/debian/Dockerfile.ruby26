@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash b
     && gem install bundler -v 1.17.3 \
     && bundle config git.allow_insecure true \
     && chmod +x /tmp/install.sh \
-    && SKIP_PYTHON=yes ./tmp/install.sh && rm /tmp/install.sh \
+    && SKIP_PYTHON=yes /tmp/install.sh && rm /tmp/install.sh \
     && node -v \
     && npm -v \
     && npm install -g corepack \

@@ -42,7 +42,7 @@ RUN set -ex \
     && gem install sqlite3-ruby -v 1.2.4 \
     && gem install sqlite3 -v 1.3.13 \
     && chmod +x /tmp/install.sh \
-    && SKIP_PYTHON=yes SKIP_NODEJS=yes ./tmp/install.sh && rm /tmp/install.sh \
+    && SKIP_PYTHON=yes SKIP_NODEJS=yes /tmp/install.sh && rm /tmp/install.sh \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
 

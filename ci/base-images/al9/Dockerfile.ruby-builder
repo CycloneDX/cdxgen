@@ -1,4 +1,4 @@
-FROM almalinux:9.5-minimal AS ruby-builder
+FROM almalinux:9.6-minimal AS ruby-builder
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
