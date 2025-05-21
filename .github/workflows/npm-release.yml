@@ -55,7 +55,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   containers-ruby-builder-amd64:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ["self-hosted", "metal", "amd64"]
+    runs-on: 'ubuntu-24.04'
     outputs:
       image-uri: ghcr.io/cyclonedx/cdxgen-ruby-builder@${{ steps.build.outputs.digest }}
     permissions:
@@ -74,9 +74,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Setup docker cache dir
-        run: |
-          mkdir -p /tmp/ruby-builder-cache
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
@@ -94,8 +91,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=local,src=/tmp/ruby-builder-cache
-          cache-to: type=local,dest=/tmp/ruby-builder-cache,mode=max
       - uses: cloudposse/github-action-matrix-outputs-write@v1
         id: out
         with:
