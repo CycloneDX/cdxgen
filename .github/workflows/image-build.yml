@@ -54,7 +54,6 @@ jobs:
           file: ci/base-images/${{ fromJSON(inputs.image).distro || 'sle' }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
           platforms: linux/amd64${{ ! fromJSON(inputs.image).skip-arm && ',linux/arm64' || '' }}
           push: true
-          load: ${{ inputs.runner == 'macos-hosted' }}
           tags: ${{ steps.base-metadata.outputs.tags }}
           labels: ${{ steps.base-metadata.outputs.labels }}
       # cdxgen image
@@ -75,7 +74,6 @@ jobs:
           file: ci/base-images/cdxgen/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
           platforms: linux/amd64${{ ! fromJSON(inputs.image).skip-arm && ',linux/arm64' || '' }}
           push: true
-          load: ${{ inputs.runner == 'macos-hosted' }}
           tags: |
             ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}:{3}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image, env.TAG) }}
@@ -90,7 +88,6 @@ jobs:
           file: ci/base-images/cdxgen/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
           platforms: linux/amd64${{ ! fromJSON(inputs.image).skip-arm && ',linux/arm64' || '' }}
           push: true
-          load: ${{ inputs.runner == 'macos-hosted' }}
           tags: ${{ steps.cdxgen-metadata.outputs.tags }}
           labels: ${{ steps.cdxgen-metadata.outputs.labels }}
       - name: save private key to file
