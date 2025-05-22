@@ -51,7 +51,7 @@ jobs:
           - lang: golang124
             distro: debian
             base-image:
-              additional-image: golang
+              additional-image: debian-golang
             cdxgen-image:
               additional-image: cdxgen-golang
 
