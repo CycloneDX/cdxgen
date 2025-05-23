@@ -21,8 +21,7 @@ RUN microdnf install -y \
           gcc gcc-c++ make autoconf automake bison libtool \
           wget git-core bash glibc-common glibc-all-langpacks \
           openssl-devel readline-devel zlib-devel \
-          ncurses-devel libffi-devel pcre2-devel rust \
-    && microdnf clean all \
+          ncurses-devel libffi-devel pcre2-devel \
     && microdnf install -y epel-release \
     && microdnf install --enablerepo=crb -y libyaml-devel \
     && git clone https://github.com/rbenv/rbenv.git --depth=1 /opt/.rbenv \
@@ -36,4 +35,5 @@ RUN microdnf install -y \
     && rbenv install ${RUBY_VERSION} -- --disable-install-doc \
     && rbenv global ${RUBY_VERSION} \
     && rm -rf /opt/.rbenv/cache \
-    && ruby --version
+    && ruby --version \
+    && microdnf clean all
