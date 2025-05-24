@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { Buffer } from "node:buffer";
+import { spawnSync } from "node:child_process";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
@@ -21,6 +22,7 @@ import {
   printTable,
 } from "../lib/helpers/display.js";
 import { thoughtEnd, thoughtLog } from "../lib/helpers/logger.js";
+import { getAllFiles } from "../lib/helpers/utils.js";
 import {
   ATOM_DB,
   DEBUG_MODE,
@@ -780,6 +782,136 @@ const checkPermissions = (filePath, options) => {
   return true;
 };
 
+/**
+ * Build missing docker-compose images if installDeps is true
+ * @param {Object} options CLI options
+ * @param {string} filePath File path
+ */
+const buildNonExistingImages = (options, filePath) => {
+  if (!options.installDeps) return;
+
+  const dockerCmd = process.env.DOCKER_CMD || "docker";
+
+  const composeFiles = getAllFiles(
+    filePath,
+    `${options.multiProject ? "**/" : ""}docker-compose*.yml`,
+    options,
+  );
+
+  if (composeFiles.length === 0) {
+    console.warn("No docker-compose file found. Skipping build.");
+    return;
+  }
+
+  // Get all compose images
+  const configImagesResult = spawnSync(
+    dockerCmd,
+    ["compose", "config", "--images"],
+    {
+      encoding: "utf8",
+    },
+  );
+
+  if (configImagesResult.error || configImagesResult.status !== 0) {
+    console.error(
+      "Failed to run docker compose config:",
+      configImagesResult.stderr,
+    );
+    return;
+  }
+
+  const configImages = configImagesResult.stdout.split("\n").filter(Boolean);
+
+  // Get all local running images
+  const imagesResult = spawnSync(
+    dockerCmd,
+    ["compose", "images", "--format", "json"],
+    {
+      encoding: "utf8",
+    },
+  );
+
+  let localImages = [];
+  if (imagesResult.stdout) {
+    try {
+      const imagesResultJson = JSON.parse(imagesResult.stdout);
+      localImages = imagesResultJson.map(
+        (image) => `${image.Repository}:${image.Tag}`,
+      );
+    } catch (e) {
+      console.error("Failed to parse docker compose images output:", e);
+    }
+  }
+
+  // Get all missing images
+  const missingImages = configImages.filter((image) => {
+    return !localImages.includes(image);
+  });
+
+  if (missingImages.length === 0) {
+    console.log(
+      "All images are already built. Skipping docker compose build...",
+    );
+    return;
+  }
+
+  // Get the config of the compose file
+  const configResult = spawnSync(
+    dockerCmd,
+    ["compose", "config", "--format", "json"],
+    {
+      encoding: "utf8",
+    },
+  );
+
+  if (!configResult.stdout) {
+    console.error("No output from docker compose config.");
+    return;
+  }
+
+  // Parse the config output
+  let configJson;
+  try {
+    configJson = JSON.parse(configResult.stdout);
+  } catch (e) {
+    console.error("Failed to parse docker compose config output:", e);
+    return;
+  }
+
+  // No services found
+  if (!configJson.services) {
+    console.warn("No services found in docker compose config.");
+    return;
+  }
+
+  // Convert service config to object
+  const servicesObj = configJson.services;
+  const servicesArray = Object.entries(servicesObj);
+
+  // build the missing services
+  servicesArray.forEach((service) => {
+    const [serviceName, serviceConfig] = service;
+
+    if (missingImages.includes(serviceConfig.image)) {
+      const buildResult = spawnSync(
+        dockerCmd,
+        ["compose", "build", serviceName],
+        {
+          stdio: "inherit",
+          encoding: "utf8",
+        },
+      );
+
+      if (buildResult.error || buildResult.status !== 0) {
+        console.error(
+          `Failed to build image for service ${serviceName}:`,
+          buildResult.stderr,
+        );
+      }
+    }
+  });
+};
+
 const needsBomSigning = ({ generateKeyAndSign }) =>
   generateKeyAndSign ||
   (process.env.SBOM_SIGN_ALGORITHM &&
@@ -793,6 +925,10 @@ const needsBomSigning = ({ generateKeyAndSign }) =>
 (async () => {
   // Display the sponsor banner
   printSponsorBanner(options);
+
+  // Build the non existing images
+  buildNonExistingImages(options, filePath);
+
   // Start SBOM server
   if (options.server) {
     const serverModule = await import("../lib/server/server.js");
