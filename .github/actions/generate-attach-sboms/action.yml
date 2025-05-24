@@ -1,0 +1,26 @@
+name: Generate and attach SBOMs
+description: Generate an SBOM for all architectures of a docker image and attach it to its registry
+inputs:
+  image:
+    description: The image-name, including tag
+    required: true
+  digest:
+    description: The digest for the specific image
+    required: true
+  generate-arm:
+    description: Whether or not the image has an ARM version
+    required: true
+runs:
+  using: composite
+  steps:
+  - uses: ./.github/actions/generate-attach-sbom
+    with:
+      image: ${{ inputs.image }}
+      digest: ${{ inputs.digest }}
+      platform: linux/amd64
+  - uses: ./.github/actions/generate-attach-sbom
+    if: inputs.generate-arm == 'true'
+    with:
+      image: ${{ inputs.image }}
+      digest: ${{ inputs.digest }}
+      platform: linux/arm64
