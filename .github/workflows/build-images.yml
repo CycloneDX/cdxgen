@@ -48,14 +48,10 @@ jobs:
           - lang: dotnet9
             distro: debian
 
-          - lang: golang124
-            distro: debian
-            base-image:
-              additional-image: debian-golang
-            cdxgen-image:
-              additional-image: cdxgen-golang
-
           - lang: golang123
+            distro: debian
+          
+          - lang: golang124
             distro: debian
             base-image:
               additional-image: debian-golang
