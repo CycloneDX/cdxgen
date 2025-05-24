@@ -15,7 +15,7 @@ ENV CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     CDXGEN_GEM_HOME="/tmp/gems" \
     ATOM_RUBY_HOME=/root/.rbenv/versions/3.4.1 \
-    PYTHONPATH=/opt/pypi
+    PYTHONPATH=/opt/pypi:${PYTHONPATH}
 ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:/opt/cdxgen/node_modules/.bin:
 
 COPY . /opt/cdxgen
