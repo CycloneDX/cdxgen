@@ -35,6 +35,7 @@ Below table summarizes all available container image versions. These images incl
 | Ruby     | 1.8.x                        | ghcr.io/cyclonedx/debian-ruby18:master                                                         | Base image for `bundle install` only. No cdxgen equivalent with Ruby 1.8.x. `--deep` mode and research profile unsupported.               |
 | Swift    | 6.0.x                        | ghcr.io/cyclonedx/cdxgen-debian-swift:v11                                                      |
 | golang   | 1.24                         | ghcr.io/cyclonedx/cdxgen-debian-golang124:v11, ghcr.io/cyclonedx/cdxgen-debian-golang:v11      | Golang 1.24                                                                                                                               |
+| golang   | 1.23                         | ghcr.io/cyclonedx/cdxgen-debian-golang123:v11      | Golang 1.23
 
 Replace `:v11` with a release version tag or sha256 hash for fine-grained control over the image tag.
 

@@ -1,0 +1,20 @@
+FROM golang:1.23-bookworm
+
+ARG NODE_VERSION=24.0.2
+
+ENV SKIP_ATOM="yes" \
+    NVM_DIR="/root/.nvm" \
+    PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:/usr/local/bin:/root/.local/bin:
+
+COPY ci/base-images/debian/install.sh /tmp/
+
+RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash bzip2 git-core zip unzip make gawk \
+    && apt-get install -qq -y build-essential python3 python3-pip python3-dev locales \
+    && chmod +x /tmp/install.sh \
+    && /tmp/install.sh && rm /tmp/install.sh \
+    && node -v \
+    && npm -v \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && rm -rf /var/lib/apt/lists/*
+
+CMD ["/bin/bash"]

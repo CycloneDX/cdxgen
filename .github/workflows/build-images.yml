@@ -48,6 +48,9 @@ jobs:
           - lang: dotnet9
             distro: debian
 
+          - lang: golang123
+            distro: debian
+          
           - lang: golang124
             distro: debian
             base-image:
