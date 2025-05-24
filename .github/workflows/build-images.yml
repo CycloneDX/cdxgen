@@ -55,6 +55,13 @@ jobs:
             cdxgen-image:
               additional-image: cdxgen-golang
 
+          - lang: golang123
+            distro: debian
+            base-image:
+              additional-image: debian-golang
+            cdxgen-image:
+              additional-image: cdxgen-golang
+
           - lang: java8
             distro: temurin
 
