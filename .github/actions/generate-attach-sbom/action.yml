@@ -1,0 +1,31 @@
+name: Generate and attach SBOM
+description: Generate an SBOM for a docker image and attach it to its registry
+inputs:
+  image:
+    description: The image-name, including tag
+    required: true
+  digest:
+    description: The digest for the specific image
+    required: true
+  platform:
+    description: The platform of the image
+    required: true
+runs:
+  using: composite
+  steps:
+  - name: Generate and attach
+    shell: bash
+    run: |
+      docker pull --platform ${{ inputs.platform }} ${{ inputs.image }}@${{ inputs.digest }}
+      docker tag ${{ inputs.image }}@${{ inputs.digest }} ${{ inputs.image }}
+      node bin/cdxgen.js -t docker -o sbom-oci-image.cdx.json ${{ inputs.image }}
+      node bin/verify.js -i sbom-oci-image.cdx.json --public-key contrib/bom-signer/public.key
+      oras attach --artifact-type sbom/cyclonedx --platform ${{ inputs.platform }} ${{ inputs.image }} ./sbom-oci-image.cdx.json:application/json
+      oras discover --format tree --platform ${{ inputs.platform }} ${{ inputs.image }}
+      node bin/verify.js -i ${{ inputs.image }} --platform ${{ inputs.platform }} --public-key contrib/bom-signer/public.key
+      rm -rf sbom-oci-base-image.cdx.json ${{ runner.temp }}/docker-images-*
+      docker rmi ${{ inputs.image }}
+    env:
+      SBOM_SIGN_ALGORITHM: RS512
+      SBOM_SIGN_PRIVATE_KEY: ${{ runner.temp }}/private.key
+      CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-sboms
