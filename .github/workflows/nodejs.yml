@@ -146,5 +146,7 @@ jobs:
           mkdir -p $HOME/.local/share/pnpm/global
           echo "$HOME/.local/share/pnpm/global" >> $GITHUB_PATH
           devenv test
+      - name: Install dependencies 
+        run: devenv shell pnpm install
       - name: Run test
         run: devenv shell pnpm run test --cov=cdxgen test
