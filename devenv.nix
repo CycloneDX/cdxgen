@@ -27,9 +27,6 @@ in
           venv.enable = true;
           venv.quiet = true;
           version = "3.13";
-          uv.enable = true;
-          uv.sync.allExtras = true;
-          uv.sync.enable = true;
         };
         javascript = {
           enable = true;
@@ -99,7 +96,7 @@ in
         mkdir -p $PNPM_GLOBAL_DIR
         export PATH="$PNPM_GLOBAL_DIR/bin:$PATH"
         pnpm config set global-dir "$PNPM_GLOBAL_DIR" --location=global
-        pnpm add -g --allow-build=sqlite3 https://github.com/CycloneDX/cdxgen.git
+        pnpm add -g --allow-build=sqlite3 .
       '';
   };
 }
