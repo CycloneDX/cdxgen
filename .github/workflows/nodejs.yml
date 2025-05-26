@@ -149,4 +149,4 @@ jobs:
       - name: Install dependencies 
         run: devenv shell pnpm install
       - name: Run test
-        run: devenv shell pnpm run test --cov=cdxgen test
+        run: pnpm test
