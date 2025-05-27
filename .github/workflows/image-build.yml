@@ -83,7 +83,7 @@ jobs:
           labels: ${{ steps.cdxgen-metadata.outputs.labels }}
       - name: Build and push Docker cdxgen-image for tag
         uses: docker/build-push-action@v5
-        if: ${{ startsWith(github.ref, 'refs/tags/') && ! fromJSON(inputs.image).cdxgen-image.skip-tags }}
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
         with:
           context: .
           file: ci/base-images/cdxgen/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
@@ -121,7 +121,7 @@ jobs:
           oras discover --format tree ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }}
           node bin/verify.js -i ${{ fromJSON(steps.cdxgen-metadata.outputs.json).tags[0] }} --public-key contrib/bom-signer/public.key
         continue-on-error: true
-        if: ${{ startsWith(github.ref, 'refs/tags/') && ! fromJSON(inputs.image).cdxgen-image.skip-tags }}
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
         env:
           SBOM_SIGN_ALGORITHM: RS512
           SBOM_SIGN_PRIVATE_KEY: ${{ github.workspace }}/private.key
