@@ -123,3 +123,30 @@ jobs:
           mkdir build
           ${{ matrix.build }}
         continue-on-error: true
+
+  devenv:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trim CI agent
+        run: |
+          chmod +x contrib/free_disk_space.sh
+          ./contrib/free_disk_space.sh
+      - uses: cachix/install-nix-action@v26
+      - uses: cachix/cachix-action@v14
+        with:
+          name: devenv
+      - name: Install devenv.sh
+        run: nix profile install nixpkgs#devenv
+      - name: Build the devenv shell
+        run: |
+          mkdir -p $HOME/.local/share/pnpm/global
+          echo "$HOME/.local/share/pnpm/global" >> $GITHUB_PATH
+          devenv test
+      - name: Install dependencies 
+        run: devenv shell pnpm install
+      - name: Run test
+        run: devenv shell pnpm run test

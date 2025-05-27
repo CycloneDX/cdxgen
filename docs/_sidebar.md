@@ -1,6 +1,7 @@
 - [Home](/)
 - [CLI Usage](CLI.md)
 - [Server Usage](SERVER.md)
+- [Getting Started - Development](GETTING_STARTED.md)
 - [Supported Project Types](PROJECT_TYPES.md)
 - [Environment Variables](ENV.md)
 - [Advanced Usage](ADVANCED.md)
