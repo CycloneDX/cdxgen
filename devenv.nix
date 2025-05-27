@@ -5,7 +5,7 @@ in
   # Language-specific topions
   options = {
     profile = lib.mkOption {
-      type = lib.types.enum [ "ruby" "php" "c" "cplusplus" "go" "swift" "scala" "rust" "dotnet" "android" "flutter" "reactNative" "basic" ];
+      type = lib.types.enum [ "ruby" "php" "c" "cplusplus" "go" "swift" "scala" "sbt" "mill" "rust" "python" "poetry" "uv" "dotnet" "android" "flutter" "reactNative" "basic" ];
       default = "basic";
       description = "Development profile to use";
     };
@@ -22,11 +22,13 @@ in
         };
       };
       languages = {
-        python = {
+        python = lib.mkIf (lib.elem config.profile [ "python" "poetry" "uv" ] == true) {
           enable = true;
           venv.enable = true;
           venv.quiet = true;
           version = "3.13";
+          poetry.enable = lib.mkIf (config.profile == "poetry") true;
+          uv.enable = lib.mkIf (config.profile == "uv") true;
         };
         javascript = {
           enable = true;
@@ -58,10 +60,10 @@ in
         rust = {
           enable = lib.mkIf (config.profile == "rust") true;
         };
-        scala = {
+        scala = lib.mkIf (lib.elem config.profile [ "scala" "sbt" "mill" ] == true) {
           enable = lib.mkIf (config.profile == "scala") true;
-          sbt.enable = lib.mkIf (config.profile == "scala") true;
-          mill.enable = lib.mkIf (config.profile == "scala") true;
+          sbt.enable = lib.mkIf (config.profile == "sbt") true;
+          mill.enable = lib.mkIf (config.profile == "mill") true;
         };
         php = {
           enable = lib.mkIf (config.profile == "php") true;
@@ -79,8 +81,6 @@ in
       packages = [
         pkgs-unstable.nodejs_24
         pkgs.python313Full
-        config.languages.python.package.pkgs.astral
-        pkgs.uv
         pkgs-unstable.pnpm_10
       ];
 
@@ -90,13 +90,20 @@ in
       # Setup the latest cdxgen using pnpm
       enterShell = ''
         set -e
-        pnpm setup
-        source $HOME/.bashrc
-        export PNPM_GLOBAL_DIR="$HOME/.local/share/pnpm/global"
-        mkdir -p $PNPM_GLOBAL_DIR
-        export PATH="$PNPM_GLOBAL_DIR/bin:$PATH"
-        pnpm config set global-dir "$PNPM_GLOBAL_DIR" --location=global
-        pnpm add -g --allow-build=sqlite3 .
+        pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
       '';
+
+      # Tasks
+      tasks."pr:prepare" = {
+        exec = ''
+        pnpm run lint && pnpm run gen-types && pnpm test
+        '';
+      };
+
+      tasks."pnpm:outdated" = {
+        exec = ''
+        pnpm outdated
+        '';
+      };
   };
 }

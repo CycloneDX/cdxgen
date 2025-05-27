@@ -8,13 +8,18 @@ title: Getting Started with Development
 This is a comprehensive guide to contributing for developers of all experience level.
 
 ## Setting up the Development Environment
-Here are steps to download and run cdxgen software.
+
+Here are steps to clone and run cdxgen locally.
 
 Clone `CycloneDX/cdxgen` project repository.
 
 ```bash
 git clone https://github.com/CycloneDX/cdxgen
 cd cdxgen
+
+corepack enable pnpm
+pnpm install --config.strict-dep-builds=true
+pnpm test
 ```
 
 ## devenv setup
@@ -23,10 +28,10 @@ Install devenv by following the official [instructions](https://devenv.sh/gettin
 
 ```shell
 devenv shell
-pnpm run test
+pnpm test
 ```
 
-Language-specific profile:
+### Language-specific profile
 
 ```shell
 # Ruby environment
@@ -40,4 +45,11 @@ devenv --option config.profile:string android shell
 
 # flutter environment
 devenv --option config.profile:string flutter shell
+```
+
+### Tasks
+
+```shell
+devenv tasks run pr:prepare
+devenv tasks run pnpm:outdated
 ```

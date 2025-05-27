@@ -147,6 +147,6 @@ jobs:
           echo "$HOME/.local/share/pnpm/global" >> $GITHUB_PATH
           devenv test
       - name: Install dependencies 
-        run: devenv shell pnpm install
+        run: devenv shell pnpm install --config.strict-dep-builds=true
       - name: Run test
-        run: devenv shell pnpm run test
+        run: devenv shell pnpm test
