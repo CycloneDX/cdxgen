@@ -48,6 +48,12 @@ jobs:
           - lang: dotnet9
             distro: debian
 
+          - lang: dotnet10
+            skip-arm: true
+
+          - lang: dotnet10
+            distro: debian
+
           - lang: golang123
             distro: debian
           
@@ -76,6 +82,9 @@ jobs:
           - lang: java21
             distro: temurin
 
+          - lang: java24
+            distro: temurin
+
           - lang: node20
             cdxgen-image:
               additional-image: cdxgen-node
@@ -91,6 +100,8 @@ jobs:
           - lang: python311
 
           - lang: python312
+
+          - lang: python313
             base-image:
               lang: lang
             cdxgen-image:
