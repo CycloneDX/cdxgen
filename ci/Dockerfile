@@ -22,7 +22,6 @@ ARG MAVEN_VERSION=3.9.9
 ARG GRADLE_VERSION=8.14
 ARG GO_VERSION=1.24.3
 ARG NODE_VERSION=24.0.2
-ARG PYTHON_VERSION=3.12
 ARG RUBY_VERSION=3.4.3
 ARG JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
 ARG SCALA_VERSION=3.6.4
@@ -39,8 +38,7 @@ ENV GOPATH=/opt/app-root/go \
     SBT_HOME="/opt/.sdkman/candidates/sbt/${SBT_VERSION}" \
     SCALA_VERSION=$SCALA_VERSION \
     SCALA_HOME="/opt/.sdkman/candidates/scala/${SCALA_VERSION}" \
-    PYTHON_VERSION=3.12 \
-    PYTHON_CMD=/usr/bin/python3.12 \
+    PYTHON_CMD=/usr/bin/python3 \
     RUBY_VERSION=$RUBY_VERSION \
     PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING="utf-8" \
@@ -83,16 +81,14 @@ RUN set -e; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
     esac \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
-        python${PYTHON_VERSION} python${PYTHON_VERSION}-devel python${PYTHON_VERSION}-pip glibc-common glibc-all-langpacks \
+        python3 python3-devel python3-pip glibc-common glibc-all-langpacks \
         openssl-devel libffi-devel libyaml zlib-devel \
         pcre2 which tar gzip zip unzip bzip2 sudo ncurses ncurses-devel sqlite-devel gnupg2 dotnet-sdk-9.0 rust cargo \
     && ruby --version \
     && which ruby \
-    && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 10 \
-    && alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYTHON_VERSION} 10 \
-    && /usr/bin/python${PYTHON_VERSION} --version \
-    && /usr/bin/python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade setuptools==77.0.3 wheel pip virtualenv \
-    && /usr/bin/python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade pipenv poetry blint atom-tools uv --target /opt/pypi \
+    && /usr/bin/python3 --version \
+    && /usr/bin/python3 -m pip install --no-cache-dir --upgrade setuptools==77.0.3 wheel pip virtualenv \
+    && /usr/bin/python3 -m pip install --no-cache-dir --upgrade pipenv poetry blint atom-tools uv --target /opt/pypi \
     && /opt/pypi/bin/poetry --version \
     && /opt/pypi/bin/pipenv --version \
     && /opt/pypi/bin/blint --help \
