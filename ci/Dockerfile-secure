@@ -9,7 +9,7 @@ LABEL maintainer="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
       org.opencontainers.image.description="Container image for cdxgen SBOM generator packing latest build tools with secure defaults." \
-      org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-secure cdxgen -r /app --server"
+      org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-secure -r /app --server"
 
 ENV NODE_OPTIONS='--permission --allow-fs-read="/app/*" --allow-fs-read="/opt/*" --allow-fs-read="/home/cyclonedx/*" --allow-fs-read="/tmp/cdxgen-temp/*" --allow-fs-write="/tmp/cdxgen-temp/*" --allow-fs-write="/app/*.json" --allow-child-process --trace-warnings' \
     NODE_NO_WARNINGS=1 \
@@ -17,4 +17,4 @@ ENV NODE_OPTIONS='--permission --allow-fs-read="/app/*" --allow-fs-read="/opt/*"
     COMPOSER_ALLOW_SUPERUSER=0
 USER cyclonedx
 WORKDIR /app
-CMD ["cdxgen"]
+ENTRYPOINT ["cdxgen"]

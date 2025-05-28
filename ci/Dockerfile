@@ -8,8 +8,8 @@ LABEL maintainer="cyclonedx" \
       org.opencontainers.image.vendor="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
-      org.opencontainers.image.description="Container image for cdxgen SBOM generator packing latest build tools with secure defaults." \
-      org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-secure cdxgen -r /app --server"
+      org.opencontainers.image.description="Container image for cdxgen SBOM generator packing latest build tools." \
+      org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server"
 
 ARG SWIFT_SIGNING_KEY=52BB7E3DE28A71BE22EC05FFEF80A866B47A981F
 ARG SWIFT_PLATFORM=ubi9
@@ -156,4 +156,4 @@ RUN set -e; \
     && microdnf clean all
 USER cyclonedx
 WORKDIR /app
-CMD ["cdxgen"]
+ENTRYPOINT ["cdxgen"]
