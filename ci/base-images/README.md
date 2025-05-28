@@ -36,6 +36,7 @@ Below table summarizes all available container image versions. These images incl
 | Swift    | 6.0.x                        | ghcr.io/cyclonedx/cdxgen-debian-swift:v11                                                      |
 | golang   | 1.24                         | ghcr.io/cyclonedx/cdxgen-debian-golang124:v11, ghcr.io/cyclonedx/cdxgen-debian-golang:v11      | Golang 1.24                                                                                                                               |
 | golang   | 1.23                         | ghcr.io/cyclonedx/cdxgen-debian-golang123:v11                                                  | Golang 1.23                                                                                                                               |
+| Rust     | 1.87                         | ghcr.io/cyclonedx/cdxgen-debian-rust187:v11                                                    | Rust 1.87                                                                                                                               |
 
 Replace `:v11` with a release version tag or sha256 hash for fine-grained control over the image tag.
 
