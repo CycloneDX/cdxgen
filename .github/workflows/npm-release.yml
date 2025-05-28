@@ -86,7 +86,7 @@ jobs:
         id: build
         with:
           context: .
-          file: ci/base-images/al9/Dockerfile.ruby-builder
+          file: ci/base-images/al10/Dockerfile.ruby-builder
           platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
@@ -129,7 +129,7 @@ jobs:
         id: build
         with:
           context: .
-          file: ci/base-images/al9/Dockerfile.ruby-builder
+          file: ci/base-images/al10/Dockerfile.ruby-builder
           platforms: linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
@@ -243,7 +243,7 @@ jobs:
   containers-secure:
     if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ["self-hosted", "metal", "amd64"]
-    needs: [containers-ruby-builder-deploy-manifest]
+    needs: [containers]
     permissions:
       contents: write
       packages: write
