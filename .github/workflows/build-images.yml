@@ -115,6 +115,13 @@ jobs:
             distro: debian
             runner: macos-hosted
 
+          - lang: rust1
+            distro: debian
+            base-image:
+              additional-image: debian-rust
+            cdxgen-image:
+              additional-image: cdxgen-debian-rust
+
           - lang: swift6
             distro: debian
             runner: macos-hosted

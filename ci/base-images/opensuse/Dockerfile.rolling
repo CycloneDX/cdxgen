@@ -25,7 +25,7 @@ ENV SBT_VERSION=$SBT_VERSION \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     DOTNET_ROOT=/usr/share/dotnet \
-    PYTHONPATH=/opt/pypi
+    PYTHONPATH=/opt/pypi:${PYTHONPATH}
 
 ENV PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:/usr/local/bin:/opt/pypi/bin:/usr/share/dotnet:
 RUN set -e; \
