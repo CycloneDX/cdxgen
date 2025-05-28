@@ -1,10 +1,10 @@
-FROM almalinux:9.6-minimal
+FROM almalinux:10.0-minimal
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
       org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
       org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
-      org.opencontainers.image.version="11.3.x" \
+      org.opencontainers.image.version="11.4.x" \
       org.opencontainers.image.vendor="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
@@ -35,7 +35,6 @@ ENV GOPATH=/opt/app-root/go \
     SBT_HOME="/root/.sdkman/candidates/sbt/${SBT_VERSION}" \
     PYTHON_VERSION=3.12 \
     PYTHON_CMD=/usr/bin/python3.12 \
-    RUBY_VERSION=$RUBY_VERSION \
     PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING="utf-8" \
     COMPOSER_ALLOW_SUPERUSER=1 \
@@ -114,7 +113,7 @@ RUN set -e; \
     && /usr/local/bin/lein \
     && curl -L -O https://github.com/clojure/brew-install/releases/latest/download/linux-install.sh \
     && chmod +x linux-install.sh \
-    && ./linux-install.sh \
+    && ./linux-install.sh && rm linux-install.sh \
     && useradd -ms /bin/bash cyclonedx \
     && pecl channel-update pecl.php.net \
     && pecl install timezonedb \
