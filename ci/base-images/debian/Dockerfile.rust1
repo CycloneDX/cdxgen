@@ -1,6 +1,6 @@
 FROM rust:1-slim-bookworm
 
-ARG NODE_VERSION=24.0.2
+ARG NODE_VERSION=24.1.0
 
 ENV CARGO_HOME=/usr/local/cargo \
     RUSTUP_HOME=/usr/local/rustup \
