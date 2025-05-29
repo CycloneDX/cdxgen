@@ -32,6 +32,7 @@ jobs:
 
           - lang: dotnet6
             distro: debian
+            runner: macos-hosted
 
           - lang: dotnet7
             skip-arm: true
@@ -41,15 +42,18 @@ jobs:
 
           - lang: dotnet8
             distro: debian
+            runner: macos-hosted
 
           - lang: dotnet9
             skip-arm: true
 
           - lang: dotnet9
             distro: debian
+            runner: macos-hosted
 
           - lang: dotnet10
             distro: debian
+            runner: macos-hosted
 
           - lang: golang123
             distro: debian
