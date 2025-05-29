@@ -106,7 +106,6 @@ jobs:
               additional-image: cdxgen-python
 
           - lang: python313
-            distro: opensuse
 
           - lang: ruby25
             fix-qemu: true
