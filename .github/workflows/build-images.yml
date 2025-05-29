@@ -49,7 +49,6 @@ jobs:
             distro: debian
 
           - lang: dotnet10
-            skip-arm: true
             distro: debian
 
           - lang: golang123
