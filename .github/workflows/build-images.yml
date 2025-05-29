@@ -48,6 +48,9 @@ jobs:
           - lang: dotnet9
             distro: debian
 
+          - lang: dotnet10
+            distro: debian
+
           - lang: golang123
             distro: debian
           
@@ -76,9 +79,15 @@ jobs:
           - lang: java21
             distro: temurin
 
+          - lang: java24
+            distro: temurin
+
           - lang: node20
             cdxgen-image:
               additional-image: cdxgen-node
+
+          - lang: php83
+            distro: debian
 
           - lang: python36
 
@@ -95,6 +104,9 @@ jobs:
               lang: lang
             cdxgen-image:
               additional-image: cdxgen-python
+
+          - lang: python313
+            distro: opensuse
 
           - lang: ruby25
             fix-qemu: true
