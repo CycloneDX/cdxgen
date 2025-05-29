@@ -89,6 +89,9 @@ jobs:
             cdxgen-image:
               additional-image: cdxgen-node
 
+          - lang: php83
+            distro: debian
+
           - lang: python36
 
           - lang: python39
