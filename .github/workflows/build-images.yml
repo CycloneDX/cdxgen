@@ -50,8 +50,6 @@ jobs:
 
           - lang: dotnet10
             skip-arm: true
-
-          - lang: dotnet10
             distro: debian
 
           - lang: golang123
@@ -103,12 +101,13 @@ jobs:
           - lang: python311
 
           - lang: python312
-
-          - lang: python313
             base-image:
               lang: lang
             cdxgen-image:
               additional-image: cdxgen-python
+
+          - lang: python313
+            distro: opensuse
 
           - lang: ruby25
             fix-qemu: true
