@@ -1,6 +1,6 @@
 FROM php:8.3-bookworm
 
-ARG NODE_VERSION=24.0.2
+ARG NODE_VERSION=24.1.0
 
 ENV NVM_DIR="/root/.nvm" \
     PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:/usr/local/bin:/root/.local/bin:

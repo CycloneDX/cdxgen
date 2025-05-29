@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0-bookworm-slim
 
-ARG NODE_VERSION=22.15.1
+ARG NODE_VERSION=22.16.0
 
 ENV DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
     DOTNET_NOLOGO=true \

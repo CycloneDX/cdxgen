@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0-preview-trixie-slim
 
-ARG NODE_VERSION=24.0.2
+ARG NODE_VERSION=24.1.0
 
 ENV DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
     DOTNET_NOLOGO=true \

@@ -1,6 +1,6 @@
 FROM ruby:3.4
 
-ARG NODE_VERSION=24.0.2
+ARG NODE_VERSION=24.1.0
 
 ENV BUNDLE_SILENCE_ROOT_WARNING=true \
     ATOM_CMD=/usr/local/bin/atom \

@@ -784,8 +784,9 @@ const needsBomSigning = ({ generateKeyAndSign }) =>
   generateKeyAndSign ||
   (process.env.SBOM_SIGN_ALGORITHM &&
     process.env.SBOM_SIGN_ALGORITHM !== "none" &&
-    process.env.SBOM_SIGN_PRIVATE_KEY &&
-    safeExistsSync(process.env.SBOM_SIGN_PRIVATE_KEY));
+    ((process.env.SBOM_SIGN_PRIVATE_KEY &&
+      safeExistsSync(process.env.SBOM_SIGN_PRIVATE_KEY)) ||
+      process.env.SBOM_SIGN_PRIVATE_KEY_BASE64));
 
 /**
  * Method to start the bom creation process
@@ -885,10 +886,17 @@ const needsBomSigning = ({ generateKeyAndSign }) =>
             .createPublicKey(publicKey)
             .export({ format: "jwk" });
         } else {
-          privateKeyToUse = fs.readFileSync(
-            process.env.SBOM_SIGN_PRIVATE_KEY,
-            "utf8",
-          );
+          if (process.env?.SBOM_SIGN_PRIVATE_KEY) {
+            privateKeyToUse = fs.readFileSync(
+              process.env.SBOM_SIGN_PRIVATE_KEY,
+              "utf8",
+            );
+          } else if (process.env?.SBOM_SIGN_PRIVATE_KEY_BASE64) {
+            privateKeyToUse = Buffer.from(
+              process.env.SBOM_SIGN_PRIVATE_KEY_BASE64,
+              "base64",
+            ).toString("utf8");
+          }
           if (
             process.env.SBOM_SIGN_PUBLIC_KEY &&
             safeExistsSync(process.env.SBOM_SIGN_PUBLIC_KEY)
@@ -898,6 +906,11 @@ const needsBomSigning = ({ generateKeyAndSign }) =>
                 fs.readFileSync(process.env.SBOM_SIGN_PUBLIC_KEY, "utf8"),
               )
               .export({ format: "jwk" });
+          } else if (process.env?.SBOM_SIGN_PUBLIC_KEY_BASE64) {
+            jwkPublicKey = Buffer.from(
+              process.env.SBOM_SIGN_PUBLIC_KEY_BASE64,
+              "base64",
+            ).toString("utf8");
           }
         }
         try {
