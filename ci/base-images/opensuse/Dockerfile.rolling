@@ -6,7 +6,8 @@ ARG GRADLE_VERSION=8.14.1
 ARG DOTNET_SDK_VERSION=9.0.100
 ARG SCALA_VERSION=3.6.4
 
-ENV SBT_VERSION=$SBT_VERSION \
+ENV CC=gcc \
+    SBT_VERSION=$SBT_VERSION \
     MAVEN_VERSION=$MAVEN_VERSION \
     GRADLE_VERSION=$GRADLE_VERSION \
     DOTNET_SDK_VERSION=$DOTNET_SDK_VERSION \
@@ -45,6 +46,7 @@ RUN set -e; \
     && zypper refresh && zypper --non-interactive dup && zypper --non-interactive install -l --no-recommends gcc14 gcc14-c++ gcc14-fortran \
         bzip2 python312 python312-devel python312-pip findutils java-24-openjdk-devel \
         libicu-devel git-core wget zip unzip make gawk nodejs22 npm22 rust1.86 cargo1.86 \
+    && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-14 10 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 10 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 10 \
     && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-14 10 \

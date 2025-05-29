@@ -10,7 +10,8 @@ ENV LC_ALL=en_US.UTF-8 \
     BUNDLE_SILENCE_ROOT_WARNING=true \
     JAVA_OPTIONS="-Dhttps.protocols=TLSv1.1,TLSv1.2" \
     RUBY_BUILD_BUILD_PATH="/tmp/rbenv" \
-    RUBY_BUILD_HTTP_CLIENT=curl
+    RUBY_BUILD_HTTP_CLIENT=curl \
+    npm_config_python=/usr/bin/python3.11
 
 ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:
 

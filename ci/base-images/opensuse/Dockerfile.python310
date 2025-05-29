@@ -2,7 +2,8 @@ FROM registry.opensuse.org/opensuse/bci/python:3.10
 
 ARG GO_VERSION=1.24.3
 
-ENV LC_ALL=en_US.UTF-8 \
+ENV CC=gcc \
+    LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     GOPATH=/opt/app-root/go \

@@ -14,7 +14,8 @@ ENV SBT_VERSION=$SBT_VERSION \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
-    JAVA_OPTIONS="-Dhttps.protocols=TLSv1.1,TLSv1.2"
+    JAVA_OPTIONS="-Dhttps.protocols=TLSv1.1,TLSv1.2" \
+    npm_config_python=/usr/bin/python3.11
 ENV PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:
 
 RUN set -e; \

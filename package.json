@@ -102,22 +102,23 @@
     "ssri": "^12.0.0",
     "table": "^6.9.0",
     "tar": "^7.4.3",
+    "tar-fs": "^3.0.9",
     "uuid": "^11.1.0",
     "validate-iri": "^1.0.1",
     "xml-js": "^1.6.11",
     "yaml": "^2.8.0",
-    "yargs": "^18.0.0",
+    "yargs": "^17.7.2",
     "yoctocolors": "^2.1.1"
   },
   "optionalDependencies": {
     "@appthreat/atom": "2.2.3",
     "@appthreat/cdx-proto": "1.0.1",
     "@cyclonedx/cdxgen-plugins-bin": "1.6.11",
-    "@cyclonedx/cdxgen-plugins-bin-linux-arm": "1.6.11",
-    "@cyclonedx/cdxgen-plugins-bin-linux-amd64": "1.6.11",
-    "@cyclonedx/cdxgen-plugins-bin-linux-arm64": "1.6.11",
     "@cyclonedx/cdxgen-plugins-bin-darwin-amd64": "1.6.11",
     "@cyclonedx/cdxgen-plugins-bin-darwin-arm64": "1.6.11",
+    "@cyclonedx/cdxgen-plugins-bin-linux-amd64": "1.6.11",
+    "@cyclonedx/cdxgen-plugins-bin-linux-arm": "1.6.11",
+    "@cyclonedx/cdxgen-plugins-bin-linux-arm64": "1.6.11",
     "@cyclonedx/cdxgen-plugins-bin-linux-ppc64": "1.6.11",
     "@cyclonedx/cdxgen-plugins-bin-windows-amd64": "1.6.11",
     "@cyclonedx/cdxgen-plugins-bin-windows-arm64": "1.6.11",
@@ -126,7 +127,7 @@
     "connect": "^3.7.0",
     "jsonata": "^2.0.6",
     "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "github:TryGhost/node-sqlite3#528e15ae605bac7aab8de60dd7c46e9fdc1fffd0"
   },
   "files": ["*.js", "lib/**", "bin/", "data/", "types/", "index.cjs"],
   "devDependencies": {
@@ -137,6 +138,7 @@
   "pnpm": {
     "onlyBuiltDependencies": ["sqlite3", "@biomejs/biome"],
     "overrides": {
+      "babel-plugin-istanbul": "^7.0.0",
       "jwa": "^2.0.1",
       "glob": "^11.0.2",
       "node-gyp": "^10.2.0",
@@ -146,6 +148,7 @@
       "@npmcli/agent": "^3.0.0",
       "@npmcli/fs": "^4.0.0",
       "abbrev": "^3.0.1",
+      "cacache": "^19.0.1",
       "camelcase": "^6.3.0",
       "chownr": "^3.0.0",
       "debug": "^4.4.1",
@@ -153,6 +156,7 @@
       "ini": "^5.0.0",
       "is-stream": "^4.0.1",
       "isexe": "^3.1.1",
+      "istanbul-lib-instrument": "^6.0.3",
       "json-parse-even-better-errors": "^4.0.0",
       "lru-cache": "^11.1.0",
       "minimatch": "^10.0.1",
@@ -170,16 +174,19 @@
       "strip-json-comments": "^3.1.1",
       "supports-color": "^8.1.1",
       "tar": "^7.4.3",
+      "tar-fs": "^3.0.9",
       "type-fest": "^4.41.0",
       "unique-filename": "^4.0.0",
       "unique-slug": "^5.0.0",
       "uuid": "^11.1.0",
       "which": "^5.0.0",
       "write-file-atomic": "^6.0.0",
-      "yallist": "^5.0.0"
+      "yallist": "^5.0.0",
+      "yargs": "^17.7.2"
     }
   },
   "overrides": {
+    "babel-plugin-istanbul": "^7.0.0",
     "jwa": "^2.0.1",
     "glob": "^11.0.2",
     "node-gyp": "^10.2.0",
@@ -189,6 +196,7 @@
     "@npmcli/agent": "^3.0.0",
     "@npmcli/fs": "^4.0.0",
     "abbrev": "^3.0.1",
+    "cacache": "^19.0.1",
     "camelcase": "^6.3.0",
     "chownr": "^3.0.0",
     "debug": "^4.4.1",
@@ -196,6 +204,7 @@
     "ini": "^5.0.0",
     "is-stream": "^4.0.1",
     "isexe": "^3.1.1",
+    "istanbul-lib-instrument": "^6.0.3",
     "json-parse-even-better-errors": "^4.0.0",
     "lru-cache": "^11.1.0",
     "minimatch": "^10.0.1",
@@ -219,6 +228,7 @@
     "uuid": "^11.1.0",
     "which": "^5.0.0",
     "write-file-atomic": "^6.0.0",
-    "yallist": "^5.0.0"
+    "yallist": "^5.0.0",
+    "yargs": "^17.7.2"
   }
 }
