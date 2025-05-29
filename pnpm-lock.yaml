@@ -200,10 +200,10 @@ importers:
         version: 2.0.6
       sequelize:
         specifier: ^6.37.7
-        version: 6.37.7(sqlite3@5.1.7)
+        version: 6.37.7(sqlite3@https://codeload.github.com/TryGhost/node-sqlite3/tar.gz/528e15ae605bac7aab8de60dd7c46e9fdc1fffd0)
       sqlite3:
-        specifier: ^5.1.7
-        version: 5.1.7
+        specifier: github:TryGhost/node-sqlite3#528e15ae605bac7aab8de60dd7c46e9fdc1fffd0
+        version: https://codeload.github.com/TryGhost/node-sqlite3/tar.gz/528e15ae605bac7aab8de60dd7c46e9fdc1fffd0
 
 packages:
 
@@ -2150,6 +2150,7 @@ packages:
 
   sequelize@6.37.7:
     resolution: {integrity: sha512-mCnh83zuz7kQxxJirtFD7q6Huy6liPanI67BSlbzSYgVNl5eXVdE2CN1FuAeZwG1SNpGsNRCV+bJAVVnykZAFA==}
+    version: 6.37.7
     engines: {node: '>=10.0.0'}
     peerDependencies:
       ibm_db: '*'
@@ -2271,8 +2272,9 @@ packages:
   sprintf-js@1.1.3:
     resolution: {integrity: sha512-Oo+0REFV59/rz3gfJNKQiBlwfHaSESl1pcGyABQsnnIfWOFt6JNj5gCog2U6MLZ//IGYD+nA8nI+mTShREReaA==}
 
-  sqlite3@5.1.7:
-    resolution: {integrity: sha512-GGIyOiFaG+TUra3JIfkI/zGP8yZYLPQ0pl1bH+ODjiX57sPhrLU5sQJn1y9bDKZUFYkX1crlrPfSYt0BKKdkog==}
+  sqlite3@https://codeload.github.com/TryGhost/node-sqlite3/tar.gz/528e15ae605bac7aab8de60dd7c46e9fdc1fffd0:
+    resolution: {tarball: https://codeload.github.com/TryGhost/node-sqlite3/tar.gz/528e15ae605bac7aab8de60dd7c46e9fdc1fffd0}
+    version: 5.1.7
 
   ssri@12.0.0:
     resolution: {integrity: sha512-S7iGNosepx9RadX82oimUkvr0Ct7IjJbEbs4mJcTxst8um95J3sDYU1RBEOvdu6oL1Wek2ODI5i4MAw+dZ6cAQ==}
@@ -4934,7 +4936,7 @@ snapshots:
   sequelize-pool@7.1.0:
     optional: true
 
-  sequelize@6.37.7(sqlite3@5.1.7):
+  sequelize@6.37.7(sqlite3@https://codeload.github.com/TryGhost/node-sqlite3/tar.gz/528e15ae605bac7aab8de60dd7c46e9fdc1fffd0):
     dependencies:
       '@types/debug': 4.1.12
       '@types/validator': 13.15.1
@@ -4953,7 +4955,7 @@ snapshots:
       validator: 13.15.15
       wkx: 0.5.0
     optionalDependencies:
-      sqlite3: 5.1.7
+      sqlite3: https://codeload.github.com/TryGhost/node-sqlite3/tar.gz/528e15ae605bac7aab8de60dd7c46e9fdc1fffd0
     transitivePeerDependencies:
       - supports-color
     optional: true
@@ -5074,7 +5076,7 @@ snapshots:
 
   sprintf-js@1.1.3: {}
 
-  sqlite3@5.1.7:
+  sqlite3@https://codeload.github.com/TryGhost/node-sqlite3/tar.gz/528e15ae605bac7aab8de60dd7c46e9fdc1fffd0:
     dependencies:
       bindings: 1.5.0
       node-addon-api: 7.1.1

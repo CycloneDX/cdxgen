@@ -114,11 +114,11 @@
     "@appthreat/atom": "2.2.3",
     "@appthreat/cdx-proto": "1.0.1",
     "@cyclonedx/cdxgen-plugins-bin": "1.6.11",
-    "@cyclonedx/cdxgen-plugins-bin-linux-arm": "1.6.11",
-    "@cyclonedx/cdxgen-plugins-bin-linux-amd64": "1.6.11",
-    "@cyclonedx/cdxgen-plugins-bin-linux-arm64": "1.6.11",
     "@cyclonedx/cdxgen-plugins-bin-darwin-amd64": "1.6.11",
     "@cyclonedx/cdxgen-plugins-bin-darwin-arm64": "1.6.11",
+    "@cyclonedx/cdxgen-plugins-bin-linux-amd64": "1.6.11",
+    "@cyclonedx/cdxgen-plugins-bin-linux-arm": "1.6.11",
+    "@cyclonedx/cdxgen-plugins-bin-linux-arm64": "1.6.11",
     "@cyclonedx/cdxgen-plugins-bin-linux-ppc64": "1.6.11",
     "@cyclonedx/cdxgen-plugins-bin-windows-amd64": "1.6.11",
     "@cyclonedx/cdxgen-plugins-bin-windows-arm64": "1.6.11",
@@ -127,7 +127,7 @@
     "connect": "^3.7.0",
     "jsonata": "^2.0.6",
     "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "github:TryGhost/node-sqlite3#528e15ae605bac7aab8de60dd7c46e9fdc1fffd0"
   },
   "files": ["*.js", "lib/**", "bin/", "data/", "types/", "index.cjs"],
   "devDependencies": {
