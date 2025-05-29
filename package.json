@@ -88,7 +88,7 @@
     "ajv-formats": "^3.0.1",
     "cheerio": "^1.0.0",
     "edn-data": "1.1.2",
-    "find-up": "7.0.0",
+    "find-up": "^7.0.0",
     "glob": "^11.0.2",
     "global-agent": "^3.0.0",
     "got": "^14.4.7",
@@ -98,11 +98,11 @@
     "packageurl-js": "1.0.2",
     "prettify-xml": "^1.2.0",
     "properties-reader": "^2.3.0",
-    "semver": "^7.7.1",
+    "semver": "^7.7.2",
     "ssri": "^12.0.0",
     "table": "^6.9.0",
     "tar": "^7.4.3",
-    "uuid": "^11.0.2",
+    "uuid": "^11.1.0",
     "validate-iri": "^1.0.1",
     "xml-js": "^1.6.11",
     "yaml": "^2.8.0",
@@ -142,7 +142,19 @@
       "node-gyp": "^10.2.0",
       "prebuild": "^13.0.0",
       "pacote": "^20.0.0",
-      "negotiator": "^0.6.4"
+      "negotiator": "^0.6.4",
+      "@npmcli/agent": "^3.0.0",
+      "@npmcli/fs": "^4.0.0",
+      "debug": "^4.4.1",
+      "lru-cache": "^11.1.0",
+      "minimatch": "^10.0.1",
+      "minizlib": "^3.0.2",
+      "mkdirp": "^3.0.1",
+      "semver": "^7.7.2",
+      "ssri": "^12.0.0",
+      "tar": "^7.4.3",
+      "uuid": "^11.1.0",
+      "which": "^5.0.0"
     }
   },
   "overrides": {
@@ -151,6 +163,18 @@
     "node-gyp": "^10.2.0",
     "prebuild": "^13.0.0",
     "pacote": "^20.0.0",
-    "negotiator": "^0.6.4"
+    "negotiator": "^0.6.4",
+    "@npmcli/agent": "^3.0.0",
+    "@npmcli/fs": "^4.0.0",
+    "debug": "^4.4.1",
+    "lru-cache": "^11.1.0",
+    "minimatch": "^10.0.1",
+    "minizlib": "^3.0.2",
+    "mkdirp": "^3.0.1",
+    "semver": "^7.7.2",
+    "ssri": "^12.0.0",
+    "tar": "^7.4.3",
+    "uuid": "^11.1.0",
+    "which": "^5.0.0"
   }
 }
