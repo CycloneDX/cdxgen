@@ -34,6 +34,9 @@ pnpm test
 ### Language-specific profile
 
 ```shell
+# deno environment
+devenv --option config.profile:string deno shell
+
 # Ruby environment
 devenv --option config.profile:string ruby shell
 
@@ -50,6 +53,18 @@ devenv --option config.profile:string flutter shell
 ### Tasks
 
 ```shell
+# Prepare to contribute a PR
 devenv tasks run pr:prepare
+
+# Check for outdated dependencies
 devenv tasks run pnpm:outdated
+
+# Prepare a deno-based environment
+devenv tasks run deno:prepare
+
+# Check if cdxgen and evinse command can work
+devenv tasks run deno:checks
+
+# Create SEA binary
+devenv tasks run deno:compile:macos
 ```

@@ -534,7 +534,7 @@ Use `pnpm add -g` command to quickly test the main branch.
 ```shell
 corepack pnpm bin -g
 corepack pnpm setup
-corepack pnpm add -g --allow-build sqlite3 https://github.com/CycloneDX/cdxgen
+corepack pnpm add -g --allow-build @appthreat/sqlite3 https://github.com/CycloneDX/cdxgen
 cdxgen --help
 ```
 

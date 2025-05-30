@@ -10,6 +10,15 @@
     "ci/",
     "tools_config/",
     ".github/",
-    ".*"
+    ".*",
+    "devenv*",
+    "jest.config.js",
+    "docker-compose.yml",
+    "ADVANCED.md",
+    "pnpm-lock.yaml",
+    "biome.json",
+    "plugins",
+    "tsconfig.json",
+    "index.cjs"
   ]
 }
