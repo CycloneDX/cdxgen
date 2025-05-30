@@ -9,7 +9,8 @@ ENV JAVA_VERSION=$JAVA_VERSION \
     ATOM_RUBY_VERSION=$ATOM_RUBY_VERSION \
     BUNDLE_SILENCE_ROOT_WARNING=true \
     JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8" \
-    NVM_DIR="/root/.nvm"
+    NVM_DIR="/root/.nvm" \
+    npm_config_build_from_source=true
 ENV PATH=/root/.nvm/versions/node/v${NODE_VERSION}/bin:${PATH}:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:
 
 COPY ci/base-images/debian/install.sh /tmp/
