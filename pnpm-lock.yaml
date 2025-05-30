@@ -148,7 +148,7 @@ importers:
         version: 1.9.4
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@22.15.24)
+        version: 29.7.0(@types/node@22.15.27)
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -200,10 +200,10 @@ importers:
         version: 2.0.6
       sequelize:
         specifier: ^6.37.7
-        version: 6.37.7(sqlite3@https://codeload.github.com/TryGhost/node-sqlite3/tar.gz/528e15ae605bac7aab8de60dd7c46e9fdc1fffd0)
+        version: 6.37.7(sqlite3@https://codeload.github.com/AppThreat/node-sqlite3/tar.gz/d9bd20f3991ced9c48bf339a77b0cbb5605db8e9)
       sqlite3:
-        specifier: github:TryGhost/node-sqlite3#528e15ae605bac7aab8de60dd7c46e9fdc1fffd0
-        version: https://codeload.github.com/TryGhost/node-sqlite3/tar.gz/528e15ae605bac7aab8de60dd7c46e9fdc1fffd0
+        specifier: github:AppThreat/node-sqlite3#d9bd20f3991ced9c48bf339a77b0cbb5605db8e9
+        version: https://codeload.github.com/AppThreat/node-sqlite3/tar.gz/d9bd20f3991ced9c48bf339a77b0cbb5605db8e9
 
 packages:
 
@@ -738,8 +738,8 @@ packages:
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
-  '@types/node@22.15.24':
-    resolution: {integrity: sha512-w9CZGm9RDjzTh/D+hFwlBJ3ziUaVw7oufKA3vOFSOZlzmW9AkZnfjPb+DLnrV6qtgL/LNmP0/2zBNCFHL3F0ng==}
+  '@types/node@22.15.27':
+    resolution: {integrity: sha512-5fF+eu5mwihV2BeVtX5vijhdaZOfkQTATrePEaXTcKqI16LhJ7gi2/Vhd9OZM0UojcdmiOCVg5rrax+i1MdoQQ==}
 
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
@@ -1816,8 +1816,9 @@ packages:
     resolution: {integrity: sha512-OhYaY5sDsIka7H7AtijtI9jwGYLyl29eQn/W623DiN/MIv5sUqc4g7BIDThX+gb7di9f6xK02nkp8sdfFWZLTg==}
     engines: {node: '>=10'}
 
-  node-addon-api@7.1.1:
-    resolution: {integrity: sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==}
+  node-addon-api@8.3.1:
+    resolution: {integrity: sha512-lytcDEdxKjGJPTLEfW4mYMigRezMlyJY8W4wxJK8zE533Jlb8L8dRuObJFWg2P+AuOIxoCgKF+2Oq4d4Zd0OUA==}
+    engines: {node: ^18 || ^20 || >= 21}
 
   node-gyp@10.3.1:
     resolution: {integrity: sha512-Pp3nFHBThHzVtNY7U6JfPjvT/DTE8+o/4xKsLQtBoU+j2HLsGlhcfzflAoUreaJbNmYnX+LlLi0qjV8kpyO6xQ==}
@@ -2269,9 +2270,10 @@ packages:
   sprintf-js@1.1.3:
     resolution: {integrity: sha512-Oo+0REFV59/rz3gfJNKQiBlwfHaSESl1pcGyABQsnnIfWOFt6JNj5gCog2U6MLZ//IGYD+nA8nI+mTShREReaA==}
 
-  sqlite3@https://codeload.github.com/TryGhost/node-sqlite3/tar.gz/528e15ae605bac7aab8de60dd7c46e9fdc1fffd0:
-    resolution: {tarball: https://codeload.github.com/TryGhost/node-sqlite3/tar.gz/528e15ae605bac7aab8de60dd7c46e9fdc1fffd0}
-    version: 5.1.7
+  sqlite3@https://codeload.github.com/AppThreat/node-sqlite3/tar.gz/d9bd20f3991ced9c48bf339a77b0cbb5605db8e9:
+    resolution: {tarball: https://codeload.github.com/AppThreat/node-sqlite3/tar.gz/d9bd20f3991ced9c48bf339a77b0cbb5605db8e9}
+    version: 5.2.1
+    engines: {node: '>=20'}
 
   ssri@12.0.0:
     resolution: {integrity: sha512-S7iGNosepx9RadX82oimUkvr0Ct7IjJbEbs4mJcTxst8um95J3sDYU1RBEOvdu6oL1Wek2ODI5i4MAw+dZ6cAQ==}
@@ -2839,7 +2841,7 @@ snapshots:
   '@jest/console@29.7.0':
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
       chalk: 4.1.2
       jest-message-util: 29.7.0
       jest-util: 29.7.0
@@ -2852,14 +2854,14 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       ci-info: 3.9.0
       exit: 0.1.2
       graceful-fs: 4.2.11
       jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@22.15.24)
+      jest-config: 29.7.0(@types/node@22.15.27)
       jest-haste-map: 29.7.0
       jest-message-util: 29.7.0
       jest-regex-util: 29.6.3
@@ -2884,7 +2886,7 @@ snapshots:
     dependencies:
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
       jest-mock: 29.7.0
 
   '@jest/expect-utils@29.7.0':
@@ -2902,7 +2904,7 @@ snapshots:
     dependencies:
       '@jest/types': 29.6.3
       '@sinonjs/fake-timers': 10.3.0
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
       jest-message-util: 29.7.0
       jest-mock: 29.7.0
       jest-util: 29.7.0
@@ -2924,7 +2926,7 @@ snapshots:
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
       '@jridgewell/trace-mapping': 0.3.25
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
       chalk: 4.1.2
       collect-v8-coverage: 1.0.2
       exit: 0.1.2
@@ -2994,7 +2996,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
       '@types/yargs': 17.0.33
       chalk: 4.1.2
 
@@ -3221,7 +3223,7 @@ snapshots:
 
   '@types/graceful-fs@4.1.9':
     dependencies:
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
 
   '@types/http-cache-semantics@4.0.4': {}
 
@@ -3238,7 +3240,7 @@ snapshots:
   '@types/ms@2.1.0':
     optional: true
 
-  '@types/node@22.15.24':
+  '@types/node@22.15.27':
     dependencies:
       undici-types: 6.21.0
 
@@ -3571,13 +3573,13 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
-  create-jest@29.7.0(@types/node@22.15.24):
+  create-jest@29.7.0(@types/node@22.15.27):
     dependencies:
       '@jest/types': 29.6.3
       chalk: 4.1.2
       exit: 0.1.2
       graceful-fs: 4.2.11
-      jest-config: 29.7.0(@types/node@22.15.24)
+      jest-config: 29.7.0(@types/node@22.15.27)
       jest-util: 29.7.0
       prompts: 2.4.2
     transitivePeerDependencies:
@@ -4057,7 +4059,7 @@ snapshots:
       '@jest/expect': 29.7.0
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
       chalk: 4.1.2
       co: 4.6.0
       dedent: 1.6.0
@@ -4077,16 +4079,16 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-cli@29.7.0(@types/node@22.15.24):
+  jest-cli@29.7.0(@types/node@22.15.27):
     dependencies:
       '@jest/core': 29.7.0
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
       chalk: 4.1.2
-      create-jest: 29.7.0(@types/node@22.15.24)
+      create-jest: 29.7.0(@types/node@22.15.27)
       exit: 0.1.2
       import-local: 3.2.0
-      jest-config: 29.7.0(@types/node@22.15.24)
+      jest-config: 29.7.0(@types/node@22.15.27)
       jest-util: 29.7.0
       jest-validate: 29.7.0
       yargs: 17.7.2
@@ -4096,7 +4098,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  jest-config@29.7.0(@types/node@22.15.24):
+  jest-config@29.7.0(@types/node@22.15.27):
     dependencies:
       '@babel/core': 7.27.3
       '@jest/test-sequencer': 29.7.0
@@ -4121,7 +4123,7 @@ snapshots:
       slash: 3.0.0
       strip-json-comments: 3.1.1
     optionalDependencies:
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -4150,7 +4152,7 @@ snapshots:
       '@jest/environment': 29.7.0
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
       jest-mock: 29.7.0
       jest-util: 29.7.0
 
@@ -4160,7 +4162,7 @@ snapshots:
     dependencies:
       '@jest/types': 29.6.3
       '@types/graceful-fs': 4.1.9
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
       anymatch: 3.1.3
       fb-watchman: 2.0.2
       graceful-fs: 4.2.11
@@ -4199,7 +4201,7 @@ snapshots:
   jest-mock@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
       jest-util: 29.7.0
 
   jest-pnp-resolver@1.2.3(jest-resolve@29.7.0):
@@ -4234,7 +4236,7 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
       chalk: 4.1.2
       emittery: 0.13.1
       graceful-fs: 4.2.11
@@ -4262,7 +4264,7 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
       chalk: 4.1.2
       cjs-module-lexer: 1.4.3
       collect-v8-coverage: 1.0.2
@@ -4308,7 +4310,7 @@ snapshots:
   jest-util@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -4327,7 +4329,7 @@ snapshots:
     dependencies:
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.13.1
@@ -4336,17 +4338,17 @@ snapshots:
 
   jest-worker@29.7.0:
     dependencies:
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
-  jest@29.7.0(@types/node@22.15.24):
+  jest@29.7.0(@types/node@22.15.27):
     dependencies:
       '@jest/core': 29.7.0
       '@jest/types': 29.6.3
       import-local: 3.2.0
-      jest-cli: 29.7.0(@types/node@22.15.24)
+      jest-cli: 29.7.0(@types/node@22.15.27)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -4571,7 +4573,7 @@ snapshots:
       semver: 7.7.2
     optional: true
 
-  node-addon-api@7.1.1:
+  node-addon-api@8.3.1:
     optional: true
 
   node-gyp@10.3.1:
@@ -4923,7 +4925,7 @@ snapshots:
   sequelize-pool@7.1.0:
     optional: true
 
-  sequelize@6.37.7(sqlite3@https://codeload.github.com/TryGhost/node-sqlite3/tar.gz/528e15ae605bac7aab8de60dd7c46e9fdc1fffd0):
+  sequelize@6.37.7(sqlite3@https://codeload.github.com/AppThreat/node-sqlite3/tar.gz/d9bd20f3991ced9c48bf339a77b0cbb5605db8e9):
     dependencies:
       '@types/debug': 4.1.12
       '@types/validator': 13.15.1
@@ -4942,7 +4944,7 @@ snapshots:
       validator: 13.15.15
       wkx: 0.5.0
     optionalDependencies:
-      sqlite3: https://codeload.github.com/TryGhost/node-sqlite3/tar.gz/528e15ae605bac7aab8de60dd7c46e9fdc1fffd0
+      sqlite3: https://codeload.github.com/AppThreat/node-sqlite3/tar.gz/d9bd20f3991ced9c48bf339a77b0cbb5605db8e9
     transitivePeerDependencies:
       - supports-color
     optional: true
@@ -5063,12 +5065,11 @@ snapshots:
 
   sprintf-js@1.1.3: {}
 
-  sqlite3@https://codeload.github.com/TryGhost/node-sqlite3/tar.gz/528e15ae605bac7aab8de60dd7c46e9fdc1fffd0:
+  sqlite3@https://codeload.github.com/AppThreat/node-sqlite3/tar.gz/d9bd20f3991ced9c48bf339a77b0cbb5605db8e9:
     dependencies:
       bindings: 1.5.0
-      node-addon-api: 7.1.1
+      node-addon-api: 8.3.1
       prebuild-install: 7.1.3
-      tar: 7.4.3
     optionalDependencies:
       node-gyp: 10.3.1
     transitivePeerDependencies:
@@ -5283,7 +5284,7 @@ snapshots:
 
   wkx@0.5.0:
     dependencies:
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
     optional: true
 
   wrap-ansi@7.0.0:
