@@ -81,21 +81,15 @@ jobs:
               deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,osRelease,homedir --allow-write --allow-net --include=./data --include=./package.json --output cdxgenx.exe bin/cdxgen.js
               .\cdxgenx.exe --help
               (Get-FileHash .\cdxgenx.exe).hash | Out-File -FilePath .\cdxgenx.exe.sha256
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,osRelease,homedir --allow-write --allow-net --node-modules-dir=auto --allow-ffi --allow-scripts=npm:@appthreat/sqlite3@6.0.2 --include=./data --include=./package.json --include=node_modules/.deno/sqlite3@5.1.7/node_modules/sqlite3/build/Release --output evinse.exe bin/evinse.js
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,osRelease,homedir --allow-write --allow-net --node-modules-dir=auto --allow-ffi --allow-scripts=npm:@appthreat/sqlite3@6.0.2 --include=./data --include=./package.json --include=node_modules/sqlite3/build/Release --output evinse.exe bin/evinse.js
               .\evinse.exe --help
               (Get-FileHash .\evinse.exe).hash | Out-File -FilePath .\evinse.exe.sha256
             artifact: cdxgenx.exe
           - os: macos
             build: |
-              rm -rf node_modules
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --include=./data --include=./package.json --target x86_64-apple-darwin --output cdxgenx-darwin-amd64 bin/cdxgen.js
-              ./cdxgenx-darwin-amd64 --help
-              shasum -a 256 cdxgenx-darwin-amd64 > cdxgenx-darwin-amd64.sha256
-              rm -rf node_modules
               deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --include=./data --include=./package.json --target aarch64-apple-darwin --output cdxgenx-darwin-arm64 bin/cdxgen.js
               shasum -a 256 cdxgenx-darwin-arm64 > cdxgenx-darwin-arm64.sha256
-              rm -rf node_modules
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --node-modules-dir=auto --allow-ffi --allow-scripts=npm:@appthreat/sqlite3@6.0.2 --include=./data --include=./package.json --include=node_modules/.deno/sqlite3@5.1.7/node_modules/sqlite3/build/Release --target aarch64-apple-darwin --output evinse-darwin-arm64 bin/evinse.js
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --node-modules-dir=auto --allow-ffi --allow-scripts=npm:@appthreat/sqlite3@6.0.2 --include=./data --include=./package.json --include=node_modules/sqlite3/build/Release --target aarch64-apple-darwin --output evinse-darwin-arm64 bin/evinse.js
               shasum -a 256 evinse-darwin-arm64 > evinse-darwin-arm64.sha256
               ./evinse-darwin-arm64 --help
             artifact: cdxgenx-darwin-arm64
@@ -105,7 +99,7 @@ jobs:
               shasum -a 256 cdxgenx > cdxgenx.sha256
               chmod + cdxgenx
               ./cdxgenx --help
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --node-modules-dir=auto --allow-ffi --allow-scripts=npm:@appthreat/sqlite3@6.0.2 --include=./data --include=./package.json --include=node_modules/.deno/sqlite3@5.1.7/node_modules/sqlite3/build/Release --output evinse bin/evinse.js
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --node-modules-dir=auto --allow-ffi --allow-scripts=npm:@appthreat/sqlite3@6.0.2 --include=./data --include=./package.json --include=node_modules/sqlite3/build/Release --output evinse bin/evinse.js
               shasum -a 256 evinse > evinse.sha256
               chmod + evinse
               ./evinse --help
@@ -113,9 +107,17 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v${{ matrix.deno_version }}
+      - name: pnpm install, build and test
+        run: |
+          npm install -g pnpm@latest
+          pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
       - name: deno compile
         run: |
           deno info bin/cdxgen.js
