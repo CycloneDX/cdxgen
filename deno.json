@@ -91,7 +91,7 @@
     "jest": "npm:jest@^29.7.0",
     "@jest/globals": "npm:@jest/globals@^29.7.0",
     "sequelize": "npm:sequelize@^6.37.7",
-    "sqlite3": "npm:@appthreat/sqlite3@^6.0.2",
+    "sqlite3": "npm:@appthreat/sqlite3@^6.0.3",
     "body-parser": "npm:body-parser@^2.2.0",
     "compression": "npm:compression@^1.7.5",
     "connect": "npm:connect@^3.7.0",

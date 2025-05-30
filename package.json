@@ -127,7 +127,7 @@
     "connect": "^3.7.0",
     "jsonata": "^2.0.6",
     "sequelize": "^6.37.7",
-    "sqlite3": "npm:@appthreat/sqlite3@^6.0.2"
+    "sqlite3": "npm:@appthreat/sqlite3@^6.0.3"
   },
   "files": ["*.js", "lib/**", "bin/", "data/", "types/", "index.cjs"],
   "devDependencies": {
