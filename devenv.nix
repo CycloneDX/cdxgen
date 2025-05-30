@@ -30,7 +30,7 @@ in
           poetry.enable = lib.mkIf (config.profile == "poetry") true;
           uv.enable = lib.mkIf (config.profile == "uv") true;
         };
-        javascript = lib.mkIf (lib.elem config.profile [ "deno" ] == false) {
+        javascript = {
           enable = true;
           package = pkgs-unstable.nodejs_24;
         };
@@ -82,6 +82,7 @@ in
 
       # Common packages
       packages = [
+        pkgs-unstable.nodejs_24
         pkgs.python313Full
         pkgs-unstable.pnpm_10
       ];
