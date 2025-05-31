@@ -5,6 +5,7 @@ ENV CC=gcc \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     npm_config_python=/usr/bin/python3.9 \
+    npm_config_build_from_source=true \
     PYTHONPATH=/opt/pypi:${PYTHONPATH}
 
 ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:

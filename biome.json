@@ -50,7 +50,7 @@
   },
   "formatter": {
     "enabled": true,
-    "ignore": ["types/**", "contrib/**"],
+    "ignore": ["types/**", "contrib/**", ".devcontainer.json"],
     "indentStyle": "space",
     "indentWidth": 2
   },

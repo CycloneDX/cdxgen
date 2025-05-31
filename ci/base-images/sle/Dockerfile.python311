@@ -16,7 +16,8 @@ ENV JAVA_VERSION=$JAVA_VERSION \
     LANGUAGE=en_US.UTF-8 \
     NVM_DIR="/root/.nvm" \
     PYTHONPATH=/opt/pypi:${PYTHONPATH} \
-    npm_config_python=/usr/bin/python3.11
+    npm_config_python=/usr/bin/python3.11 \
+    npm_config_build_from_source=true
 ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/usr/local/bin:/opt/pypi/bin:${GOPATH}/bin:/usr/local/go/bin:
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \

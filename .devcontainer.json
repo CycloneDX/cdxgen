@@ -1,7 +1,9 @@
 {
   "customizations": {
     "vscode": {
-      "extensions": ["mkhl.direnv"]
+      "extensions": [
+        "mkhl.direnv"
+      ]
     }
   },
   "image": "ghcr.io/cachix/devenv/devcontainer:latest",

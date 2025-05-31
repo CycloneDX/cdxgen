@@ -56,16 +56,16 @@ importers:
   .:
     dependencies:
       '@babel/parser':
-        specifier: ^7.27.2
-        version: 7.27.3
+        specifier: ^7.27.4
+        version: 7.27.4
       '@babel/traverse':
-        specifier: ^7.27.1
-        version: 7.27.3
+        specifier: ^7.27.4
+        version: 7.27.4
       '@iarna/toml':
         specifier: 2.2.5
         version: 2.2.5
       '@npmcli/arborist':
-        specifier: ^9.1.0
+        specifier: ^9.1.1
         version: 9.1.1
       ajv:
         specifier: ^8.17.1
@@ -148,7 +148,7 @@ importers:
         version: 1.9.4
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@22.15.27)
+        version: 29.7.0(@types/node@22.15.29)
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -200,10 +200,10 @@ importers:
         version: 2.0.6
       sequelize:
         specifier: ^6.37.7
-        version: 6.37.7(sqlite3@https://codeload.github.com/AppThreat/node-sqlite3/tar.gz/d9bd20f3991ced9c48bf339a77b0cbb5605db8e9)
+        version: 6.37.7(@appthreat/sqlite3@6.0.3)
       sqlite3:
-        specifier: github:AppThreat/node-sqlite3#d9bd20f3991ced9c48bf339a77b0cbb5605db8e9
-        version: https://codeload.github.com/AppThreat/node-sqlite3/tar.gz/d9bd20f3991ced9c48bf339a77b0cbb5605db8e9
+        specifier: npm:@appthreat/sqlite3@^6.0.3
+        version: '@appthreat/sqlite3@6.0.3'
 
 packages:
 
@@ -228,6 +228,10 @@ packages:
     resolution: {integrity: sha512-r/X6RRn3B4hzRmdvuEmVbqfPV2fItY5y6+J3JJO7hrMMT4bMjYAu1J0rNcT1tbQ1yP91MpgJzyoHTzCqpmw5/A==}
     engines: {node: '>=18'}
 
+  '@appthreat/sqlite3@6.0.3':
+    resolution: {integrity: sha512-7tHZoxELI7cVp3iTqYyyIFalorbdianmbTqBQf6S+i5Kw3Lj/POEkeQX2727Tpv2Rkt09UhSx37p8KbWepnouQ==}
+    engines: {node: '>=20'}
+
   '@babel/code-frame@7.27.1':
     resolution: {integrity: sha512-cjQ7ZlQ0Mv3b47hABuTevyTuYN4i+loJKGeV9flcCgIK37cCXRh+L1bd3iBHlynerhQ7BhCkn2BPbQUL+rGqFg==}
     engines: {node: '>=6.9.0'}
@@ -236,8 +240,8 @@ packages:
     resolution: {integrity: sha512-V42wFfx1ymFte+ecf6iXghnnP8kWTO+ZLXIyZq+1LAXHHvTZdVxicn4yiVYdYMGaCO3tmqub11AorKkv+iodqw==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/core@7.27.3':
-    resolution: {integrity: sha512-hyrN8ivxfvJ4i0fIJuV4EOlV0WDMz5Ui4StRTgVaAvWeiRCilXgwVvxJKtFQ3TKtHgJscB2YiXKGNJuVwhQMtA==}
+  '@babel/core@7.27.4':
+    resolution: {integrity: sha512-bXYxrXFubeYdvB0NhD/NBB3Qi6aZeV20GOWVI47t2dkecCEoneR4NPVcb7abpXDEvejgrUfFtG6vG/zxAKmg+g==}
     engines: {node: '>=6.9.0'}
 
   '@babel/generator@7.27.3':
@@ -274,12 +278,12 @@ packages:
     resolution: {integrity: sha512-YvjJow9FxbhFFKDSuFnVCe2WxXk1zWc22fFePVNEaWJEu8IrZVlda6N0uHwzZrUM1il7NC9Mlp4MaJYbYd9JSg==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/helpers@7.27.3':
-    resolution: {integrity: sha512-h/eKy9agOya1IGuLaZ9tEUgz+uIRXcbtOhRtUyyMf8JFmn1iT13vnl/IGVWSkdOCG/pC57U4S1jnAabAavTMwg==}
+  '@babel/helpers@7.27.4':
+    resolution: {integrity: sha512-Y+bO6U+I7ZKaM5G5rDUZiYfUvQPUibYmAFe7EnKdnKBbVXDZxvp+MWOH5gYciY0EPk4EScsuFMQBbEfpdRKSCQ==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/parser@7.27.3':
-    resolution: {integrity: sha512-xyYxRj6+tLNDTWi0KCBcZ9V7yg3/lwL9DWh9Uwh/RIVlIfFidggcgxKX3GCXwCiswwcGRawBKbEg2LG/Y8eJhw==}
+  '@babel/parser@7.27.4':
+    resolution: {integrity: sha512-BRmLHGwpUqLFR2jzx9orBuX/ABDkj2jLKOXrHDTN2aOKL+jFDDKaRNo9nyYsIl9h/UE/7lMKdDjKQQyxKKDZ7g==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -378,8 +382,8 @@ packages:
     resolution: {integrity: sha512-LPDZ85aEJyYSd18/DkjNh4/y1ntkE5KwUHWTiqgRxruuZL2F1yuHligVHLvcHY2vMHXttKFpJn6LwfI7cw7ODw==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/traverse@7.27.3':
-    resolution: {integrity: sha512-lId/IfN/Ye1CIu8xG7oKBHXd2iNb2aW1ilPszzGcJug6M8RCKfVNcYhpI5+bMvFYjK7lXIM0R+a+6r8xhHp2FQ==}
+  '@babel/traverse@7.27.4':
+    resolution: {integrity: sha512-oNcu2QbHqts9BtOWJosOVJapWjBDSxGCpFvikNR5TGDYDQf3JwpIoMzIKrvfoti93cLfPJEG4tH9SPVeyCGgdA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/types@7.27.3':
@@ -738,8 +742,8 @@ packages:
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
-  '@types/node@22.15.27':
-    resolution: {integrity: sha512-5fF+eu5mwihV2BeVtX5vijhdaZOfkQTATrePEaXTcKqI16LhJ7gi2/Vhd9OZM0UojcdmiOCVg5rrax+i1MdoQQ==}
+  '@types/node@22.15.29':
+    resolution: {integrity: sha512-LNdjOkUDlU1RZb8e1kOIUpN1qQUlzGkEtbVNo53vbrwDg5om6oduhm4SiUaPW5ASTXhAiP0jInWG8Qx9fVlOeQ==}
 
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
@@ -2148,7 +2152,6 @@ packages:
 
   sequelize@6.37.7:
     resolution: {integrity: sha512-mCnh83zuz7kQxxJirtFD7q6Huy6liPanI67BSlbzSYgVNl5eXVdE2CN1FuAeZwG1SNpGsNRCV+bJAVVnykZAFA==}
-    version: 6.37.7
     engines: {node: '>=10.0.0'}
     peerDependencies:
       ibm_db: '*'
@@ -2269,11 +2272,6 @@ packages:
 
   sprintf-js@1.1.3:
     resolution: {integrity: sha512-Oo+0REFV59/rz3gfJNKQiBlwfHaSESl1pcGyABQsnnIfWOFt6JNj5gCog2U6MLZ//IGYD+nA8nI+mTShREReaA==}
-
-  sqlite3@https://codeload.github.com/AppThreat/node-sqlite3/tar.gz/d9bd20f3991ced9c48bf339a77b0cbb5605db8e9:
-    resolution: {tarball: https://codeload.github.com/AppThreat/node-sqlite3/tar.gz/d9bd20f3991ced9c48bf339a77b0cbb5605db8e9}
-    version: 5.2.1
-    engines: {node: '>=20'}
 
   ssri@12.0.0:
     resolution: {integrity: sha512-S7iGNosepx9RadX82oimUkvr0Ct7IjJbEbs4mJcTxst8um95J3sDYU1RBEOvdu6oL1Wek2ODI5i4MAw+dZ6cAQ==}
@@ -2543,7 +2541,7 @@ snapshots:
   '@appthreat/atom-parsetools@1.0.2':
     dependencies:
       '@appthreat/atom-common': 1.0.2
-      '@babel/parser': 7.27.3
+      '@babel/parser': 7.27.4
       typescript: 5.8.3
       yargs: 17.7.2
     optional: true
@@ -2559,6 +2557,18 @@ snapshots:
       '@bufbuild/protobuf': 1.7.2
     optional: true
 
+  '@appthreat/sqlite3@6.0.3':
+    dependencies:
+      bindings: 1.5.0
+      node-addon-api: 8.3.1
+      prebuild-install: 7.1.3
+    optionalDependencies:
+      node-gyp: 10.3.1
+    transitivePeerDependencies:
+      - bare-buffer
+      - supports-color
+    optional: true
+
   '@babel/code-frame@7.27.1':
     dependencies:
       '@babel/helper-validator-identifier': 7.27.1
@@ -2567,17 +2577,17 @@ snapshots:
 
   '@babel/compat-data@7.27.3': {}
 
-  '@babel/core@7.27.3':
+  '@babel/core@7.27.4':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@babel/code-frame': 7.27.1
       '@babel/generator': 7.27.3
       '@babel/helper-compilation-targets': 7.27.2
-      '@babel/helper-module-transforms': 7.27.3(@babel/core@7.27.3)
-      '@babel/helpers': 7.27.3
-      '@babel/parser': 7.27.3
+      '@babel/helper-module-transforms': 7.27.3(@babel/core@7.27.4)
+      '@babel/helpers': 7.27.4
+      '@babel/parser': 7.27.4
       '@babel/template': 7.27.2
-      '@babel/traverse': 7.27.3
+      '@babel/traverse': 7.27.4
       '@babel/types': 7.27.3
       convert-source-map: 2.0.0
       debug: 4.4.1
@@ -2589,7 +2599,7 @@ snapshots:
 
   '@babel/generator@7.27.3':
     dependencies:
-      '@babel/parser': 7.27.3
+      '@babel/parser': 7.27.4
       '@babel/types': 7.27.3
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
@@ -2605,17 +2615,17 @@ snapshots:
 
   '@babel/helper-module-imports@7.27.1':
     dependencies:
-      '@babel/traverse': 7.27.3
+      '@babel/traverse': 7.27.4
       '@babel/types': 7.27.3
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/helper-module-transforms@7.27.3(@babel/core@7.27.3)':
+  '@babel/helper-module-transforms@7.27.3(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-module-imports': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
-      '@babel/traverse': 7.27.3
+      '@babel/traverse': 7.27.4
     transitivePeerDependencies:
       - supports-color
 
@@ -2627,111 +2637,111 @@ snapshots:
 
   '@babel/helper-validator-option@7.27.1': {}
 
-  '@babel/helpers@7.27.3':
+  '@babel/helpers@7.27.4':
     dependencies:
       '@babel/template': 7.27.2
       '@babel/types': 7.27.3
 
-  '@babel/parser@7.27.3':
+  '@babel/parser@7.27.4':
     dependencies:
       '@babel/types': 7.27.3
 
-  '@babel/plugin-syntax-async-generators@7.8.4(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-async-generators@7.8.4(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-syntax-bigint@7.8.3(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-bigint@7.8.3(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-syntax-class-properties@7.12.13(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-class-properties@7.12.13(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-syntax-class-static-block@7.14.5(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-class-static-block@7.14.5(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-syntax-import-attributes@7.27.1(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-import-attributes@7.27.1(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-syntax-import-meta@7.10.4(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-import-meta@7.10.4(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-syntax-json-strings@7.8.3(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-json-strings@7.8.3(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-syntax-jsx@7.27.1(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-jsx@7.27.1(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-syntax-logical-assignment-operators@7.10.4(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-logical-assignment-operators@7.10.4(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-syntax-nullish-coalescing-operator@7.8.3(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-nullish-coalescing-operator@7.8.3(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-syntax-numeric-separator@7.10.4(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-numeric-separator@7.10.4(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-syntax-object-rest-spread@7.8.3(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-object-rest-spread@7.8.3(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-syntax-optional-catch-binding@7.8.3(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-optional-catch-binding@7.8.3(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-syntax-optional-chaining@7.8.3(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-optional-chaining@7.8.3(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-syntax-private-property-in-object@7.14.5(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-private-property-in-object@7.14.5(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-syntax-top-level-await@7.14.5(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-top-level-await@7.14.5(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-syntax-typescript@7.27.1(@babel/core@7.27.3)':
+  '@babel/plugin-syntax-typescript@7.27.1(@babel/core@7.27.4)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.27.1
 
   '@babel/template@7.27.2':
     dependencies:
       '@babel/code-frame': 7.27.1
-      '@babel/parser': 7.27.3
+      '@babel/parser': 7.27.4
       '@babel/types': 7.27.3
 
-  '@babel/traverse@7.27.3':
+  '@babel/traverse@7.27.4':
     dependencies:
       '@babel/code-frame': 7.27.1
       '@babel/generator': 7.27.3
-      '@babel/parser': 7.27.3
+      '@babel/parser': 7.27.4
       '@babel/template': 7.27.2
       '@babel/types': 7.27.3
       debug: 4.4.1
@@ -2841,7 +2851,7 @@ snapshots:
   '@jest/console@29.7.0':
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
       chalk: 4.1.2
       jest-message-util: 29.7.0
       jest-util: 29.7.0
@@ -2854,14 +2864,14 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       ci-info: 3.9.0
       exit: 0.1.2
       graceful-fs: 4.2.11
       jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@22.15.27)
+      jest-config: 29.7.0(@types/node@22.15.29)
       jest-haste-map: 29.7.0
       jest-message-util: 29.7.0
       jest-regex-util: 29.6.3
@@ -2886,7 +2896,7 @@ snapshots:
     dependencies:
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
       jest-mock: 29.7.0
 
   '@jest/expect-utils@29.7.0':
@@ -2904,7 +2914,7 @@ snapshots:
     dependencies:
       '@jest/types': 29.6.3
       '@sinonjs/fake-timers': 10.3.0
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
       jest-message-util: 29.7.0
       jest-mock: 29.7.0
       jest-util: 29.7.0
@@ -2926,7 +2936,7 @@ snapshots:
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
       '@jridgewell/trace-mapping': 0.3.25
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
       chalk: 4.1.2
       collect-v8-coverage: 1.0.2
       exit: 0.1.2
@@ -2973,7 +2983,7 @@ snapshots:
 
   '@jest/transform@29.7.0':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@jest/types': 29.6.3
       '@jridgewell/trace-mapping': 0.3.25
       babel-plugin-istanbul: 7.0.0
@@ -2996,7 +3006,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
       '@types/yargs': 17.0.33
       chalk: 4.1.2
 
@@ -3197,7 +3207,7 @@ snapshots:
 
   '@types/babel__core@7.20.5':
     dependencies:
-      '@babel/parser': 7.27.3
+      '@babel/parser': 7.27.4
       '@babel/types': 7.27.3
       '@types/babel__generator': 7.27.0
       '@types/babel__template': 7.4.4
@@ -3209,7 +3219,7 @@ snapshots:
 
   '@types/babel__template@7.4.4':
     dependencies:
-      '@babel/parser': 7.27.3
+      '@babel/parser': 7.27.4
       '@babel/types': 7.27.3
 
   '@types/babel__traverse@7.20.7':
@@ -3223,7 +3233,7 @@ snapshots:
 
   '@types/graceful-fs@4.1.9':
     dependencies:
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
 
   '@types/http-cache-semantics@4.0.4': {}
 
@@ -3240,7 +3250,7 @@ snapshots:
   '@types/ms@2.1.0':
     optional: true
 
-  '@types/node@22.15.27':
+  '@types/node@22.15.29':
     dependencies:
       undici-types: 6.21.0
 
@@ -3299,13 +3309,13 @@ snapshots:
 
   b4a@1.6.7: {}
 
-  babel-jest@29.7.0(@babel/core@7.27.3):
+  babel-jest@29.7.0(@babel/core@7.27.4):
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@jest/transform': 29.7.0
       '@types/babel__core': 7.20.5
       babel-plugin-istanbul: 7.0.0
-      babel-preset-jest: 29.6.3(@babel/core@7.27.3)
+      babel-preset-jest: 29.6.3(@babel/core@7.27.4)
       chalk: 4.1.2
       graceful-fs: 4.2.11
       slash: 3.0.0
@@ -3329,30 +3339,30 @@ snapshots:
       '@types/babel__core': 7.20.5
       '@types/babel__traverse': 7.20.7
 
-  babel-preset-current-node-syntax@1.1.0(@babel/core@7.27.3):
+  babel-preset-current-node-syntax@1.1.0(@babel/core@7.27.4):
     dependencies:
-      '@babel/core': 7.27.3
-      '@babel/plugin-syntax-async-generators': 7.8.4(@babel/core@7.27.3)
-      '@babel/plugin-syntax-bigint': 7.8.3(@babel/core@7.27.3)
-      '@babel/plugin-syntax-class-properties': 7.12.13(@babel/core@7.27.3)
-      '@babel/plugin-syntax-class-static-block': 7.14.5(@babel/core@7.27.3)
-      '@babel/plugin-syntax-import-attributes': 7.27.1(@babel/core@7.27.3)
-      '@babel/plugin-syntax-import-meta': 7.10.4(@babel/core@7.27.3)
-      '@babel/plugin-syntax-json-strings': 7.8.3(@babel/core@7.27.3)
-      '@babel/plugin-syntax-logical-assignment-operators': 7.10.4(@babel/core@7.27.3)
-      '@babel/plugin-syntax-nullish-coalescing-operator': 7.8.3(@babel/core@7.27.3)
-      '@babel/plugin-syntax-numeric-separator': 7.10.4(@babel/core@7.27.3)
-      '@babel/plugin-syntax-object-rest-spread': 7.8.3(@babel/core@7.27.3)
-      '@babel/plugin-syntax-optional-catch-binding': 7.8.3(@babel/core@7.27.3)
-      '@babel/plugin-syntax-optional-chaining': 7.8.3(@babel/core@7.27.3)
-      '@babel/plugin-syntax-private-property-in-object': 7.14.5(@babel/core@7.27.3)
-      '@babel/plugin-syntax-top-level-await': 7.14.5(@babel/core@7.27.3)
+      '@babel/core': 7.27.4
+      '@babel/plugin-syntax-async-generators': 7.8.4(@babel/core@7.27.4)
+      '@babel/plugin-syntax-bigint': 7.8.3(@babel/core@7.27.4)
+      '@babel/plugin-syntax-class-properties': 7.12.13(@babel/core@7.27.4)
+      '@babel/plugin-syntax-class-static-block': 7.14.5(@babel/core@7.27.4)
+      '@babel/plugin-syntax-import-attributes': 7.27.1(@babel/core@7.27.4)
+      '@babel/plugin-syntax-import-meta': 7.10.4(@babel/core@7.27.4)
+      '@babel/plugin-syntax-json-strings': 7.8.3(@babel/core@7.27.4)
+      '@babel/plugin-syntax-logical-assignment-operators': 7.10.4(@babel/core@7.27.4)
+      '@babel/plugin-syntax-nullish-coalescing-operator': 7.8.3(@babel/core@7.27.4)
+      '@babel/plugin-syntax-numeric-separator': 7.10.4(@babel/core@7.27.4)
+      '@babel/plugin-syntax-object-rest-spread': 7.8.3(@babel/core@7.27.4)
+      '@babel/plugin-syntax-optional-catch-binding': 7.8.3(@babel/core@7.27.4)
+      '@babel/plugin-syntax-optional-chaining': 7.8.3(@babel/core@7.27.4)
+      '@babel/plugin-syntax-private-property-in-object': 7.14.5(@babel/core@7.27.4)
+      '@babel/plugin-syntax-top-level-await': 7.14.5(@babel/core@7.27.4)
 
-  babel-preset-jest@29.6.3(@babel/core@7.27.3):
+  babel-preset-jest@29.6.3(@babel/core@7.27.4):
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       babel-plugin-jest-hoist: 29.6.3
-      babel-preset-current-node-syntax: 1.1.0(@babel/core@7.27.3)
+      babel-preset-current-node-syntax: 1.1.0(@babel/core@7.27.4)
 
   balanced-match@1.0.2: {}
 
@@ -3573,13 +3583,13 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
-  create-jest@29.7.0(@types/node@22.15.27):
+  create-jest@29.7.0(@types/node@22.15.29):
     dependencies:
       '@jest/types': 29.6.3
       chalk: 4.1.2
       exit: 0.1.2
       graceful-fs: 4.2.11
-      jest-config: 29.7.0(@types/node@22.15.27)
+      jest-config: 29.7.0(@types/node@22.15.29)
       jest-util: 29.7.0
       prompts: 2.4.2
     transitivePeerDependencies:
@@ -4016,8 +4026,8 @@ snapshots:
 
   istanbul-lib-instrument@6.0.3:
     dependencies:
-      '@babel/core': 7.27.3
-      '@babel/parser': 7.27.3
+      '@babel/core': 7.27.4
+      '@babel/parser': 7.27.4
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.2
       semver: 7.7.2
@@ -4059,7 +4069,7 @@ snapshots:
       '@jest/expect': 29.7.0
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
       chalk: 4.1.2
       co: 4.6.0
       dedent: 1.6.0
@@ -4079,16 +4089,16 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-cli@29.7.0(@types/node@22.15.27):
+  jest-cli@29.7.0(@types/node@22.15.29):
     dependencies:
       '@jest/core': 29.7.0
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
       chalk: 4.1.2
-      create-jest: 29.7.0(@types/node@22.15.27)
+      create-jest: 29.7.0(@types/node@22.15.29)
       exit: 0.1.2
       import-local: 3.2.0
-      jest-config: 29.7.0(@types/node@22.15.27)
+      jest-config: 29.7.0(@types/node@22.15.29)
       jest-util: 29.7.0
       jest-validate: 29.7.0
       yargs: 17.7.2
@@ -4098,12 +4108,12 @@ snapshots:
       - supports-color
       - ts-node
 
-  jest-config@29.7.0(@types/node@22.15.27):
+  jest-config@29.7.0(@types/node@22.15.29):
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@jest/test-sequencer': 29.7.0
       '@jest/types': 29.6.3
-      babel-jest: 29.7.0(@babel/core@7.27.3)
+      babel-jest: 29.7.0(@babel/core@7.27.4)
       chalk: 4.1.2
       ci-info: 3.9.0
       deepmerge: 4.3.1
@@ -4123,7 +4133,7 @@ snapshots:
       slash: 3.0.0
       strip-json-comments: 3.1.1
     optionalDependencies:
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -4152,7 +4162,7 @@ snapshots:
       '@jest/environment': 29.7.0
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
       jest-mock: 29.7.0
       jest-util: 29.7.0
 
@@ -4162,7 +4172,7 @@ snapshots:
     dependencies:
       '@jest/types': 29.6.3
       '@types/graceful-fs': 4.1.9
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
       anymatch: 3.1.3
       fb-watchman: 2.0.2
       graceful-fs: 4.2.11
@@ -4201,7 +4211,7 @@ snapshots:
   jest-mock@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
       jest-util: 29.7.0
 
   jest-pnp-resolver@1.2.3(jest-resolve@29.7.0):
@@ -4236,7 +4246,7 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
       chalk: 4.1.2
       emittery: 0.13.1
       graceful-fs: 4.2.11
@@ -4264,7 +4274,7 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
       chalk: 4.1.2
       cjs-module-lexer: 1.4.3
       collect-v8-coverage: 1.0.2
@@ -4284,15 +4294,15 @@ snapshots:
 
   jest-snapshot@29.7.0:
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.27.4
       '@babel/generator': 7.27.3
-      '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.27.3)
-      '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.27.3)
+      '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.27.4)
+      '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.27.4)
       '@babel/types': 7.27.3
       '@jest/expect-utils': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      babel-preset-current-node-syntax: 1.1.0(@babel/core@7.27.3)
+      babel-preset-current-node-syntax: 1.1.0(@babel/core@7.27.4)
       chalk: 4.1.2
       expect: 29.7.0
       graceful-fs: 4.2.11
@@ -4310,7 +4320,7 @@ snapshots:
   jest-util@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -4329,7 +4339,7 @@ snapshots:
     dependencies:
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.13.1
@@ -4338,17 +4348,17 @@ snapshots:
 
   jest-worker@29.7.0:
     dependencies:
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
-  jest@29.7.0(@types/node@22.15.27):
+  jest@29.7.0(@types/node@22.15.29):
     dependencies:
       '@jest/core': 29.7.0
       '@jest/types': 29.6.3
       import-local: 3.2.0
-      jest-cli: 29.7.0(@types/node@22.15.27)
+      jest-cli: 29.7.0(@types/node@22.15.29)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -4925,7 +4935,7 @@ snapshots:
   sequelize-pool@7.1.0:
     optional: true
 
-  sequelize@6.37.7(sqlite3@https://codeload.github.com/AppThreat/node-sqlite3/tar.gz/d9bd20f3991ced9c48bf339a77b0cbb5605db8e9):
+  sequelize@6.37.7(@appthreat/sqlite3@6.0.3):
     dependencies:
       '@types/debug': 4.1.12
       '@types/validator': 13.15.1
@@ -4944,7 +4954,7 @@ snapshots:
       validator: 13.15.15
       wkx: 0.5.0
     optionalDependencies:
-      sqlite3: https://codeload.github.com/AppThreat/node-sqlite3/tar.gz/d9bd20f3991ced9c48bf339a77b0cbb5605db8e9
+      sqlite3: '@appthreat/sqlite3@6.0.3'
     transitivePeerDependencies:
       - supports-color
     optional: true
@@ -5064,18 +5074,6 @@ snapshots:
   spdx-license-ids@3.0.21: {}
 
   sprintf-js@1.1.3: {}
-
-  sqlite3@https://codeload.github.com/AppThreat/node-sqlite3/tar.gz/d9bd20f3991ced9c48bf339a77b0cbb5605db8e9:
-    dependencies:
-      bindings: 1.5.0
-      node-addon-api: 8.3.1
-      prebuild-install: 7.1.3
-    optionalDependencies:
-      node-gyp: 10.3.1
-    transitivePeerDependencies:
-      - bare-buffer
-      - supports-color
-    optional: true
 
   ssri@12.0.0:
     dependencies:
@@ -5284,7 +5282,7 @@ snapshots:
 
   wkx@0.5.0:
     dependencies:
-      '@types/node': 22.15.27
+      '@types/node': 22.15.29
     optional: true
 
   wrap-ansi@7.0.0:

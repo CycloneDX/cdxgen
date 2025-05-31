@@ -80,10 +80,10 @@
     "*": "biome check --fix --no-errors-on-unmatched"
   },
   "dependencies": {
-    "@babel/parser": "^7.27.2",
-    "@babel/traverse": "^7.27.1",
+    "@babel/parser": "^7.27.4",
+    "@babel/traverse": "^7.27.4",
     "@iarna/toml": "2.2.5",
-    "@npmcli/arborist": "^9.1.0",
+    "@npmcli/arborist": "^9.1.1",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "cheerio": "^1.0.0",
@@ -127,7 +127,7 @@
     "connect": "^3.7.0",
     "jsonata": "^2.0.6",
     "sequelize": "^6.37.7",
-    "sqlite3": "github:AppThreat/node-sqlite3#d9bd20f3991ced9c48bf339a77b0cbb5605db8e9"
+    "sqlite3": "npm:@appthreat/sqlite3@^6.0.3"
   },
   "files": ["*.js", "lib/**", "bin/", "data/", "types/", "index.cjs"],
   "devDependencies": {
@@ -136,7 +136,7 @@
     "typescript": "^5.8.3"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["sqlite3", "@biomejs/biome"],
+    "onlyBuiltDependencies": ["@appthreat/sqlite3", "@biomejs/biome"],
     "overrides": {
       "babel-plugin-istanbul": "^7.0.0",
       "jwa": "^2.0.1",
