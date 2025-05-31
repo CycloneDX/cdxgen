@@ -1,6 +1,14 @@
 #! /usr/bin/env bash
 set -e
 
+glibc_version=$(ldd --version | head -n1 | awk '{print $NF}')
+required_version="2.35"
+
+# Compare versions: if glibc_version < required_version, set the env var
+if [ "$(printf '%s\n%s\n' "$glibc_version" "$required_version" | sort -V | head -n1)" != "$required_version" ]; then
+  export npm_config_build_from_source=true
+fi
+
 if [ x"${ATOM_RUBY_VERSION}" != "x" ]; then
   git clone https://github.com/rbenv/rbenv.git --depth=1 ~/.rbenv
   echo 'export PATH="/root/.rbenv/bin:$PATH"' >> ~/.bashrc
