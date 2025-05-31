@@ -1,0 +1,37 @@
+images:
+  - location: https://github.com/AppThreat/alpine-lima/releases/download/v0.3.0/alpine-lima-std-3.22.0-x86_64.iso
+    arch: x86_64
+    digest: sha512:5583a58b163c7111f9507cc7c285b0522e76b0031f6767b450e3ad06941f50958cc723c29623865a9074d73805dff031fd02db4944aafb31a6e379a2723212b5
+
+  - location: https://github.com/AppThreat/alpine-lima/releases/download/v0.3.0/alpine-lima-std-3.22.0-aarch64.iso
+    arch: aarch64
+    digest: sha512:5e966183c1d81ff73943304c88921084a84a59fe85413505645533bb1531426373b45a0eaa64f80a3d7c80bb7206a97da4d0532ae4b642e7f641caa54cdcd35c
+mounts:
+  - location: "~"
+  - location: "/tmp/cdxgen"
+    writable: true
+containerd:
+  system: false
+  user: false
+provision:
+- mode: dependency
+  skipDefaultDependencyResolution: false
+  script: |
+    #!/bin/bash
+    set -eux -o pipefail
+    apk update
+    apk add --no-cache \
+      zip unzip wget binutils git gnupg curl tar \
+      build-base musl-dev libedit libxml2-dev ncurses-dev z3-dev pkgconfig tzdata zlib-dev curl-dev sqlite-libs libstdc++ \
+      python3 python3-dev py3-pip poetry uv \
+      openjdk21 maven cargo go ruby ruby-bundler docker docker-cli docker-cli-buildx docker-cli-compose nerdctl \
+      maven gradle nodejs npm pnpm android-tools
+probes:
+  - script: |
+      #!/bin/bash
+      set -eux -o pipefail
+      if ! timeout 30s bash -c "until command -v docker >/dev/null 2>&1; do sleep 3; done"; then
+        echo >&2 "docker is not installed yet"
+        exit 1
+      fi
+    hint: See "/var/log/cloud-init-output.log". in the guest
