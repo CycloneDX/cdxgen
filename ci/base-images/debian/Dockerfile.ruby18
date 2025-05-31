@@ -25,7 +25,7 @@ RUN set -ex \
     && rm /etc/apt/sources.list \
     && echo "deb http://archive.debian.org/debian-security jessie/updates main" >> /etc/apt/sources.list.d/jessie.list \
     && echo "deb http://archive.debian.org/debian jessie main" >> /etc/apt/sources.list.d/jessie.list \
-    && apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -qq -y --force-yes --no-install-recommends curl bash bzip2 git-core zip unzip make gawk gnupg2 nodejs \
+    && apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -qq -y --force-yes --no-install-recommends gcc-4.9-base curl bash bzip2 git-core zip unzip make gawk gnupg2 nodejs \
     && apt-get install -qq -y --force-yes build-essential python3 python3-pip python3-dev libmagic-dev locales autoconf automake bison libffi-dev libgdbm-dev \
         libncurses5-dev libsqlite3-dev libtool libyaml-dev pkg-config sqlite3 zlib1g-dev libgmp-dev libreadline6-dev libssl-dev libc-dev libxslt-dev libmagickwand-dev \
     && command curl -sSL https://rvm.io/mpapis.asc | gpg2 --import - \

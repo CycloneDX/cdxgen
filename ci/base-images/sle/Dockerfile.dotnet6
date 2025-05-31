@@ -10,7 +10,7 @@ ENV DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
     npm_config_build_from_source=true
 ENV PATH=${PATH}:/usr/local/bin:
 
-RUN zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends git-core nodejs20 npm20 \
+RUN zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends gcc14 gcc14-c++ git-core nodejs20 npm20 \
         python311 python311-pip wget zip unzip make gawk java-21-openjdk-devel curl \
     && rpm -Uvh https://packages.microsoft.com/config/sles/15/packages-microsoft-prod.rpm \
     && zypper --non-interactive install -l --no-recommends dotnet-sdk-3.1 \

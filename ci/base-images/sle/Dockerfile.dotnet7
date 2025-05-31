@@ -10,7 +10,7 @@ ENV DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
     npm_config_build_from_source=true
 ENV PATH=${PATH}:/usr/local/bin:
 
-RUN zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends git-core nodejs20 npm20 python311 python311-pip wget zip unzip make gawk curl \
+RUN zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends gcc13 gcc13-c++ git-core nodejs20 npm20 python311 python311-pip wget zip unzip make gawk curl \
     && npm install -g corepack \
     && zypper clean -a
 
