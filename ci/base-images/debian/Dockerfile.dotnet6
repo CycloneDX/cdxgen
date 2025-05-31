@@ -8,8 +8,7 @@ ENV DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
     NUGET_XMLDOC_MODE=skip \
     DOTNET_RUNNING_IN_CONTAINER=true \
     DOTNET_CLI_TELEMETRY_OPTOUT=1 \
-    NVM_DIR="/root/.nvm" \
-    npm_config_build_from_source=true
+    NVM_DIR="/root/.nvm"
 ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:/usr/local/bin:/root/.local/bin:
 
 COPY ci/base-images/debian/install.sh /tmp/

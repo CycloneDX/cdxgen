@@ -8,7 +8,6 @@ ENV CC=gcc \
     LANGUAGE=en_US.UTF-8 \
     GOPATH=/opt/app-root/go \
     npm_config_python=/usr/bin/python3.10 \
-    npm_config_build_from_source=true \
     PYTHONPATH=/opt/pypi:${PYTHONPATH}
 
 ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:${GOPATH}/bin:/usr/local/go/bin:
