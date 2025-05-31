@@ -11,8 +11,7 @@ ENV LC_ALL=en_US.UTF-8 \
     JAVA_OPTIONS="-Dhttps.protocols=TLSv1.1,TLSv1.2" \
     RUBY_BUILD_BUILD_PATH="/tmp/rbenv" \
     RUBY_BUILD_HTTP_CLIENT=curl \
-    npm_config_python=/usr/bin/python3.11 \
-    npm_config_build_from_source=true
+    npm_config_python=/usr/bin/python3.11
 
 ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:
 
@@ -30,7 +29,7 @@ RUN set -e; \
             ;; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
     esac \
-    && zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends gcc14 gcc14-c++ git-core java-21-openjdk-devel nodejs20 npm20 python311 python311-pip wget zip \
+    && zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends git-core java-21-openjdk-devel nodejs20 npm20 python311 python311-pip wget zip \
       unzip make gawk rust1.85 libopenssl-devel libffi-devel readline-devel libyaml-devel zlib-devel ncurses ncurses-devel jemalloc-devel \
     && npm install -g corepack \
     && gem install bundler -v 2.3.27 \

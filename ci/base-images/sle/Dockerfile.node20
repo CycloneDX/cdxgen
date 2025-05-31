@@ -6,8 +6,7 @@ ENV NVM_DIR="/root/.nvm" \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
-    npm_config_python=/usr/bin/python3.11 \
-    npm_config_build_from_source=true
+    npm_config_python=/usr/bin/python3.11
 ENV PATH=${PATH}:/usr/local/bin:
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \

@@ -13,8 +13,7 @@ ENV JAVA_VERSION=$JAVA_VERSION \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     NVM_DIR="/root/.nvm" \
-    npm_config_python=/usr/bin/python3.6 \
-    npm_config_build_from_source=true
+    npm_config_python=/usr/bin/python3.6
 ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/usr/local/bin:
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
