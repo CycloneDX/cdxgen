@@ -1,6 +1,6 @@
 FROM golang:1.24-alpine
 
-ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin
+ENV PATH=${PATH}:/usr/local/bin:
 
 RUN apk update && apk add --no-cache \
     curl \
