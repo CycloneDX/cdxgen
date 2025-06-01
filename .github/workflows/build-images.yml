@@ -59,6 +59,16 @@ jobs:
             distro: debian
 
           - lang: golang123
+            distro: alpine
+          
+          - lang: golang124
+            distro: alpine
+            base-image:
+              additional-image: alpine-golang
+            cdxgen-image:
+              additional-image: cdxgen-alpine-golang
+
+          - lang: golang123
             distro: debian
           
           - lang: golang124
