@@ -13,6 +13,12 @@ export function safeExistsSync(filePath: string): boolean;
  * @Boolean True if the path exists. False otherwise
  */
 export function safeMkdirSync(filePath: string, options: Options): string;
+export function safeSpawnSync(command: any, args: any, options: any): import("child_process").SpawnSyncReturns<string> | {
+    status: number;
+    stdout: any;
+    stderr: any;
+    error: Error;
+};
 export function shouldFetchLicense(): boolean;
 export function shouldFetchVCS(): boolean;
 export function getJavaCommand(): string;
@@ -1136,7 +1142,7 @@ export function readZipEntry(zipFile: string, filePattern: string, contentEncodi
  *
  * @returns List of classes and sources matching certain known patterns
  */
-export function getJarClasses(jarFile: string): Promise<any[]>;
+export function getJarClasses(jarFile: string): Promise<any>;
 /**
  * Method to return the gradle command to use.
  *
