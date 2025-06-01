@@ -1,0 +1,24 @@
+FROM golang:1.23-alpine
+
+ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin
+
+RUN apk update && apk add --no-cache \
+    curl \
+    bash \
+    bzip2 \
+    git \
+    zip \
+    unzip \
+    make \
+    gawk \
+    build-base \
+    npm \
+    python3 \
+    python3-dev \
+    py3-pip \
+    && node -v \
+    && npm -v 
+
+RUN rm -rf /var/cache/apk/*
+
+CMD ["/bin/bash"]
