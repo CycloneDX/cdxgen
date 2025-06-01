@@ -13,6 +13,7 @@ export function safeExistsSync(filePath: string): boolean;
  * @Boolean True if the path exists. False otherwise
  */
 export function safeMkdirSync(filePath: string, options: Options): string;
+export function safeSpawnSync(command: any, args: any, options: any): import("child_process").SpawnSyncReturns<string>;
 export function shouldFetchLicense(): boolean;
 export function shouldFetchVCS(): boolean;
 export function getJavaCommand(): string;
