@@ -160,32 +160,38 @@ importers:
         specifier: 1.0.1
         version: 1.0.1
       '@cyclonedx/cdxgen-plugins-bin':
-        specifier: 1.6.11
-        version: 1.6.11
+        specifier: 1.6.12
+        version: 1.6.12
       '@cyclonedx/cdxgen-plugins-bin-darwin-amd64':
-        specifier: 1.6.11
-        version: 1.6.11
+        specifier: 1.6.12
+        version: 1.6.12
       '@cyclonedx/cdxgen-plugins-bin-darwin-arm64':
-        specifier: 1.6.11
-        version: 1.6.11
+        specifier: 1.6.12
+        version: 1.6.12
       '@cyclonedx/cdxgen-plugins-bin-linux-amd64':
-        specifier: 1.6.11
-        version: 1.6.11
+        specifier: 1.6.12
+        version: 1.6.12
       '@cyclonedx/cdxgen-plugins-bin-linux-arm':
-        specifier: 1.6.11
-        version: 1.6.11
+        specifier: 1.6.12
+        version: 1.6.12
       '@cyclonedx/cdxgen-plugins-bin-linux-arm64':
-        specifier: 1.6.11
-        version: 1.6.11
+        specifier: 1.6.12
+        version: 1.6.12
       '@cyclonedx/cdxgen-plugins-bin-linux-ppc64':
-        specifier: 1.6.11
-        version: 1.6.11
+        specifier: 1.6.12
+        version: 1.6.12
+      '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64':
+        specifier: 1.6.12
+        version: 1.6.12
+      '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64':
+        specifier: 1.6.12
+        version: 1.6.12
       '@cyclonedx/cdxgen-plugins-bin-windows-amd64':
-        specifier: 1.6.11
-        version: 1.6.11
+        specifier: 1.6.12
+        version: 1.6.12
       '@cyclonedx/cdxgen-plugins-bin-windows-arm64':
-        specifier: 1.6.11
-        version: 1.6.11
+        specifier: 1.6.12
+        version: 1.6.12
       body-parser:
         specifier: ^2.2.0
         version: 2.2.0
@@ -200,10 +206,10 @@ importers:
         version: 2.0.6
       sequelize:
         specifier: ^6.37.7
-        version: 6.37.7(@appthreat/sqlite3@6.0.3)
+        version: 6.37.7(@appthreat/sqlite3@6.0.4)
       sqlite3:
-        specifier: npm:@appthreat/sqlite3@^6.0.3
-        version: '@appthreat/sqlite3@6.0.3'
+        specifier: npm:@appthreat/sqlite3@^6.0.4
+        version: '@appthreat/sqlite3@6.0.4'
 
 packages:
 
@@ -228,8 +234,8 @@ packages:
     resolution: {integrity: sha512-r/X6RRn3B4hzRmdvuEmVbqfPV2fItY5y6+J3JJO7hrMMT4bMjYAu1J0rNcT1tbQ1yP91MpgJzyoHTzCqpmw5/A==}
     engines: {node: '>=18'}
 
-  '@appthreat/sqlite3@6.0.3':
-    resolution: {integrity: sha512-7tHZoxELI7cVp3iTqYyyIFalorbdianmbTqBQf6S+i5Kw3Lj/POEkeQX2727Tpv2Rkt09UhSx37p8KbWepnouQ==}
+  '@appthreat/sqlite3@6.0.4':
+    resolution: {integrity: sha512-l6s/OkX5wwnH5hV4yUDsYoEgwZLzEGYBxCCpd2e2j9b96uHPepbkFc2hKf9juCcko7jdI93zowbTOmP7MOxgqw==}
     engines: {node: '>=20'}
 
   '@babel/code-frame@7.27.1':
@@ -449,48 +455,58 @@ packages:
   '@bufbuild/protobuf@1.7.2':
     resolution: {integrity: sha512-i5GE2Dk5ekdlK1TR7SugY4LWRrKSfb5T1Qn4unpIMbfxoeGKERKQ59HG3iYewacGD10SR7UzevfPnh6my4tNmQ==}
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.11':
-    resolution: {integrity: sha512-ZO92M7o8NVBDcjcTrheU0Y+RCMSMTty/lFogzbCOscZfXmGRr9tTw8Y68GKpOpAyvBj0J4izGK5Tqw2DXrv3BA==}
+  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.12':
+    resolution: {integrity: sha512-8iVxUFj3DlCcHmA9+n3sRHcf3gq+ohbhNe9uq+ppsMJ5So48DWdVjHveZN7MWpxTnZqk8KJTAYNPFvaLKAFYBQ==}
     cpu: [x64]
     os: [darwin]
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.6.11':
-    resolution: {integrity: sha512-IkxDrvBq6sH26BFpsTFCtPCsOEMnrvRE0mdvH8Feuo4YX/E7Bwv2nQ61P8KgboB7mpBgaebUqQvbXhSnZIDlrA==}
+  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.6.12':
+    resolution: {integrity: sha512-m9uObp61BQb+34YDFoITmB8xQiX7mRx8a2EoEEsgcL26I9h2454cXri4ZqfzMej3loCUlJHxspptzXmYrS8cug==}
     cpu: [arm64]
     os: [darwin]
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-amd64@1.6.11':
-    resolution: {integrity: sha512-TFPJtGWMs9n+1OOu0CtbRtdZrAxweDTw+eyJktYe8bU9Jly8fnp5fxv874Ku1pTMXEkBigtjPQX27sbT/l+tHg==}
+  '@cyclonedx/cdxgen-plugins-bin-linux-amd64@1.6.12':
+    resolution: {integrity: sha512-D/vdxpvrtkfYITHpiQjlvhZBNkm2GLmm/lZHbSs5R+nghbulTgXR9I8pTALFTBhjHZQu55DTiACmn/irhhotkA==}
     cpu: [x64]
     os: [linux]
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.6.11':
-    resolution: {integrity: sha512-q4Bn8qsVFGF/dvo3/67HiY3HMB0MFf6DsE74IWyH3QszwTk/hIUFxvWCGvlhPxG/FC9C0PnA02d86mzGySOZHQ==}
+  '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.6.12':
+    resolution: {integrity: sha512-xd9A25e+4SwHwm9FRglMdsfRsTAROTj3C5eiQ501FI+FOxEbnCODNkDFkplqKqDjDDSIPOgc4llmk9Wk+91c/Q==}
     cpu: [arm64]
     os: [linux]
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.6.11':
-    resolution: {integrity: sha512-FmsaCoPHTnUADgOVrARaZjanTXpjBTsiFmpm4hlyXSkSZzFbRCcWaCQIR4+cPw2Of7Gy7cUdRhvZzFje2UvaUA==}
+  '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.6.12':
+    resolution: {integrity: sha512-6c7IGJcbZemZ2RCj3r1BbxPfQZPxzQNvuk4er0xLdcompQITvjmWT/aaYFtPLT5ymDjIfDyVbgDin8PXQwWWIA==}
     cpu: [arm]
     os: [linux]
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-ppc64@1.6.11':
-    resolution: {integrity: sha512-wfOLU8JeW9EPdFntlhdBP+2KaFrLQid0j2SgwNoCJKAPZg2KDVdJPllCdcmT718BAQ2n1DzWrjIAhZe7jqcHHg==}
+  '@cyclonedx/cdxgen-plugins-bin-linux-ppc64@1.6.12':
+    resolution: {integrity: sha512-JaRY6F+3VBHZMZ51DhC8NhHJkwtLOM1Lnh//iAPw5pAxpQdron+YwfcVIKWhBlFx5zxbz2NI5L7QtiEV/iO4PA==}
     cpu: [ppc64]
     os: [linux]
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.11':
-    resolution: {integrity: sha512-xbBqtCvsgLUBV2qny9t+obCVkKrSQgcMSRtMEBapJfOtyyZls88fz2zK+ChKZV/WjryKY1fOJmJ2VZe8T4NjIg==}
+  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.6.12':
+    resolution: {integrity: sha512-X4eHr0WUtBOiX1Yy8hr35JhpUBJYYbZ31v8KCHtuSK8/h5/0gJidg1OvTGxFWoOLKtPCcb3FvqCY+PSrUcxN0A==}
+    cpu: [x64]
+    os: [linux]
+
+  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64@1.6.12':
+    resolution: {integrity: sha512-smaxqZ2ZmVm04elK9Dydk1IjEcyRuRt9pSBZxK/RhgJojsJGQaeY/boKR0P/46avoNNiZbVkIDAIbBjfJ5Z7RA==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.12':
+    resolution: {integrity: sha512-6reJ+EFAR8YIwSRYMZ/dfF5e+o/JGaAa7h8ByHUcDXdVb9AZDyFKEXu0WeH732FJ1rk06GuNBU2ZFonFvt5lqQ==}
     cpu: [x64]
     os: [win32]
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.6.11':
-    resolution: {integrity: sha512-R1JMWTtmCZd0wumYmMvvUDVpYDqUgGjW5efL3/yaccyRX53F3HbZYlXJEOsmmTPqiQz8SG4bqrjIhAQt5sDBgg==}
+  '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.6.12':
+    resolution: {integrity: sha512-MnYmZXiIZNCPZl3F9KGtKdCjOBfBBI866hdKMojdbgL9u5VMfQBrGA8xTAnAoXPK4MAVRelz42NswieW4OCN+Q==}
     cpu: [arm64]
     os: [win32]
 
-  '@cyclonedx/cdxgen-plugins-bin@1.6.11':
-    resolution: {integrity: sha512-3HjhMEDE+r2T5JZwuIWv+kd8RfPY48PeJD4+CXEWZSgJVdmmmf3Y2EVyQ5/Udc5blOemZkQGa8VRKYmk2GwXuQ==}
+  '@cyclonedx/cdxgen-plugins-bin@1.6.12':
+    resolution: {integrity: sha512-bw+sdaGO54LE5CX+keXXZRNqt6tkwzNctLUmUrNagSP5AWD3U1q3CgWUD55QKOMZcIIrusaFO2vhQZMsTdp0jQ==}
     cpu: [x64]
 
   '@iarna/toml@2.2.5':
@@ -2557,7 +2573,7 @@ snapshots:
       '@bufbuild/protobuf': 1.7.2
     optional: true
 
-  '@appthreat/sqlite3@6.0.3':
+  '@appthreat/sqlite3@6.0.4':
     dependencies:
       bindings: 1.5.0
       node-addon-api: 8.3.1
@@ -2794,31 +2810,37 @@ snapshots:
   '@bufbuild/protobuf@1.7.2':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.11':
+  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.12':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.6.11':
+  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.6.12':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-amd64@1.6.11':
+  '@cyclonedx/cdxgen-plugins-bin-linux-amd64@1.6.12':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.6.11':
+  '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.6.12':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.6.11':
+  '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.6.12':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-ppc64@1.6.11':
+  '@cyclonedx/cdxgen-plugins-bin-linux-ppc64@1.6.12':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.11':
+  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.6.12':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.6.11':
+  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64@1.6.12':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin@1.6.11':
+  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.12':
+    optional: true
+
+  '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.6.12':
+    optional: true
+
+  '@cyclonedx/cdxgen-plugins-bin@1.6.12':
     optional: true
 
   '@iarna/toml@2.2.5': {}
@@ -4935,7 +4957,7 @@ snapshots:
   sequelize-pool@7.1.0:
     optional: true
 
-  sequelize@6.37.7(@appthreat/sqlite3@6.0.3):
+  sequelize@6.37.7(@appthreat/sqlite3@6.0.4):
     dependencies:
       '@types/debug': 4.1.12
       '@types/validator': 13.15.1
@@ -4954,7 +4976,7 @@ snapshots:
       validator: 13.15.15
       wkx: 0.5.0
     optionalDependencies:
-      sqlite3: '@appthreat/sqlite3@6.0.3'
+      sqlite3: '@appthreat/sqlite3@6.0.4'
     transitivePeerDependencies:
       - supports-color
     optional: true
