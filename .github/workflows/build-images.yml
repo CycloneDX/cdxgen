@@ -55,6 +55,9 @@ jobs:
             distro: debian
             runner: macos-hosted
 
+          - lang: dotnet9
+            distro: alpine
+
           - lang: dotnet10
             distro: debian
 

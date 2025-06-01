@@ -9,5 +9,3 @@ RUN apk update && apk add --no-cache \
     && node -v \
     && npm -v \
     && rm -rf /var/cache/apk/*
-
-CMD ["/bin/bash"]

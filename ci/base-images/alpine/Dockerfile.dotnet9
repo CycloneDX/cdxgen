@@ -1,4 +1,4 @@
-FROM golang:1.23-alpine
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine
 
 ENV PATH=${PATH}:/usr/local/bin:
 
