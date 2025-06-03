@@ -1,10 +1,7 @@
 FROM eclipse-temurin:21-jdk-alpine
 
-ARG MAVEN_VERSION=3.9.9
-ARG GRADLE_VERSION=8.14.1
-ARG NODE_VERSION=24.1.0
-
-ENV PATH=${PATH}:/usr/local/apache-maven-${MAVEN_VERSION}/bin:/usr/local/bin
+ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin:/opt/pypi/bin:${PYTHONPATH}: \
+    PYTHON_VERSION=3.12
 
 RUN apk update && apk add --no-cache \
     curl \
@@ -13,13 +10,22 @@ RUN apk update && apk add --no-cache \
     nodejs \
     npm \
     gradle \
-    && curl -fsSL https://downloads.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
-        | tar -xz -C /usr/local \
-    && ln -s /usr/local/apache-maven-${MAVEN_VERSION}/bin/mvn /usr/local/bin/mvn \
-    && ln -s /usr/local/apache-maven-${MAVEN_VERSION}/bin/mvn /usr/local/bin/maven \
+    maven \
+    python3 \
+    python3-dev \
+    py3-pip \
+    py3-virtualenv \
+    gcc \
+    musl-dev \
+    make \
+    git \
     && npm install -g corepack \
+    && /usr/bin/python${PYTHON_VERSION} --version \
+    && /usr/bin/python${PYTHON_VERSION} -m pip install --break-system-packages --no-cache-dir --upgrade setuptools==77.0.3 wheel pip virtualenv \
+    && /usr/bin/python${PYTHON_VERSION} -m pip install --break-system-packages --no-cache-dir --upgrade pipenv atom-tools --target /opt/pypi \
     && node -v \
     && npm -v \
     && mvn -v \
     && gradle -v \
+    && python3 --version \
     && rm -rf /var/cache/apk/*
