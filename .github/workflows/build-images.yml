@@ -98,7 +98,13 @@ jobs:
           - lang: java17-slim
 
           - lang: java21
+            distro: alpine
+
+          - lang: java21
             distro: temurin
+
+          - lang: java24
+            distro: alpine
 
           - lang: java24
             distro: temurin
