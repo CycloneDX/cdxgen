@@ -663,10 +663,10 @@ jobs:
           cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example
           sbt clean stage
           cd $GITHUB_WORKSPACE
-          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example -o bomresults/bom-simple-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
-          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example --profile research -o bomresults/bom-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
-          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example --profile research -o bomresults/bom-play-scala-rest-api-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example
-          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example --profile research -o bomresults/bom-pplay-scala-grpc-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example
+          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example -o bomresults/bom-simple-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example --fail-on-error
+          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example --profile research -o bomresults/bom-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example --fail-on-error
+          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example --profile research -o bomresults/bom-play-scala-rest-api-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example --fail-on-error
+          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example --profile research -o bomresults/bom-pplay-scala-grpc-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example --fail-on-error
         shell: bash
         env:
           CDXGEN_DEBUG_MODE: debug
@@ -796,11 +796,11 @@ jobs:
         shell: bash
       - name: repotests 1.4
         run: |
-          bin/cdxgen.js -r -t java repotests/shiftleft-java-example -o bomresults/1.4-bom-java.json --generate-key-and-sign --spec-version 1.4
-          SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/1.4-bom-github.json --spec-version 1.4
-          FETCH_LICENSE=0 bin/cdxgen.js -r -t js repotests/shiftleft-ts-example -o bomresults/1.4-bom-ts-1.json --fail-on-error --spec-version 1.4
+          bin/cdxgen.js -r -t java repotests/shiftleft-java-example -o bomresults/1.4-bom-java.json --generate-key-and-sign --spec-version 1.4 --fail-on-error
+          SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/1.4-bom-github.json --spec-version 1.4 --fail-on-error
+          FETCH_LICENSE=0 bin/cdxgen.js -r -t js repotests/shiftleft-ts-example -o bomresults/1.4-bom-ts-1.json --fail-on-error --spec-version 1.4 --fail-on-error
           FETCH_LICENSE=1 bin/cdxgen.js -r -t javascript repotests/shiftleft-ts-example --required-only -o bomresults/1.4-bom-ts-2.json --fail-on-error --spec-version 1.4
-          FETCH_LICENSE=true bin/cdxgen.js -r -t csharp repotests/vulnerable_net_core -o bomresults/1.4-bom-csharp2.json --spec-version 1.4
+          FETCH_LICENSE=true bin/cdxgen.js -r -t csharp repotests/vulnerable_net_core -o bomresults/1.4-bom-csharp2.json --spec-version 1.4 --fail-on-error
           FETCH_LICENSE=false bin/cdxgen.js -r repotests/Goatly.NET -o bomresults/1.4-bom-csharp3.json --spec-version 1.4
           FETCH_LICENSE=true bin/cdxgen.js -r -t python repotests/DjanGoat -o bomresults/1.4-bom-python.json --fail-on-error --spec-version 1.4
           bin/cdxgen.js -p -r -t php repotests/Vulnerable-Web-Application -o bomresults/1.4-bom-php.json --fail-on-error --spec-version 1.4
