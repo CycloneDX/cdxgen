@@ -16,6 +16,7 @@ RUN apk update && apk add --no-cache \
     py3-pip \
     py3-virtualenv \
     gcc \
+    g++ \
     musl-dev \
     make \
     git \

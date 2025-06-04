@@ -20,7 +20,7 @@ COPY . /opt/cdxgen
 
 RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
     && npm uninstall -g corepack \
-    && apk del npm py3-pip py3-virtualenv gcc musl-dev make curl tar bash \
+    && apk del npm py3-pip py3-virtualenv gcc musl-dev make curl tar bash g++ \
     && mkdir -p /opt/cdxgen-node-cache \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && rm -rf /root/.cache/node \
