@@ -9,6 +9,7 @@ on:
       run_id:
         required: true
         type: string
+  workflow_dispatch:
 
 jobs:
   rerun:
