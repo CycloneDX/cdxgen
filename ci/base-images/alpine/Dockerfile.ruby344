@@ -24,7 +24,6 @@ RUN apk update && apk add --no-cache \
     git \
     && npm install -g corepack \
     && /usr/bin/python${PYTHON_VERSION} --version \
-    && /usr/bin/python${PYTHON_VERSION} -m pip install --break-system-packages --no-cache-dir --upgrade \
     && /usr/bin/python${PYTHON_VERSION} -m pip install --break-system-packages --no-cache-dir --upgrade atom-tools --target /opt/pypi \
     && node -v \
     && npm -v \
