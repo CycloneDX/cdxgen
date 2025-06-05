@@ -1,0 +1,34 @@
+FROM ruby:3.4.4-alpine
+
+ARG NODE_VERSION=24.1.0
+
+ENV BUNDLE_SILENCE_ROOT_WARNING=true \
+    PYTHON_VERSION=3.12
+
+ENV PATH=${PATH}:/usr/local/bin:/root/.rbenv/bin:/opt/pypi/bin:${PYTHONPATH}:
+
+RUN apk update && apk add --no-cache \
+    curl \
+    tar \
+    bash \
+    nodejs \
+    npm \
+    bzip2 \
+    python3 \
+    python3-dev \
+    py3-pip \
+    py3-virtualenv \
+    gcc \
+    g++ \
+    musl-dev \
+    make \
+    git \
+    && npm install -g corepack \
+    && /usr/bin/python${PYTHON_VERSION} --version \
+    && /usr/bin/python${PYTHON_VERSION} -m pip install --break-system-packages --no-cache-dir --upgrade setuptools==77.0.3 wheel pip virtualenv \
+    && /usr/bin/python${PYTHON_VERSION} -m pip install --break-system-packages --no-cache-dir --upgrade pipenv atom-tools --target /opt/pypi \
+    && node -v \
+    && npm -v \
+    && python3 --version \
+    && gem install bundler cocoapods \
+    && rm -rf /var/cache/apk/*
