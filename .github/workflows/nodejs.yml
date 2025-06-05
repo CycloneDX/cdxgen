@@ -36,6 +36,7 @@ jobs:
           corepack pnpm install --config.strict-dep-builds=true
           python3 -m pip install --pre owasp-depscan[all] atom-tools
       - name: check sbom for vulns
+        if: github.ref == 'refs/heads/master'
         run: |
           node bin/cdxgen.js -t js -o $(pwd)/reports/sbom-build-js.cdx.json --no-recurse --profile research $(pwd)
           docker pull ghcr.io/cyclonedx/cdxgen:master
