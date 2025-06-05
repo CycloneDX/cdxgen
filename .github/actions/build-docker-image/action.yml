@@ -19,12 +19,15 @@ inputs:
   tags:
     description: All tags for the image
     required: true
+  target:
+    description: Which stage in the Dockerfile to build
+    required: true
 
 runs:
   using: composite
   steps:
   - name: Build Docker image
-    uses: docker/build-push-action@v5
+    uses: docker/build-push-action@v6
     with:
       context: .
       file: ${{ inputs.dockerfile }}
@@ -33,3 +36,4 @@ runs:
       platforms: ${{ inputs.platforms }}
       push: ${{ inputs.action == 'push' }}
       tags: ${{ inputs.tags }}
+      target: ${{ inputs.target }}

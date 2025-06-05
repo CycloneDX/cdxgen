@@ -61,12 +61,12 @@ jobs:
         uses: ./.github/actions/build-docker-images-generate-attach-sboms
         with:
           build-arm: ${{ ! fromJSON(inputs.image).skip-arm }}
-          clean-cache: ${{ ! fromJSON(inputs.image).runner }}
-          dockerfile: ci/base-images/${{ fromJSON(inputs.image).distro || 'sle' }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
+          dockerfile: ci/images/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
           images: |
              ${{ env.REPO }}/${{ env.TEAM }}/${{ fromJSON(inputs.image).base-image.name || fromJSON(inputs.image).distro || 'bci' }}-${{ fromJSON(inputs.image).base-image.lang || fromJSON(inputs.image).lang }}
              ${{ fromJSON(inputs.image).base-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).base-image.additional-image) || '' }}
           signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
+          target: base
 
       # cdxgen image
       - name: Build cdxgen image - master-branch
@@ -74,8 +74,7 @@ jobs:
         uses: ./.github/actions/build-docker-images-generate-attach-sboms
         with:
           build-arm: ${{ ! fromJSON(inputs.image).skip-arm }}
-          clean-cache: ${{ fromJSON(inputs.image).runner && true }}
-          dockerfile: ci/base-images/cdxgen/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
+          dockerfile: ci/images/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
           images: |
             ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image) || '' }}
@@ -88,16 +87,24 @@ jobs:
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}:{3}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image, env.TAG) }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image2 && format('{0}/{1}/{2}:{3}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image2, env.TAG) }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}:{3}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3, env.TAG) }}
+          target: cdxgen
       - name: Build cdxgen image - tags
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         uses: ./.github/actions/build-docker-images-generate-attach-sboms
         with:
           build-arm: ${{ ! fromJSON(inputs.image).skip-arm }}
-          clean-cache: ${{ fromJSON(inputs.image).runner && true }}
-          dockerfile: ci/base-images/cdxgen/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
+          dockerfile: ci/images/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
           images: |
             ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image) || '' }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image2 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image2) || '' }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3) || '' }}
           signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
+          target: cdxgen
+
+      # Cleanup
+      - name: Clean buildx cache
+        if: ${{ fromJSON(inputs.image).runner || failure() }}
+        shell: bash
+        run: |
+          docker buildx prune -af

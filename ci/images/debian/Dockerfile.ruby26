@@ -1,0 +1,67 @@
+# Base-image
+FROM ruby:2.6.10 AS base
+
+ARG JAVA_VERSION=21.0.7-tem
+ARG NODE_VERSION=20.19.2
+ARG ATOM_RUBY_VERSION=3.4.3
+
+ENV JAVA_VERSION=$JAVA_VERSION \
+    JAVA_HOME="/opt/java/${JAVA_VERSION}" \
+    ATOM_RUBY_VERSION=$ATOM_RUBY_VERSION \
+    BUNDLE_SILENCE_ROOT_WARNING=true \
+    JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8" \
+    NVM_DIR="/root/.nvm" \
+    npm_config_build_from_source=true
+ENV PATH=/root/.nvm/versions/node/v${NODE_VERSION}/bin:${PATH}:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:
+
+COPY ci/images/debian/install.sh /tmp/
+
+RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash bzip2 git-core zip unzip make gawk \
+    && apt-get install -qq -y build-essential gcc-9 g++-9 python2 libmagic-dev locales nodejs \
+    && gem install bundler -v 1.17.3 \
+    && bundle config git.allow_insecure true \
+    && chmod +x /tmp/install.sh \
+    && SKIP_PYTHON=yes /tmp/install.sh && rm /tmp/install.sh \
+    && node -v \
+    && npm -v \
+    && npm install -g corepack \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && rm -rf /var/lib/apt/lists/*
+
+CMD ["/bin/bash"]
+
+
+
+# cdxgen-image
+FROM base AS cdxgen
+
+LABEL maintainer="CycloneDX" \
+      org.opencontainers.image.authors="Team AppThreat <cloud@appthreat.com>" \
+      org.opencontainers.image.source="https://github.com/CycloneDX/cdxgen" \
+      org.opencontainers.image.url="https://github.com/CycloneDX/cdxgen" \
+      org.opencontainers.image.version="rolling" \
+      org.opencontainers.image.vendor="CycloneDX" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.title="cdxgen" \
+      org.opencontainers.image.description="Rolling image with cdxgen SBOM generator for Ruby 2.6 apps" \
+      org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby26:v11 -r /app --server"
+
+ENV CDXGEN_IN_CONTAINER=true \
+    NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
+    CDXGEN_GEM_HOME="/tmp/gems" \
+    ATOM_RUBY_HOME=/root/.rbenv/versions/3.4.1 \
+    PYTHONPATH=/opt/pypi:${PYTHONPATH}
+ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:/opt/cdxgen/node_modules/.bin:
+
+COPY . /opt/cdxgen
+
+RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
+    && npm install -g @appthreat/atom-parsetools \
+    && mkdir -p /opt/cdxgen-node-cache \
+    && node /opt/cdxgen/bin/cdxgen.js --help \
+    && rbastgen --help \
+    && rm -rf ${CDXGEN_GEM_HOME} && mkdir -p ${CDXGEN_GEM_HOME} \
+    && rm -rf /root/.cache/node \
+    && chmod a-w -R /opt
+WORKDIR /app
+ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]
