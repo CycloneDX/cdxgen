@@ -18,7 +18,7 @@ jobs:
       - name: rerun ${{ inputs.run_id }}
         env:
           GH_REPO: ${{ github.repository }}
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.APIKEY }}
           GH_DEBUG: api
         run: |
           gh run watch ${{ inputs.run_id }} > /dev/null 2>&1
