@@ -39,6 +39,7 @@ jobs:
         {
           "lang": "rolling",
           "distro": "opensuse",
+          "runner": "macos-hosted",
           "base-image": {
             "lang": "lang"
           }
