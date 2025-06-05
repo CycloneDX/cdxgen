@@ -1,7 +1,5 @@
 FROM ruby:3.4.4-alpine
 
-ARG NODE_VERSION=24.1.0
-
 ENV BUNDLE_SILENCE_ROOT_WARNING=true \
     PYTHON_VERSION=3.12
 
@@ -26,8 +24,8 @@ RUN apk update && apk add --no-cache \
     git \
     && npm install -g corepack \
     && /usr/bin/python${PYTHON_VERSION} --version \
-    && /usr/bin/python${PYTHON_VERSION} -m pip install --break-system-packages --no-cache-dir --upgrade virtualenv \
-    && /usr/bin/python${PYTHON_VERSION} -m pip install --break-system-packages --no-cache-dir --upgrade pipenv atom-tools --target /opt/pypi \
+    && /usr/bin/python${PYTHON_VERSION} -m pip install --break-system-packages --no-cache-dir --upgrade \
+    && /usr/bin/python${PYTHON_VERSION} -m pip install --break-system-packages --no-cache-dir --upgrade atom-tools --target /opt/pypi \
     && node -v \
     && npm -v \
     && java -version \
