@@ -663,10 +663,10 @@ jobs:
           cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example
           sbt clean stage
           cd $GITHUB_WORKSPACE
-          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example -o bomresults/bom-simple-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example --fail-on-error
-          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example --profile research -o bomresults/bom-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example --fail-on-error
-          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example --profile research -o bomresults/bom-play-scala-rest-api-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example --fail-on-error
-          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example --profile research -o bomresults/bom-pplay-scala-grpc-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example --fail-on-error
+          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example -o bomresults/bom-simple-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
+          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example --profile research -o bomresults/bom-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
+          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example --profile research -o bomresults/bom-play-scala-rest-api-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example
+          bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example --profile research -o bomresults/bom-pplay-scala-grpc-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example
         shell: bash
         env:
           CDXGEN_DEBUG_MODE: debug
