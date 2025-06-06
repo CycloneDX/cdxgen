@@ -54,7 +54,7 @@ ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:/opt/cdxgen/node_modules/.bin:
 COPY . /opt/cdxgen
 
 RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
-    && npm install -g @appthreat/atom-parsetools@1.0.3 \
+    && npm install -g --production @appthreat/atom-parsetools@1.0.3 \
     && npm uninstall -g corepack \
     && apk del npm py3-pip py3-virtualenv gcc musl-dev make curl tar bash g++ \
     && mkdir -p /opt/cdxgen-node-cache \
