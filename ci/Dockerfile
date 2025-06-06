@@ -22,7 +22,7 @@ ARG MAVEN_VERSION=3.9.9
 ARG GRADLE_VERSION=8.14.1
 ARG GO_VERSION=1.24.3
 ARG NODE_VERSION=24.1.0
-ARG RUBY_VERSION=3.4.3
+ARG RUBY_VERSION=3.4.4
 ARG JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
 ARG SCALA_VERSION=3.6.4
 
@@ -62,7 +62,7 @@ ENV GOPATH=/opt/app-root/go \
     SDKMAN_DIR=/opt/.sdkman \
     SDKMAN_CANDIDATES_DIR=/opt/.sdkman/candidates \
     RBENV_ROOT=/opt/.rbenv
-ENV PATH=${PATH}:/opt/bin:/opt/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/opt/.local/bin:/opt/pypi/bin:/opt/.rbenv/bin:/opt/.rbenv/versions/3.4.3/bin:
+ENV PATH=${PATH}:/opt/bin:/opt/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/opt/.local/bin:/opt/pypi/bin:/opt/.rbenv/bin:/opt/.rbenv/versions/3.4.4/bin:
 
 COPY . /opt/cdxgen
 
