@@ -69,7 +69,6 @@ jobs:
 
           - lang: dotnet6
             distro: debian
-            runner: macos-hosted
 
           - lang: dotnet7
             skip-arm: true
@@ -93,6 +92,7 @@ jobs:
 
           - lang: dotnet10
             distro: debian
+            runner: macos-hosted
 
           - lang: golang123
             distro: alpine
@@ -143,26 +143,26 @@ jobs:
             distro: temurin
 
           - lang: node20
-            runner: macos-hosted
             cdxgen-image:
               additional-image: cdxgen-node
 
           - lang: php83
             distro: debian
+            runner: macos-hosted
 
           - lang: python36
-            runner: macos-hosted
 
           - lang: python39
             distro: opensuse
+            runner: macos-hosted
 
           - lang: python310
             distro: opensuse
+            runner: macos-hosted
 
           - lang: python311
 
           - lang: python312
-            runner: macos-hosted
             base-image:
               lang: lang
             cdxgen-image:
@@ -178,7 +178,6 @@ jobs:
 
           - lang: ruby26
             distro: debian
-            runner: macos-hosted
             skip-arm: true
 
           - lang: ruby33
@@ -187,7 +186,6 @@ jobs:
 
           - lang: ruby34
             distro: debian
-            runner: macos-hosted
 
           - lang: ruby344
             distro: alpine
@@ -201,7 +199,6 @@ jobs:
 
           - lang: swift6
             distro: debian
-            runner: macos-hosted
             base-image:
               additional-image: debian-swift
             cdxgen-image:
