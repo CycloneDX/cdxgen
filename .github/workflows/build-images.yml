@@ -8,7 +8,7 @@ name: Build images
 # An image definition looks like this:
 #
 #   lang:                  Language+version the image will be built for    -- mandatory
-#   distro:                Distribution the image is based on              -- default: 'bci' for the image name, 'sle' for Dockerfile-location (defined in `image-build.yml`)
+#   distro:                Distribution the image is based on              -- default: 'bci' (defined in `image-build.yml`)
 #   fix-qemu:              Fix the QEMU installation on the build-server   -- default: false
 #   runner:                Hint/name of the server to run the build on     -- default: 'ubuntu-24.04' (defined in `image-build.yml`)
 #   skip-arm:              Do not build an ARM64-version of this image     -- default: false
@@ -28,10 +28,9 @@ name: Build images
 #   cdxgen-image:   cdxgen${ -distro }-${ lang }:${ image-build.ymlTAG || 'vX.X.X' }
 #
 # The above configurations are also used to lookup the location of the
-# 'Dockerfile' for the image:
+# 'Dockerfile' for the images:
 #
-#   base-image:     ci/base-images/${ distro }/Dockerfile.${ lang }
-#   cdxgen-image:   ci/base-images/cdxgen/${ distro }/Dockerfile.${ lang }
+#   ci/images/${ distro }/Dockerfile.${ lang }
 
 on:
   schedule:
@@ -58,14 +57,6 @@ jobs:
       fail-fast: false
       matrix:
         image:
-
-#          - lang: dotnet6
-#            fix-qemu: true
-#            skip-arm: true
-#            base-image:
-#              additional-image: bci-dotnet
-#            cdxgen-image:
-#              additional-image: cdxgen-dotnet
 
           - lang: dotnet6
             distro: debian

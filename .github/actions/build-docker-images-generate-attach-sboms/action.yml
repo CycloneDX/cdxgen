@@ -7,9 +7,6 @@ inputs:
   build-arm:
     description: Whether or not to build the arm image
     required: true
-  clean-cache:
-    description: Whether or not to clean the build-cache at the end
-    required: true
   dockerfile:
     description: Dockerfile that describes the image
     required: true
@@ -23,6 +20,9 @@ inputs:
     required: true
   tags:
     description: All tags to set for this image, defaults to all tags returned from the metadata extraction
+  target:
+    description: Which stage in the Dockerfile to build
+    required: true
 
 runs:
   using: composite
@@ -40,6 +40,7 @@ runs:
       labels: ${{ steps.metadata.outputs.labels }}
       platforms: linux/amd64${{ inputs.build-arm == 'true' && ',linux/arm64' || '' }}
       tags: ${{ inputs.tags || steps.metadata.outputs.tags }}
+      target: ${{ inputs.target }}
   - name: Generate and attach SBOM for amd64
     uses: ./.github/actions/generate-attach-sbom
     with:
@@ -47,6 +48,7 @@ runs:
       platform: linux/amd64
       signing-key: ${{ inputs.signing-key }}
       tag: ${{ inputs.main-tag || fromJSON(steps.metadata.outputs.json).tags[0] }}
+      target: ${{ inputs.target }}
   - name: Generate and attach SBOM for arm64
     if: ${{ inputs.build-arm == 'true' }}
     uses: ./.github/actions/generate-attach-sbom
@@ -55,8 +57,4 @@ runs:
       platform: linux/arm64
       signing-key: ${{ inputs.signing-key }}
       tag: ${{ inputs.main-tag || fromJSON(steps.metadata.outputs.json).tags[0] }}
-  - name: Clean buildx cache
-    if: ${{ inputs.clean-cache == 'true' && always() }}
-    shell: bash
-    run: |
-      docker buildx prune -af
+      target: ${{ inputs.target }}

@@ -16,6 +16,9 @@ inputs:
   signing-key:
     description: The key to use for signing the SBOM, base64 encoded
     required: true
+  target:
+    description: Which stage in the Dockerfile to build
+    required: true
 
 runs:
   using: composite
@@ -27,6 +30,7 @@ runs:
       dockerfile: ${{ inputs.dockerfile }}
       platforms: ${{ inputs.platform }}
       tags: ${{ inputs.tag }}
+      target: ${{ inputs.target }}
   - name: Generate and attach SBOM
     shell: bash
     run: |
