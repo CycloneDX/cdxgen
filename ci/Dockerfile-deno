@@ -22,7 +22,7 @@ ARG MAVEN_VERSION=3.9.9
 ARG GRADLE_VERSION=8.14.1
 ARG GO_VERSION=1.24.3
 ARG PYTHON_VERSION=3.12
-ARG RUBY_VERSION=3.4.3
+ARG RUBY_VERSION=3.4.4
 ARG SCALA_VERSION=3.6.4
 
 ENV GOPATH=/opt/app-root/go \
@@ -60,7 +60,7 @@ ENV GOPATH=/opt/app-root/go \
     PYTHONPATH=/opt/pypi:${PYTHONPATH} \
     DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     RBENV_ROOT=/opt/.rbenv
-ENV PATH=${PATH}:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:/root/.deno/bin:/root/.cargo/bin:/opt/pypi/bin:/opt/.rbenv/bin:/opt/.rbenv/versions/3.4.3/bin:
+ENV PATH=${PATH}:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:/root/.deno/bin:/root/.cargo/bin:/opt/pypi/bin:/opt/.rbenv/bin:/opt/.rbenv/versions/3.4.4/bin:
 
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
@@ -88,7 +88,7 @@ RUN set -e; \
     && python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade setuptools==77.0.3 wheel pip virtualenv \
     && python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade pipenv poetry blint atom-tools uv --target /opt/pypi \
     && curl -fsSL https://deno.land/x/install/install.sh | sh \
-    && deno install -g --node-modules-dir=auto --allow-scripts=npm:@appthreat/sqlite3@6.0.4 --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net -n cdxgen "npm:@cyclonedx/cdxgen/cdxgen" \
+    && deno install -g --node-modules-dir=auto --allow-scripts=npm:@appthreat/sqlite3@6.0.6 --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net -n cdxgen "npm:@cyclonedx/cdxgen/cdxgen" \
     && deno install -g --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write -n atom "npm:@appthreat/atom/atom" \
     && deno install -g --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write -n astgen "npm:@appthreat/atom/astgen" \
     && deno install -g --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write -n phpastgen "npm:@appthreat/atom/phpastgen" \
