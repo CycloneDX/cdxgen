@@ -21,7 +21,6 @@ RUN apk update && apk add --no-cache \
     git \
     && npm install -g corepack \
     && /usr/bin/python --version \
-    && /usr/bin/python -m pip install --break-system-packages --no-cache-dir --upgrade setuptools==77.0.3 wheel pip virtualenv \
     && /usr/bin/python -m pip install --break-system-packages --no-cache-dir --upgrade pipenv atom-tools --target /opt/pypi \
     && node -v \
     && npm -v \
