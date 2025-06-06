@@ -21,6 +21,7 @@ jobs:
   sae-builds:
     if: github.repository == 'CycloneDX/cdxgen'
     strategy:
+      fail-fast: false
       matrix:
         os: ['ubuntu-22.04', 'windows-2019', 'windows-11-arm', 'ubuntu-22.04-arm']
         include:
