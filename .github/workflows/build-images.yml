@@ -189,6 +189,9 @@ jobs:
             distro: debian
             runner: macos-hosted
 
+          - lang: ruby344
+            distro: alpine
+
           - lang: rust1
             distro: debian
             base-image:
