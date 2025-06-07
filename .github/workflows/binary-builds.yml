@@ -33,7 +33,7 @@ jobs:
               ./cdxgen --help
               sha256sum cdxgen > cdxgen.sha256
               rm -rf node_modules
-              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy              
+              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile              
               pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen-slim
               ./cdxgen-slim --version
@@ -55,7 +55,7 @@ jobs:
               ./cdxgen-arm64 --version
               sha256sum cdxgen-arm64 > cdxgen-arm64.sha256
               rm -rf node_modules
-              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy
+              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
               pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-arm64-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen-arm64-slim
               ./cdxgen-arm64-slim --version
@@ -77,7 +77,7 @@ jobs:
               ./cdxgen.exe --version
               (Get-FileHash ./cdxgen.exe).hash | Out-File -FilePath ./cdxgen.exe.sha256
               rm -rf node_modules
-              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy
+              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
               echo "cdxgen-slim.exe"
               pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               ./cdxgen-slim.exe --version
@@ -99,7 +99,7 @@ jobs:
               ./cdxgen-arm.exe --version
               (Get-FileHash ./cdxgen-arm.exe).hash | Out-File -FilePath ./cdxgen-arm.exe.sha256
               rm -rf node_modules
-              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy
+              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
               echo "cdxgen-arm-slim.exe"
               pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-arm-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               ./cdxgen-arm-slim.exe --version
@@ -125,15 +125,14 @@ jobs:
           node-version: '24.x'
       - name: Produce sae
         run: |
-          rm .pnpmfile.cjs
-          mkdir -p $RUNNER_TEMP/cdxgen-builds
+          mkdir -p $GITHUB_WORKSPACE/.cdxgen-builds
           npm install --global pnpm@10.11.1
-          pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy
+          pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
           ${{ matrix.build }}
         shell: bash
         env:
-          TEMP: ${{ runner.temp }}/cdxgen-builds
-          TMP: ${{ runner.temp }}/cdxgen-builds
+          TEMP: ${{ github.workspace }}/.cdxgen-builds
+          TMP: ${{ github.workspace }}/.cdxgen-builds
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
