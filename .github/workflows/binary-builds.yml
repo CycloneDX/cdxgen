@@ -71,7 +71,8 @@ jobs:
             vartifact: cdx-arm64-verify
           - os: windows-2022
             build: |
-              rm -rf ci contrib tools_config
+              rm -rf ci contrib tools_config node_modules
+              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile --force
               echo "cdxgen.exe"
               npx @appthreat/caxa --input . --output "cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               ./cdxgen.exe --version
@@ -93,7 +94,8 @@ jobs:
             vartifact: cdx-verify.exe
           - os: windows-11-arm
             build: |
-              rm -rf ci contrib tools_config
+              rm -rf ci contrib tools_config node_modules
+              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile --force
               echo "cdxgen-arm.exe"
               npx @appthreat/caxa --input . --output "cdxgen-arm.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               ./cdxgen-arm.exe --version
