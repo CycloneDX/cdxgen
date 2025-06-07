@@ -123,9 +123,8 @@ jobs:
           node-version: '24.x'
       - name: Produce sae
         run: |
-          npm install --global corepack@latest --force
-          corepack enable pnpm
-          corepack pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
+          npm install --global pnpm@10.11.1
+          pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
           ${{ matrix.build }}
       - uses: actions/upload-artifact@v4
         with:
