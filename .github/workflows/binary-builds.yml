@@ -74,14 +74,17 @@ jobs:
               Remove-Item ci -Recurse -Force
               Remove-Item contrib -Recurse -Force
               Remove-Item tools_config -Recurse -Force
+              echo "cdxgen.exe"
               npx @appthreat/caxa --input . --output "cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen.exe --version
               (Get-FileHash .\cdxgen.exe).hash | Out-File -FilePath .\cdxgen.exe.sha256
               Remove-Item node_modules -Recurse -Force
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
+              echo "cdxgen-slim.exe"
               npx @appthreat/caxa --input . --output "cdxgen-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen-slim.exe --version
               (Get-FileHash .\cdxgen-slim.exe).hash | Out-File -FilePath .\cdxgen-slim.exe.sha256
+              echo "cdx-verify.exe"
               npx @appthreat/caxa --input . --output "cdx-verify.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
               .\cdx-verify.exe --version
               (Get-FileHash .\cdx-verify.exe).hash | Out-File -FilePath .\cdx-verify.exe.sha256
@@ -95,14 +98,17 @@ jobs:
               Remove-Item ci -Recurse -Force
               Remove-Item contrib -Recurse -Force
               Remove-Item tools_config -Recurse -Force
+              echo "cdxgen-arm.exe"
               npx @appthreat/caxa --input . --output "cdxgen-arm.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen-arm.exe --version
               (Get-FileHash .\cdxgen-arm.exe).hash | Out-File -FilePath .\cdxgen-arm.exe.sha256
               Remove-Item node_modules -Recurse -Force
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
+              echo "cdxgen-arm-slim.exe"
               npx @appthreat/caxa --input . --output "cdxgen-arm-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen-arm-slim.exe --version
               (Get-FileHash .\cdxgen-arm-slim.exe).hash | Out-File -FilePath .\cdxgen-arm-slim.exe.sha256
+              echo "cdx-arm-verify.exe"
               npx @appthreat/caxa --input . --output "cdx-arm-verify.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
               .\cdx-arm-verify.exe --version
               (Get-FileHash .\cdx-arm-verify.exe).hash | Out-File -FilePath .\cdx-arm-verify.exe.sha256
