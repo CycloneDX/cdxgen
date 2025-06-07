@@ -122,7 +122,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24.x'
+          node-version: '22.x'
       - name: Produce sae
         run: |
           mkdir -p $RUNNER_TEMP/cdxgen-builds
