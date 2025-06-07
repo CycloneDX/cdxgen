@@ -71,14 +71,12 @@ jobs:
             vartifact: cdx-arm64-verify
           - os: windows-2022
             build: |
-              rm -rf ci -Recurse -Force
-              rm -rf contrib -Recurse -Force
-              rm -rf tools_config -Recurse -Force
+              rm -rf ci contrib tools_config
               echo "cdxgen.exe"
               npx @appthreat/caxa --input . --output "cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen.exe --version
               (Get-FileHash .\cdxgen.exe).hash | Out-File -FilePath .\cdxgen.exe.sha256
-              rm -rf node_modules -Recurse -Force
+              rm -rf node_modules
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
               echo "cdxgen-slim.exe"
               npx @appthreat/caxa --input . --output "cdxgen-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
@@ -95,14 +93,12 @@ jobs:
             vartifact: cdx-verify.exe
           - os: windows-11-arm
             build: |
-              rm -rf ci -Recurse -Force
-              rm -rf contrib -Recurse -Force
-              rm -rf tools_config -Recurse -Force
+              rm -rf ci contrib tools_config
               echo "cdxgen-arm.exe"
               npx @appthreat/caxa --input . --output "cdxgen-arm.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen-arm.exe --version
               (Get-FileHash .\cdxgen-arm.exe).hash | Out-File -FilePath .\cdxgen-arm.exe.sha256
-              rm -rf node_modules -Recurse -Force
+              rm -rf node_modules
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
               echo "cdxgen-arm-slim.exe"
               npx @appthreat/caxa --input . --output "cdxgen-arm-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
