@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-22.04', 'windows-2019', 'windows-11-arm', 'ubuntu-22.04-arm']
+        os: ['ubuntu-22.04', 'windows-2022', 'windows-11-arm', 'ubuntu-22.04-arm']
         include:
           - os: ubuntu-22.04
             build: |
@@ -69,7 +69,7 @@ jobs:
             artifact: cdxgen-arm64
             sartifact: cdxgen-arm64-slim
             vartifact: cdx-arm64-verify
-          - os: windows-2019
+          - os: windows-2022
             build: |
               Remove-Item ci -Recurse -Force
               Remove-Item contrib -Recurse -Force
@@ -120,7 +120,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24.x'
+          node-version: '23.x'
       - name: Produce sae
         run: |
           npm install --global corepack@latest --force
