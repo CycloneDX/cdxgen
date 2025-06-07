@@ -132,6 +132,7 @@ jobs:
         shell: bash
         env:
           TEMP: ${{ runner.temp }}/cdxgen-builds
+          TMP: ${{ runner.temp }}/cdxgen-builds
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
