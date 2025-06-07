@@ -6,9 +6,9 @@ ENV CC=gcc \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     npm_config_python=/usr/bin/python3.9 \
-    PYTHONPATH=/opt/pypi:${PYTHONPATH}
+    PYTHONPATH=/opt/pypi
 
-ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:
+ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     url=; \
@@ -76,7 +76,7 @@ COPY . /opt/cdxgen
 RUN zypper --non-interactive install --allow-downgrade -l --no-recommends readline-devel clang15 llvm15 llvm15-devel libjpeg62-devel libmariadb-devel \
         postgresql16-devel postgresql16-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel graphviz-devel \
     && cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
-    && mkdir -p /opt/cdxgen-node-cache \
+    && mkdir -p ${NODE_COMPILE_CACHE} \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && chmod a-w -R /opt \
     && rm -rf /root/.cache/node \

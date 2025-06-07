@@ -12,7 +12,7 @@ ENV JAVA_VERSION=$JAVA_VERSION \
     JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8" \
     NVM_DIR="/root/.nvm" \
     npm_config_build_from_source=true
-ENV PATH=/root/.nvm/versions/node/v${NODE_VERSION}/bin:${PATH}:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:
+ENV PATH=${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${PATH}:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:
 
 COPY ci/images/debian/install.sh /tmp/
 
@@ -50,14 +50,14 @@ ENV CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     CDXGEN_GEM_HOME="/tmp/gems" \
     ATOM_RUBY_HOME=/root/.rbenv/versions/3.4.1 \
-    PYTHONPATH=/opt/pypi:${PYTHONPATH}
-ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:/opt/cdxgen/node_modules/.bin:
+    PYTHONPATH=/opt/pypi
+ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin:
 
 COPY . /opt/cdxgen
 
 RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
     && npm install -g --production @appthreat/atom-parsetools@1.0.3 \
-    && mkdir -p /opt/cdxgen-node-cache \
+    && mkdir -p ${NODE_COMPILE_CACHE} \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && rbastgen --help \
     && rm -rf ${CDXGEN_GEM_HOME} && mkdir -p ${CDXGEN_GEM_HOME} \

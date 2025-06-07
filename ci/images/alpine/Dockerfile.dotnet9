@@ -36,7 +36,7 @@ COPY . /opt/cdxgen
 RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
 	&& npm uninstall -g corepack \
     && apk del npm \
-    && mkdir -p /opt/cdxgen-node-cache \
+    && mkdir -p ${NODE_COMPILE_CACHE} \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && rm -rf /root/.cache/node \
     && chmod a-w -R /opt

@@ -9,9 +9,9 @@ ENV CC=gcc \
     LANGUAGE=en_US.UTF-8 \
     GOPATH=/opt/app-root/go \
     npm_config_python=/usr/bin/python3.10 \
-    PYTHONPATH=/opt/pypi:${PYTHONPATH}
+    PYTHONPATH=/opt/pypi
 
-ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:${GOPATH}/bin:/usr/local/go/bin:
+ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:${GOPATH}/bin:/usr/local/go/bin:
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     url=; \
@@ -77,15 +77,14 @@ ENV CDXGEN_IN_CONTAINER=true \
     SAFE_PIP_INSTALL=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
-    PYTHONPATH=/opt/pypi:${PYTHONPATH} \
-    PATH=${PATH}:/opt/pypi/bin:/opt/cdxgen/node_modules/.bin:
+    PATH=${PATH}:/opt/cdxgen/node_modules/.bin:
 
 COPY . /opt/cdxgen
 
 RUN zypper --non-interactive install --allow-downgrade -l --no-recommends readline-devel clang15 llvm15 llvm15-devel libjpeg62-devel libmariadb-devel \
         postgresql16-devel postgresql16-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel graphviz-devel \
     && cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
-    && mkdir -p /opt/cdxgen-node-cache \
+    && mkdir -p ${NODE_COMPILE_CACHE} \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && pip install --upgrade --no-cache-dir atom-tools --target /opt/pypi \
     && chmod a-w -R /opt \

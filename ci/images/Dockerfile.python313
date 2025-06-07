@@ -14,7 +14,7 @@ ENV JAVA_VERSION=$JAVA_VERSION \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     NVM_DIR="/root/.nvm"
-ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/usr/local/bin:
+ENV PATH=${PATH}:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/usr/local/bin:
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     url=; \
@@ -44,7 +44,7 @@ RUN set -e; \
     && mv /root/.sdkman/candidates/* /opt/ \
     && rm -rf /root/.sdkman \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
-    && source /root/.nvm/nvm.sh \
+    && source ${NVMDIR}/nvm.sh \
     && nvm install ${NODE_VERSION} \
     && npm install -g node-gyp corepack \
     && npx node-gyp install \
@@ -76,8 +76,7 @@ LABEL maintainer="CycloneDX" \
 
 ARG NODE_VERSION=24.1.0
 
-ENV NVM_DIR="/root/.nvm" \
-    PYTHON_CMD=python3 \
+ENV PYTHON_CMD=python3 \
     PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING="utf-8" \
     LC_ALL=en_US.UTF-8 \
@@ -86,17 +85,17 @@ ENV NVM_DIR="/root/.nvm" \
     CDXGEN_IN_CONTAINER=true \
     SAFE_PIP_INSTALL=true \
     CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
-    PYTHONPATH=/opt/pypi:${PYTHONPATH} \
+    PYTHONPATH=/opt/pypi \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
-    PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/opt/pypi/bin:/opt/cdxgen/node_modules/.bin:
+    PATH=${PATH}:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin:
 
 COPY . /opt/cdxgen
 
-RUN source /root/.nvm/nvm.sh \
+RUN source ${NVMDIR}/nvm.sh \
     && zypper --non-interactive install -l --no-recommends clang7 llvm7 llvm7-devel libcurl-devel libjpeg62-devel libmariadb-devel \
         postgresql-devel postgresql17-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel graphviz-devel \
     && cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
-    && mkdir -p /opt/cdxgen-node-cache \
+    && mkdir -p ${NODE_COMPILE_CACHE} \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && pip install --upgrade --no-cache-dir atom-tools --target /opt/pypi \
     && chmod a-w -R /opt \
