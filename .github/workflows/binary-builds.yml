@@ -122,13 +122,16 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24.0.1'
+          node-version: '24.x'
       - name: Produce sae
         run: |
+          mkdir -p $RUNNER_TEMP/cdxgen-builds
           npm install --global pnpm@10.11.1
           pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
           ${{ matrix.build }}
         shell: bash
+        env:
+          TEMP: ${{ runner.temp }}/cdxgen-builds
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
