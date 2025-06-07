@@ -28,17 +28,17 @@ jobs:
           - os: ubuntu-22.04
             build: |
               rm -rf ci contrib tools_config
-              npx --yes @appthreat/caxa --input . --output "cdxgen" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              pnpm --package=@appthreat/caxa --input . --output "cdxgen" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen
               ./cdxgen --help
               sha256sum cdxgen > cdxgen.sha256
               rm -rf node_modules
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile              
-              npx --yes @appthreat/caxa --input . --output "cdxgen-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              pnpm --package=@appthreat/caxa --input . --output "cdxgen-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen-slim
               ./cdxgen-slim --version
               sha256sum cdxgen-slim > cdxgen-slim.sha256
-              npx --yes @appthreat/caxa --input . --output "cdx-verify" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
+              pnpm --package=@appthreat/caxa --input . --output "cdx-verify" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
               chmod +x cdx-verify
               ./cdx-verify --version
               sha256sum cdx-verify > cdx-verify.sha256
@@ -50,17 +50,17 @@ jobs:
           - os: ubuntu-22.04-arm
             build: |
               rm -rf ci contrib tools_config
-              npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen-arm64" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              pnpm --package=@appthreat/caxa --input . --output "cdxgen-arm64" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen-arm64
               ./cdxgen-arm64 --version
               sha256sum cdxgen-arm64 > cdxgen-arm64.sha256
               rm -rf node_modules
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
-              npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen-arm64-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              pnpm --package=@appthreat/caxa --input . --output "cdxgen-arm64-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen-arm64-slim
               ./cdxgen-arm64-slim --version
               sha256sum cdxgen-arm64-slim > cdxgen-arm64-slim.sha256
-              npx --no-progress --yes @appthreat/caxa --input . --output "cdx-arm64-verify" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
+              pnpm --package=@appthreat/caxa --input . --output "cdx-arm64-verify" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
               chmod +x cdx-arm64-verify
               ./cdx-arm64-verify --version
               sha256sum cdx-arm64-verify > cdx-arm64-verify.sha256
@@ -75,20 +75,20 @@ jobs:
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile --force
               echo "cdxgen.exe"
               pnpm --package=@appthreat/caxa --input . --output "cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
-              ./cdxgen.exe --version
+              cdxgen.exe --version
               (Get-FileHash ./cdxgen.exe).hash | Out-File -FilePath ./cdxgen.exe.sha256
               rm -rf node_modules
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
               echo "cdxgen-slim.exe"
               pnpm --package=@appthreat/caxa --input . --output "cdxgen-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
-              ./cdxgen-slim.exe --version
+              cdxgen-slim.exe --version
               (Get-FileHash ./cdxgen-slim.exe).hash | Out-File -FilePath ./cdxgen-slim.exe.sha256
               echo "cdx-verify.exe"
               pnpm --package=@appthreat/caxa --input . --output "cdx-verify.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
-              ./cdx-verify.exe --version
+              cdx-verify.exe --version
               (Get-FileHash ./cdx-verify.exe).hash | Out-File -FilePath ./cdx-verify.exe.sha256
-              ./cdxgen.exe --help
-              ./cdxgen-slim.exe --help
+              cdxgen.exe --help
+              cdxgen-slim.exe --help
             artifact: cdxgen.exe
             sartifact: cdxgen-slim.exe
             vartifact: cdx-verify.exe
@@ -98,20 +98,20 @@ jobs:
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile --force
               echo "cdxgen-arm.exe"
               pnpm --package=@appthreat/caxa --input . --output "cdxgen-arm.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
-              ./cdxgen-arm.exe --version
+              cdxgen-arm.exe --version
               (Get-FileHash ./cdxgen-arm.exe).hash | Out-File -FilePath ./cdxgen-arm.exe.sha256
               rm -rf node_modules
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
               echo "cdxgen-arm-slim.exe"
               pnpm --package=@appthreat/caxa --input . --output "cdxgen-arm-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
-              ./cdxgen-arm-slim.exe --version
+              cdxgen-arm-slim.exe --version
               (Get-FileHash ./cdxgen-arm-slim.exe).hash | Out-File -FilePath ./cdxgen-arm-slim.exe.sha256
               echo "cdx-arm-verify.exe"
               pnpm --package=@appthreat/caxa --input . --output "cdx-arm-verify.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
-              ./cdx-arm-verify.exe --version
+              cdx-arm-verify.exe --version
               (Get-FileHash ./cdx-arm-verify.exe).hash | Out-File -FilePath ./cdx-arm-verify.exe.sha256
-              ./cdxgen-arm.exe --help
-              ./cdxgen-arm-slim.exe --help
+              cdxgen-arm.exe --help
+              cdxgen-arm-slim.exe --help
             artifact: cdxgen-arm.exe
             sartifact: cdxgen-arm-slim.exe
             vartifact: cdx-arm-verify.exe
