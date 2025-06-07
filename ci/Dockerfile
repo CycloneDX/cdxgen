@@ -56,13 +56,13 @@ ENV GOPATH=/opt/app-root/go \
     TMPDIR=/tmp \
     DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
-    PYTHONPATH=/opt/pypi:${PYTHONPATH} \
+    PYTHONPATH=/opt/pypi \
     CDXGEN_IN_CONTAINER=true \
     CDXGEN_TEMP_DIR=/tmp/cdxgen-temp \
     SDKMAN_DIR=/opt/.sdkman \
     SDKMAN_CANDIDATES_DIR=/opt/.sdkman/candidates \
     RBENV_ROOT=/opt/.rbenv
-ENV PATH=${PATH}:/opt/bin:/opt/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/opt/.local/bin:/opt/pypi/bin:/opt/.rbenv/bin:/opt/.rbenv/versions/3.4.4/bin:
+ENV PATH=${PATH}:/opt/bin:/opt/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/opt/.local/bin:${PYTHONPATH}/bin:/opt/.rbenv/bin:/opt/.rbenv/versions/3.4.4/bin:
 
 COPY . /opt/cdxgen
 
@@ -89,9 +89,9 @@ RUN set -e; \
     && /usr/bin/python3 --version \
     && /usr/bin/python3 -m pip install --no-cache-dir --upgrade setuptools==77.0.3 wheel pip virtualenv \
     && /usr/bin/python3 -m pip install --no-cache-dir --upgrade pipenv poetry blint atom-tools uv --target /opt/pypi \
-    && /opt/pypi/bin/poetry --version \
-    && /opt/pypi/bin/pipenv --version \
-    && /opt/pypi/bin/blint --help \
+    && ${PYTHONPATH}/bin/poetry --version \
+    && ${PYTHONPATH}/bin/pipenv --version \
+    && ${PYTHONPATH}/bin/blint --help \
     && mkdir -p /opt/bin /opt/.nvm /tmp/cdxgen-temp \
     && cargo --version \
     && rustc --version \
@@ -149,8 +149,8 @@ RUN set -e; \
     && cd /opt/cdxgen && corepack enable pnpm && pnpm config set global-bin-dir /opt/bin \
     && pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && pnpm link && pnpm cache delete \
     && pnpm bin && pnpm bin -g \
-    && mkdir -p /opt/cdxgen-node-cache \
-    && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
+    && mkdir -p ${NODE_COMPILE_CACHE} \
+    && chown -R cyclonedx:cyclonedx /opt/cdxgen ${NODE_COMPILE_CACHE} \
     && chmod a-w -R /opt \
     && rm -rf /var/cache/yum /root/.cache/pypoetry /root/.cache/node \
     && microdnf clean all

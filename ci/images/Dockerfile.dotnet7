@@ -34,9 +34,9 @@ LABEL maintainer="CycloneDX" \
 
 ENV CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
-    PYTHONPATH=/opt/pypi:${PYTHONPATH} \
+    PYTHONPATH=/opt/pypi \
     DOSAI_CMD=/usr/local/bin/dosai
-ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:/opt/cdxgen/node_modules/.bin:
+ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin:
 
 COPY . /opt/cdxgen
 
@@ -59,7 +59,7 @@ RUN set -e; \
     && curl -L https://github.com/owasp-dep-scan/dosai/releases/latest/download/Dosai${DOSAI_ARCH_SUFFIX} -o /usr/local/bin/dosai \
     && chmod +x /usr/local/bin/dosai \
     && dosai --help \
-    && mkdir -p /opt/cdxgen-node-cache \
+    && mkdir -p ${NODE_COMPILE_CACHE} \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && pip install --upgrade --no-cache-dir blint atom-tools --target /opt/pypi \
     && rm -rf /root/.cache/node \

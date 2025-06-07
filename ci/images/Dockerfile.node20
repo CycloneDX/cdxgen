@@ -35,7 +35,7 @@ RUN set -e; \
     && npm -v \
     && python --version \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
-    && source /root/.nvm/nvm.sh \
+    && source ${NVMDIR}/nvm.sh \
     && curl -L --output /usr/bin/bazel https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
     && chmod +x /usr/bin/bazel \
     && bazel --version \
@@ -62,8 +62,8 @@ LABEL maintainer="CycloneDX" \
 ENV CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     ATOM_CMD=/usr/local/bin/atom \
-    PYTHONPATH=/opt/pypi:${PYTHONPATH}
-ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:/opt/cdxgen/node_modules/.bin:
+    PYTHONPATH=/opt/pypi
+ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin:
 
 COPY . /opt/cdxgen
 
@@ -86,7 +86,7 @@ RUN set -e; \
     && chmod +x /usr/local/bin/atom \
     && /usr/local/bin/atom --help \
     && npm install -g --production @appthreat/atom-parsetools@1.0.3 \
-    && mkdir -p /opt/cdxgen-node-cache \
+    && mkdir -p ${NODE_COMPILE_CACHE} \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && pip install --upgrade --no-cache-dir atom-tools --target /opt/pypi \
     && atom-tools --help \

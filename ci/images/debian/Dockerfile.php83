@@ -7,7 +7,7 @@ ARG JAVA_VERSION=21.0.7-tem
 ENV JAVA_VERSION=$JAVA_VERSION \
 	JAVA_HOME="/opt/java/${JAVA_VERSION}" \
 	NVM_DIR="/root/.nvm" \
-    PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:/usr/local/bin:/root/.local/bin:
+    PATH=${PATH}:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:/usr/local/bin:/root/.local/bin:
         
 COPY ci/images/debian/install.sh /tmp/
 
@@ -44,14 +44,14 @@ LABEL maintainer="CycloneDX" \
 
 ENV CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
-    PYTHONPATH=/opt/pypi:${PYTHONPATH}
-ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:/opt/cdxgen/node_modules/.bin:
+    PYTHONPATH=/opt/pypi
+ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin:
 
 COPY . /opt/cdxgen
 
 RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
 	&& npm install -g --production @appthreat/atom-parsetools@1.0.3 \
-    && mkdir -p /opt/cdxgen-node-cache \
+    && mkdir -p ${NODE_COMPILE_CACHE} \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && pip install --upgrade --no-cache-dir atom-tools --target /opt/pypi \
 	&& phpastgen --help \
