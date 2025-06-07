@@ -49,7 +49,7 @@ RUN set -e; \
     && /usr/bin/python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade setuptools==77.0.3 wheel pip virtualenv \
     && /usr/bin/python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade pipenv atom-tools --target /opt/pypi \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
-    && source ${NVMDIR}/nvm.sh \
+    && source ${NVM_DIR}/nvm.sh \
     && nvm install ${NODE_VERSION} \
     && node --version \
     && curl -s "https://get.sdkman.io" | bash \

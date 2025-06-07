@@ -47,7 +47,7 @@ RUN set -e; \
     && python3 -m pip install --no-cache-dir --upgrade setuptools pip virtualenv \
     && python3 -m pip install --no-cache-dir --upgrade --user pipenv poetry \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
-    && source ${NVMDIR}/nvm.sh \
+    && source ${NVM_DIR}/nvm.sh \
     && nvm install ${NODE_VERSION} \
     && node -v \
     && npm -v \
@@ -92,7 +92,7 @@ ENV PYTHON_CMD=python3 \
 
 COPY . /opt/cdxgen
 
-RUN source ${NVMDIR}/nvm.sh \
+RUN source ${NVM_DIR}/nvm.sh \
     && zypper --non-interactive install -l --no-recommends clang7 llvm7 llvm7-devel libcurl-devel libjpeg62-devel libmariadb-devel \
         postgresql-devel postgresql16-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel \
     && cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
