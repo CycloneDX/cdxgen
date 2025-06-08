@@ -9,7 +9,7 @@ ENV JAVA_VERSION=$JAVA_VERSION \
 	BUNDLE_SILENCE_ROOT_WARNING=true \
     ATOM_CMD=/usr/local/bin/atom \
     NVM_DIR="/root/.nvm"
-ENV PATH=${PATH}:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:
+ENV PATH=${PATH}:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin
 
 COPY ci/images/debian/install.sh /tmp/
 
@@ -45,7 +45,7 @@ ENV CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     CDXGEN_GEM_HOME="/tmp/gems" \
     PYTHONPATH=/opt/pypi
-ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin:
+ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin
 
 COPY . /opt/cdxgen
 

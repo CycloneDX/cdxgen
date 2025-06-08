@@ -16,7 +16,7 @@ ENV SBT_VERSION=$SBT_VERSION \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     npm_config_python=/usr/bin/python3.11
-ENV PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:
+ENV PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin
 
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
@@ -50,7 +50,7 @@ ARG SCALA_VERSION=3.6.4
 
 ENV SCALA_VERSION=$SCALA_VERSION \
     SCALA_HOME="/opt/scala/${SCALA_VERSION}"
-ENV PATH=${PATH}:${SCALA_HOME}/bin:
+ENV PATH=${PATH}:${SCALA_HOME}/bin
 
 RUN source "$HOME/.sdkman/bin/sdkman-init.sh" \
     && sdk install scala $SCALA_VERSION
@@ -76,7 +76,7 @@ LABEL maintainer="CycloneDX" \
 ENV CDXGEN_IN_CONTAINER=true \
     PYTHONPATH=/opt/pypi \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache"
-ENV PATH=${PATH}:/usr/local/bin:/opt/cdxgen/node_modules/.bin:${PYTHONPATH}/bin:
+ENV PATH=${PATH}:/usr/local/bin:/opt/cdxgen/node_modules/.bin:${PYTHONPATH}/bin
 
 COPY . /opt/cdxgen
 

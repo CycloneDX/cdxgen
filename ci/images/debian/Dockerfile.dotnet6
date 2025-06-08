@@ -10,7 +10,7 @@ ENV DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
     DOTNET_RUNNING_IN_CONTAINER=true \
     DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     NVM_DIR="/root/.nvm"
-ENV PATH=${PATH}:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:/usr/local/bin:/root/.local/bin:
+ENV PATH=${PATH}:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:/usr/local/bin:/root/.local/bin
 
 COPY ci/images/debian/install.sh /tmp/
 
@@ -49,7 +49,7 @@ ENV CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     PYTHONPATH=/opt/pypi \
     DOSAI_CMD=/usr/local/bin/dosai
-ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin:
+ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin
 
 COPY . /opt/cdxgen
 

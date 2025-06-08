@@ -8,7 +8,7 @@ ENV DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
     DOTNET_RUNNING_IN_CONTAINER=true \
     DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     npm_config_python=/usr/bin/python3.11
-ENV PATH=${PATH}:/usr/local/bin:
+ENV PATH=${PATH}:/usr/local/bin
 
 RUN zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends git-core nodejs20 npm20 python311 python311-pip wget zip unzip make gawk curl \
     && npm install -g corepack \
@@ -36,7 +36,7 @@ ENV CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     PYTHONPATH=/opt/pypi \
     DOSAI_CMD=/usr/local/bin/dosai
-ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin:
+ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin
 
 COPY . /opt/cdxgen
 

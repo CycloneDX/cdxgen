@@ -29,7 +29,7 @@ ENV CC=gcc \
     DOTNET_ROOT=/usr/share/dotnet \
     PYTHONPATH=/opt/pypi
 
-ENV PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:/usr/local/bin:${PYTHONPATH}/bin:/usr/share/dotnet:
+ENV PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:/usr/local/bin:${PYTHONPATH}/bin:/usr/share/dotnet
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     url=; \
@@ -103,7 +103,7 @@ ENV CDXGEN_DEBUG_MODE=debug \
     SCAN_DEBUG_MODE=debug \
     CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache"
-ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin:
+ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin
 
 COPY . /opt/cdxgen
 

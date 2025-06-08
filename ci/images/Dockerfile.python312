@@ -14,7 +14,7 @@ ENV JAVA_VERSION=$JAVA_VERSION \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     NVM_DIR="/root/.nvm"
-ENV PATH=${PATH}:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/usr/local/bin:
+ENV PATH=${PATH}:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/usr/local/bin
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     url=; \
@@ -85,7 +85,7 @@ ENV PYTHON_CMD=python3 \
     CDXGEN_IN_CONTAINER=true \
     SAFE_PIP_INSTALL=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
-    PATH=${PATH}:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/opt/cdxgen/node_modules/.bin:
+    PATH=${PATH}:/opt/cdxgen/node_modules/.bin
 
 COPY . /opt/cdxgen
 

@@ -18,7 +18,7 @@ ENV JAVA_VERSION=$JAVA_VERSION \
     NVM_DIR="/root/.nvm" \
     PYTHONPATH=/opt/pypi \
     npm_config_python=/usr/bin/python3.11
-ENV PATH=${PATH}:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/usr/local/bin:${PYTHONPATH}/bin:${GOPATH}/bin:/usr/local/go/bin:
+ENV PATH=${PATH}:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/usr/local/bin:${PYTHONPATH}/bin:${GOPATH}/bin:/usr/local/go/bin
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     url=; \
@@ -95,7 +95,7 @@ ENV PYTHON_CMD=python3 \
     SAFE_PIP_INSTALL=true \
     CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
-    PATH=${PATH}:/opt/cdxgen/node_modules/.bin:
+    PATH=${PATH}:/opt/cdxgen/node_modules/.bin
 
 COPY . /opt/cdxgen
 

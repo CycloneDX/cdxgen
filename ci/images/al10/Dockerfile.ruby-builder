@@ -15,7 +15,7 @@ ARG RUBY_VERSION=3.4.4
 ENV RUBY_VERSION=$RUBY_VERSION \
     RBENV_ROOT=/opt/.rbenv \
     MAKEFLAGS="-j$(nproc --ignore=2)" \
-    PATH=/opt/bin:/opt/vendor/bin:${PATH}:/usr/local/bin/:/root/.local/bin:/root/.rbenv/bin:/root/.rbenv/versions/3.4.4/bin:
+    PATH=/opt/bin:/opt/vendor/bin:${PATH}:/usr/local/bin/:/root/.local/bin:/root/.rbenv/bin:/root/.rbenv/versions/3.4.4/bin
 
 RUN microdnf install -y \
           gcc gcc-c++ make autoconf automake bison libtool \

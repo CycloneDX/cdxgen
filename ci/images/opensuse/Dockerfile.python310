@@ -11,7 +11,7 @@ ENV CC=gcc \
     npm_config_python=/usr/bin/python3.10 \
     PYTHONPATH=/opt/pypi
 
-ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:${GOPATH}/bin:/usr/local/go/bin:
+ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:${GOPATH}/bin:/usr/local/go/bin
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     url=; \
@@ -77,7 +77,7 @@ ENV CDXGEN_IN_CONTAINER=true \
     SAFE_PIP_INSTALL=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
-    PATH=${PATH}:/opt/cdxgen/node_modules/.bin:
+    PATH=${PATH}:/opt/cdxgen/node_modules/.bin
 
 COPY . /opt/cdxgen
 

@@ -1,7 +1,7 @@
 # Base-image
 FROM golang:1.24-alpine AS base
 
-ENV PATH=${PATH}:/usr/local/bin:
+ENV PATH=${PATH}:/usr/local/bin
 
 RUN apk update && apk add --no-cache \
     nodejs \
@@ -29,7 +29,7 @@ LABEL maintainer="CycloneDX" \
 
 ENV CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
-    PATH=${PATH}:/usr/local/bin:/opt/cdxgen/node_modules/.bin:
+    PATH=${PATH}:/usr/local/bin:/opt/cdxgen/node_modules/.bin
 
 COPY . /opt/cdxgen
 

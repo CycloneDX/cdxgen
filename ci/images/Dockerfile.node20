@@ -8,7 +8,7 @@ ENV NVM_DIR="/root/.nvm" \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     npm_config_python=/usr/bin/python3.11
-ENV PATH=${PATH}:/usr/local/bin:
+ENV PATH=${PATH}:/usr/local/bin
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     url=; \
@@ -63,7 +63,7 @@ ENV CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     ATOM_CMD=/usr/local/bin/atom \
     PYTHONPATH=/opt/pypi
-ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin:
+ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin
 
 COPY . /opt/cdxgen
 
