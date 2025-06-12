@@ -75,7 +75,7 @@
   "bugs": {
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
-  "packageManager": "pnpm@10.11.1",
+  "packageManager": "pnpm@10.12.1",
   "lint-staged": {
     "*": "biome check --fix --no-errors-on-unmatched"
   },
@@ -86,7 +86,7 @@
     "@npmcli/arborist": "^9.1.1",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
-    "cheerio": "^1.0.0",
+    "cheerio": "^1.1.0",
     "edn-data": "1.1.2",
     "glob": "^11.0.2",
     "global-agent": "^3.0.0",
@@ -109,7 +109,7 @@
     "yoctocolors": "^2.1.1"
   },
   "optionalDependencies": {
-    "@appthreat/atom": "2.2.4",
+    "@appthreat/atom": "2.2.5",
     "@appthreat/cdx-proto": "1.0.1",
     "@cyclonedx/cdxgen-plugins-bin": "1.6.12",
     "@cyclonedx/cdxgen-plugins-bin-darwin-amd64": "1.6.12",
@@ -139,6 +139,7 @@
     "onlyBuiltDependencies": ["@appthreat/sqlite3", "@biomejs/biome"],
     "overrides": {
       "babel-plugin-istanbul": "^7.0.0",
+      "brace-expansion": "2.0.2",
       "jwa": "^2.0.1",
       "glob": "^11.0.2",
       "node-gyp": "^10.2.0",
@@ -187,6 +188,7 @@
   },
   "overrides": {
     "babel-plugin-istanbul": "^7.0.0",
+    "brace-expansion": "2.0.2",
     "jwa": "^2.0.1",
     "glob": "^11.0.2",
     "node-gyp": "^10.2.0",

@@ -28,44 +28,46 @@ jobs:
           - os: ubuntu-22.04
             build: |
               rm -rf ci contrib tools_config
-              npx --yes @appthreat/caxa --input . --output "cdxgen" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen
               ./cdxgen --help
               sha256sum cdxgen > cdxgen.sha256
               rm -rf node_modules
-              corepack pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile              
-              npx --yes @appthreat/caxa --input . --output "cdxgen-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile              
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen-slim
               ./cdxgen-slim --version
               sha256sum cdxgen-slim > cdxgen-slim.sha256
-              npx --yes @appthreat/caxa --input . --output "cdx-verify" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdx-verify" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
               chmod +x cdx-verify
               ./cdx-verify --version
               sha256sum cdx-verify > cdx-verify.sha256
               CDXGEN_DEBUG_MODE=debug ./cdxgen --help
               ./cdxgen-slim --help
+              ./cdx-verify --help
             artifact: cdxgen
             sartifact: cdxgen-slim
             vartifact: cdx-verify
           - os: ubuntu-22.04-arm
             build: |
               rm -rf ci contrib tools_config
-              npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen-arm64" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-arm64" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen-arm64
               ./cdxgen-arm64 --version
               sha256sum cdxgen-arm64 > cdxgen-arm64.sha256
               rm -rf node_modules
-              corepack pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
-              npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen-arm64-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-arm64-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen-arm64-slim
               ./cdxgen-arm64-slim --version
               sha256sum cdxgen-arm64-slim > cdxgen-arm64-slim.sha256
-              npx --no-progress --yes @appthreat/caxa --input . --output "cdx-arm64-verify" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdx-arm64-verify" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
               chmod +x cdx-arm64-verify
               ./cdx-arm64-verify --version
               sha256sum cdx-arm64-verify > cdx-arm64-verify.sha256
               CDXGEN_DEBUG_MODE=debug ./cdxgen-arm64 --help
               ./cdxgen-arm64-slim --help
+              ./cdx-arm64-verify --help
             artifact: cdxgen-arm64
             sartifact: cdxgen-arm64-slim
             vartifact: cdx-arm64-verify
@@ -74,19 +76,20 @@ jobs:
               Remove-Item ci -Recurse -Force
               Remove-Item contrib -Recurse -Force
               Remove-Item tools_config -Recurse -Force
-              npx @appthreat/caxa --input . --output "cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              npm install --omit=dev --no-package-lock --no-audit --no-fund --no-progress
+              npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen.exe --version
               (Get-FileHash .\cdxgen.exe).hash | Out-File -FilePath .\cdxgen.exe.sha256
               Remove-Item node_modules -Recurse -Force
-              corepack pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
-              npx @appthreat/caxa --input . --output "cdxgen-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund
+              npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen-slim.exe --version
               (Get-FileHash .\cdxgen-slim.exe).hash | Out-File -FilePath .\cdxgen-slim.exe.sha256
-              npx @appthreat/caxa --input . --output "cdx-verify.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
-              .\cdx-verify.exe --version
+              npx --no-progress --yes @appthreat/caxa --input . --output "cdx-verify.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
               (Get-FileHash .\cdx-verify.exe).hash | Out-File -FilePath .\cdx-verify.exe.sha256
               .\cdxgen.exe --help
               .\cdxgen-slim.exe --help
+              .\cdx-verify.exe --help
             artifact: cdxgen.exe
             sartifact: cdxgen-slim.exe
             vartifact: cdx-verify.exe
@@ -95,19 +98,20 @@ jobs:
               Remove-Item ci -Recurse -Force
               Remove-Item contrib -Recurse -Force
               Remove-Item tools_config -Recurse -Force
-              npx @appthreat/caxa --input . --output "cdxgen-arm.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              npm install --omit=dev --no-package-lock --no-audit --no-fund --no-progress
+              npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen-arm.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen-arm.exe --version
               (Get-FileHash .\cdxgen-arm.exe).hash | Out-File -FilePath .\cdxgen-arm.exe.sha256
               Remove-Item node_modules -Recurse -Force
-              corepack pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
-              npx @appthreat/caxa --input . --output "cdxgen-arm-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund
+              npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen-arm-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen-arm-slim.exe --version
               (Get-FileHash .\cdxgen-arm-slim.exe).hash | Out-File -FilePath .\cdxgen-arm-slim.exe.sha256
-              npx @appthreat/caxa --input . --output "cdx-arm-verify.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
-              .\cdx-arm-verify.exe --version
+              npx --no-progress --yes @appthreat/caxa --input . --output "cdx-arm-verify.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
               (Get-FileHash .\cdx-arm-verify.exe).hash | Out-File -FilePath .\cdx-arm-verify.exe.sha256
               .\cdxgen-arm.exe --help
               .\cdxgen-arm-slim.exe --help
+              .\cdx-arm-verify.exe --help
             artifact: cdxgen-arm.exe
             sartifact: cdxgen-arm-slim.exe
             vartifact: cdx-arm-verify.exe
@@ -121,12 +125,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24.x'
+      - name: Install pnpm
+        run: |
+          npm install --global pnpm@10.12.1
+          pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
+        if: ${{ !startsWith(matrix.os, 'windows') }}
       - name: Produce sae
         run: |
-          npm install --global corepack@latest --force
-          corepack enable pnpm
-          corepack pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
           ${{ matrix.build }}
+        env:
+          CDXGEN_DEBUG_MODE: debug
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
