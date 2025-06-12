@@ -41,7 +41,7 @@ RUN set -e; \
     && source "$HOME/.sdkman/bin/sdkman-init.sh" \
     && sdk install maven $MAVEN_VERSION \
     && sdk install gradle $GRADLE_VERSION \
-    && sdk install scala $SCALA_VERSION
+    && sdk install scala $SCALA_VERSION \
     && sdk install sbt $SBT_VERSION \
     && mv /root/.sdkman/candidates/* /opt/ \
     && curl -L --output /usr/bin/bazel https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
