@@ -115,11 +115,11 @@
     "@cyclonedx/cdxgen-plugins-bin-darwin-amd64": "1.6.12",
     "@cyclonedx/cdxgen-plugins-bin-darwin-arm64": "1.6.12",
     "@cyclonedx/cdxgen-plugins-bin-linux-amd64": "1.6.12",
-    "@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64": "1.6.12",
     "@cyclonedx/cdxgen-plugins-bin-linux-arm": "1.6.12",
     "@cyclonedx/cdxgen-plugins-bin-linux-arm64": "1.6.12",
-    "@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64": "1.6.12",
     "@cyclonedx/cdxgen-plugins-bin-linux-ppc64": "1.6.12",
+    "@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64": "1.6.12",
+    "@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64": "1.6.12",
     "@cyclonedx/cdxgen-plugins-bin-windows-amd64": "1.6.12",
     "@cyclonedx/cdxgen-plugins-bin-windows-arm64": "1.6.12",
     "body-parser": "^2.2.0",
@@ -132,7 +132,7 @@
   "files": ["*.js", "lib/**", "bin/", "data/", "types/", "index.cjs"],
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "jest": "^29.7.0",
+    "jest": "^30.0.0",
     "typescript": "^5.8.3"
   },
   "pnpm": {
@@ -184,7 +184,8 @@
       "write-file-atomic": "^6.0.0",
       "yallist": "^5.0.0",
       "yargs": "^17.7.2"
-    }
+    },
+    "ignoredBuiltDependencies": ["unrs-resolver"]
   },
   "overrides": {
     "babel-plugin-istanbul": "^7.0.0",
