@@ -75,11 +75,6 @@ jobs:
           mkdir -p rubyresults
       - uses: actions/checkout@v4
         with:
-          repository: 'campsite/campsite'
-          path: 'repotests/campsite'
-          ref: '10197238bbbefd9c9ac7c77467b647fd93993ba0'
-      - uses: actions/checkout@v4
-        with:
           repository: 'bionomia/bionomia'
           path: 'repotests/bionomia'
           ref: '5ada8b5f4a5f68561a7195e2badc2f744dc4676e'
@@ -100,12 +95,6 @@ jobs:
           cd repotests/railsgoat
           docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby26:v11 -r /app -o /app/bom.json -t ruby --profile research
           cp bom.json *.slices.json $GITHUB_WORKSPACE/rubyresults/railsgoat
-      - name: generate reachables sbom - campsite
-        run: |
-          mkdir -p $GITHUB_WORKSPACE/rubyresults/campsite
-          cd repotests/campsite/api
-          docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby33:v11 -r /app -o /app/bom.json -t ruby --profile research
-          ls -lh bom.json *.slices.json
       - uses: actions/upload-artifact@v4
         with:
           name: rubyresults
