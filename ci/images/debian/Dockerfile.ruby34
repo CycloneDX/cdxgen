@@ -14,7 +14,7 @@ ENV PATH=${PATH}:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:/usr/local/bin:/r
 COPY ci/images/debian/install.sh /tmp/
 
 RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash bzip2 git-core zip unzip make gawk \
-    && apt-get install -qq -y build-essential python3 python3-pip python3-dev libmagic-dev locales libffi-dev \
+    && apt-get install -qq -y build-essential python3 python3-pip python3-dev libmagic-dev locales libffi-dev libyaml-dev \
     && chmod +x /tmp/install.sh \
     && /tmp/install.sh && rm /tmp/install.sh \
     && node -v \

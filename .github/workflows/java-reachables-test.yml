@@ -104,8 +104,8 @@ jobs:
         run: |
           mkdir -p $GITHUB_WORKSPACE/rubyresults/campsite
           cd repotests/campsite/api
-          docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby34:v11 -r /app -o /app/bom.json -t ruby --profile research
-          cp bom.json *.slices.json $GITHUB_WORKSPACE/rubyresults/campsite
+          docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby33:v11 -r /app -o /app/bom.json -t ruby --profile research
+          ls -lh bom.json *.slices.json
       - uses: actions/upload-artifact@v4
         with:
           name: rubyresults
