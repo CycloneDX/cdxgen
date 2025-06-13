@@ -42,48 +42,69 @@ def get_installed_distributions(python_path=None):
     return [d._dist for d in dists]
 
 
+def _get_extra_deps_from_dist(dist):
+    extra_deps = {}
+    if not dist:
+        return extra_deps
+    # all requirements, some of which may be extra-only:
+    reqs = dist.metadata.get_all('Requires-Dist') or []
+    # extras this package defines:
+    extras = dist.metadata.get_all('Provides-Extra') or []
+    for req_str in reqs:
+        req = Requirement(req_str)
+        if req.marker and 'extra' in str(req.marker):
+            # evaluate marker for each declared extra
+            for extra in extras:
+                if req.marker.evaluate({'extra': extra}):
+                    extra_deps.setdefault(extra, []).append({"name": str(req.name), "versionSpecifiers": str(req.specifier), "url": str(req.url) if req.url else None})
+    return extra_deps
+
+
+def _get_deps_from_extras(name_version_cache, name_dist_cache, extra_deps):
+    dependencies = []
+    if not extra_deps:
+        return dependencies
+    # Treat an extra with the name all as dependencies
+    all_deps = extra_deps.get("all", [])
+    for dep in all_deps:
+        dversion = name_version_cache.get(dep["name"])
+        if not dversion:
+            continue
+        dversionSpecifiers = dep.get("versionSpecifiers")
+        dpurl = f"""pkg:pypi/{dep["name"].lower()}@{dversion}"""
+        dextra_deps = _get_extra_deps_from_dist(name_dist_cache.get(dep["name"]))
+        ddependencies = _get_deps_from_extras(name_version_cache, name_dist_cache, dextra_deps)
+        dependencies.append({
+            "name": dep["name"],
+            "version": dversion,
+            "versionSpecifiers": dversionSpecifiers,
+            "purl": dpurl,
+            "extra_deps": dextra_deps,
+            "dependencies": ddependencies
+        })
+    return dependencies
+
+
 def get_installed_with_extras():
     result = {}
     if not REQUIREMENT_MODULE_FOUND:
         return result
     name_version_cache = {}
+    name_dist_cache = {}
     for dist in importlib_metadata.distributions():
         name = dist.metadata['Name']
         version = dist.version or ""
         name_version_cache[name] = version
+        name_dist_cache[name] = dist
     for dist in importlib_metadata.distributions():
         name = dist.metadata['Name']
         version = dist.version or ""
         # extras this package defines:
         extras = dist.metadata.get_all('Provides-Extra') or []
-        # all requirements, some of which may be extra-only:
-        reqs = dist.metadata.get_all('Requires-Dist') or []
-
         # map each extra → its extra-only dependencies
-        extra_deps = {}
-        for req_str in reqs:
-            req = Requirement(req_str)
-            if req.marker and 'extra' in str(req.marker):
-                # evaluate marker for each declared extra
-                for extra in extras:
-                    if req.marker.evaluate({'extra': extra}):
-                        extra_deps.setdefault(extra, []).append({"name": str(req.name), "versionSpecifiers": str(req.specifier), "url": str(req.url) if req.url else None})
+        extra_deps = _get_extra_deps_from_dist(dist)
         purl = f"pkg:pypi/{name.lower()}@{version}"
-        dependencies = []
-        # Treat an extra with the name all as dependencies
-        all_deps = extra_deps.get("all", [])
-        for dep in all_deps:
-            dversion = name_version_cache.get(dep["name"])
-            if not dversion:
-                continue
-            dversionSpecifiers = dep.get("versionSpecifiers")
-            dpurl = f"""pkg:pypi/{dep["name"].lower()}@{dversion}"""
-            dependencies.append({
-                "name": dep["name"],
-                "version": dversion,
-                "versionSpecifiers": dversionSpecifiers,
-                "purl": dpurl
-            })
+        dependencies = _get_deps_from_extras(name_version_cache, name_dist_cache, extra_deps)
         result[purl] = {
             'name': name,
             'version': version,
@@ -162,15 +183,8 @@ def main(argv):
                 "dependencies": dependencies + all_dependencies,
             }
         )
-    all_deps = {}
-    for t in tree:
-        for d in t["dependencies"]:
-            all_deps[d["name"]] = True
-    trimmed_tree = [
-        t for t in tree if t["name"] not in all_deps
-    ]
     with open(out_file, mode="w", encoding="utf-8") as fp:
-        json.dump(trimmed_tree, fp)
+        json.dump(tree, fp)
 
 
 if __name__ == "__main__":
