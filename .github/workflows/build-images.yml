@@ -141,6 +141,13 @@ jobs:
             distro: debian
             runner: macos-hosted
 
+          - lang: php84
+            distro: alpine
+
+          - lang: php84
+            distro: debian
+            runner: macos-hosted
+
           - lang: python36
 
           - lang: python39
