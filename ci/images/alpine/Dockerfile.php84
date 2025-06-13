@@ -25,7 +25,7 @@ RUN apk update && apk add --no-cache \
     re2c \
     && npm install -g corepack \
     && /usr/bin/python --version \
-    && /usr/bin/python -m pip install --break-system-packages --no-cache-dir --upgrade pipenv atom-tools --target /opt/pypi \
+    && /usr/bin/python -m pip install --no-cache-dir --upgrade atom-tools --target /opt/pypi \
     && docker-php-ext-install zip intl mbstring xml curl pdo pdo_mysql mysqli \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && node -v \
@@ -64,6 +64,7 @@ RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-d
     && mkdir -p ${NODE_COMPILE_CACHE} \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && phpastgen --help \
+    && atom-tools --help \
     && rm -rf /root/.cache/node \
     && chmod a-w -R /opt
 
