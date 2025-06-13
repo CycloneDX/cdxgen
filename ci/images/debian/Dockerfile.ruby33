@@ -16,7 +16,7 @@ ENV PATH=${PATH}:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:/usr/local/bin:/r
 COPY ci/images/debian/install.sh /tmp/
 
 RUN apt-get update && apt-get install -qq -y --no-install-recommends curl bash bzip2 git-core zip unzip make gawk \
-    && apt-get install -qq -y build-essential python3 python3-pip python3-dev libmagic-dev locales libffi-dev \
+    && apt-get install -qq -y build-essential python3 python3-pip python3-dev libmagic-dev locales libffi-dev libyaml-dev \
     && chmod +x /tmp/install.sh \
     && /tmp/install.sh && rm /tmp/install.sh \
     && node -v \
@@ -46,18 +46,20 @@ LABEL maintainer="CycloneDX" \
 ENV CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     CDXGEN_GEM_HOME="/tmp/gems" \
-    ATOM_RUBY_HOME=/root/.rbenv/versions/3.4.1 \
+    ATOM_RUBY_HOME=/root/.rbenv/versions/3.4.4 \
     PYTHONPATH=/opt/pypi
 ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin
 
 COPY . /opt/cdxgen
 
-RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
+RUN set -e; \
+    cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
     && npm install -g --production @appthreat/atom-parsetools@1.0.4 \
     && mkdir -p ${NODE_COMPILE_CACHE} \
     && node /opt/cdxgen/bin/cdxgen.js --help \
     && pip install --upgrade --no-cache-dir atom-tools --target /opt/pypi \
     && rbastgen --help \
+    && atom-tools --help \
     && rm -rf ${CDXGEN_GEM_HOME} && mkdir -p ${CDXGEN_GEM_HOME} \
     && rm -rf /root/.cache/node \
     && chmod a-w -R /opt
