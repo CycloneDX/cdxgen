@@ -93,7 +93,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Setup alpine builder
         run: |
-          apk add --no-cache nodejs make python3 python3-dev py3-pip py3-virtualenv gcc g++ musl-dev npm pnpm
+          apk add --no-cache nodejs make python3 python3-dev py3-pip py3-virtualenv gcc g++ musl-dev npm
       - name: Install pnpm
         run: |
           npm install --global pnpm@10.12.1
