@@ -21,6 +21,9 @@ env:
 
 jobs:
   image:
+    permissions:
+      contents: read
+      packages: write
     runs-on: ${{ fromJSON(inputs.image).runner || 'ubuntu-24.04' }}
     steps:
       - uses: actions/checkout@v4

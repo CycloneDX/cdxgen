@@ -1,15 +1,4 @@
-FROM ghcr.io/cyclonedx/cdxgen-ruby-builder:master
-
-LABEL maintainer="cyclonedx" \
-      org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
-      org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
-      org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
-      org.opencontainers.image.version="11.4.x" \
-      org.opencontainers.image.vendor="cyclonedx" \
-      org.opencontainers.image.licenses="Apache-2.0" \
-      org.opencontainers.image.title="cdxgen" \
-      org.opencontainers.image.description="Container image for cdxgen SBOM generator packing latest build tools." \
-      org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server"
+FROM ghcr.io/cyclonedx/cdxgen-ruby-builder:master as base
 
 ARG SWIFT_SIGNING_KEY=52BB7E3DE28A71BE22EC05FFEF80A866B47A981F
 ARG SWIFT_PLATFORM=ubi9
@@ -63,8 +52,6 @@ ENV GOPATH=/opt/app-root/go \
     SDKMAN_CANDIDATES_DIR=/opt/.sdkman/candidates \
     RBENV_ROOT=/opt/.rbenv
 ENV PATH=${PATH}:/opt/bin:/opt/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/opt/.local/bin:${PYTHONPATH}/bin:/opt/.rbenv/bin:/opt/.rbenv/versions/3.4.4/bin
-
-COPY . /opt/cdxgen
 
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
@@ -145,8 +132,24 @@ RUN set -e; \
     && mv composer.phar /usr/local/bin/composer \
     && gem install bundler cocoapods \
     && gem --version \
-    && bundler --version \
-    && cd /opt/cdxgen && corepack enable pnpm && pnpm config set global-bin-dir /opt/bin \
+    && bundler --version
+
+FROM base as cdxgen
+
+LABEL maintainer="cyclonedx" \
+      org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
+      org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
+      org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
+      org.opencontainers.image.version="11.4.x" \
+      org.opencontainers.image.vendor="cyclonedx" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.title="cdxgen" \
+      org.opencontainers.image.description="Container image for cdxgen SBOM generator packing latest build tools." \
+      org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server"
+
+COPY . /opt/cdxgen
+
+RUN cd /opt/cdxgen && corepack enable pnpm && pnpm config set global-bin-dir /opt/bin \
     && pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && pnpm link && pnpm cache delete \
     && pnpm bin && pnpm bin -g \
     && mkdir -p ${NODE_COMPILE_CACHE} \

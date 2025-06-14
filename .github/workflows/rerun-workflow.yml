@@ -12,6 +12,8 @@ on:
 
 jobs:
   rerun:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: rerun ${{ inputs.run_id }}

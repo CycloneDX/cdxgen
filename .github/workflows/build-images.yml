@@ -217,6 +217,8 @@ jobs:
   retry:
     needs: images
     if: failure() && fromJSON(github.run_attempt) < 3
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - run: gh workflow run rerun-workflow.yml -F run_id=${{ github.run_id }}
