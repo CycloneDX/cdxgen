@@ -1,7 +1,7 @@
 # Base-image
 FROM golang:1.24-bookworm AS base
 
-ARG NODE_VERSION=24.1.0
+ARG NODE_VERSION=24.2.0
 
 ENV SKIP_ATOM="yes" \
     NVM_DIR="/root/.nvm"

@@ -1,7 +1,7 @@
 # Base-image
 FROM rust:1-slim-bookworm AS base
 
-ARG NODE_VERSION=24.1.0
+ARG NODE_VERSION=24.2.0
 
 ENV CARGO_HOME=/usr/local/cargo \
     RUSTUP_HOME=/usr/local/rustup \

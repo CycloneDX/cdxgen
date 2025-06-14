@@ -783,6 +783,12 @@ jobs:
           cd ..
           bin/cdxgen.js -p -t go --lifecycle post-build -o bomresults/bom-go-binary.json gobintests
         shell: bash
+      - name: repotests 1.7
+        run: |
+          bin/cdxgen.js -r -t java repotests/shiftleft-java-example -o bomresults/1.7-bom-java.json --generate-key-and-sign --tlp-classification AMBER --spec-version 1.7
+          SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/1.7-bom-github.json --spec-version 1.7
+          FETCH_LICENSE=0 bin/cdxgen.js -r -t js repotests/shiftleft-ts-example -o bomresults/1.7-bom-ts-1.json --fail-on-error --spec-version 1.7 --tlp-classification RED
+        shell: bash
       - name: repotests 1.6
         run: |
           bin/cdxgen.js -r -t java repotests/shiftleft-java-example -o bomresults/1.6-bom-java.json --generate-key-and-sign --spec-version 1.6

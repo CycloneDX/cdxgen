@@ -1,7 +1,7 @@
 # Base-image
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
 
-ARG NODE_VERSION=24.1.0
+ARG NODE_VERSION=24.2.0
 
 ENV DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
     DOTNET_NOLOGO=true \
