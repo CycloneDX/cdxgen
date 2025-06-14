@@ -1021,13 +1021,14 @@ export function collectGradleDependencies(_gradleCmd: any, _basePath: any, _clea
  * @return object containing jar name and class list
  */
 export function collectJarNS(jarPath: string, pomPathMap?: object): Promise<{}>;
-export function convertJarNSToPackages(jarNSMapping: any): {
+export function convertJarNSToPackages(jarNSMapping: any): Promise<{
     name: any;
     group: any;
     version: any;
     description: any;
     purl: string;
     "bom-ref": string;
+    hashes: any;
     evidence: {
         identity: {
             field: string;
@@ -1043,7 +1044,7 @@ export function convertJarNSToPackages(jarNSMapping: any): {
         name: string;
         value: any;
     }[];
-}[];
+}[]>;
 /**
  * Deprecated function to parse pom.xml. Use parsePom instead.
  *
