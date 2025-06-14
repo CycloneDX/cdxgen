@@ -220,7 +220,7 @@ const args = yargs(hideBin(process.argv))
     description: "CycloneDX Specification version to use. Defaults to 1.6",
     default: 1.6,
     type: "number",
-    choices: [1.4, 1.5, 1.6],
+    choices: [1.4, 1.5, 1.6, 1.7],
   })
   .option("filter", {
     description:
@@ -330,6 +330,13 @@ const args = yargs(hideBin(process.argv))
       "instrumentation",
       "filename",
     ],
+  })
+  .option("tlp-classification", {
+    description:
+      'Traffic Light Protocol (TLP) is a classification system for identifying the potential risk associated with artefact, including whether it is subject to certain types of legal, financial, or technical threats. Refer to [https://www.first.org/tlp/](https://www.first.org/tlp/) for further information.\nThe default classification is "CLEAR"',
+    choices: ["CLEAR", "GREEN", "AMBER", "AMBER_AND_STRICT", "RED"],
+    default: "CLEAR",
+    hidden: true,
   })
   .completion("completion", "Generate bash/zsh completion")
   .array("type")
