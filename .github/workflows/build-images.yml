@@ -187,6 +187,10 @@ jobs:
 
           - lang: ruby344
             distro: alpine
+          - lang: node20
+            distro: alpine
+          - lang: node24
+            distro: alpine
 
           - lang: rust1
             distro: debian

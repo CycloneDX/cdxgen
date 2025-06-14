@@ -11,8 +11,6 @@ RUN apk update && apk add --no-cache \
     && npm -v \
     && rm -rf /var/cache/apk/*
 
-
-
 # cdxgen-image
 FROM base AS cdxgen
 

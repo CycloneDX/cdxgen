@@ -56,7 +56,7 @@ COPY . /opt/cdxgen
 RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
     && npm install -g --omit=dev @appthreat/atom-parsetools@1.0.4 \
     && npm uninstall -g corepack \
-    && apk del npm py3-pip py3-virtualenv gcc musl-dev make curl tar bash g++ \
+    && apk del npm python3-dev py3-pip py3-virtualenv gcc musl-dev make curl tar bash g++ \
     && mkdir -p ${NODE_COMPILE_CACHE} \
     && rbastgen --help \
     && rm -rf ${CDXGEN_GEM_HOME} && mkdir -p ${CDXGEN_GEM_HOME} \
