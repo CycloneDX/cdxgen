@@ -18,6 +18,102 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  musl-builds:
+    if: github.repository == 'CycloneDX/cdxgen'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ 'ubuntu-22.04', 'ubuntu-22.04-arm' ]
+        include:
+          - os: ubuntu-22.04
+            build: |
+              rm -rf ci contrib tools_config
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              chmod +x cdxgen
+              ./cdxgen --help
+              sha256sum cdxgen > cdxgen.sha256
+              rm -rf node_modules
+              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile              
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              chmod +x cdxgen-slim
+              ./cdxgen-slim --version
+              sha256sum cdxgen-slim > cdxgen-slim.sha256
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdx-verify" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
+              chmod +x cdx-verify
+              ./cdx-verify --version
+              sha256sum cdx-verify > cdx-verify.sha256
+              ./cdxgen --help
+              ./cdxgen-slim --help
+              ./cdx-verify --help
+              mv cdxgen cdxgen-musl
+              mv cdxgen.sha256 cdxgen-musl.sha256
+              mv cdxgen-slim cdxgen-musl-slim
+              mv cdxgen-slim.sha256 cdxgen-musl-slim.sha256
+              mv cdx-verify cdx-musl-verify
+              mv cdx-verify.sha256 cdx-musl-verify.sha256
+            artifact: cdxgen-musl
+            sartifact: cdxgen-musl-slim
+            vartifact: cdx-musl-verify
+          - os: ubuntu-22.04-arm
+            build: |
+              rm -rf ci contrib tools_config
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-arm64" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              chmod +x cdxgen-arm64
+              ./cdxgen-arm64 --version
+              sha256sum cdxgen-arm64 > cdxgen-arm64.sha256
+              rm -rf node_modules
+              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-arm64-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              chmod +x cdxgen-arm64-slim
+              ./cdxgen-arm64-slim --version
+              sha256sum cdxgen-arm64-slim > cdxgen-arm64-slim.sha256
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdx-arm64-verify" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
+              chmod +x cdx-arm64-verify
+              ./cdx-arm64-verify --version
+              sha256sum cdx-arm64-verify > cdx-arm64-verify.sha256
+              ./cdxgen-arm64 --help
+              ./cdxgen-arm64-slim --help
+              ./cdx-arm64-verify --help
+              mv cdxgen-arm64 cdxgen-musl-arm64
+              mv cdxgen-arm64.sha256 cdxgen-musl-arm64.sha256
+              mv cdxgen-arm64-slim cdxgen-musl-arm64-slim
+              mv cdxgen-arm64-slim.sha256 cdxgen-musl-arm64-slim.sha256
+              mv cdx-arm64-verify cdx-musl-arm64-verify
+              mv cdx-arm64-verify.sha256 cdx-musl-arm64-verify.sha256
+            artifact: cdxgen-musl-arm64
+            sartifact: cdxgen-musl-arm64-slim
+            vartifact: cdx-musl-arm64-verify
+    runs-on: ${{ matrix.os }}
+    container:
+      image: alpine:3.20
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup alpine builder
+        run: |
+          apk add --no-cache nodejs make python3 python3-dev py3-pip py3-virtualenv gcc g++ musl-dev npm pnpm
+      - name: Install pnpm
+        run: |
+          npm install --global pnpm@10.12.1
+          pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
+      - name: Produce sae
+        run: |
+          ${{ matrix.build }}
+        env:
+          CDXGEN_DEBUG_MODE: debug
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ${{ matrix.artifact }}
+            ${{ matrix.artifact }}.sha256
+            ${{ matrix.sartifact }}
+            ${{ matrix.sartifact }}.sha256
+            ${{ matrix.vartifact }}
+            ${{ matrix.vartifact }}.sha256
   sae-builds:
     if: github.repository == 'CycloneDX/cdxgen'
     strategy:
@@ -42,7 +138,7 @@ jobs:
               chmod +x cdx-verify
               ./cdx-verify --version
               sha256sum cdx-verify > cdx-verify.sha256
-              CDXGEN_DEBUG_MODE=debug ./cdxgen --help
+              ./cdxgen --help
               ./cdxgen-slim --help
               ./cdx-verify --help
             artifact: cdxgen
@@ -65,7 +161,7 @@ jobs:
               chmod +x cdx-arm64-verify
               ./cdx-arm64-verify --version
               sha256sum cdx-arm64-verify > cdx-arm64-verify.sha256
-              CDXGEN_DEBUG_MODE=debug ./cdxgen-arm64 --help
+              ./cdxgen-arm64 --help
               ./cdxgen-arm64-slim --help
               ./cdx-arm64-verify --help
             artifact: cdxgen-arm64
