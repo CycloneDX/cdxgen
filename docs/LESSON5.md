@@ -58,7 +58,7 @@ nerdctl run --rm -e CDXGEN_DEBUG_MODE=debug -e "NPM_INSTALL_ARGS=--package-lock 
 
 ### Option 2: Use the default image with specific type
 
-The default image of cdxgen `ghcr.io/cyclonedx/cdxgen:latest` bundles node 23 or higher, which is incompatible with juice-shop. Pass the type `-t node20` to automatically install node.js 20 and use the same for the SBOM generation.
+The default image of cdxgen `ghcr.io/cyclonedx/cdxgen:latest` bundles node 24 or higher, which is incompatible with juice-shop. Pass the type `-t node20` to automatically install node.js 20 and use the same for the SBOM generation.
 
 ```shell
 docker run --rm -e CDXGEN_DEBUG_MODE=debug -e "NPM_INSTALL_ARGS=--package-lock --legacy-peer-deps" -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen:latest -t node20 -r /app -o /app/bom.json
