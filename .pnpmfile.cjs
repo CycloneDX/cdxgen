@@ -6,6 +6,15 @@ function readPackage(pkg) {
     } else if (pkg.name?.includes("linux-") && !pkg.libc) {
       pkg.libc = "glibc";
     }
+  } else if (
+    pkg.name?.includes("resolver-binding") &&
+    pkg.name.includes("linux")
+  ) {
+    if (pkg.name?.includes("musl") && !pkg.libc) {
+      pkg.libc = "musl";
+    } else if (pkg.name?.includes("gnu") && !pkg.libc) {
+      pkg.libc = "glibc";
+    }
   }
   return pkg;
 }
