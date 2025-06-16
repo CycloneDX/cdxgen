@@ -153,7 +153,7 @@ RUN cd /opt/cdxgen && corepack enable pnpm && pnpm config set global-bin-dir /op
     && pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && pnpm link && pnpm cache delete \
     && pnpm bin && pnpm bin -g \
     && mkdir -p ${NODE_COMPILE_CACHE} \
-    && chown -R cyclonedx:cyclonedx /opt/cdxgen ${NODE_COMPILE_CACHE} \
+    && chown -R cyclonedx:cyclonedx /opt/cdxgen ${NODE_COMPILE_CACHE} ${CDXGEN_TEMP_DIR} \
     && chmod a-w -R /opt \
     && rm -rf /var/cache/yum /root/.cache/pypoetry /root/.cache/node \
     && microdnf clean all
