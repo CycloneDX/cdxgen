@@ -1,4 +1,4 @@
-FROM ghcr.io/cyclonedx/cdxgen-ruby-builder:master as base
+FROM ghcr.io/cyclonedx/cdxgen-ruby-builder:master AS base
 
 ARG SWIFT_SIGNING_KEY=52BB7E3DE28A71BE22EC05FFEF80A866B47A981F
 ARG SWIFT_PLATFORM=ubi9
@@ -134,7 +134,7 @@ RUN set -e; \
     && gem --version \
     && bundler --version
 
-FROM base as cdxgen
+FROM base AS cdxgen
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
