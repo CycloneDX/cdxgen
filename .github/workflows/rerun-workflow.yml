@@ -1,0 +1,25 @@
+name: Re-run failed workflow
+
+# This workflow CAN NOT be called directly. It is supposed to be called by
+# other workflows when they fail and this workflow will trigger a re-run.
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        required: true
+        type: string
+
+jobs:
+  rerun:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: rerun ${{ inputs.run_id }}
+        run: |
+          gh run watch ${{ inputs.run_id }} > /dev/null 2>&1
+          gh run rerun ${{ inputs.run_id }} --failed
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}

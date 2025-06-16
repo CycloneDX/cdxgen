@@ -1,10 +1,7 @@
 #!/usr/bin/env node
-
-import fs from "node:fs";
-import process from "node:process";
-import { findUpSync } from "find-up";
-import { parse as _load } from "yaml";
 // Evinse (Evinse Verification Is Nearly SBOM Evidence)
+
+import process from "node:process";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import {
@@ -20,26 +17,6 @@ import {
 } from "../lib/helpers/display.js";
 import { ATOM_DB } from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
-
-// Support for config files
-const configPath = findUpSync([
-  ".cdxgenrc",
-  ".cdxgen.json",
-  ".cdxgen.yml",
-  ".cdxgen.yaml",
-]);
-let config = {};
-if (configPath) {
-  try {
-    if (configPath.endsWith(".yml") || configPath.endsWith(".yaml")) {
-      config = _load(fs.readFileSync(configPath, "utf-8"));
-    } else {
-      config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
-    }
-  } catch (e) {
-    console.log("Invalid config file", configPath);
-  }
-}
 
 const args = yargs(hideBin(process.argv))
   .env("EVINSE")
@@ -150,7 +127,6 @@ const args = yargs(hideBin(process.argv))
   ])
   .completion("completion", "Generate bash/zsh completion")
   .epilogue("for documentation, visit https://cyclonedx.github.io/cdxgen")
-  .config(config)
   .scriptName("evinse")
   .version()
   .help("h")

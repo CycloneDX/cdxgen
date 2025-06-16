@@ -17,6 +17,9 @@ const args = yargs(hideBin(process.argv))
     default: "bom.json",
     description: "Input json to validate. Default bom.json",
   })
+  .option("platform", {
+    description: "The platform to validate. No default",
+  })
   .option("public-key", {
     default: "public.key",
     description: "Public key in PEM format. Default public.key",
@@ -53,7 +56,7 @@ function getBom(args) {
     args.input.includes("docker") ||
     args.input.includes("ghcr")
   ) {
-    return getBomWithOras(args.input);
+    return getBomWithOras(args.input, args.platform);
   }
   return undefined;
 }

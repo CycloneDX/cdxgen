@@ -43,7 +43,7 @@ in
         };
         ruby = {
           enable = lib.mkIf (config.profile == "ruby") true;
-          version = "3.4.3";
+          version = "3.4.4";
         };
         dotnet = {
           enable = lib.mkIf (config.profile == "dotnet") true;
@@ -97,7 +97,7 @@ in
             pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
         elif command -v deno >/dev/null 2>&1; then
             rm -rf node_modules
-            deno install --allow-scripts=npm:@biomejs/biome@1.9.4,npm:@appthreat/sqlite3@6.0.4
+            deno install --allow-scripts=npm:@biomejs/biome@1.9.4,npm:@appthreat/sqlite3@6.0.6
         fi
       '';
 
@@ -117,7 +117,7 @@ in
       tasks."deno:prepare" = {
         exec = ''
         rm -rf node_modules
-        deno install --allow-scripts=npm:@biomejs/biome@1.9.4,npm:@appthreat/sqlite3@6.0.4
+        deno install --allow-scripts=npm:@biomejs/biome@1.9.4,npm:@appthreat/sqlite3@6.0.6
         deno info bin/cdxgen.js
         deno info bin/evinse.js
         '';

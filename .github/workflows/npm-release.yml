@@ -90,7 +90,7 @@ jobs:
         id: build
         with:
           context: .
-          file: ci/base-images/al10/Dockerfile.ruby-builder
+          file: ci/images/al10/Dockerfile.ruby-builder
           platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
@@ -133,7 +133,7 @@ jobs:
         id: build
         with:
           context: .
-          file: ci/base-images/al10/Dockerfile.ruby-builder
+          file: ci/images/al10/Dockerfile.ruby-builder
           platforms: linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}

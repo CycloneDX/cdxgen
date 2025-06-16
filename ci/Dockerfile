@@ -1,15 +1,4 @@
-FROM ghcr.io/cyclonedx/cdxgen-ruby-builder:master
-
-LABEL maintainer="cyclonedx" \
-      org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
-      org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
-      org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
-      org.opencontainers.image.version="11.4.x" \
-      org.opencontainers.image.vendor="cyclonedx" \
-      org.opencontainers.image.licenses="Apache-2.0" \
-      org.opencontainers.image.title="cdxgen" \
-      org.opencontainers.image.description="Container image for cdxgen SBOM generator packing latest build tools." \
-      org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server"
+FROM ghcr.io/cyclonedx/cdxgen-ruby-builder:master as base
 
 ARG SWIFT_SIGNING_KEY=52BB7E3DE28A71BE22EC05FFEF80A866B47A981F
 ARG SWIFT_PLATFORM=ubi9
@@ -18,13 +7,13 @@ ARG SWIFT_VERSION=swift-6.1-RELEASE
 ARG SWIFT_WEBROOT=https://download.swift.org
 ARG JAVA_VERSION=24-tem
 ARG SBT_VERSION=1.10.11
-ARG MAVEN_VERSION=3.9.9
+ARG MAVEN_VERSION=3.9.10
 ARG GRADLE_VERSION=8.14.1
 ARG GO_VERSION=1.24.3
-ARG NODE_VERSION=24.1.0
-ARG RUBY_VERSION=3.4.3
+ARG NODE_VERSION=24.2.0
+ARG RUBY_VERSION=3.4.4
 ARG JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
-ARG SCALA_VERSION=3.6.4
+ARG SCALA_VERSION=3.7.1
 
 ENV GOPATH=/opt/app-root/go \
     JAVA_VERSION=$JAVA_VERSION \
@@ -56,15 +45,13 @@ ENV GOPATH=/opt/app-root/go \
     TMPDIR=/tmp \
     DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
-    PYTHONPATH=/opt/pypi:${PYTHONPATH} \
+    PYTHONPATH=/opt/pypi \
     CDXGEN_IN_CONTAINER=true \
     CDXGEN_TEMP_DIR=/tmp/cdxgen-temp \
     SDKMAN_DIR=/opt/.sdkman \
     SDKMAN_CANDIDATES_DIR=/opt/.sdkman/candidates \
     RBENV_ROOT=/opt/.rbenv
-ENV PATH=${PATH}:/opt/bin:/opt/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/opt/.local/bin:/opt/pypi/bin:/opt/.rbenv/bin:/opt/.rbenv/versions/3.4.3/bin:
-
-COPY . /opt/cdxgen
+ENV PATH=${PATH}:/opt/bin:/opt/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/opt/.local/bin:${PYTHONPATH}/bin:/opt/.rbenv/bin:/opt/.rbenv/versions/3.4.4/bin
 
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
@@ -89,9 +76,9 @@ RUN set -e; \
     && /usr/bin/python3 --version \
     && /usr/bin/python3 -m pip install --no-cache-dir --upgrade setuptools==77.0.3 wheel pip virtualenv \
     && /usr/bin/python3 -m pip install --no-cache-dir --upgrade pipenv poetry blint atom-tools uv --target /opt/pypi \
-    && /opt/pypi/bin/poetry --version \
-    && /opt/pypi/bin/pipenv --version \
-    && /opt/pypi/bin/blint --help \
+    && ${PYTHONPATH}/bin/poetry --version \
+    && ${PYTHONPATH}/bin/pipenv --version \
+    && ${PYTHONPATH}/bin/blint --help \
     && mkdir -p /opt/bin /opt/.nvm /tmp/cdxgen-temp \
     && cargo --version \
     && rustc --version \
@@ -145,12 +132,28 @@ RUN set -e; \
     && mv composer.phar /usr/local/bin/composer \
     && gem install bundler cocoapods \
     && gem --version \
-    && bundler --version \
-    && cd /opt/cdxgen && corepack enable pnpm && pnpm config set global-bin-dir /opt/bin \
+    && bundler --version
+
+FROM base as cdxgen
+
+LABEL maintainer="cyclonedx" \
+      org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
+      org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
+      org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
+      org.opencontainers.image.version="11.4.x" \
+      org.opencontainers.image.vendor="cyclonedx" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.title="cdxgen" \
+      org.opencontainers.image.description="Container image for cdxgen SBOM generator packing latest build tools." \
+      org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server"
+
+COPY . /opt/cdxgen
+
+RUN cd /opt/cdxgen && corepack enable pnpm && pnpm config set global-bin-dir /opt/bin \
     && pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && pnpm link && pnpm cache delete \
     && pnpm bin && pnpm bin -g \
-    && mkdir -p /opt/cdxgen-node-cache \
-    && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
+    && mkdir -p ${NODE_COMPILE_CACHE} \
+    && chown -R cyclonedx:cyclonedx /opt/cdxgen ${NODE_COMPILE_CACHE} \
     && chmod a-w -R /opt \
     && rm -rf /var/cache/yum /root/.cache/pypoetry /root/.cache/node \
     && microdnf clean all
