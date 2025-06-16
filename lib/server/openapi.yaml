@@ -216,11 +216,21 @@ components:
       type: object
       properties:
         type:
-          type: string
-          description: Project Type
+          type: array
+          items:
+            type: string
+          description: Project Types
           default: "universal"
           externalDocs:
             description: Single or comma separated values. See supported project types
+            url: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
+        excludeType:
+          type: array
+          items:
+            type: string
+          description: Exclude Types
+          externalDocs:
+            description: Project types to exclude
             url: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
         multiProject:
           type: boolean
@@ -259,7 +269,7 @@ components:
         specVersion:
           type: string
           description: CycloneDX Specification version to use
-          default: "1.5"
+          default: "1.6"
         filter:
           type: array
           items:
@@ -304,6 +314,14 @@ components:
         standard:
           type: string
           description: The list of standards which may consist of regulations, industry or organizational-specific standards, maturity models, best practices, or any other requirements which can be evaluated against or attested to. Choices are asvs-4.0.3, bsimm-v13, masvs-2.0.0, nist_ssdf-1.1, pcissc-secure-slc-1.1, scvs-1.0.0, ssaf-DRAFT-2023-11
+        minConfidence:
+          type: number
+          description: Minimum confidence needed for the identity of a component from 0 - 1, where 1 is 100% confidence.
+        technique:
+          type: array
+          items:
+            type: string
+          description: Analysis technique to use
     CycloneDXSBOM:
       type: object
       externalDocs:

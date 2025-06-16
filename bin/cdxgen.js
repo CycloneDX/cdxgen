@@ -4,10 +4,11 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import process from "node:process";
-import { findUpSync } from "find-up";
 import globalAgent from "global-agent";
 import jws from "jws";
 import { parse as _load } from "yaml";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
 import { createBom, submitBom } from "../lib/cli/index.js";
 import {
   printCallStack,
@@ -35,15 +36,21 @@ import { validateBom } from "../lib/helpers/validator.js";
 import { postProcess } from "../lib/stages/postgen/postgen.js";
 import { prepareEnv } from "../lib/stages/pregen/pregen.js";
 
+const dirName = dirNameStr;
+
 // Support for config files
-const configPath = findUpSync([
+const configPaths = [
   ".cdxgenrc",
   ".cdxgen.json",
   ".cdxgen.yml",
   ".cdxgen.yaml",
-]);
+];
 let config = {};
-if (configPath) {
+for (const configPattern of configPaths) {
+  const configPath = join(process.cwd(), configPattern);
+  if (!safeExistsSync(configPath)) {
+    continue;
+  }
   try {
     if (configPath.endsWith(".yml") || configPath.endsWith(".yaml")) {
       config = _load(fs.readFileSync(configPath, "utf-8"));
@@ -54,11 +61,6 @@ if (configPath) {
     console.log("Invalid config file", configPath);
   }
 }
-
-const dirName = dirNameStr;
-
-import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
 
 const args = yargs(hideBin(process.argv))
   .env("CDXGEN")
@@ -218,7 +220,7 @@ const args = yargs(hideBin(process.argv))
     description: "CycloneDX Specification version to use. Defaults to 1.6",
     default: 1.6,
     type: "number",
-    choices: [1.4, 1.5, 1.6],
+    choices: [1.4, 1.5, 1.6, 1.7],
   })
   .option("filter", {
     description:
@@ -328,6 +330,13 @@ const args = yargs(hideBin(process.argv))
       "instrumentation",
       "filename",
     ],
+  })
+  .option("tlp-classification", {
+    description:
+      'Traffic Light Protocol (TLP) is a classification system for identifying the potential risk associated with artefact, including whether it is subject to certain types of legal, financial, or technical threats. Refer to [https://www.first.org/tlp/](https://www.first.org/tlp/) for further information.\nThe default classification is "CLEAR"',
+    choices: ["CLEAR", "GREEN", "AMBER", "AMBER_AND_STRICT", "RED"],
+    default: "CLEAR",
+    hidden: true,
   })
   .completion("completion", "Generate bash/zsh completion")
   .array("type")

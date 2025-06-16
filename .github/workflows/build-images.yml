@@ -1,5 +1,37 @@
 name: Build images
 
+# This workflow builds all cdxgen images.
+#
+# In this file we define all the images, the actual building is done in
+# `image-build.yml`.
+#
+# An image definition looks like this:
+#
+#   lang:                  Language+version the image will be built for    -- mandatory
+#   distro:                Distribution the image is based on              -- default: 'bci' (defined in `image-build.yml`)
+#   fix-qemu:              Fix the QEMU installation on the build-server   -- default: false
+#   runner:                Hint/name of the server to run the build on     -- default: 'ubuntu-24.04' (defined in `image-build.yml`)
+#   skip-arm:              Do not build an ARM64-version of this image     -- default: false
+#   base-image:            Configuration specific to the base-image        -- optional
+#     additional-image:    Additional name for the base-image              -- optional
+#     lang:                Override the lang for just the base-image       -- historical, should not be used for new images
+#     name:                Override the distro for just the base-image     -- historical, should not be used for new images
+#   cdxgen-image:          Configuration specific to the cdxgen-image      -- optional
+#     additional-image:    Additional name for the cdxgen-image            -- optional
+#     additional-image2:   As above                                        -- optional
+#     additional-image3:   As above                                        -- optional
+#
+# The actual names of the images are then constructed from the above parameters
+# like this (plus any and all defined additional-names):
+#
+#   base-image:     ${ base-image.name || distro }-${ base-image.lang || lang }:${ 'master' || 'vX.X.X' }
+#   cdxgen-image:   cdxgen${ -distro }-${ lang }:${ image-build.ymlTAG || 'vX.X.X' }
+#
+# The above configurations are also used to lookup the location of the
+# 'Dockerfile' for the images:
+#
+#   ci/images/${ distro }/Dockerfile.${ lang }
+
 on:
   schedule:
   - cron: "0 8 * * *"
@@ -26,17 +58,8 @@ jobs:
       matrix:
         image:
 
-#          - lang: dotnet6
-#            fix-qemu: true
-#            skip-arm: true
-#            base-image:
-#              additional-image: bci-dotnet
-#            cdxgen-image:
-#              additional-image: cdxgen-dotnet
-
           - lang: dotnet6
             distro: debian
-            runner: macos-hosted
 
           - lang: dotnet7
             skip-arm: true
@@ -52,18 +75,22 @@ jobs:
             skip-arm: true
 
           - lang: dotnet9
+            distro: alpine
+
+          - lang: dotnet9
             distro: debian
             runner: macos-hosted
 
-          - lang: dotnet9
-            distro: alpine
-
           - lang: dotnet10
             distro: debian
+            runner: macos-hosted
 
           - lang: golang123
             distro: alpine
-          
+
+          - lang: golang123
+            distro: debian
+
           - lang: golang124
             distro: alpine
             base-image:
@@ -71,9 +98,6 @@ jobs:
             cdxgen-image:
               additional-image: cdxgen-alpine-golang
 
-          - lang: golang123
-            distro: debian
-          
           - lang: golang124
             distro: debian
             base-image:
@@ -98,26 +122,41 @@ jobs:
           - lang: java17-slim
 
           - lang: java21
+            distro: alpine
+
+          - lang: java21
             distro: temurin
+
+          - lang: java24
+            distro: alpine
 
           - lang: java24
             distro: temurin
 
           - lang: node20
-            runner: macos-hosted
             cdxgen-image:
               additional-image: cdxgen-node
 
           - lang: php83
             distro: debian
+            runner: macos-hosted
+
+          - lang: php84
+            distro: alpine
+
+          - lang: php84
+            distro: debian
+            runner: macos-hosted
 
           - lang: python36
 
           - lang: python39
             distro: opensuse
+            runner: macos-hosted
 
           - lang: python310
             distro: opensuse
+            runner: macos-hosted
 
           - lang: python311
 
@@ -137,7 +176,6 @@ jobs:
 
           - lang: ruby26
             distro: debian
-            runner: macos-hosted
             skip-arm: true
 
           - lang: ruby33
@@ -146,7 +184,13 @@ jobs:
 
           - lang: ruby34
             distro: debian
-            runner: macos-hosted
+
+          - lang: ruby344
+            distro: alpine
+          - lang: node20
+            distro: alpine
+          - lang: node24
+            distro: alpine
 
           - lang: rust1
             distro: debian
@@ -157,7 +201,6 @@ jobs:
 
           - lang: swift6
             distro: debian
-            runner: macos-hosted
             base-image:
               additional-image: debian-swift
             cdxgen-image:
@@ -167,7 +210,18 @@ jobs:
       contents: read
       packages: write
     uses: ./.github/workflows/image-build.yml
+    secrets: inherit
     with:
       image: ${{ toJSON(matrix.image) }}
-      runner: ${{ matrix.image.runner }}
-    secrets: inherit
+
+  retry:
+    needs: images
+    if: failure() && fromJSON(github.run_attempt) < 3
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh workflow run rerun-workflow.yml -F run_id=${{ github.run_id }}
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}

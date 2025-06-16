@@ -16,14 +16,12 @@
 
 
 #
-# The Azure provided machines typically have the following disk allocation:
-# Total space: 85GB
-# Allocated: 67 GB
-# Free: 17 GB
-# This script frees up 28 GB of disk space by deleting unneeded packages and 
+# The GitHub provided machines typically have the following disk allocation:
+# Total space: 72GB
+# Allocated: 48 GB
+# Free: 25 GB
+# This script frees up 16 GB of disk space by deleting unneeded packages and
 # large directories.
-# The Flink end to end tests download and generate more than 17 GB of files,
-# causing unpredictable behavior and build failures.
 #
 echo "=============================================================================="
 echo "Freeing up disk space on CI system"
@@ -37,6 +35,7 @@ sudo apt-get remove --purge -y '^azure-.*'
 sudo apt-get remove --purge -y '^dotnet-.*'
 sudo apt-get remove --purge -y '^google-cloud-.*'
 sudo apt-get remove --purge -y '^libllvm.*'
+sudo apt-get remove --purge -y '^linux-.*-headers-.*'
 sudo apt-get remove --purge -y '^llvm-.*'
 sudo apt-get remove --purge -y '^microsoft-.*'
 sudo apt-get remove --purge -y '^mongodb-.*'
@@ -50,6 +49,7 @@ sudo apt-get remove --purge -y hhvm
 sudo apt-get remove --purge -y libgl1-mesa-dri
 sudo apt-get remove --purge -y mono-devel
 sudo apt-get remove --purge -y powershell
+sudo apt-get remove --purge -y snapd
 sudo apt-get autoremove -y
 sudo apt-get clean
 dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -nr | head -n 100

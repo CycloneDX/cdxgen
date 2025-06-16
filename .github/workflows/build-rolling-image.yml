@@ -1,13 +1,21 @@
 name: Build rolling image
 
+# This workflow builds a fresh image for the current 'master'-branch every day
+# and on pushes.
+#
+# Similar to `build-images`, this workflow only defines the image and building
+# is handled in `image-build.yml`.
+#
+# The definition is the same as in `build-images.yml`, except for the fact it
+# must be defined in a JSON-String, since parameters can only be transferred as
+# simple types!
+
 on:
   schedule:
   - cron: "0 8 * * *"
   push:
     branches:
       - master
-    tags:
-      - 'v*'
     paths-ignore:
       - 'docs/**'
       - 'contrib/**'
@@ -25,15 +33,26 @@ jobs:
       contents: read
       packages: write
     uses: ./.github/workflows/image-build.yml
+    secrets: inherit
     with:
       image: |
         {
           "lang": "rolling",
           "distro": "opensuse",
+          "runner": "macos-hosted",
           "base-image": {
             "lang": "lang"
-          },
-          "cdxgen-image": {
-            "skip-tags": true
           }
         }
+
+  retry:
+    needs: image
+    if: failure() && fromJSON(github.run_attempt) < 3
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh workflow run rerun-workflow.yml -F run_id=${{ github.run_id }}
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
