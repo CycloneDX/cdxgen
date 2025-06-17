@@ -69,11 +69,11 @@ jobs:
           REPO_URL: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           REF: ${{ github.ref }}
         run: |
-          if [[ "$REF" == refs/heads/* ]]; then
-            REF_NAME="${REF#refs/heads/}"
-          else
-            REF_NAME="$REF"
-          fi
+          case "$REF" in
+            refs/heads/*) REF_NAME="${REF#refs/heads/}" ;;
+            refs/tags/*)  REF_NAME="${REF#refs/tags/}"  ;;
+            *)            REF_NAME="$REF"               ;;
+          esac
           echo "Cloning ${REF} as ${REF_NAME}"
           git clone --depth=1 --branch "$REF_NAME" "$REPO_URL" .
           ls -lh

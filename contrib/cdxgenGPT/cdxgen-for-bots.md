@@ -91,7 +91,7 @@ When a user provides a CycloneDX SBOM and asks about “optimization,” “comp
 2. **Component filtering**
 
    - Only consider `"type":"library"`.
-   - Exclude test frameworks (e.g. xunit, jest) and core-function libraries (http, regex, security, emojis, table, parse, colors).
+   - Exclude test frameworks (e.g. xunit, jest) and core-function libraries (ansi, http, regex, security, emojis, table, parse, colors).
 
 3. **Duplicate detection**
 
