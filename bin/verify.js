@@ -3,9 +3,11 @@
 import fs from "node:fs";
 import { join } from "node:path";
 import process from "node:process";
+
 import jws from "jws";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+
 import { dirNameStr } from "../lib/helpers/utils.js";
 import { getBomWithOras } from "../lib/managers/oci.js";
 

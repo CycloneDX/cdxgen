@@ -2,8 +2,10 @@
 // Evinse (Evinse Verification Is Nearly SBOM Evidence)
 
 import process from "node:process";
+
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+
 import {
   analyzeProject,
   createEvinseFile,

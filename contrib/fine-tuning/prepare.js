@@ -3,6 +3,7 @@ import { join } from "node:path";
 import process from "node:process";
 
 import { dirNameStr, getAllFiles } from "../../lib/helpers/utils.js";
+
 const jsonlFiles = getAllFiles(dirNameStr, "**/*.jsonl", {
   exclude: ["**/{train, valid}.jsonl"],
 });

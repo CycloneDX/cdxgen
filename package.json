@@ -129,14 +129,24 @@
     "sequelize": "^6.37.7",
     "sqlite3": "npm:@appthreat/sqlite3@^6.0.6"
   },
-  "files": ["*.js", "lib/**", "bin/", "data/", "types/", "index.cjs"],
+  "files": [
+    "*.js",
+    "lib/**",
+    "bin/",
+    "data/",
+    "types/",
+    "index.cjs"
+  ],
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.0.0",
     "jest": "^30.0.0",
     "typescript": "^5.8.3"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["@appthreat/sqlite3", "@biomejs/biome"],
+    "onlyBuiltDependencies": [
+      "@appthreat/sqlite3",
+      "@biomejs/biome"
+    ],
     "overrides": {
       "babel-plugin-istanbul": "^7.0.0",
       "brace-expansion": "2.0.2",
@@ -186,7 +196,9 @@
       "yallist": "^5.0.0",
       "yargs": "^17.7.2"
     },
-    "ignoredBuiltDependencies": ["unrs-resolver"]
+    "ignoredBuiltDependencies": [
+      "unrs-resolver"
+    ]
   },
   "overrides": {
     "babel-plugin-istanbul": "^7.0.0",

@@ -5,6 +5,7 @@ import { homedir } from "node:os";
 import { join } from "node:path";
 import process from "node:process";
 import repl from "node:repl";
+
 import jsonata from "jsonata";
 
 import { createBom } from "../lib/cli/index.js";
@@ -12,8 +13,8 @@ import {
   printCallStack,
   printDependencyTree,
   printFormulation,
-  printOSTable,
   printOccurrences,
+  printOSTable,
   printServices,
   printSummary,
   printTable,
@@ -50,9 +51,9 @@ if (process.env?.CDXGEN_NODE_OPTIONS) {
 }
 
 // The current sbom is stored here
-let sbom = undefined;
+let sbom;
 
-let historyFile = undefined;
+let historyFile;
 const historyConfigDir = join(homedir(), ".config", ".cdxgen");
 if (!process.env.CDXGEN_REPL_HISTORY && !fs.existsSync(historyConfigDir)) {
   try {

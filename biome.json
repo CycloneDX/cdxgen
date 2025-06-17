@@ -1,22 +1,36 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "organizeImports": {
-    "enabled": true,
-    "ignore": ["contrib/**"]
+  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              ":NODE:",
+              ":BLANK_LINE:",
+              ":PACKAGE:",
+              ":BLANK_LINE:",
+              "**"
+            ]
+          }
+        }
+      }
+    }
   },
   "linter": {
     "enabled": true,
-    "ignore": ["types/**", "contrib/**", "data/**"],
+    "includes": ["**", "!**/types/**", "!**/contrib/**", "!**/data/**"],
     "rules": {
       "recommended": true,
       "complexity": {
         "noForEach": "off",
         "useLiteralKeys": "off",
-        "noUselessTernary": "warn"
+        "noUselessTernary": "warn",
+        "noUselessContinue": "warn"
       },
       "correctness": {
         "noUndeclaredVariables": "error",
-        "noUnnecessaryContinue": "warn",
         "noConstAssign": "error",
         "noConstantCondition": "error",
         "noUnreachable": "info",
@@ -28,7 +42,15 @@
       "style": {
         "noParameterAssign": "off",
         "noShoutyConstants": "warn",
-        "noUselessElse": "warn"
+        "noUselessElse": "warn",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noInferrableTypes": "error"
       },
       "suspicious": {
         "noAssignInExpressions": "off",
@@ -36,11 +58,10 @@
         "noAsyncPromiseExecutor": "warn",
         "noControlCharactersInRegex": "warn",
         "noDebugger": "error",
-        "noEmptyBlockStatements": "warn"
-      },
-      "nursery": {
+        "noEmptyBlockStatements": "warn",
         "noDuplicateElseIf": "warn"
-      }
+      },
+      "nursery": {}
     }
   },
   "vcs": {
@@ -50,7 +71,12 @@
   },
   "formatter": {
     "enabled": true,
-    "ignore": ["types/**", "contrib/**", ".devcontainer.json"],
+    "includes": [
+      "**",
+      "!**/types/**",
+      "!**/contrib/**",
+      "!**/.devcontainer.json"
+    ],
     "indentStyle": "space",
     "indentWidth": 2
   },
