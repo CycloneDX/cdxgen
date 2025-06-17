@@ -2,7 +2,6 @@
   "git.alwaysSignOff": true,
   "editor.codeActionsOnSave": {
     "quickfix.biome": "explicit",
-    "source.fixAll.biome": "explicit",
     "source.organizeImports.biome": "explicit"
   },
   "editor.defaultFormatter": "biomejs.biome",
