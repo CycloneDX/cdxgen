@@ -190,6 +190,10 @@ jobs:
         node-version: '24.x'
         registry-url: https://registry.npmjs.org/
     - uses: oras-project/setup-oras@v1
+    - name: Free disk space
+      uses: jlumbroso/free-disk-space@main
+      with:
+        tool-cache: true
     - name: Trim CI agent
       run: |
         chmod +x contrib/free_disk_space.sh
@@ -267,6 +271,10 @@ jobs:
           node-version: '24.x'
           registry-url: https://registry.npmjs.org/
       - uses: oras-project/setup-oras@v1
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
       - name: Trim CI agent
         run: |
           chmod +x contrib/free_disk_space.sh
@@ -331,6 +339,10 @@ jobs:
         node-version: '24.x'
         registry-url: https://registry.npmjs.org/
     - uses: oras-project/setup-oras@v1
+    - name: Free disk space
+      uses: jlumbroso/free-disk-space@main
+      with:
+        tool-cache: true
     - name: Trim CI agent
       run: |
         chmod +x contrib/free_disk_space.sh
@@ -395,6 +407,10 @@ jobs:
         node-version: '24.x'
         registry-url: https://registry.npmjs.org/
     - uses: oras-project/setup-oras@v1
+    - name: Free disk space
+      uses: jlumbroso/free-disk-space@main
+      with:
+        tool-cache: true
     - name: Trim CI agent
       run: |
         chmod +x contrib/free_disk_space.sh
@@ -441,6 +457,10 @@ jobs:
         node-version: '24.x'
         registry-url: https://registry.npmjs.org/
     - uses: oras-project/setup-oras@v1
+    - name: Free disk space
+      uses: jlumbroso/free-disk-space@main
+      with:
+        tool-cache: true
     - name: Trim CI agent
       run: |
         chmod +x contrib/free_disk_space.sh
