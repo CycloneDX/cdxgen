@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import process from "node:process";
 
 const DOCKER_CMD = process.env.DOCKER_CMD || "docker";
@@ -45,6 +45,9 @@ function main(argvs) {
   if (argvs.length !== 1) {
     console.log("USAGE: node image-avail.js <csv file>");
     process.exit(1);
+  }
+  if (!existsSync(argvs[0])){
+    throw new Error("File does not exist!")
   }
   const imagesList = readcsv(argvs[0]);
   for (const imageArgs of imagesList) {
