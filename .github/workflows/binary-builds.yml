@@ -230,7 +230,7 @@ jobs:
               .\cdxgen.exe --version
               (Get-FileHash .\cdxgen.exe).hash | Out-File -FilePath .\cdxgen.exe.sha256
               Remove-Item node_modules -Recurse -Force
-              npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund
+              pnpm install --config.node-linker=hoisted --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy
               pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen-slim.exe --version
               (Get-FileHash .\cdxgen-slim.exe).hash | Out-File -FilePath .\cdxgen-slim.exe.sha256
@@ -251,7 +251,7 @@ jobs:
               .\cdxgen-arm.exe --version
               (Get-FileHash .\cdxgen-arm.exe).hash | Out-File -FilePath .\cdxgen-arm.exe.sha256
               Remove-Item node_modules -Recurse -Force
-              npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund
+              pnpm install --config.node-linker=hoisted --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy
               pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-arm-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen-arm-slim.exe --version
               (Get-FileHash .\cdxgen-arm-slim.exe).hash | Out-File -FilePath .\cdxgen-arm-slim.exe.sha256
@@ -278,11 +278,15 @@ jobs:
       - name: Install pnpm
         run: |
           npm install --global pnpm@10.12.1
+      - name: pnpm install
+        run: |          
           pnpm install --config.node-linker=hoisted --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy
-        if: ${{ startsWith(matrix.os, 'windows') }}          
-      - name: Install pnpm
+          Remove-Item .git -Recurse -Force
+          Remove-Item .github -Recurse -Force
+          Remove-Item .vscode -Recurse -Force
+        if: ${{ startsWith(matrix.os, 'windows') }}
+      - name: pnpm install
         run: |
-          npm install --global pnpm@10.12.1
           pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
           rm -rf .git .github .vscode
         if: ${{ !startsWith(matrix.os, 'windows') }}
