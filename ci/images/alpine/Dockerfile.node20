@@ -12,8 +12,10 @@ RUN apk update && apk add --no-cache \
     gcc \
     g++ \
     musl-dev \
-    npm yarn openjdk21 \
+    npm openjdk21 \
     && npm install -g npm corepack \
+    && /usr/bin/python --version \
+    && /usr/bin/python -m pip install --no-cache-dir --upgrade atom-tools --target /opt/pypi \
     && node -v \
     && npm -v \
     && rm -rf /var/cache/apk/*
@@ -39,7 +41,7 @@ ENV CDXGEN_IN_CONTAINER=true \
 
 COPY . /opt/cdxgen
 
-RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --no-optional --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
+RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
 	&& npm uninstall -g corepack \
 	&& apk del npm python3-dev py3-pip py3-virtualenv gcc g++ musl-dev make \
     && mkdir -p ${NODE_COMPILE_CACHE} \

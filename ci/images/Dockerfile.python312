@@ -1,7 +1,7 @@
 # Base-image
 FROM registry.suse.com/bci/python:3.12 AS base
 
-ARG JAVA_VERSION=24-tem
+ARG JAVA_VERSION=24.0.1-tem
 ARG MAVEN_VERSION=3.9.10
 ARG GCC_VERSION=13
 ARG NODE_VERSION=24.2.0

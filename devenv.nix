@@ -28,7 +28,9 @@ in
           venv.quiet = true;
           version = "3.13";
           poetry.enable = lib.mkIf (config.profile == "poetry") true;
-          uv.enable = lib.mkIf (config.profile == "uv") true;
+          uv.enable = lib.mkIf (lib.elem config.profile [ "python" "uv" ] == true) true;
+          uv.sync.enable = lib.mkIf (lib.elem config.profile [ "python" "uv" ] == true) true;
+          uv.sync.allExtras = true;
         };
         javascript = {
           enable = true;

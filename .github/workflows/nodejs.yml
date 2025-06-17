@@ -16,7 +16,9 @@ jobs:
     continue-on-error: true
     runs-on: ["self-hosted", "ubuntu", "arm64"]
     permissions:
-      contents: read
+      contents: write
+      packages: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -46,6 +48,19 @@ jobs:
           COLUMNS: 140
           CDXGEN_DEBUG_MODE: debug
           JAVA_TOOL_OPTIONS: "-XX:UseSVE=0 -Dfile.encoding=UTF-8"
+      - name: Generate atom and slices
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          node bin/cdxgen.js -t js -o $(pwd)/reports/sbom-build-js.cdx.json --no-recurse --profile research $(pwd)
+      - name: Upload atom and slices
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            reports/js-app.atom
+            reports/js-reachables.slices.json
+            reports/js-usages.slices.json
+            reports/sbom-build-js.cdx.json
   matrix-unit-test:
     permissions:
       contents: read
