@@ -29,7 +29,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '23.x'
+        node-version: '24.x'
         registry-url: https://registry.npmjs.org/
     - name: Trim CI agent
       run: |
@@ -176,7 +176,7 @@ jobs:
             ${{ needs.containers-ruby-builder-arm64.outputs.image-uri }}
   containers:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ["self-hosted", "metal", "amd64"]
+    runs-on: ubuntu-latest
     needs: [containers-ruby-builder-deploy-manifest]
     permissions:
       contents: write
@@ -184,7 +184,17 @@ jobs:
       id-token: write
     steps:
     - uses: actions/checkout@v4
-    - run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24.x'
+        registry-url: https://registry.npmjs.org/
+    - uses: oras-project/setup-oras@v1
+    - name: Trim CI agent
+      run: |
+        chmod +x contrib/free_disk_space.sh
+        ./contrib/free_disk_space.sh
+    - run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes    
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     - name: Log in to the Container registry
@@ -193,20 +203,12 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Setup docker cache dir
-      run: |
-        mkdir -p /tmp/containers-cache
     - name: Extract metadata (tags, labels) for Docker
       id: meta
       uses: docker/metadata-action@v5
       with:
         images: |
           ghcr.io/cyclonedx/cdxgen
-    - name: Trim CI agent
-      run: |
-        docker system prune -a -f
-        rm -rf /tmp/docker-images-* /tmp/atom-usages-* /tmp/atom-reachables-* /tmp/cdx*
-        sudo tailscale up
     - name: Build and push Docker images
       uses: docker/build-push-action@v5
       with:
@@ -216,8 +218,13 @@ jobs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-        cache-from: type=local,src=/tmp/containers-cache
-        cache-to: type=local,dest=/tmp/containers-cache,mode=max
+    - name: setup nydus
+      run: |
+        curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.3.1/nydus-static-v2.3.1-linux-amd64.tgz
+        tar -xvf nydus-static-v2.3.1-linux-amd64.tgz
+        chmod +x nydus-static/*
+        mv nydus-static/* /usr/local/bin/
+        rm -rf nydus-static-v2.3.1-linux-amd64.tgz nydus-static
     - name: nydusify
       run: |
         nydusify convert --oci --oci-ref --source ${{ steps.meta.outputs.tags }} --target ${{ steps.meta.outputs.tags }}-nydus --prefetch-dir /opt/cdxgen
@@ -246,7 +253,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   containers-secure:
     if: github.repository == 'CycloneDX/cdxgen'
-    runs-on: ["self-hosted", "metal", "amd64"]
+    runs-on: ubuntu-latest
     needs: [containers]
     permissions:
       contents: write
@@ -254,6 +261,16 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          registry-url: https://registry.npmjs.org/
+      - uses: oras-project/setup-oras@v1
+      - name: Trim CI agent
+        run: |
+          chmod +x contrib/free_disk_space.sh
+          ./contrib/free_disk_space.sh
       - run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -263,18 +280,12 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Setup docker cache dir
-        run: |
-          mkdir -p /tmp/containers-cache
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: |
             ghcr.io/cyclonedx/cdxgen-secure
-      - name: Trim CI agent
-        run: |
-          rm -rf /tmp/docker-images-* /tmp/atom-usages-* /tmp/atom-reachables-* /tmp/cdx*
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
         with:
@@ -284,8 +295,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=local,src=/tmp/containers-cache
-          cache-to: type=local,dest=/tmp/containers-cache,mode=max
       - name: Attach cdx sbom
         run: |
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
@@ -319,7 +328,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '23.x'
+        node-version: '24.x'
         registry-url: https://registry.npmjs.org/
     - uses: oras-project/setup-oras@v1
     - name: Trim CI agent
@@ -383,7 +392,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '23.x'
+        node-version: '24.x'
         registry-url: https://registry.npmjs.org/
     - uses: oras-project/setup-oras@v1
     - name: Trim CI agent
@@ -429,7 +438,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '23.x'
+        node-version: '24.x'
         registry-url: https://registry.npmjs.org/
     - uses: oras-project/setup-oras@v1
     - name: Trim CI agent
