@@ -153,10 +153,14 @@ jobs:
           - lang: python39
             distro: opensuse
             runner: macos-hosted
+            cdxgen-image:
+              additional-image: cdxgen-python39
 
           - lang: python310
             distro: opensuse
             runner: macos-hosted
+            cdxgen-image:
+              additional-image: cdxgen-python310
 
           - lang: python311
 
