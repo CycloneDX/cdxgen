@@ -230,6 +230,7 @@ jobs:
               .\cdxgen.exe --version
               (Get-FileHash .\cdxgen.exe).hash | Out-File -FilePath .\cdxgen.exe.sha256
               Remove-Item node_modules -Recurse -Force
+              Remove-Item pnpm-lock.yaml
               pnpm install --config.node-linker=hoisted --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy
               pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen-slim.exe --version
@@ -251,6 +252,7 @@ jobs:
               .\cdxgen-arm.exe --version
               (Get-FileHash .\cdxgen-arm.exe).hash | Out-File -FilePath .\cdxgen-arm.exe.sha256
               Remove-Item node_modules -Recurse -Force
+              Remove-Item pnpm-lock.yaml
               pnpm install --config.node-linker=hoisted --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy
               pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-arm-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen-arm-slim.exe --version
@@ -279,7 +281,8 @@ jobs:
         run: |
           npm install --global pnpm@10.12.1
       - name: pnpm install
-        run: |          
+        run: |
+          Remove-Item pnpm-lock.yaml
           pnpm install --config.node-linker=hoisted --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy
           Remove-Item .git -Recurse -Force
           Remove-Item .github -Recurse -Force
