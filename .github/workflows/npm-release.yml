@@ -204,7 +204,9 @@ jobs:
           ghcr.io/cyclonedx/cdxgen
     - name: Trim CI agent
       run: |
+        docker system prune -a -f
         rm -rf /tmp/docker-images-* /tmp/atom-usages-* /tmp/atom-reachables-* /tmp/cdx*
+        sudo tailscale up
     - name: Build and push Docker images
       uses: docker/build-push-action@v5
       with:
