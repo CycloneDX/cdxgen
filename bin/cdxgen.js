@@ -59,7 +59,7 @@ for (const configPattern of configPaths) {
     } else {
       config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
     }
-  } catch (e) {
+  } catch (_e) {
     console.log("Invalid config file", configPath);
   }
 }

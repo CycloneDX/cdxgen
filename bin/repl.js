@@ -59,7 +59,7 @@ if (!process.env.CDXGEN_REPL_HISTORY && !fs.existsSync(historyConfigDir)) {
   try {
     fs.mkdirSync(historyConfigDir, { recursive: true });
     historyFile = join(historyConfigDir, ".repl_history");
-  } catch (e) {
+  } catch (_e) {
     // ignore
   }
 } else {

@@ -622,11 +622,12 @@ export function parseGoModGraph(rawOutput: string, goModFile: string, gosumMap: 
     rootList: any;
 }>;
 /**
- * Parse go mod why output
+ * Parse go mod why output.
+ *
  * @param {string} rawOutput Output from go mod why
- * @returns package name or none
+ * @returns {string|undefined} package name or none
  */
-export function parseGoModWhy(rawOutput: string): any;
+export function parseGoModWhy(rawOutput: string): string | undefined;
 /**
  * Parse go sum data
  * @param {string} gosumData Content of go.sum
