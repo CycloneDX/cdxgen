@@ -5,150 +5,148 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  babel-plugin-istanbul: ^7.0.0
+  babel-plugin-istanbul: 7.0.0
   brace-expansion: 2.0.2
-  jwa: ^2.0.1
-  glob: ^11.0.3
-  node-gyp: ^10.2.0
-  prebuild: ^13.0.0
-  pacote: ^20.0.0
-  negotiator: ^0.6.4
-  '@npmcli/agent': ^3.0.0
-  '@npmcli/fs': ^4.0.0
-  abbrev: ^3.0.1
-  cacache: ^19.0.1
-  camelcase: ^6.3.0
-  chownr: ^3.0.0
-  debug: ^4.4.1
-  escape-string-regexp: ^4.0.0
-  ini: ^5.0.0
-  is-stream: ^4.0.1
-  isexe: ^3.1.1
-  istanbul-lib-instrument: ^6.0.3
-  json-parse-even-better-errors: ^4.0.0
-  lru-cache: ^11.1.0
-  minimatch: ^10.0.3
-  minizlib: ^3.0.2
+  jwa: 2.0.1
+  glob: 11.0.3
+  node-gyp: 10.3.1
+  prebuild: 13.0.1
+  pacote: 20.0.0
+  negotiator: 0.6.4
+  '@npmcli/agent': 3.0.0
+  '@npmcli/fs': 4.0.0
+  abbrev: 3.0.1
+  cacache: 19.0.1
+  camelcase: 6.3.0
+  chownr: 3.0.0
+  debug: 4.4.1
+  escape-string-regexp: 4.0.0
+  ini: 5.0.0
+  is-stream: 4.0.1
+  isexe: 3.1.1
+  istanbul-lib-instrument: 6.0.3
+  json-parse-even-better-errors: 4.0.0
+  lru-cache: 11.1.0
+  minimatch: 10.0.3
+  minizlib: 3.0.2
   make-fetch-happen: 14.0.3
-  mkdirp: ^3.0.1
-  ms: ^2.1.3
-  nopt: ^8.1.0
-  on-finished: ^2.4.1
-  proc-log: ^5.0.0
-  semver: ^7.7.2
-  signal-exit: ^4.1.0
-  sprintf-js: ^1.1.3
-  ssri: ^12.0.0
-  statuses: ^2.0.1
-  strip-json-comments: ^3.1.1
-  supports-color: ^8.1.1
-  tar: ^7.4.3
-  tar-fs: ^3.0.9
-  type-fest: ^4.41.0
-  unique-filename: ^4.0.0
-  unique-slug: ^5.0.0
-  uuid: ^11.1.0
-  which: ^5.0.0
-  write-file-atomic: ^6.0.0
-  yallist: ^5.0.0
-  yargs: ^17.7.2
-
-pnpmfileChecksum: sha256-zddoD5DO4pDXt1woGSkWiGYuIzHsyOAVI3HXb7mgvsM=
+  mkdirp: 3.0.1
+  ms: 2.1.3
+  nopt: 8.1.0
+  on-finished: 2.4.1
+  proc-log: 5.0.0
+  semver: 7.7.2
+  signal-exit: 4.1.0
+  sprintf-js: 1.1.3
+  ssri: 12.0.0
+  statuses: 2.0.2
+  strip-json-comments: 3.1.1
+  supports-color: 8.1.1
+  tar: 7.4.3
+  tar-fs: 3.0.10
+  type-fest: 4.41.0
+  unique-filename: 4.0.0
+  unique-slug: 5.0.0
+  uuid: 11.1.0
+  which: 5.0.0
+  write-file-atomic: 6.0.0
+  yallist: 5.0.0
+  yargs: 17.7.2
 
 importers:
 
   .:
     dependencies:
       '@babel/parser':
-        specifier: ^7.27.4
+        specifier: 7.27.5
         version: 7.27.5
       '@babel/traverse':
-        specifier: ^7.27.4
+        specifier: 7.27.4
         version: 7.27.4
       '@iarna/toml':
         specifier: 2.2.5
         version: 2.2.5
       '@npmcli/arborist':
-        specifier: ^9.1.2
+        specifier: 9.1.2
         version: 9.1.2
       ajv:
-        specifier: ^8.17.1
+        specifier: 8.17.1
         version: 8.17.1
       ajv-formats:
-        specifier: ^3.0.1
+        specifier: 3.0.1
         version: 3.0.1(ajv@8.17.1)
       cheerio:
-        specifier: ^1.1.0
+        specifier: 1.1.0
         version: 1.1.0
       edn-data:
         specifier: 1.1.2
         version: 1.1.2
       glob:
-        specifier: ^11.0.3
+        specifier: 11.0.3
         version: 11.0.3
       global-agent:
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0
       got:
-        specifier: ^14.4.7
+        specifier: 14.4.7
         version: 14.4.7
       iconv-lite:
-        specifier: ^0.6.3
+        specifier: 0.6.3
         version: 0.6.3
       jws:
-        specifier: ^4.0.0
+        specifier: 4.0.0
         version: 4.0.0
       node-stream-zip:
-        specifier: ^1.15.0
+        specifier: 1.15.0
         version: 1.15.0
       packageurl-js:
         specifier: 1.0.2
         version: 1.0.2
       prettify-xml:
-        specifier: ^1.2.0
+        specifier: 1.2.0
         version: 1.2.0
       properties-reader:
-        specifier: ^2.3.0
+        specifier: 2.3.0
         version: 2.3.0
       semver:
-        specifier: ^7.7.2
+        specifier: 7.7.2
         version: 7.7.2
       ssri:
-        specifier: ^12.0.0
+        specifier: 12.0.0
         version: 12.0.0
       table:
-        specifier: ^6.9.0
+        specifier: 6.9.0
         version: 6.9.0
       tar:
-        specifier: ^7.4.3
+        specifier: 7.4.3
         version: 7.4.3
       uuid:
-        specifier: ^11.1.0
+        specifier: 11.1.0
         version: 11.1.0
       validate-iri:
-        specifier: ^1.0.1
+        specifier: 1.0.1
         version: 1.0.1
       xml-js:
-        specifier: ^1.6.11
+        specifier: 1.6.11
         version: 1.6.11
       yaml:
-        specifier: ^2.8.0
+        specifier: 2.8.0
         version: 2.8.0
       yargs:
-        specifier: ^17.7.2
+        specifier: 17.7.2
         version: 17.7.2
       yoctocolors:
-        specifier: ^2.1.1
+        specifier: 2.1.1
         version: 2.1.1
     devDependencies:
       '@biomejs/biome':
         specifier: 2.0.0
         version: 2.0.0
       jest:
-        specifier: ^30.0.0
+        specifier: 30.0.0
         version: 30.0.0(@types/node@24.0.3)
       typescript:
-        specifier: ^5.8.3
+        specifier: 5.8.3
         version: 5.8.3
     optionalDependencies:
       '@appthreat/atom':
@@ -191,22 +189,22 @@ importers:
         specifier: 1.6.12
         version: 1.6.12
       body-parser:
-        specifier: ^2.2.0
+        specifier: 2.2.0
         version: 2.2.0
       compression:
-        specifier: ^1.7.5
+        specifier: 1.8.0
         version: 1.8.0
       connect:
-        specifier: ^3.7.0
+        specifier: 3.7.0
         version: 3.7.0
       jsonata:
-        specifier: ^2.0.6
+        specifier: 2.0.6
         version: 2.0.6
       sequelize:
-        specifier: ^6.37.7
+        specifier: 6.37.7
         version: 6.37.7(@appthreat/sqlite3@6.0.6)
       sqlite3:
-        specifier: npm:@appthreat/sqlite3@^6.0.6
+        specifier: npm:@appthreat/sqlite3@6.0.6
         version: '@appthreat/sqlite3@6.0.6'
 
 packages:
@@ -467,37 +465,31 @@ packages:
     resolution: {integrity: sha512-D/vdxpvrtkfYITHpiQjlvhZBNkm2GLmm/lZHbSs5R+nghbulTgXR9I8pTALFTBhjHZQu55DTiACmn/irhhotkA==}
     cpu: [x64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.6.12':
     resolution: {integrity: sha512-xd9A25e+4SwHwm9FRglMdsfRsTAROTj3C5eiQ501FI+FOxEbnCODNkDFkplqKqDjDDSIPOgc4llmk9Wk+91c/Q==}
     cpu: [arm64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.6.12':
     resolution: {integrity: sha512-6c7IGJcbZemZ2RCj3r1BbxPfQZPxzQNvuk4er0xLdcompQITvjmWT/aaYFtPLT5ymDjIfDyVbgDin8PXQwWWIA==}
     cpu: [arm]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linux-ppc64@1.6.12':
     resolution: {integrity: sha512-JaRY6F+3VBHZMZ51DhC8NhHJkwtLOM1Lnh//iAPw5pAxpQdron+YwfcVIKWhBlFx5zxbz2NI5L7QtiEV/iO4PA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.6.12':
     resolution: {integrity: sha512-X4eHr0WUtBOiX1Yy8hr35JhpUBJYYbZ31v8KCHtuSK8/h5/0gJidg1OvTGxFWoOLKtPCcb3FvqCY+PSrUcxN0A==}
     cpu: [x64]
     os: [linux]
-    libc: musl
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64@1.6.12':
     resolution: {integrity: sha512-smaxqZ2ZmVm04elK9Dydk1IjEcyRuRt9pSBZxK/RhgJojsJGQaeY/boKR0P/46avoNNiZbVkIDAIbBjfJ5Z7RA==}
     cpu: [arm64]
     os: [linux]
-    libc: musl
 
   '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.12':
     resolution: {integrity: sha512-6reJ+EFAR8YIwSRYMZ/dfF5e+o/JGaAa7h8ByHUcDXdVb9AZDyFKEXu0WeH732FJ1rk06GuNBU2ZFonFvt5lqQ==}
@@ -849,61 +841,51 @@ packages:
     resolution: {integrity: sha512-bPUBksQfrgcfv2+mm+AZinaKq8LCFvt5PThYqRotqSuuZK1TVKkhbVMS/jvSRfYl7jr3AoZLYbDkItxgqMKRkg==}
     cpu: [arm]
     os: [linux]
-    libc: glibc
 
   '@unrs/resolver-binding-linux-arm-musleabihf@1.9.0':
     resolution: {integrity: sha512-uT6E7UBIrTdCsFQ+y0tQd3g5oudmrS/hds5pbU3h4s2t/1vsGWbbSKhBSCD9mcqaqkBwoqlECpUrRJCmldl8PA==}
     cpu: [arm]
     os: [linux]
-    libc: musl
 
   '@unrs/resolver-binding-linux-arm64-gnu@1.9.0':
     resolution: {integrity: sha512-vdqBh911wc5awE2bX2zx3eflbyv8U9xbE/jVKAm425eRoOVv/VseGZsqi3A3SykckSpF4wSROkbQPvbQFn8EsA==}
     cpu: [arm64]
     os: [linux]
-    libc: glibc
 
   '@unrs/resolver-binding-linux-arm64-musl@1.9.0':
     resolution: {integrity: sha512-/8JFZ/SnuDr1lLEVsxsuVwrsGquTvT51RZGvyDB/dOK3oYK2UqeXzgeyq6Otp8FZXQcEYqJwxb9v+gtdXn03eQ==}
     cpu: [arm64]
     os: [linux]
-    libc: musl
 
   '@unrs/resolver-binding-linux-ppc64-gnu@1.9.0':
     resolution: {integrity: sha512-FkJjybtrl+rajTw4loI3L6YqSOpeZfDls4SstL/5lsP2bka9TiHUjgMBjygeZEis1oC8LfJTS8FSgpKPaQx2tQ==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@unrs/resolver-binding-linux-riscv64-gnu@1.9.0':
     resolution: {integrity: sha512-w/NZfHNeDusbqSZ8r/hp8iL4S39h4+vQMc9/vvzuIKMWKppyUGKm3IST0Qv0aOZ1rzIbl9SrDeIqK86ZpUK37w==}
     cpu: [riscv64]
     os: [linux]
-    libc: glibc
 
   '@unrs/resolver-binding-linux-riscv64-musl@1.9.0':
     resolution: {integrity: sha512-bEPBosut8/8KQbUixPry8zg/fOzVOWyvwzOfz0C0Rw6dp+wIBseyiHKjkcSyZKv/98edrbMknBaMNJfA/UEdqw==}
     cpu: [riscv64]
     os: [linux]
-    libc: musl
 
   '@unrs/resolver-binding-linux-s390x-gnu@1.9.0':
     resolution: {integrity: sha512-LDtMT7moE3gK753gG4pc31AAqGUC86j3AplaFusc717EUGF9ZFJ356sdQzzZzkBk1XzMdxFyZ4f/i35NKM/lFA==}
     cpu: [s390x]
     os: [linux]
-    libc: glibc
 
   '@unrs/resolver-binding-linux-x64-gnu@1.9.0':
     resolution: {integrity: sha512-WmFd5KINHIXj8o1mPaT8QRjA9HgSXhN1gl9Da4IZihARihEnOylu4co7i/yeaIpcfsI6sYs33cNZKyHYDh0lrA==}
     cpu: [x64]
     os: [linux]
-    libc: glibc
 
   '@unrs/resolver-binding-linux-x64-musl@1.9.0':
     resolution: {integrity: sha512-CYuXbANW+WgzVRIl8/QvZmDaZxrqvOldOwlbUjIM4pQ46FJ0W5cinJ/Ghwa/Ng1ZPMJMk1VFdsD/XwmCGIXBWg==}
     cpu: [x64]
     os: [linux]
-    libc: musl
 
   '@unrs/resolver-binding-wasm32-wasi@1.9.0':
     resolution: {integrity: sha512-6Rp2WH0OoitMYR57Z6VE8Y6corX8C6QEMWLgOV6qXiJIeZ1F9WGXY/yQ8yDC4iTraotyLOeJ2Asea0urWj2fKQ==}
