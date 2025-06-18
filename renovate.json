@@ -30,7 +30,7 @@
     },
     {
       "description": "Disable pinning for engines and nvmrc",
-      "matchManagers": ["npm", "nvm"],
+      "matchManagers": ["nvm"],
       "matchUpdateTypes": ["pin"],
       "enabled": false
     }
