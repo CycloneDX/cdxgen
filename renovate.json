@@ -9,5 +9,6 @@
     "helpers:pinGitHubActionDigests"
   ],
   "labels": ["dependency"],
-  "rangeStrategy": "pin"
+  "rangeStrategy": "pin",
+  "enabledManagers": ["github-actions", "node", "npm"]
 }
