@@ -56,7 +56,7 @@ jobs:
             vartifact: cdx-musl-arm64-verify
     runs-on: ${{ matrix.os }}
     container:
-      image: alpine:3.20
+      image: alpine:3.22
     permissions:
       contents: write
       packages: write
@@ -135,7 +135,7 @@ jobs:
             vartifact: cdx-musl-verify
     runs-on: ${{ matrix.os }}
     container:
-      image: alpine:3.20
+      image: alpine:3.22
     permissions:
       contents: write
       packages: write
