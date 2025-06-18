@@ -4,10 +4,11 @@
     "config:recommended",
     ":separateMultipleMajorReleases",
     ":enableVulnerabilityAlerts",
-    "schedule:weekly",
+    "schedule:monthly",
     "customManagers:biomeVersions",
     "helpers:pinGitHubActionDigests"
   ],
   "labels": ["dependency"],
-  "rangeStrategy": "pin"
+  "rangeStrategy": "pin",
+  "enabledManagers": ["github-actions", "node", "npm"]
 }
