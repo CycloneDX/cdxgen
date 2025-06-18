@@ -17,19 +17,14 @@
       "rangeStrategy": "auto"
     },
     {
-      "description": "Separate GitHub Action pin updates for actions",
+      "description": "Separate GitHub Action pin updates",
+      "groupName": "GitHub Action pins",
       "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["pin"],
-      "matchDepTypes": ["action"]
-    },
-    {
-      "description": "Separate GitHub Action pin updates for uses-with",
-      "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["pin"],
-      "matchDepTypes": ["uses-with"]
+      "matchUpdateTypes": ["pin", "pinDigest"]
     },
     {
       "description": "Separate npm pin updates",
+      "groupName": "npm pin updates",
       "matchManagers": ["npm"],
       "matchUpdateTypes": ["pin"]
     },
@@ -37,7 +32,6 @@
       "description": "Disable pinning for engines and nvmrc",
       "matchManagers": ["npm", "nvm"],
       "matchUpdateTypes": ["pin"],
-      "matchDepTypes": ["engines"],
       "enabled": false
     }
   ]
