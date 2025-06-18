@@ -4,3 +4,6 @@ analysis:
     validationFunctions:
       - name: isAllowedHost
       - name: isAllowedPath
+    sanitizationFunctions:
+      - name: parseQueryString
+      - name: parseValue
