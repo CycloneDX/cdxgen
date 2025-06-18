@@ -10,5 +10,5 @@
   ],
   "labels": ["dependency"],
   "rangeStrategy": "pin",
-  "enabledManagers": ["github-actions", "node", "npm"]
+  "enabledManagers": ["github-actions", "npm", "nvm"]
 }
