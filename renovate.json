@@ -1,6 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
-  ]
+    "config:recommended",
+    ":separateMultipleMajorReleases",
+    ":enableVulnerabilityAlerts",
+    "schedule:weekly",
+    "customManagers:biomeVersions",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "labels": ["dependency"],
+  "rangeStrategy": "pin"
 }
