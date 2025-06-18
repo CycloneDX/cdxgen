@@ -10,5 +10,35 @@
   ],
   "labels": ["dependency"],
   "rangeStrategy": "pin",
-  "enabledManagers": ["github-actions", "jsonata", "npm", "nvm"]
+  "enabledManagers": ["github-actions", "jsonata", "npm", "nvm"],
+  "packageRules": [
+    {
+      "matchDepTypes": ["engines"],
+      "rangeStrategy": "auto"
+    },
+    {
+      "description": "Separate GitHub Action pin updates for actions",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["pin"],
+      "matchDepTypes": ["action"]
+    },
+    {
+      "description": "Separate GitHub Action pin updates for uses-with",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["pin"],
+      "matchDepTypes": ["uses-with"]
+    },
+    {
+      "description": "Separate npm pin updates",
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["pin"]
+    },
+    {
+      "description": "Disable pinning for engines and nvmrc",
+      "matchManagers": ["npm", "nvm"],
+      "matchUpdateTypes": ["pin"],
+      "matchDepTypes": ["engines"],
+      "enabled": false
+    }
+  ]
 }
