@@ -86,7 +86,7 @@ jobs:
             ghcr.io/cyclonedx/cdxgen-ruby-builder
           flavor: latest=false,suffix=-amd64
       - name: Build and push Docker images
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
         id: build
         with:
           context: .
@@ -129,7 +129,7 @@ jobs:
             ghcr.io/cyclonedx/cdxgen-ruby-builder
           flavor: latest=false,suffix=-arm64
       - name: Build and push Docker images
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
         id: build
         with:
           context: .
@@ -214,7 +214,7 @@ jobs:
         images: |
           ghcr.io/cyclonedx/cdxgen
     - name: Build and push Docker images
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
       with:
         context: .
         file: ci/Dockerfile
@@ -295,7 +295,7 @@ jobs:
           images: |
             ghcr.io/cyclonedx/cdxgen-secure
       - name: Build and push Docker images
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
         with:
           context: .
           file: ci/Dockerfile-secure
@@ -364,7 +364,7 @@ jobs:
         images: |
           ghcr.io/cyclonedx/cdxgen-deno
     - name: Build and push Docker images
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
       with:
         context: .
         file: ci/Dockerfile-deno
@@ -432,7 +432,7 @@ jobs:
         images: |
           ghcr.io/cyclonedx/cdxgen-ppc64
     - name: Build and push Docker images
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
       with:
         context: .
         file: ci/Dockerfile-ppc64
@@ -483,7 +483,7 @@ jobs:
         images: |
           ghcr.io/cyclonedx/cdxgen-bun
     - name: Build and push Docker images
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
       with:
         context: .
         file: ci/Dockerfile-bun
