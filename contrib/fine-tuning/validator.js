@@ -1,5 +1,7 @@
 import { readFileSync } from "node:fs";
+
 import { dirNameStr, getAllFiles } from "../../lib/helpers/utils.js";
+
 let datasetDir = dirNameStr;
 const argv = process.argv.slice(2);
 if (argv.length > 1) {

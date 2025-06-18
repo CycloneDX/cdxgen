@@ -4,11 +4,13 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import process from "node:process";
+
 import globalAgent from "global-agent";
 import jws from "jws";
 import { parse as _load } from "yaml";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+
 import { createBom, submitBom } from "../lib/cli/index.js";
 import {
   printCallStack,
@@ -832,7 +834,7 @@ const needsBomSigning = ({ generateKeyAndSign }) =>
     const jsonFile = options.output;
     // Create bom json file
     if (bomNSData.bomJson) {
-      let jsonPayload = undefined;
+      let jsonPayload;
       if (
         typeof bomNSData.bomJson === "string" ||
         bomNSData.bomJson instanceof String
@@ -859,9 +861,9 @@ const needsBomSigning = ({ generateKeyAndSign }) =>
         if (alg.includes("none")) {
           alg = "RS512";
         }
-        let privateKeyToUse = undefined;
-        let jwkPublicKey = undefined;
-        let publicKeyFile = undefined;
+        let privateKeyToUse;
+        let jwkPublicKey;
+        let publicKeyFile;
         if (options.generateKeyAndSign) {
           const jdirName = dirname(jsonFile);
           publicKeyFile = join(jdirName, "public.key");
