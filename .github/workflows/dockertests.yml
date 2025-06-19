@@ -20,6 +20,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -49,6 +51,7 @@ jobs:
           CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-dockertests
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           repository: 'grafana-operator/grafana-operator'
           path: 'repotests/grafana-operator'
       - name: dockertests
@@ -98,6 +101,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -146,6 +151,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -190,6 +197,8 @@ jobs:
         java-version: ['24']
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:

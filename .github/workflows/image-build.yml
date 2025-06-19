@@ -27,6 +27,8 @@ jobs:
     runs-on: ${{ fromJSON(inputs.image).runner || 'ubuntu-24.04' }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Free disk space
         if: ${{ ! fromJSON(inputs.image).runner }}
         uses: jlumbroso/free-disk-space@main

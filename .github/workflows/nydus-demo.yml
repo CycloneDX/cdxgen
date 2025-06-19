@@ -13,6 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -24,6 +26,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           repository: 'DependencyTrack/dependency-track'
           path: 'repotests/dependency-track'
       - name: setup nydus

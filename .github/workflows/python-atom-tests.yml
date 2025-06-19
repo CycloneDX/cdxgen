@@ -12,6 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           fetch-depth: 0
       - uses: coursier/cache-action@v6
       - name: Use Node.js
@@ -34,35 +35,43 @@ jobs:
           CI: true
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           repository: 'scipy/scipy'
           path: 'repotests/scipy'
           ref: 'v1.15.2'
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           repository: 'psf/black'
           path: 'repotests/black'
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           repository: 'psf/pyperf'
           path: 'repotests/pyperf'
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           repository: 'psf/cachecontrol'
           path: 'repotests/cachecontrol'
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           repository: 'pallets/flask'
           path: 'repotests/flask'
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           repository: 'pallets/click'
           path: 'repotests/click'
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           repository: 'pallets/jinja'
           path: 'repotests/jinja'
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           repository: 'pypa/bandersnatch'
           path: 'repotests/bandersnatch'
       - name: repotests
