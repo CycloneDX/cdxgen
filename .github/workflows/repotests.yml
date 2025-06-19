@@ -903,6 +903,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
+        java-version: ['24']
         node-version: ['23.x']
         os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'macos-15']
     runs-on: ${{ matrix.os }}
