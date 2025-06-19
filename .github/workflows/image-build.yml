@@ -26,7 +26,7 @@ jobs:
       packages: write
     runs-on: ${{ fromJSON(inputs.image).runner || 'ubuntu-24.04' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           persist-credentials: false
       - name: Free disk space
@@ -41,21 +41,21 @@ jobs:
           ./contrib/free_disk_space.sh
       - name: Set up QEMU
         if: ${{ ! fromJSON(inputs.image).runner }}
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3
       - name: Fix QEMU
         if: ${{ fromJSON(inputs.image).fix-qemu }}
         run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
       - name: Set up Docker BuildX
         if: ${{ ! fromJSON(inputs.image).runner }}
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3
       - name: Setup ORAS
-        uses: oras-project/setup-oras@v1
+        uses: oras-project/setup-oras@8d34698a59f5ffe24821f0b48ab62a3de8b64b20 # v1
       - name: Install project dependencies
         run: |
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
           mkdir -p $RUNNER_TEMP/cdxgen-sboms
       - name: Login to the Container registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
