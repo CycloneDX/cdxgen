@@ -266,12 +266,10 @@ const args = yargs(hideBin(process.argv))
     type: "boolean",
     default: false,
     description: "Serialize and export BOM as protobuf binary.",
-    hidden: true,
   })
   .option("proto-bin-file", {
     description: "Path for the serialized protobuf binary.",
     default: "bom.cdx",
-    hidden: true,
   })
   .option("include-formulation", {
     type: "boolean",
