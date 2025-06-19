@@ -19,6 +19,10 @@ jobs:
       contents: write
       packages: write
       id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        java-version: ['24']
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,11 +31,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: 3.12
-      - name: Set up JDK
+      - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '24'
+          java-version: ${{ matrix.java-version }}
       - name: Trim CI agent
         run: |
           rm -rf /tmp/docker-images-* /tmp/atom-usages-* /tmp/atom-reachables-*

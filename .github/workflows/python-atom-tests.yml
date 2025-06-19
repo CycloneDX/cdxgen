@@ -8,22 +8,28 @@ concurrency:
   cancel-in-progress: true
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        java-version: ['24']
+        node-version: ['24']
+        os: ['ubuntu-24.04']
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
           fetch-depth: 0
       - uses: coursier/cache-action@v6
-      - name: Use Node.js
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: '24.x'
-      - name: Set up JDK
+          node-version: ${{ matrix.node-version }}
+      - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '24'
+          java-version: ${{ matrix.java-version }}
       - name: npm install, build and test
         run: |
           npm install --global corepack@latest
