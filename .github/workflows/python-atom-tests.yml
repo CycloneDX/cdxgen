@@ -8,6 +8,8 @@ concurrency:
   cancel-in-progress: true
 jobs:
   build:
+    permissions:
+        contents: read
     strategy:
       fail-fast: false
       matrix:
