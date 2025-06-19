@@ -29,7 +29,7 @@ runs:
   steps:
   - name: Extract metadata (tags, labels) for Docker image
     id: metadata
-    uses: docker/metadata-action@v5
+    uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5
     with:
       images: ${{ inputs.images }}
   - name: Build and push image
