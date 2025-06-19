@@ -704,11 +704,11 @@ jobs:
           bin/cdxgen.js -p -r -t dotnet-framework repotests/SimpleFrameworkApp -o bomresults/bom-dotnet-framework.json
           bin/cdxgen.js -p -r -t dotnet-framework repotests/Reporting-Windows-Application -o bomresults/bom-dotnet-framework-reporting.json --deep
         shell: bash
-      - name: Set up JDK ${{ matrix.java-version }}
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: ${{ matrix.java-version }}
+          java-version: '21'
       - uses: sbt/setup-sbt@v1
       - uses: coursier/setup-action@v1
         with:
