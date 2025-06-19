@@ -9,7 +9,6 @@
     "helpers:pinGitHubActionDigests"
   ],
   "labels": ["dependency"],
-  "rangeStrategy": "pin",
   "enabledManagers": ["github-actions", "jsonata", "npm", "nvm"],
   "packageRules": [
     {
