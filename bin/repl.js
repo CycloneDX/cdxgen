@@ -20,6 +20,7 @@ import {
   printTable,
   printVulnerabilities,
 } from "../lib/helpers/display.js";
+import { readBinary } from "../lib/helpers/protobom.js";
 import { getTmpDir } from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
 
@@ -79,6 +80,12 @@ export const importSbom = (sbomOrPath) => {
     } catch (e) {
       console.log(`⚠ Unable to import the BOM from ${sbomOrPath} due to ${e}`);
     }
+  } else if (
+    (sbomOrPath?.endsWith(".cdx") || sbomOrPath?.endsWith(".proto")) &&
+    fs.existsSync(sbomOrPath)
+  ) {
+    sbom = readBinary(sbomOrPath, true);
+    printSummary(sbom);
   } else {
     console.log(`⚠ ${sbomOrPath} is invalid.`);
   }
