@@ -7,8 +7,6 @@ analysis:
     sanitizationFunctions:
       - name: parseQueryString
       - name: parseValue
-queries:
-  - uses: security
 query-filters:
   - exclude:
       id: actions/missing-workflow-permissions
