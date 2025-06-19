@@ -1,0 +1,37 @@
+name: Rebuild release images
+
+on:
+  schedule:
+  - cron: "0 2 * * 0"
+  workflow_dispatch:
+
+jobs:
+  rebuild-latest:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read latest
+        run: |
+          echo "release=$(gh api -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' /repos/CycloneDX/cdxgen/releases?per_page=1)" > $GITHUB_OUTPUT
+      - name: Rebuild latest
+        #run: gh workflow run build-images.yml -r refs/tags/${{ steps.run_tests.outputs.release.tag_name }}
+        run: echo ${{ steps.run_tests.outputs.release.tag_name }}
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+        
+  rebuild-previous:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read previous
+        run: |
+          echo "release=$(gh api -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' /repos/CycloneDX/cdxgen/releases?per_page=1&page=2)" > $GITHUB_OUTPUT
+      - name: Rebuild previous
+        #run: gh workflow run build-images.yml -r refs/tags/${{ steps.run_tests.outputs.release.tag_name }}
+        run: echo ${{ steps.run_tests.outputs.release.tag_name }}
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
