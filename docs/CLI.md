@@ -101,7 +101,8 @@ Options:
       --validate               Validate the generated SBOM using json schema. Defaults to true. Pass --no-validate to di
                                sable.                                                          [boolean] [default: true]
       --evidence               Generate SBOM with evidence for supported languages.           [boolean] [default: false]
-      --spec-version           CycloneDX Specification version to use. Defaults to 1.6           [number] [default: 1.6]
+      --spec-version           CycloneDX Specification version to use. Defaults to 1.6
+                                                                        [number] [choices: 1.4, 1.5, 1.6] [default: 1.6]
       --filter                 Filter components containing this word in purl or component.properties.value. Multiple va
                                lues allowed.                                                                     [array]
       --only                   Include components only containing this word in purl. Useful to generate BOM with first p
@@ -112,6 +113,8 @@ Options:
   [choices: "appsec", "research", "operational", "threat-modeling", "license-compliance", "generic", "machine-learning",
                                                        "ml", "deep-learning", "ml-deep", "ml-tiny"] [default: "generic"]
       --exclude                Additional glob pattern(s) to ignore                                              [array]
+      --export-proto           Serialize and export BOM as protobuf binary.                   [boolean] [default: false]
+      --proto-bin-file         Path for the serialized protobuf binary.                             [default: "bom.cdx"]
       --include-formulation    Generate formulation section with git metadata and build tools. Defaults to false.
                                                                                               [boolean] [default: false]
       --include-crypto         Include crypto libraries as components.                        [boolean] [default: false]

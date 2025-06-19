@@ -46,7 +46,7 @@ jobs:
       - name: check sbom for vulns
         if: github.ref == 'refs/heads/master'
         run: |
-          node bin/cdxgen.js -t js -o $(pwd)/reports/sbom-build-js.cdx.json --no-recurse --profile research $(pwd)
+          node bin/cdxgen.js -t js -o $(pwd)/reports/sbom-build-js.cdx.json --export-proto --proto-bin-file $(pwd)/reports/sbom-build-js.cdx.proto --no-recurse --profile research $(pwd)
           docker pull ghcr.io/cyclonedx/cdxgen:master
           node bin/cdxgen.js -t docker -o $(pwd)/reports/sbom-container-js.cdx.json ghcr.io/cyclonedx/cdxgen:master
           depscan --src $(pwd) --bom-dir $(pwd)/reports --reports-dir $(pwd)/reports --reachability-analyzer SemanticReachability --explain
@@ -57,7 +57,7 @@ jobs:
       - name: Generate atom and slices
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          node bin/cdxgen.js -t js -o $(pwd)/reports/sbom-build-js.cdx.json --no-recurse --profile research $(pwd)
+          node bin/cdxgen.js -t js -o $(pwd)/reports/sbom-build-js.cdx.json --export-proto --proto-bin-file $(pwd)/reports/sbom-build-js.cdx.proto --no-recurse --profile research $(pwd)
       - name: Upload atom and slices
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
@@ -67,6 +67,7 @@ jobs:
             reports/js-reachables.slices.json
             reports/js-usages.slices.json
             reports/sbom-build-js.cdx.json
+            reports/sbom-build-js.cdx.proto
   matrix-unit-test:
     permissions:
       contents: read
