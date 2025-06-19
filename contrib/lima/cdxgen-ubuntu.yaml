@@ -67,7 +67,7 @@ provision:
     sdk install maven $MAVEN_VERSION
     sdk install gradle $GRADLE_VERSION
     sdk install sbt $SBT_VERSION
-    curl -fsSL https://deb.nodesource.com/setup_23.x -o nodesource_setup.sh
+    curl -fsSL https://deb.nodesource.com/setup_24.x -o nodesource_setup.sh
     bash nodesource_setup.sh
     apt install -y nodejs
     rm nodesource_setup.sh
