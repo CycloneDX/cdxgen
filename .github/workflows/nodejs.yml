@@ -73,7 +73,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['20.x', '21.x', '22.x', '23.x', '24.x']
+        node-version: ['20', '21', '22', '23', '24']
         os: ['ubuntu-22.04', 'ubuntu-24.04', 'windows-latest', 'windows-11-arm', 'ubuntu-22.04-arm', 'ubuntu-24.04-arm', 'macos-latest', 'macos-13']
     runs-on: ${{ matrix.os }}
     steps:
@@ -97,6 +97,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
+        node-version: ['24']
         os: [windows, macos, ubuntu]
         deno_version: [2.x]
         include:
@@ -133,10 +134,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Use Node.js
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: '24.x'
+          node-version: ${{ matrix.node-version }}
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v${{ matrix.deno_version }}

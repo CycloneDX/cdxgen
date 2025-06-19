@@ -143,7 +143,7 @@ jobs:
       fail-fast: true
       matrix:
         java-version: ['24']
-        node-version: ['23.x']
+        node-version: ['24']
         os: ['self-hosted-ubuntu', 'ubuntu-24.04-arm', 'windows-latest', 'macos-15']
     runs-on: ${{ matrix.os }}
     steps:
@@ -904,7 +904,7 @@ jobs:
       fail-fast: true
       matrix:
         java-version: ['24']
-        node-version: ['23.x']
+        node-version: ['24']
         os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'macos-15']
     runs-on: ${{ matrix.os }}
     env:

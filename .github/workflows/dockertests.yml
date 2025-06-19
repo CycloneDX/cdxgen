@@ -15,7 +15,7 @@ jobs:
       fail-fast: true
       matrix:
         os: ['ubuntu-24.04', 'ubuntu-24.04-arm']
-        node-version: ['23.x']
+        node-version: ['24']
         java-version: ['24']
     runs-on: ${{ matrix.os }}
     steps:
@@ -96,7 +96,7 @@ jobs:
       fail-fast: true
       matrix:
         os: ['ubuntu-24.04', 'ubuntu-24.04-arm']
-        node-version: ['23.x']
+        node-version: ['24']
         java-version: ['24']
     runs-on: ${{ matrix.os }}
     steps:
@@ -145,7 +145,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        node-version: ['23.x']
+        node-version: ['24']
         java-version: ['24']
         os: [ubuntu-24.04, ubuntu-24.04-arm]
     runs-on: ${{ matrix.os }}
@@ -193,7 +193,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        node-version: ['23.x']
+        node-version: ['24']
         java-version: ['24']
     steps:
       - uses: actions/checkout@v4

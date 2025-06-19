@@ -31,7 +31,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '24.x'
+        node-version-file: '.nvmrc'
         registry-url: https://registry.npmjs.org/
     - name: Trim CI agent
       run: |
@@ -196,7 +196,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '24.x'
+        node-version-file: '.nvmrc'
         registry-url: https://registry.npmjs.org/
     - uses: oras-project/setup-oras@v1
     - name: Free disk space
@@ -279,7 +279,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24.x'
+          node-version-file: '.nvmrc'
           registry-url: https://registry.npmjs.org/
       - uses: oras-project/setup-oras@v1
       - name: Free disk space
@@ -349,7 +349,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '24.x'
+        node-version-file: '.nvmrc'
         registry-url: https://registry.npmjs.org/
     - uses: oras-project/setup-oras@v1
     - name: Free disk space
@@ -419,7 +419,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '24.x'
+        node-version-file: '.nvmrc'
         registry-url: https://registry.npmjs.org/
     - uses: oras-project/setup-oras@v1
     - name: Free disk space
@@ -471,7 +471,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '24.x'
+        node-version-file: '.nvmrc'
         registry-url: https://registry.npmjs.org/
     - uses: oras-project/setup-oras@v1
     - name: Free disk space
