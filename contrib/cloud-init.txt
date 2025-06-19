@@ -158,7 +158,7 @@ runcmd:
   - tar -xzf swift.tar.gz --directory / --strip-components=1
   - chmod -R o+r /usr/lib/swift
   - apt-get autoremove -y
-  - curl -fsSL https://deb.nodesource.com/setup_23.x -o nodesource_setup.sh
+  - curl -fsSL https://deb.nodesource.com/setup_24.x -o nodesource_setup.sh
   - bash nodesource_setup.sh
   - apt install -y nodejs
   - rm nodesource_setup.sh

@@ -266,12 +266,10 @@ const args = yargs(hideBin(process.argv))
     type: "boolean",
     default: false,
     description: "Serialize and export BOM as protobuf binary.",
-    hidden: true,
   })
   .option("proto-bin-file", {
     description: "Path for the serialized protobuf binary.",
     default: "bom.cdx",
-    hidden: true,
   })
   .option("include-formulation", {
     type: "boolean",
@@ -1060,7 +1058,7 @@ const needsBomSigning = ({ generateKeyAndSign }) =>
     if (!validateBom(bomNSData.bomJson)) {
       process.exit(1);
     }
-    thoughtLog("BOM file looks valid. Thank you for using cdxgen!");
+    thoughtLog("✅ BOM file looks valid.");
   }
   thoughtEnd();
   // Automatically submit the bom data
@@ -1077,6 +1075,7 @@ const needsBomSigning = ({ generateKeyAndSign }) =>
   if (options.exportProto) {
     const protobomModule = await import("../lib/helpers/protobom.js");
     protobomModule.writeBinary(bomNSData.bomJson, options.protoBinFile);
+    thoughtLog("BOM file is also available in .proto format!");
   }
   if (options.print && bomNSData.bomJson && bomNSData.bomJson.components) {
     printSummary(bomNSData.bomJson);
