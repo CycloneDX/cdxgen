@@ -1,7 +1,7 @@
 # Base-image
 FROM registry.suse.com/bci/nodejs:20 AS base
 
-ARG GCC_VERSION=13
+ARG GCC_VERSION=14
 
 ENV NVM_DIR="/root/.nvm" \
     LC_ALL=en_US.UTF-8 \
