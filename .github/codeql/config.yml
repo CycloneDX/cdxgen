@@ -1,12 +1,3 @@
-version: 2
-analysis:
-  javascript-typescript:
-    validationFunctions:
-      - name: isAllowedHost
-      - name: isAllowedPath
-    sanitizationFunctions:
-      - name: parseQueryString
-      - name: parseValue
 query-filters:
   - exclude:
       id: actions/missing-workflow-permissions
