@@ -91,7 +91,8 @@ ENV PATH=${PATH}:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin
 
 COPY . /opt/cdxgen
 
-RUN source ${NVM_DIR}/nvm.sh \
+RUN set -e \
+    && source ${NVM_DIR}/nvm.sh \
     && zypper --non-interactive install -l --no-recommends clang7 llvm7 llvm7-devel libcurl-devel libjpeg62-devel libmariadb-devel \
         postgresql-devel postgresql17-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel graphviz-devel \
     && cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
