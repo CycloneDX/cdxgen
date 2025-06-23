@@ -1,5 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "enabledManagers": ["github-actions", "jsonata", "npm", "nvm"],
   "extends": [
     "config:recommended",
     ":separateMultipleMajorReleases",
@@ -9,7 +10,7 @@
     "helpers:pinGitHubActionDigests"
   ],
   "labels": ["dependency"],
-  "enabledManagers": ["github-actions", "jsonata", "npm", "nvm"],
+  "minimumReleaseAge": "3 days",
   "packageRules": [
     {
       "matchDepTypes": ["engines"],
