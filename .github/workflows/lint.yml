@@ -1,13 +1,29 @@
 name: Biome
 
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/lint.yml'
+      - '**.cjs'
+      - '**.js'
+      - '**.json'
+      - '!contrib/**'
+      - '!data/**'
+      - '!test/**'
   push:
     branches:
       - master
     tags:
-    - 'v*'
+      - 'v*'
+    paths:
+      - '.github/workflows/lint.yml'
+      - '**.cjs'
+      - '**.js'
+      - '**.json'
+      - '!contrib/**'
+      - '!data/**'
+      - '!test/**'
   workflow_dispatch:
-  pull_request:
 jobs:
   lint:
     runs-on: ubuntu-24.04

@@ -20,7 +20,7 @@
   },
   "linter": {
     "enabled": true,
-    "includes": ["**", "!**/types/**", "!**/contrib/**", "!**/data/**"],
+    "includes": ["**", "!contrib/**", "!data/**", "!test/**", "!types/**"],
     "rules": {
       "recommended": true,
       "complexity": {
@@ -72,12 +72,7 @@
   },
   "formatter": {
     "enabled": true,
-    "includes": [
-      "**",
-      "!**/types/**",
-      "!**/contrib/**",
-      "!**/.devcontainer.json"
-    ],
+    "includes": ["**", "!contrib/**", "!data/**", "!test/**", "!types/**"],
     "indentStyle": "space",
     "indentWidth": 2
   },

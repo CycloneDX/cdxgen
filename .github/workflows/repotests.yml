@@ -1,13 +1,17 @@
 name: Repo tests
 
 on:
-  workflow_dispatch:
   pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - 'ci/**'
-      - 'contrib/**'
-      - '*.md'
+    paths:
+      - '.github/workflows/repotests.yml'
+      - '.pnpmfile.cjs'
+      - 'bin/**'
+      - 'data/**'
+      - 'index.cjs'
+      - 'lib/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+  workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
