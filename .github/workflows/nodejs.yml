@@ -168,7 +168,7 @@ jobs:
           chmod +x contrib/free_disk_space.sh
           ./contrib/free_disk_space.sh
       - uses: cachix/install-nix-action@8887e596b4ee1134dae06b98d573bd674693f47c # v26
-      - uses: cachix/cachix-action@18cf96c7c98e048e10a83abd92116114cd8504be # v14
+      - uses: cachix/cachix-action@0fc020193b5a1fa3ac4575aa3a7d3aa6a35435ad # v16
         with:
           name: devenv
       - name: Install devenv.sh
