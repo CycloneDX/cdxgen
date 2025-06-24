@@ -714,7 +714,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
       - uses: sbt/setup-sbt@69a46ab4acd4316aa16e68d91a9249a98d7e78d5 # v1.1.8
-      - uses: coursier/setup-action@039f736548afa5411c1382f40a5bd9c2d30e0383 # v1
+      - uses: coursier/setup-action@039f736548afa5411c1382f40a5bd9c2d30e0383 # v1.3.9
         with:
           apps: scala3 scalac
       - name: scala tests
@@ -924,7 +924,7 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
       - uses: sbt/setup-sbt@69a46ab4acd4316aa16e68d91a9249a98d7e78d5 # v1.1.8
-      - uses: coursier/setup-action@039f736548afa5411c1382f40a5bd9c2d30e0383 # v1
+      - uses: coursier/setup-action@039f736548afa5411c1382f40a5bd9c2d30e0383 # v1.3.9
         with:
           apps: scala3 scalac
       - uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
