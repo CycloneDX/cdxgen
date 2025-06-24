@@ -1,9 +1,14 @@
-**/*
+**
 !.pnpmfile.cjs
 !bin/*
 !data/*
+!index.cjs
 !lib/*
 !LICENSE
 !package.json
+!plugins/**
+plugins/.gitkeep
+plugins/.npmignore
+plugins/**/node_modules
 !pnpm-lock.yaml
 !*.md
