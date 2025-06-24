@@ -85,6 +85,9 @@ jobs:
             distro: debian
             runner: macos-hosted
 
+          - lang: golang121
+            distro: alpine
+
           - lang: golang123
             distro: alpine
 
