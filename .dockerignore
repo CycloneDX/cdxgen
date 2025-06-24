@@ -12,3 +12,5 @@ plugins/.npmignore
 plugins/**/node_modules
 !pnpm-lock.yaml
 !*.md
+# Required for debian images
+!ci/images/debian/install.sh
