@@ -17,6 +17,10 @@
       "rangeStrategy": "auto"
     },
     {
+      "matchManagers": "github-actions",
+      "rangeStrategy": "pin"
+    },
+    {
       "description": "Separate GitHub Action pin updates",
       "groupName": "GitHub Action pins",
       "matchManagers": ["github-actions"],
