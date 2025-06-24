@@ -1,6 +1,8 @@
 **
 !.pnpmfile.cjs
 !bin/*
+!ci/images/debian/install.sh
+!ci/images/nuget/**
 !data/*
 !index.cjs
 !lib/*
@@ -12,5 +14,3 @@ plugins/.npmignore
 plugins/**/node_modules
 !pnpm-lock.yaml
 !*.md
-# Required for debian images
-!ci/images/debian/install.sh
