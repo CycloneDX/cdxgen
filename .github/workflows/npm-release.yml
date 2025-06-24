@@ -18,6 +18,9 @@ on:
       - 'lib/**'
       - 'LICENSE'
       - 'package.json'
+      - 'plugins/**'
+      - '!plugins/.gitkeep'
+      - '!plugins/.npmignore'
       - 'pnpm-lock.yaml'
       - '!**.test.js'
   workflow_dispatch:
