@@ -3,7 +3,7 @@ name: Node CI
 on:
   pull_request:
     paths:
-      - '.github/workflows/modejs.yml'
+      - '.github/workflows/nodejs.yml'
       - '.pnpmfile.cjs'
       - 'bin/**'
       - 'data/**'
@@ -18,7 +18,7 @@ on:
     tags:
       - 'v*'
     paths:
-      - '.github/workflows/modejs.yml'
+      - '.github/workflows/nodejs.yml'
       - '.pnpmfile.cjs'
       - 'bin/**'
       - 'data/**'

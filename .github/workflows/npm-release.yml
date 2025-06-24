@@ -8,7 +8,7 @@ on:
     tags:
       - 'v*'
     paths:
-      - '.github/workflows/npm-releases.yml'
+      - '.github/workflows/npm-release.yml'
       - '.pnpmfile.cjs'
       - 'bin/**'
       - 'ci/images/Dockerfile*'
