@@ -24,8 +24,8 @@ on:
       - '.github/actions/**'
       - '.github/workflows/**'
       - '**.js'
-  schedule:
-    - cron: '17 9 * * 6'
+#  schedule:
+#    - cron: '17 9 * * 6'
 
 jobs:
   analyze:
