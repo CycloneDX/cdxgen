@@ -13,7 +13,7 @@ on:
       - 'pnpm-lock.yaml'
   workflow_dispatch:
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
   cli-tests-quick-amd64:
