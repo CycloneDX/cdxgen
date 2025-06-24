@@ -7,7 +7,7 @@
     ":enableVulnerabilityAlerts",
     "schedule:daily",
     "customManagers:biomeVersions",
-    "helpers:pinGitHubActionDigests"
+    "helpers:pinGitHubActionDigestsToSemver"
   ],
   "labels": ["dependency"],
   "minimumReleaseAge": "3 days",
@@ -15,28 +15,6 @@
     {
       "matchDepTypes": ["engines"],
       "rangeStrategy": "auto"
-    },
-    {
-      "matchManagers": "github-actions",
-      "rangeStrategy": "pin"
-    },
-    {
-      "description": "Separate GitHub Action pin updates",
-      "groupName": "GitHub Action pins",
-      "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["pin", "pinDigest"]
-    },
-    {
-      "description": "Separate npm pin updates",
-      "groupName": "npm pin updates",
-      "matchManagers": ["npm"],
-      "matchUpdateTypes": ["pin"]
-    },
-    {
-      "description": "Disable pinning for engines and nvmrc",
-      "matchManagers": ["nvm"],
-      "matchUpdateTypes": ["pin"],
-      "enabled": false
     }
   ]
 }
