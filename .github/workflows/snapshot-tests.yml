@@ -1,17 +1,24 @@
 name: Test BOM Snapshots
 
 on:
-  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/snapshot-tests.yml'
+      - 'bin/**'
+      - 'data/**'
+      - 'index.cjs'
+      - 'lib/**'
+      - 'LICENSE'
+      - 'package.json'
+      - 'types/**'
+      - '!**.test.js'
   push:
     branches:
       - master
       - release/*
     tags:
       - 'v*'
-  pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - '*.md'
+  workflow_dispatch:
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.head_ref || github.run_id }}"

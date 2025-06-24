@@ -2,6 +2,16 @@ name: Reachables tests
 
 on:
   pull_request:
+    paths:
+      - '.github/workflows/java-reachables-test.yml'
+      - '.pnpmfile.cjs'
+      - 'bin/**'
+      - 'data/**'
+      - 'index.cjs'
+      - 'lib/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '!**.test.js'
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}

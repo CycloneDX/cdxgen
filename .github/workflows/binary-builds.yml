@@ -7,10 +7,16 @@ on:
       - release/*
     tags:
       - 'v*'
-    paths-ignore:
-      - 'docs/**'
-      - 'contrib/**'
-      - '*.md'
+    paths:
+      - '.github/workflows/binary-builds.yml'
+      - '.pnpmfile.cjs'
+      - 'bin/**'
+      - 'data/**'
+      - 'index.cjs'
+      - 'lib/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '!**.test.js'
   workflow_dispatch:
 
 concurrency:

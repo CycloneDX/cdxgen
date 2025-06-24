@@ -25,7 +25,7 @@ name: Build images
 # like this (plus any and all defined additional-names):
 #
 #   base-image:     ${ base-image.name || distro }-${ base-image.lang || lang }:${ 'master' || 'vX.X.X' }
-#   cdxgen-image:   cdxgen${ -distro }-${ lang }:${ image-build.ymlTAG || 'vX.X.X' }
+#   cdxgen-image:   cdxgen${ -distro }-${ lang }:${ image-build.yml#TAG || 'vX.X.X' }
 #
 # The above configurations are also used to lookup the location of the
 # 'Dockerfile' for the images:
@@ -40,10 +40,24 @@ on:
       - master
     tags:
       - 'v*'
-    paths-ignore:
-      - 'docs/**'
-      - 'contrib/**'
-      - '*.md'
+    paths:
+      - '.github/actions/**'
+      - '.github/workflows/build-images.yml'
+      - '.github/workflows/image-build.yml'
+      - '.pnpmfile.cjs'
+      - 'bin/**'
+      - 'ci/images/**'
+      - '!ci/images/al10/**'
+      - 'data/**'
+      - 'index.cjs'
+      - 'lib/**'
+      - 'LICENSE'
+      - 'package.json'
+      - 'plugins/**'
+      - '!plugins/.gitkeep'
+      - '!plugins/.npmignore'
+      - 'pnpm-lock.yaml'
+      - '!**.test.js'
   workflow_dispatch:
 
 concurrency:

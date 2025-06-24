@@ -6,11 +6,23 @@ on:
       - master
       - release/*
     tags:
-    - 'v*'
-    paths-ignore:
-      - 'docs/**'
-      - 'contrib/**'
-      - '*.md'
+      - 'v*'
+    paths:
+      - '.github/workflows/npm-releases.yml'
+      - '.pnpmfile.cjs'
+      - 'bin/**'
+      - 'ci/images/Dockerfile*'
+      - 'ci/images/al10/**'
+      - 'data/**'
+      - 'index.cjs'
+      - 'lib/**'
+      - 'LICENSE'
+      - 'package.json'
+      - 'plugins/**'
+      - '!plugins/.gitkeep'
+      - '!plugins/.npmignore'
+      - 'pnpm-lock.yaml'
+      - '!**.test.js'
   workflow_dispatch:
 
 env:
@@ -33,10 +45,6 @@ jobs:
       with:
         node-version: '24'
         registry-url: https://registry.npmjs.org/
-    - name: Trim CI agent
-      run: |
-        chmod +x contrib/free_disk_space.sh
-        ./contrib/free_disk_space.sh
     - name: Release npm package
       if: startsWith(github.ref, 'refs/tags/')
       run: |
@@ -52,9 +60,6 @@ jobs:
     - name: jsr publish
       if: startsWith(github.ref, 'refs/tags/')
       run: |
-        npm install --global corepack@latest
-        corepack enable
-        corepack pnpm install --config.strict-dep-builds=true
         npx jsr publish --allow-dirty
       continue-on-error: true
       env:
