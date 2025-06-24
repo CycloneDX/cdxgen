@@ -41,7 +41,7 @@ jobs:
           ./contrib/free_disk_space.sh
       - name: Set up QEMU
         if: ${{ ! fromJSON(inputs.image).runner }}
-        uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3
+        uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3.6.0
       - name: Fix QEMU
         if: ${{ fromJSON(inputs.image).fix-qemu }}
         run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
