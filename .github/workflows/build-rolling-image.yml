@@ -13,27 +13,27 @@ name: Build rolling image
 on:
   schedule:
   - cron: "0 8 * * *"
-  push:
-    branches:
-      - master
-    paths:
-      - '.github/actions/**'
-      - '.github/workflows/build-rolling-image.yml'
-      - '.github/workflows/image-build.yml'
-      - '.pnpmfile.cjs'
-      - 'bin/**'
-      - 'ci/images/**'
-      - '!ci/images/al10/**'
-      - 'plugins/**'
-      - '!plugins/.gitkeep'
-      - '!plugins/.npmignore'
-      - 'data/**'
-      - 'index.cjs'
-      - 'lib/**'
-      - 'LICENSE'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - '!**.test.js'
+#  push:
+#    branches:
+#      - master
+#    paths:
+#      - '.github/actions/**'
+#      - '.github/workflows/build-rolling-image.yml'
+#      - '.github/workflows/image-build.yml'
+#      - '.pnpmfile.cjs'
+#      - 'bin/**'
+#      - 'ci/images/**'
+#      - '!ci/images/al10/**'
+#      - 'plugins/**'
+#      - '!plugins/.gitkeep'
+#      - '!plugins/.npmignore'
+#      - 'data/**'
+#      - 'index.cjs'
+#      - 'lib/**'
+#      - 'LICENSE'
+#      - 'package.json'
+#      - 'pnpm-lock.yaml'
+#      - '!**.test.js'
   workflow_dispatch:
 
 concurrency:
