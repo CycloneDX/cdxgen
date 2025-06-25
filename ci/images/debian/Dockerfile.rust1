@@ -1,6 +1,7 @@
 # Base-image
 FROM rust:1-slim-bookworm AS base
 
+# renovate: datasource=docker depName=node
 ARG NODE_VERSION=24.3.0
 
 ENV CARGO_HOME=/usr/local/cargo \
