@@ -2,6 +2,7 @@
 FROM ruby:2.6.10-slim AS base
 
 ARG JAVA_VERSION=21.0.7-tem
+# renovate: datasource=docker depName=node
 ARG NODE_VERSION=20.19.3
 ARG ATOM_RUBY_VERSION=3.4.4
 
