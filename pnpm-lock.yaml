@@ -53,8 +53,6 @@ overrides:
   yallist: ^5.0.0
   yargs: ^17.7.2
 
-pnpmfileChecksum: sha256-zddoD5DO4pDXt1woGSkWiGYuIzHsyOAVI3HXb7mgvsM=
-
 importers:
 
   .:
@@ -102,8 +100,8 @@ importers:
         specifier: ^1.15.0
         version: 1.15.0
       packageurl-js:
-        specifier: 1.0.2
-        version: 1.0.2
+        specifier: 1.2.1
+        version: 1.2.1
       prettify-xml:
         specifier: ^1.2.0
         version: 1.2.0
@@ -470,37 +468,31 @@ packages:
     resolution: {integrity: sha512-D/vdxpvrtkfYITHpiQjlvhZBNkm2GLmm/lZHbSs5R+nghbulTgXR9I8pTALFTBhjHZQu55DTiACmn/irhhotkA==}
     cpu: [x64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.6.12':
     resolution: {integrity: sha512-xd9A25e+4SwHwm9FRglMdsfRsTAROTj3C5eiQ501FI+FOxEbnCODNkDFkplqKqDjDDSIPOgc4llmk9Wk+91c/Q==}
     cpu: [arm64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.6.12':
     resolution: {integrity: sha512-6c7IGJcbZemZ2RCj3r1BbxPfQZPxzQNvuk4er0xLdcompQITvjmWT/aaYFtPLT5ymDjIfDyVbgDin8PXQwWWIA==}
     cpu: [arm]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linux-ppc64@1.6.12':
     resolution: {integrity: sha512-JaRY6F+3VBHZMZ51DhC8NhHJkwtLOM1Lnh//iAPw5pAxpQdron+YwfcVIKWhBlFx5zxbz2NI5L7QtiEV/iO4PA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.6.12':
     resolution: {integrity: sha512-X4eHr0WUtBOiX1Yy8hr35JhpUBJYYbZ31v8KCHtuSK8/h5/0gJidg1OvTGxFWoOLKtPCcb3FvqCY+PSrUcxN0A==}
     cpu: [x64]
     os: [linux]
-    libc: musl
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64@1.6.12':
     resolution: {integrity: sha512-smaxqZ2ZmVm04elK9Dydk1IjEcyRuRt9pSBZxK/RhgJojsJGQaeY/boKR0P/46avoNNiZbVkIDAIbBjfJ5Z7RA==}
     cpu: [arm64]
     os: [linux]
-    libc: musl
 
   '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.12':
     resolution: {integrity: sha512-6reJ+EFAR8YIwSRYMZ/dfF5e+o/JGaAa7h8ByHUcDXdVb9AZDyFKEXu0WeH732FJ1rk06GuNBU2ZFonFvt5lqQ==}
@@ -852,61 +844,51 @@ packages:
     resolution: {integrity: sha512-bPUBksQfrgcfv2+mm+AZinaKq8LCFvt5PThYqRotqSuuZK1TVKkhbVMS/jvSRfYl7jr3AoZLYbDkItxgqMKRkg==}
     cpu: [arm]
     os: [linux]
-    libc: glibc
 
   '@unrs/resolver-binding-linux-arm-musleabihf@1.9.0':
     resolution: {integrity: sha512-uT6E7UBIrTdCsFQ+y0tQd3g5oudmrS/hds5pbU3h4s2t/1vsGWbbSKhBSCD9mcqaqkBwoqlECpUrRJCmldl8PA==}
     cpu: [arm]
     os: [linux]
-    libc: musl
 
   '@unrs/resolver-binding-linux-arm64-gnu@1.9.0':
     resolution: {integrity: sha512-vdqBh911wc5awE2bX2zx3eflbyv8U9xbE/jVKAm425eRoOVv/VseGZsqi3A3SykckSpF4wSROkbQPvbQFn8EsA==}
     cpu: [arm64]
     os: [linux]
-    libc: glibc
 
   '@unrs/resolver-binding-linux-arm64-musl@1.9.0':
     resolution: {integrity: sha512-/8JFZ/SnuDr1lLEVsxsuVwrsGquTvT51RZGvyDB/dOK3oYK2UqeXzgeyq6Otp8FZXQcEYqJwxb9v+gtdXn03eQ==}
     cpu: [arm64]
     os: [linux]
-    libc: musl
 
   '@unrs/resolver-binding-linux-ppc64-gnu@1.9.0':
     resolution: {integrity: sha512-FkJjybtrl+rajTw4loI3L6YqSOpeZfDls4SstL/5lsP2bka9TiHUjgMBjygeZEis1oC8LfJTS8FSgpKPaQx2tQ==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@unrs/resolver-binding-linux-riscv64-gnu@1.9.0':
     resolution: {integrity: sha512-w/NZfHNeDusbqSZ8r/hp8iL4S39h4+vQMc9/vvzuIKMWKppyUGKm3IST0Qv0aOZ1rzIbl9SrDeIqK86ZpUK37w==}
     cpu: [riscv64]
     os: [linux]
-    libc: glibc
 
   '@unrs/resolver-binding-linux-riscv64-musl@1.9.0':
     resolution: {integrity: sha512-bEPBosut8/8KQbUixPry8zg/fOzVOWyvwzOfz0C0Rw6dp+wIBseyiHKjkcSyZKv/98edrbMknBaMNJfA/UEdqw==}
     cpu: [riscv64]
     os: [linux]
-    libc: musl
 
   '@unrs/resolver-binding-linux-s390x-gnu@1.9.0':
     resolution: {integrity: sha512-LDtMT7moE3gK753gG4pc31AAqGUC86j3AplaFusc717EUGF9ZFJ356sdQzzZzkBk1XzMdxFyZ4f/i35NKM/lFA==}
     cpu: [s390x]
     os: [linux]
-    libc: glibc
 
   '@unrs/resolver-binding-linux-x64-gnu@1.9.0':
     resolution: {integrity: sha512-WmFd5KINHIXj8o1mPaT8QRjA9HgSXhN1gl9Da4IZihARihEnOylu4co7i/yeaIpcfsI6sYs33cNZKyHYDh0lrA==}
     cpu: [x64]
     os: [linux]
-    libc: glibc
 
   '@unrs/resolver-binding-linux-x64-musl@1.9.0':
     resolution: {integrity: sha512-CYuXbANW+WgzVRIl8/QvZmDaZxrqvOldOwlbUjIM4pQ46FJ0W5cinJ/Ghwa/Ng1ZPMJMk1VFdsD/XwmCGIXBWg==}
     cpu: [x64]
     os: [linux]
-    libc: musl
 
   '@unrs/resolver-binding-wasm32-wasi@1.9.0':
     resolution: {integrity: sha512-6Rp2WH0OoitMYR57Z6VE8Y6corX8C6QEMWLgOV6qXiJIeZ1F9WGXY/yQ8yDC4iTraotyLOeJ2Asea0urWj2fKQ==}
@@ -2070,8 +2052,8 @@ packages:
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
 
-  packageurl-js@1.0.2:
-    resolution: {integrity: sha512-fWC4ZPxo80qlh3xN5FxfIoQD3phVY4+EyzTIqyksjhKNDmaicdpxSvkWwIrYTtv9C1/RcUN6pxaTwGmj2NzS6A==}
+  packageurl-js@1.2.1:
+    resolution: {integrity: sha512-cZ6/MzuXaoFd16/k0WnwtI298UCaDHe/XlSh85SeOKbGZ1hq0xvNbx3ILyCMyk7uFQxl6scF3Aucj6/EO9NwcA==}
 
   pacote@20.0.0:
     resolution: {integrity: sha512-pRjC5UFwZCgx9kUFDVM9YEahv4guZ1nSLqwmWiLUnDbGsjs+U5w7z6Uc8HNR1a6x8qnu5y9xtGE6D1uAuYz+0A==}
@@ -4870,7 +4852,7 @@ snapshots:
 
   package-json-from-dist@1.0.1: {}
 
-  packageurl-js@1.0.2: {}
+  packageurl-js@1.2.1: {}
 
   pacote@20.0.0:
     dependencies:
