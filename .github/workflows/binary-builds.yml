@@ -1,6 +1,17 @@
 name: Binary builds
 
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/binary-builds.yml'
+      - '.pnpmfile.cjs'
+      - 'bin/**'
+      - 'data/**'
+      - 'index.cjs'
+      - 'lib/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '!**.test.js'
   push:
     branches:
       - master
@@ -73,11 +84,12 @@ jobs:
       - name: Clone repo
         env:
           REPO_URL: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          REF: ${{ github.ref }}
+          REF: ${{ github.head_ref || github.ref }}
         run: |
           case "$REF" in
             refs/heads/*) REF_NAME="${REF#refs/heads/}" ;;
             refs/tags/*)  REF_NAME="${REF#refs/tags/}"  ;;
+            refs/pull/*)  REF_NAME="${REF#refs/pull/}"  ;;
             *)            REF_NAME="$REF"               ;;
           esac
           echo "Cloning ${REF} as ${REF_NAME}"
@@ -315,3 +327,15 @@ jobs:
             ${{ matrix.sartifact }}.sha256
             ${{ matrix.vartifact }}
             ${{ matrix.vartifact }}.sha256
+
+  retry:
+    needs: [ musl-builds, musl-builds-arm64, sae-builds ]
+    if: failure() && fromJSON(github.run_attempt) < 3
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh workflow run rerun-workflow.yml -F run_id=${{ github.run_id }}
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
