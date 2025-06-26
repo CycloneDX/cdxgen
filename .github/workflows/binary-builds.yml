@@ -1,6 +1,17 @@
 name: Binary builds
 
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/binary-builds.yml'
+      - '.pnpmfile.cjs'
+      - 'bin/**'
+      - 'data/**'
+      - 'index.cjs'
+      - 'lib/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '!**.test.js'
   push:
     branches:
       - master
