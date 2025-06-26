@@ -59,6 +59,14 @@ jobs:
           bin/cdxgen.js -t java -t github repotests/java-sec-code -o bomresults/bom-java-sec-code-9.json
           bin/cdxgen.js -t java -exclude-type js repotests/java-sec-code -o bomresults/bom-java-sec-code-10.json
         shell: bash
+      - name: repotests java-sec-code (allow lists)
+        run: |
+          CDXGEN_DEBUG_MODE=debug CDXGEN_ALLOWED_COMMANDS=none CDXGEN_ALLOWED_HOSTS=localhost bin/cdxgen.js -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-1.json
+          CDXGEN_ALLOWED_COMMANDS=mvn CDXGEN_ALLOWED_HOSTS="*.maven.org,*.github.com" bin/cdxgen.js -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-2.json --fail-on-error
+        shell: bash
+        env:
+          FETCH_LICENSE: true
+          CDXGEN_TRACE_ID: foo
       - name: repotests greyhound
         run: |
           bin/cdxgen.js -r -t java11 repotests/greyhound -o bomresults/bom-greyhound-java.json
