@@ -80,8 +80,8 @@
     "*": "biome check --fix --no-errors-on-unmatched"
   },
   "dependencies": {
-    "@babel/parser": "^7.27.4",
-    "@babel/traverse": "^7.27.4",
+    "@babel/parser": "^7.27.7",
+    "@babel/traverse": "^7.27.7",
     "@iarna/toml": "2.2.5",
     "@npmcli/arborist": "^9.1.2",
     "ajv": "^8.17.1",
@@ -124,7 +124,7 @@
     "@cyclonedx/cdxgen-plugins-bin-windows-amd64": "1.6.12",
     "@cyclonedx/cdxgen-plugins-bin-windows-arm64": "1.6.12",
     "body-parser": "^2.2.0",
-    "compression": "^1.7.5",
+    "compression": "^1.8.0",
     "connect": "^3.7.0",
     "jsonata": "^2.0.6",
     "sequelize": "^6.37.7",
@@ -140,7 +140,7 @@
   ],
   "devDependencies": {
     "@biomejs/biome": "2.0.5",
-    "jest": "^30.0.0",
+    "jest": "^30.0.3",
     "typescript": "^5.8.3"
   },
   "pnpm": {

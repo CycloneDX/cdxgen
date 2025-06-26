@@ -15,6 +15,14 @@ function readPackage(pkg) {
     } else if (pkg.name?.includes("gnu") && !pkg.libc) {
       pkg.libc = "glibc";
     }
+  } else if (pkg.name?.includes("@biomejs")) {
+    if (pkg.name?.includes("linux") && !pkg.libc) {
+      if (pkg.name?.includes("musl")) {
+        pkg.libc = "musl";
+      } else {
+        pkg.libc = "glibc";
+      }
+    }
   }
   return pkg;
 }
