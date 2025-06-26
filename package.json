@@ -105,7 +105,7 @@
     "validate-iri": "^1.0.1",
     "xml-js": "^1.6.11",
     "yaml": "^2.8.0",
-    "yargs": "^17.7.2",
+    "yargs": "^18.0.0",
     "yoctocolors": "^2.1.1"
   },
   "optionalDependencies": {
@@ -195,7 +195,7 @@
       "which": "^5.0.0",
       "write-file-atomic": "^6.0.0",
       "yallist": "^5.0.0",
-      "yargs": "^17.7.2"
+      "yargs": "^18.0.0"
     },
     "ignoredBuiltDependencies": [
       "unrs-resolver"
@@ -247,6 +247,6 @@
     "which": "^5.0.0",
     "write-file-atomic": "^6.0.0",
     "yallist": "^5.0.0",
-    "yargs": "^17.7.2"
+    "yargs": "^18.0.0"
   }
 }
