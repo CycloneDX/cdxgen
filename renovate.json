@@ -17,10 +17,5 @@
       "matchDepTypes": ["engines"],
       "rangeStrategy": "auto"
     }
-  ],
-  "postUpgradeTasks": {
-    "commands": ["pnpm i"],
-    "fileFilters": ["pnpm-lock.yaml"],
-    "executionMode": "branch"
-  }
+  ]
 }
