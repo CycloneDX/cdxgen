@@ -28,7 +28,7 @@ jobs:
           token: ${{ secrets.WORKFLOW_TOKEN }}
       - name: PNPM install
         run: corepack pnpm i --no-frozen-lockfile
-      - uses: EndBug/add-and-commit@v9
+      - uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9.1.4
         with:
           add: 'pnpm-lock.yaml'
           commit: --signoff
