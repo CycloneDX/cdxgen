@@ -6,6 +6,11 @@ on:
       - 'renovate/*'
     paths:
       - 'pnpm-lock.yaml'
+  push:
+    branches:
+      - 'renovate/*'
+    paths:
+      - 'pnpm-lock.yaml'
   workflow_dispatch:
 
 concurrency:
@@ -22,7 +27,7 @@ jobs:
         with:
           persist-credentials: false
       - name: PNPM install
-        run: pnpm i
+        run: corepack pnpm i
       - uses: EndBug/add-and-commit@v9
         with:
           add: 'pnpm-lock.yaml'
