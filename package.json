@@ -94,7 +94,7 @@
     "iconv-lite": "^0.6.3",
     "jws": "^4.0.0",
     "node-stream-zip": "^1.15.0",
-    "packageurl-js": "1.0.2",
+    "packageurl-js": "2.0.1",
     "prettify-xml": "^1.2.0",
     "properties-reader": "^2.3.0",
     "semver": "^7.7.2",
