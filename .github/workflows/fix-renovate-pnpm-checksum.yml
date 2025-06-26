@@ -6,9 +6,12 @@ on:
       - 'renovate/*'
     paths:
       - 'pnpm-lock.yaml'
+  workflow_dispatch:
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
 jobs:
   fix-lock:
     permissions:
@@ -23,6 +26,6 @@ jobs:
       - uses: EndBug/add-and-commit@v9
         with:
           add: 'pnpm-lock.yaml'
+          commit: --signoff
           default_author: github_actions
           message: Fixed pnpm-lock after renovate update
-          
