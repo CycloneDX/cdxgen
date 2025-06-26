@@ -75,7 +75,7 @@ jobs:
 
       # cdxgen image
       - name: Build cdxgen image - master-branch
-        if: github.ref == 'refs/heads/master'
+        if: ${{ startsWith(github.ref, 'refs/heads/') }}
         uses: ./.github/actions/build-docker-images-generate-attach-sboms
         with:
           build-arm: ${{ ! fromJSON(inputs.image).skip-arm }}
