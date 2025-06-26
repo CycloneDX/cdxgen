@@ -1,0 +1,28 @@
+name: Fix pnpm-lock after renovate
+
+on:
+  pull_request:
+    branches:
+      - 'renovate/*'
+    paths:
+      - 'pnpm-lock.yaml'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  fix-lock:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: PNPM install
+        run: pnpm i
+      - uses: EndBug/add-and-commit@v9
+        with:
+          add: 'pnpm-lock.yaml'
+          default_author: github_actions
+          message: Fixed pnpm-lock after renovate update
+          
