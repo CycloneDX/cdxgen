@@ -20,12 +20,13 @@ concurrency:
 jobs:
   fix-lock:
     permissions:
-      contents: write
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
+#          ref: ${{ github.head_ref }}
       - name: PNPM install
         run: corepack pnpm i --no-frozen-lockfile
       - uses: EndBug/add-and-commit@v9
@@ -34,3 +35,5 @@ jobs:
           commit: --signoff
           default_author: github_actions
           message: Fixed pnpm-lock after renovate update
+        env:
+          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
