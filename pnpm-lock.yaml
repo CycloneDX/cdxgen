@@ -53,7 +53,7 @@ overrides:
   yallist: ^5.0.0
   yargs: ^17.7.2
 
-pnpmfileChecksum: sha256-SmEj9ns2ZctH05k3DruYvLOHL4+mCmpLXIkBxBVo6jQ=
+pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
 
 importers:
 
