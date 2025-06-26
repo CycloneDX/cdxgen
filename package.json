@@ -150,7 +150,7 @@
     ],
     "overrides": {
       "babel-plugin-istanbul": "^7.0.0",
-      "brace-expansion": "2.0.2",
+      "brace-expansion": "4.0.1",
       "jwa": "^2.0.1",
       "glob": "^11.0.3",
       "node-gyp": "^10.2.0",
@@ -203,7 +203,7 @@
   },
   "overrides": {
     "babel-plugin-istanbul": "^7.0.0",
-    "brace-expansion": "2.0.2",
+    "brace-expansion": "4.0.1",
     "jwa": "^2.0.1",
     "glob": "^11.0.3",
     "node-gyp": "^10.2.0",
