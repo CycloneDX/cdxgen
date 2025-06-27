@@ -18,21 +18,24 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.WORKFLOW_TOKEN }}
-      - name: PNPM install
+      - name: Fix & comment
         run: |
           corepack pnpm i --no-frozen-lockfile
-      - name: PNPM why
-        if: "${{ startsWith(github.event.head_commit.message, 'chore(deps): update dependency') || startsWith(github.event.head_commit.message, 'fix(deps): update dependency') }}"
-        run: |
+          node bin/cdxgen.js
           read -a array <<< "${{ github.event.head_commit.message }}"
-          echo "Output of \`pnpm why ${array[3]}\`:" > _why.txt
-          echo "\`\`\`" >> _why.txt
-          corepack pnpm why ${array[3]} >> _why.txt
-          echo "\`\`\`" >> _why.txt
+          echo "Output of \`pnpm why ${array[3]}\`:" > _tree.txt
+          echo "\`\`\`" >> _tree.txt
+          corepack pnpm why ${array[3]} >> _tree.txt
+          echo "\`\`\`" >> _tree.txt
+          echo "Output of \`grep\`:"
+          echo "\`\`\`" >> _tree.txt
+          grep -nA20 ${array[3]} bom.json >> _tree.txt
+          echo "\`\`\`" >> _tree.txt
+        env:
+          CDXGEN_DEBUG_MODE: debug
       - uses: mshick/add-pr-comment@b8f338c590a895d50bcbfa6c5859251edc8952fc # v2.8.2
-        if: "${{ startsWith(github.event.head_commit.message, 'chore(deps): update dependency') || startsWith(github.event.head_commit.message, 'fix(deps): update dependency') }}"
         with:
-          message-path: _why.txt
+          message-path: _tree.txt
       - uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9.1.4
         with:
           add: 'pnpm-lock.yaml'
