@@ -2,8 +2,12 @@ name: Rebuild release images
 
 on:
   schedule:
-  - cron: "0 2 * * 0"
+    - cron: "0 2 * * 0"
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   rebuild-latest:
@@ -22,7 +26,7 @@ jobs:
         env:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
-        
+
   rebuild-previous:
     permissions:
       contents: read

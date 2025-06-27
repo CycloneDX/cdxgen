@@ -15,6 +15,7 @@ on:
   push:
     branches:
       - master
+      - release/*
     tags:
       - 'v*'
     paths:
@@ -194,7 +195,7 @@ jobs:
           mkdir -p $HOME/.local/share/pnpm/global
           echo "$HOME/.local/share/pnpm/global" >> $GITHUB_PATH
           devenv test
-      - name: Install dependencies 
+      - name: Install dependencies
         run: devenv shell pnpm install --config.strict-dep-builds=true
       - name: Run test
         run: devenv shell pnpm test

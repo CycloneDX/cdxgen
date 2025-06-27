@@ -27,34 +27,34 @@ inputs:
 runs:
   using: composite
   steps:
-  - name: Extract metadata (tags, labels) for Docker image
-    id: metadata
-    uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5.7.0
-    with:
-      images: ${{ inputs.images }}
-  - name: Build and push image
-    uses: ./.github/actions/build-docker-image
-    with:
-      action: push
-      dockerfile: ${{ inputs.dockerfile }}
-      labels: ${{ steps.metadata.outputs.labels }}
-      platforms: linux/amd64${{ inputs.build-arm == 'true' && ',linux/arm64' || '' }}
-      tags: ${{ inputs.tags || steps.metadata.outputs.tags }}
-      target: ${{ inputs.target }}
-  - name: Generate and attach SBOM for amd64
-    uses: ./.github/actions/generate-attach-sbom
-    with:
-      dockerfile: ${{ inputs.dockerfile }}
-      platform: linux/amd64
-      signing-key: ${{ inputs.signing-key }}
-      tag: ${{ inputs.main-tag || fromJSON(steps.metadata.outputs.json).tags[0] }}
-      target: ${{ inputs.target }}
-  - name: Generate and attach SBOM for arm64
-    if: ${{ inputs.build-arm == 'true' }}
-    uses: ./.github/actions/generate-attach-sbom
-    with:
-      dockerfile: ${{ inputs.dockerfile }}
-      platform: linux/arm64
-      signing-key: ${{ inputs.signing-key }}
-      tag: ${{ inputs.main-tag || fromJSON(steps.metadata.outputs.json).tags[0] }}
-      target: ${{ inputs.target }}
+    - name: Extract metadata (tags, labels) for Docker image
+      id: metadata
+      uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5.7.0
+      with:
+        images: ${{ inputs.images }}
+    - name: Build and push image
+      uses: ./.github/actions/build-docker-image
+      with:
+        action: push
+        dockerfile: ${{ inputs.dockerfile }}
+        labels: ${{ steps.metadata.outputs.labels }}
+        platforms: linux/amd64${{ inputs.build-arm == 'true' && ',linux/arm64' || '' }}
+        tags: ${{ inputs.tags || steps.metadata.outputs.tags }}
+        target: ${{ inputs.target }}
+    - name: Generate and attach SBOM for amd64
+      uses: ./.github/actions/generate-attach-sbom
+      with:
+        dockerfile: ${{ inputs.dockerfile }}
+        platform: linux/amd64
+        signing-key: ${{ inputs.signing-key }}
+        tag: ${{ inputs.main-tag || fromJSON(steps.metadata.outputs.json).tags[0] }}
+        target: ${{ inputs.target }}
+    - name: Generate and attach SBOM for arm64
+      if: ${{ inputs.build-arm == 'true' }}
+      uses: ./.github/actions/generate-attach-sbom
+      with:
+        dockerfile: ${{ inputs.dockerfile }}
+        platform: linux/arm64
+        signing-key: ${{ inputs.signing-key }}
+        tag: ${{ inputs.main-tag || fromJSON(steps.metadata.outputs.json).tags[0] }}
+        target: ${{ inputs.target }}

@@ -14,10 +14,19 @@ on:
       - '!**.test.js'
   push:
     branches:
-      - master
       - release/*
     tags:
       - 'v*'
+    paths:
+      - '.github/workflows/snapshot-tests.yml'
+      - 'bin/**'
+      - 'data/**'
+      - 'index.cjs'
+      - 'lib/**'
+      - 'LICENSE'
+      - 'package.json'
+      - 'types/**'
+      - '!**.test.js'
   workflow_dispatch:
 
 concurrency:
@@ -37,18 +46,18 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
 
-      -  name: cdxgen, custom-json-diff installs
-         shell: bash
-         env:
-           SHELL: bash
-         run: |
-           rm -rf original_snapshots new_snapshots src_repos
-           cdxgen_tarball=$(pnpm pack | tail -1)
-           sudo npm install -g "$cdxgen_tarball"
-           git clone https://github.com/appthreat/cdxgen-samples.git original_snapshots
-           python3.12 -m venv .venv
-           source .venv/bin/activate && pip install setuptools==77.0.3 wheel
-           source .venv/bin/activate && pip install -r test/diff/requirements.txt
+      - name: cdxgen, custom-json-diff installs
+        shell: bash
+        env:
+          SHELL: bash
+        run: |
+          rm -rf original_snapshots new_snapshots src_repos
+          cdxgen_tarball=$(pnpm pack | tail -1)
+          sudo npm install -g "$cdxgen_tarball"
+          git clone https://github.com/appthreat/cdxgen-samples.git original_snapshots
+          python3.12 -m venv .venv
+          source .venv/bin/activate && pip install setuptools==77.0.3 wheel
+          source .venv/bin/activate && pip install -r test/diff/requirements.txt
 
       - name: Generate scripts
         run: |
@@ -89,7 +98,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: diffs
-          path: | 
+          path: |
             new_snapshots/diffs.json
             new_snapshots/*.html
 
