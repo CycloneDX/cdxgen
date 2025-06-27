@@ -34,7 +34,7 @@ jobs:
         if: ${{ startsWith(github.event.head_commit.message, 'chore(deps):') }}
         run: |
           read -a array <<< "${{ github.event.head_commit.message }}"
-          echo "Ouput of \`pnpm why ${array[3]}\`:" > _why.txt
+          echo "Output of \`pnpm why ${array[3]}\`:" > _why.txt
           echo "\`\`\`" >> _why.txt
           corepack pnpm why ${array[3]} >> _why.txt
           echo "\`\`\`" >> _why.txt
