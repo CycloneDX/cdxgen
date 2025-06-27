@@ -27,16 +27,19 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.WORKFLOW_TOKEN }}
-      - name: PNPM install & why
+      - name: PNPM install
         run: |
           corepack pnpm i --no-frozen-lockfile
-          echo "${{ github.event.head_commit.message }}"
+      - name: PNPM why
+        if: ${{ startsWith(github.event.head_commit.message, 'chore(deps):') }}
+        run: |
           read -a array <<< "${{ github.event.head_commit.message }}"
           echo "Ouput of \`pnpm why ${array[3]}\`:" > _why.txt
           echo "\`\`\`" >> _why.txt
           corepack pnpm why ${array[3]} >> _why.txt
           echo "\`\`\`" >> _why.txt
       - uses: mshick/add-pr-comment@b8f338c590a895d50bcbfa6c5859251edc8952fc # v2.8.2
+        if: ${{ startsWith(github.event.head_commit.message, 'chore(deps):') }}
         with:
           message-path: _why.txt
       - uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9.1.4
