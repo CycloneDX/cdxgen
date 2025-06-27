@@ -20,14 +20,22 @@ jobs:
   fix-lock:
     permissions:
       contents: read
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.WORKFLOW_TOKEN }}
-      - name: PNPM install
-        run: corepack pnpm i --no-frozen-lockfile
+      - name: PNPM install & why
+        run: |
+          corepack pnpm i --no-frozen-lockfile
+          message=`git log -1 --pretty=%B | head -n 1`
+          read -a array <<< "$message"
+          corepack pnpm why ${array[3]} > _why.txt
+      - uses: mshick/add-pr-comment@v2
+        with:
+          message-path: _why.txt
       - uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9.1.4
         with:
           add: 'pnpm-lock.yaml'
