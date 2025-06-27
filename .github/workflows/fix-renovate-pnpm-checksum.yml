@@ -32,7 +32,10 @@ jobs:
           corepack pnpm i --no-frozen-lockfile
           message=`git log -1 --pretty=%B | head -n 1`
           read -a array <<< "$message"
-          corepack pnpm why ${array[3]} > _why.txt
+          echo "Ouput of \`pnpm why ${array[3]}\`:" > _why.txt
+          echo "\`\`\`" >> _why.txt
+          corepack pnpm why ${array[3]} >> _why.txt
+          echo "\`\`\`" >> _why.txt
       - uses: mshick/add-pr-comment@v2
         with:
           message-path: _why.txt
