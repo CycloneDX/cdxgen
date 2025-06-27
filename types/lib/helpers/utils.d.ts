@@ -1487,6 +1487,7 @@ export const isSecureMode: any;
 export const isWin: boolean;
 export const isMac: boolean;
 export let ATOM_DB: string;
+export const commandsExecuted: Set<any>;
 export const frameworksList: any;
 export const DEBUG_MODE: boolean;
 export const TIMEOUT_MS: number;
@@ -1547,6 +1548,7 @@ export const PROJECT_TYPE_ALIASES: {
 export namespace PACKAGE_MANAGER_ALIASES {
     let scala: string[];
 }
+export const remoteHostsAccessed: Set<any>;
 export const cdxgenAgent: any;
 export const RUBY_PLATFORM_PREFIXES: string[];
 //# sourceMappingURL=utils.d.ts.map
