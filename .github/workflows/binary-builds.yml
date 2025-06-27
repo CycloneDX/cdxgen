@@ -14,7 +14,6 @@ on:
       - '!**.test.js'
   push:
     branches:
-      - master
       - release/*
     tags:
       - 'v*'
@@ -50,7 +49,7 @@ jobs:
               ./cdxgen --help
               sha256sum cdxgen > cdxgen.sha256
               rm -rf node_modules
-              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile              
+              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
               pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen-slim
               ./cdxgen-slim --version
@@ -130,7 +129,7 @@ jobs:
               ./cdxgen --help
               sha256sum cdxgen > cdxgen.sha256
               rm -rf node_modules
-              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile              
+              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
               pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen-slim
               ./cdxgen-slim --version
@@ -200,7 +199,7 @@ jobs:
               ./cdxgen --help
               sha256sum cdxgen > cdxgen.sha256
               rm -rf node_modules
-              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile              
+              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
               pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen-slim
               ./cdxgen-slim --version

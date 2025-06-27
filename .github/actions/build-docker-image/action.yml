@@ -26,14 +26,14 @@ inputs:
 runs:
   using: composite
   steps:
-  - name: Build Docker image
-    uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
-    with:
-      context: .
-      file: ${{ inputs.dockerfile }}
-      labels: ${{ inputs.labels }}
-      load: ${{ inputs.action == 'load' }}
-      platforms: ${{ inputs.platforms }}
-      push: ${{ inputs.action == 'push' }}
-      tags: ${{ inputs.tags }}
-      target: ${{ inputs.target }}
+    - name: Build Docker image
+      uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+      with:
+        context: .
+        file: ${{ inputs.dockerfile }}
+        labels: ${{ inputs.labels }}
+        load: ${{ inputs.action == 'load' }}
+        platforms: ${{ inputs.platforms }}
+        push: ${{ inputs.action == 'push' }}
+        tags: ${{ inputs.tags }}
+        target: ${{ inputs.target }}

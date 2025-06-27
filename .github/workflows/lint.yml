@@ -13,8 +13,7 @@ on:
   push:
     branches:
       - master
-    tags:
-      - 'v*'
+      - release/*
     paths:
       - '.github/workflows/lint.yml'
       - '**.cjs'
