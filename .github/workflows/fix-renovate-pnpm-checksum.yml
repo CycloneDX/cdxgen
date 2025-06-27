@@ -21,7 +21,7 @@ jobs:
       - name: Fix & comment
         run: |
           corepack pnpm i --no-frozen-lockfile
-          node bin/cdxgen.js
+          node bin/cdxgen.js -t js
           read -a array <<< "${{ github.event.head_commit.message }}"
           echo "Output of \`pnpm why ${array[3]}\`:" > _tree.txt
           echo "\`\`\`" >> _tree.txt
