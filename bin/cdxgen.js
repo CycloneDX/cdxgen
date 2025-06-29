@@ -23,15 +23,17 @@ import {
   printSummary,
   printTable,
 } from "../lib/helpers/display.js";
-import { thoughtEnd, thoughtLog } from "../lib/helpers/logger.js";
+import { TRACE_MODE, thoughtEnd, thoughtLog } from "../lib/helpers/logger.js";
 import {
   ATOM_DB,
+  commandsExecuted,
   DEBUG_MODE,
   dirNameStr,
   getTmpDir,
   isMac,
   isSecureMode,
   isWin,
+  remoteHostsAccessed,
   safeExistsSync,
 } from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
@@ -1088,6 +1090,26 @@ const needsBomSigning = ({ generateKeyAndSign }) =>
     if (options.includeCrypto) {
       printTable(bomNSData.bomJson, ["cryptographic-asset"]);
       printDependencyTree(bomNSData.bomJson, "provides");
+    }
+  }
+  if (
+    (DEBUG_MODE || TRACE_MODE) &&
+    (!process.env?.CDXGEN_ALLOWED_HOSTS ||
+      !process.env?.CDXGEN_ALLOWED_COMMANDS)
+  ) {
+    let allowListSuggestion;
+    const envPrefix = isWin ? "set $env:" : "export ";
+    if (remoteHostsAccessed.size) {
+      allowListSuggestion = `${envPrefix}CDXGEN_ALLOWED_HOSTS="${Array.from(remoteHostsAccessed).join(",")}"\n`;
+    }
+    if (commandsExecuted.size) {
+      allowListSuggestion = `${allowListSuggestion}${envPrefix}CDXGEN_ALLOWED_COMMANDS="${Array.from(commandsExecuted).join(",")}"\n`;
+    }
+    if (allowListSuggestion) {
+      console.log(
+        "SECURE MODE: cdxgen supports allowlists for remote hosts and external commands. Set the following environment variables to get started.",
+      );
+      console.log(allowListSuggestion);
     }
   }
 })();
