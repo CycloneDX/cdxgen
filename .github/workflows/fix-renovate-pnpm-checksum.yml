@@ -23,13 +23,13 @@ jobs:
           corepack pnpm i --no-frozen-lockfile
           node bin/cdxgen.js -t js
           read -a array <<< "${{ github.event.head_commit.message }}"
-          echo "Output of \`pnpm why ${array[github.event.head_commit.message.contains('dependency' ? 3 : 2]}\`:" > _tree.txt
+          echo "Output of \`pnpm why ${array[github.event.head_commit.message.contains('dependency') ? 3 : 2]}\`:" > _tree.txt
           echo "\`\`\`" >> _tree.txt
-          corepack pnpm why ${array[github.event.head_commit.message.contains('dependency' ? 3 : 2]} >> _tree.txt
+          corepack pnpm why ${array[github.event.head_commit.message.contains('dependency') ? 3 : 2]} >> _tree.txt
           echo "\`\`\`" >> _tree.txt
           echo "Output of \`grep\`:"
           echo "\`\`\`" >> _tree.txt
-          grep -nA20 ${array[github.event.head_commit.message.contains('dependency' ? 3 : 2]} bom.json >> _tree.txt
+          grep -nA20 ${array[github.event.head_commit.message.contains('dependency') ? 3 : 2]} bom.json >> _tree.txt
           echo "\`\`\`" >> _tree.txt
         env:
           CDXGEN_DEBUG_MODE: debug
