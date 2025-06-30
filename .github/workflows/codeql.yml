@@ -15,12 +15,16 @@ on:
       - '.github/workflows/**'
       - '**.js'
 
+
+# https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token
+permissions: {}
+
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
     permissions:
-      packages: read
+      contents: read
       security-events: write
 
     strategy:

@@ -10,10 +10,11 @@ on:
         required: true
         type: string
 
+# https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token
+permissions: {}
+
 jobs:
   rerun:
-    permissions:
-      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: rerun ${{ inputs.run_id }}

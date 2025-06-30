@@ -19,12 +19,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token
+permissions: {}
+
 jobs:
   image:
     if: github.repository == 'CycloneDX/cdxgen'
     permissions:
       contents: read
-      packages: write
+      packages: write  # needed for publishing images on GH package registry
     uses: ./.github/workflows/image-build.yml
     secrets: inherit
     with:
@@ -41,8 +44,6 @@ jobs:
   retry:
     needs: image
     if: failure() && fromJSON(github.run_attempt) < 3
-    permissions:
-      contents: read
     runs-on: ubuntu-latest
     steps:
       - run: gh workflow run rerun-workflow.yml -F run_id=${{ github.run_id }}
