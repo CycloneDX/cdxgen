@@ -139,7 +139,7 @@
     "index.cjs"
   ],
   "devDependencies": {
-    "@biomejs/biome": "2.0.5",
+    "@biomejs/biome": "2.0.6",
     "jest": "^30.0.3",
     "typescript": "^5.8.3"
   },
