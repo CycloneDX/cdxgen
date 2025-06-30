@@ -26,7 +26,6 @@ permissions: {}
 jobs:
   image:
     permissions:
-      contents: read
       packages: write  # needed for publishing images on GH package registry
     runs-on: ${{ fromJSON(inputs.image).runner || 'ubuntu-24.04' }}
     steps:

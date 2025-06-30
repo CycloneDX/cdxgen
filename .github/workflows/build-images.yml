@@ -49,6 +49,8 @@ permissions: {}
 
 jobs:
   images:
+    permissions:
+      packages: write  # needed for publishing images on GH package registry
     if: github.repository == 'CycloneDX/cdxgen'
     strategy:
       fail-fast: false
@@ -207,9 +209,6 @@ jobs:
             cdxgen-image:
               additional-image: cdxgen-debian-swift
 
-    permissions:
-      contents: read
-      packages: write  # needed for publishing images on GH package registry
     uses: ./.github/workflows/image-build.yml
     secrets: inherit
     with:
