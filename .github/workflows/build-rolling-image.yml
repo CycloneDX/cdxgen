@@ -24,6 +24,8 @@ permissions: {}
 
 jobs:
   image:
+    permissions:
+      packages: write  # needed for publishing images on GH package registry
     if: github.repository == 'CycloneDX/cdxgen'
     uses: ./.github/workflows/image-build.yml
     secrets: inherit
