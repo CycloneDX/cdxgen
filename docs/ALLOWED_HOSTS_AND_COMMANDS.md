@@ -1,6 +1,6 @@
 # List of allowed hosts and commands
 
-To allow commands and hosts correctly, make sure to add Operating System specific [commands](#Platform-Specific Commands) along with common [commands](#Common Commands (All Platforms)) if there is any!
+To allow commands and hosts correctly, make sure to add Operating System specific [commands](#platform-specific-commands) along with common [commands](#common-commands-all-platforms) if there is any!
 
 ## Common Commands (All Platforms)
 
