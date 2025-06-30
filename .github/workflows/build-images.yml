@@ -49,6 +49,8 @@ permissions: {}
 
 jobs:
   images:
+    permissions:
+      packages: write  # needed for publishing images on GH package registry
     if: github.repository == 'CycloneDX/cdxgen'
     strategy:
       fail-fast: false
