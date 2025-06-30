@@ -23,7 +23,7 @@ jobs:
       - name: Fix & comment
         run: |
           corepack pnpm i --no-frozen-lockfile
-          read -a array <<< "${{ github.event.head_commit.message }}"
+          read -a array <<< "$COMMIT_MESSAGE"
           if [ "${array[2]}" = "dependency" ]; then
             node bin/cdxgen.js --exclude test/\*\* -t js
             echo "Output of \`pnpm why ${array[3]}\`:" > _tree.txt
@@ -37,6 +37,7 @@ jobs:
           fi
         env:
           CDXGEN_DEBUG_MODE: debug
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
       - uses: mshick/add-pr-comment@b8f338c590a895d50bcbfa6c5859251edc8952fc # v2.8.2
         if: hashFiles('_tree.txt')
         with:
