@@ -32,7 +32,7 @@ jobs:
             echo "\`\`\`" >> _tree.txt
             echo "Output of \`grep\`:" >> _tree.txt
             echo "\`\`\`" >> _tree.txt
-            grep -nA20 ${array[3]} bom.json >> _tree.txt
+            grep -n -A20 -B5 ${array[3]} bom.json >> _tree.txt
             echo "\`\`\`" >> _tree.txt
           fi
         env:
