@@ -23,7 +23,7 @@ jobs:
           corepack pnpm i --no-frozen-lockfile
           read -a array <<< "${{ github.event.head_commit.message }}"
           if [ "${array[2]}" = "dependency" ]; then
-            node bin/cdxgen.js --exclude test/** -t js
+            node bin/cdxgen.js --exclude test/\*\* -t js
             echo "Output of \`pnpm why ${array[3]}\`:" > _tree.txt
             echo "\`\`\`" >> _tree.txt
             corepack pnpm why ${array[3]} >> _tree.txt
