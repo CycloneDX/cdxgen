@@ -39,7 +39,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
       - name: Rebuild previous
-        run: gh workflow run build-images.yml -r refs/tags/${{ steps.read_previous.outputs.release.tag_name }}
+        run: gh workflow run build-images.yml -r refs/tags/${{ steps.read_previous.outputs.release }}
         env:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
