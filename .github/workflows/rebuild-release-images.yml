@@ -14,8 +14,6 @@ permissions: {}
 
 jobs:
   rebuild-latest:
-    permissions:
-      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Read latest
@@ -31,8 +29,6 @@ jobs:
           GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
 
   rebuild-previous:
-    permissions:
-      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Read previous
