@@ -1097,7 +1097,7 @@ const needsBomSigning = ({ generateKeyAndSign }) =>
     (!process.env?.CDXGEN_ALLOWED_HOSTS ||
       !process.env?.CDXGEN_ALLOWED_COMMANDS)
   ) {
-    let allowListSuggestion;
+    let allowListSuggestion = "";
     const envPrefix = isWin ? "set $env:" : "export ";
     if (remoteHostsAccessed.size) {
       allowListSuggestion = `${envPrefix}CDXGEN_ALLOWED_HOSTS="${Array.from(remoteHostsAccessed).join(",")}"\n`;
