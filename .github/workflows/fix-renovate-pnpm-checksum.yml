@@ -22,21 +22,25 @@ jobs:
           token: ${{ secrets.WORKFLOW_TOKEN }}
       - name: Fix & comment
         run: |
-          corepack pnpm i --no-frozen-lockfile
           read -a array <<< "$COMMIT_MESSAGE"
           if [ "${array[2]}" = "dependency" ]; then
+            corepack pnpm i --no-frozen-lockfile
             node bin/cdxgen.js --exclude test/\*\* -t js
             echo "Output of \`pnpm why ${array[3]}\`:" > _tree.txt
             echo "\`\`\`" >> _tree.txt
             corepack pnpm why ${array[3]} >> _tree.txt
             echo "\`\`\`" >> _tree.txt
-            echo "Output of \`grep\`:" >> _tree.txt
+            echo "Output of \`jq\` on components:" >> _tree.txt
             echo "\`\`\`" >> _tree.txt
-            grep -n -A20 -B15 ${array[3]} bom.json >> _tree.txt
+            jq --arg dep "${array[3]}" '.components[] | select(."bom-ref" | test($dep))' bom.json >> _tree.txt
+            echo "\`\`\`" >> _tree.txt
+            echo "Output of \`jq\` on dependencies:" >> _tree.txt
+            echo "\`\`\`" >> _tree.txt
+            jq --arg dep "${array[3]}" '.dependencies[] | select(.ref | test($dep))' bom.json >> _tree.txt
+            jq --arg dep "${array[3]}" '.dependencies[] | select(.dependsOn | any(test($dep)))' bom.json >> _tree.txt
             echo "\`\`\`" >> _tree.txt
           fi
         env:
-          CDXGEN_DEBUG_MODE: debug
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
       - uses: mshick/add-pr-comment@b8f338c590a895d50bcbfa6c5859251edc8952fc # v2.8.2
         if: hashFiles('_tree.txt')
