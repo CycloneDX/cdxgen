@@ -2,9 +2,42 @@
 
 To allow commands and hosts correctly, make sure to add Operating System specific [commands](#platform-specific-commands) along with common [commands](#common-commands-all-platforms) if there is any!
 
+Examples:-
+
+**add "ldd" command only when the testing system is linux**. Check [commands](#platform-specific-commands) for more details.
+
+```
+CDXGEN_ALLOWED_COMMANDS="foo" (other systems)
+CDXGEN_ALLOWED_COMMANDS="foo,ldd" (linux systems)
+```
+
+- Nodejs
+```
+CDXGEN_ALLOWED_HOSTS="localhost,registry.npmjs.org" 
+CDXGEN_ALLOWED_COMMANDS="npm,pnpm,yarn,rush" 
+```
+- Golang
+```
+CDXGEN_ALLOWED_HOSTS="localhost,proxy.golang.org,pkg.go.dev"
+CDXGEN_ALLOWED_COMMANDS="go" 
+```
+- Rust
+```
+CDXGEN_ALLOWED_HOSTS="localhost,crates.io"
+CDXGEN_ALLOWED_COMMANDS="cargo" 
+```
+
+These env variables should provided like this:
+```
+CDXGEN_ALLOWED_HOSTS=<hosts> 
+CDXGEN_ALLOWED_COMMANDS=<commands> 
+CDXGEN_TRACE_ID=<foo> 
+node bin/cdxgen.js -t <type of projects> --json-pretty -o bom.json $(pwd)
+```
+
 ## Common Commands (All Platforms)
 
-| Language / Platform | Project Types | Allowed Commands | Remote Hosts Typically Accessed |
+| Language / Platform | Project Types | External Commands | Remote Hosts |
 | ------------------------------------- | ------------------------------------------------------------------------------ | ---------------- | ----------------------------------------------- |
 | **Node.js** | `npm`, `pnpm`, `nodejs`, `js`, `javascript`, `typescript`, `ts`, `tsx`, `yarn`, `rush` | `npm`, `pnpm`, `yarn`, `rush` | `registry.npmjs.org` |
 | **Node.js (Specific version)** | `node*` (Example: node10, node12, node18, node20) | `npm`, `pnpm`, `yarn`, `rush` | `registry.npmjs.org` |
@@ -17,7 +50,7 @@ To allow commands and hosts correctly, make sure to add Operating System specifi
 | **JAR (Maven Cache)** | `maven-index`, `maven-cache`, `maven-repo` | Usually none | Usually none |
 | **Python (Default)** | `python`, `py`, `pypi`, `uv`, `pip`, `poetry`, `pdm`, `hatch` | `pip`, `poetry`, `uv` | `pypi.org` |
 | **Python (Specific version)** | `python*` (Example: python38, python39, python311) | `pip`, `poetry`, `uv` | `pypi.org` |
-| **Golang** | `go`, `golang` | `go` | `pkg.go.dev`, `proxy.golang.org` |
+| **Golang** | `go`, `golang` | `go` | `pkg.go.dev`, `proxy.golang.org`, `pkg.go.dev` |
 | **Rust** | `rust`, `rust-lang`, `cargo` | `cargo` | `crates.io` |
 | **Ruby** | `ruby`, `gems`, `rubygems`, `bundler`, `rb`, `gemspec` | `bundle` | `rubygems.org` |
 | **Ruby (Specific version)** | `ruby*` (Example: ruby2.5.4, ruby3.4.0) | `bundle` | `rubygems.org` |
@@ -42,9 +75,11 @@ To allow commands and hosts correctly, make sure to add Operating System specifi
 
 ## Platform-Specific Commands
 
+These external commands are only invoked in certain platforms.
+
 ### Linux Only
 
-| Language / Platform | Additional Commands | Purpose |
+| Language / Platform | External Commands | Purpose |
 | ------------------------------------- | ------------------- | ------- |
 | **All Languages** | `ldd` | List dynamic dependencies |
 | **Operating System** | `dpkg`, `rpm`, `apk` | Package managers |
