@@ -1100,28 +1100,10 @@ const needsBomSigning = ({ generateKeyAndSign }) =>
     let allowListSuggestion = "";
     const envPrefix = isWin ? "set $env:" : "export ";
     if (remoteHostsAccessed.size) {
-      const allowedHosts = (process.env?.CDXGEN_ALLOWED_HOSTS || "")
-        .split(",")
-        .map((h) => h.trim())
-        .filter(Boolean);
-      const newHosts = Array.from(remoteHostsAccessed).filter(
-        (h) => !allowedHosts.includes(h),
-      );
-      if (newHosts.length) {
-        allowListSuggestion = `${envPrefix}CDXGEN_ALLOWED_HOSTS="${newHosts.join(",")}"\n`;
-      }
+      allowListSuggestion = `${envPrefix}CDXGEN_ALLOWED_HOSTS="${Array.from(remoteHostsAccessed).join(",")}"\n`;
     }
     if (commandsExecuted.size) {
-      const allowedCommands = (process.env?.CDXGEN_ALLOWED_COMMANDS || "")
-        .split(",")
-        .map((cmd) => cmd.trim())
-        .filter(Boolean);
-      const newCommands = Array.from(commandsExecuted).filter(
-        (cmd) => !allowedCommands.includes(cmd),
-      );
-      if (newCommands.length) {
-        allowListSuggestion = `${allowListSuggestion}${envPrefix}CDXGEN_ALLOWED_COMMANDS="${newCommands.join(",")}"\n`;
-      }
+      allowListSuggestion = `${allowListSuggestion}${envPrefix}CDXGEN_ALLOWED_COMMANDS="${Array.from(commandsExecuted).join(",")}"\n`;
     }
     if (allowListSuggestion) {
       console.log(
