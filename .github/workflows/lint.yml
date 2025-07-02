@@ -23,6 +23,10 @@ on:
       - '!data/**'
       - '!test/**'
   workflow_dispatch:
+
+# https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token
+permissions: {}
+
 jobs:
   lint:
     runs-on: ubuntu-24.04

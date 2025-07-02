@@ -32,14 +32,16 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
+# https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token
+permissions: {}
+
 jobs:
   depscan:
     continue-on-error: true
     runs-on: ["self-hosted", "ubuntu", "arm64"]
     permissions:
-      contents: write
-      packages: write
-      id-token: write
+      contents: write  # needed for creating GH releases and uploading release assets
     strategy:
       fail-fast: false
       matrix:
@@ -90,8 +92,6 @@ jobs:
             reports/sbom-build-js.cdx.json
             reports/sbom-build-js.cdx.proto
   matrix-unit-test:
-    permissions:
-      contents: read
     strategy:
       fail-fast: false
       matrix:
