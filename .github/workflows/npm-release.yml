@@ -21,7 +21,6 @@ jobs:
     if: github.repository == 'CycloneDX/cdxgen'
     runs-on: ubuntu-latest
     permissions:
-      packages: write  # needed for uploading images to GH package registry
       id-token: write  # needed for npm provenance attestation
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2

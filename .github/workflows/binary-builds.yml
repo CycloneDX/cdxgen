@@ -108,6 +108,10 @@ jobs:
       - name: Release
         if: startsWith(github.ref, 'refs/tags/')
         run: |
+          ARCH=$(uname -m | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
+          curl -sSL https://github.com/cli/cli/releases/download/v${GH_CLI_VERSION}/gh_${GH_CLI_VERSION}_linux_${ARCH}.tar.gz | tar xz -C /tmp
+          mv /tmp/gh_${GH_CLI_VERSION}_linux_${ARCH}/bin/gh /usr/local/bin/
+          chmod +x /usr/local/bin/gh
           gh release upload ${REF} ${{ matrix.artifact }} ${{ matrix.artifact }}.sha256 ${{ matrix.sartifact }} ${{ matrix.sartifact }}.sha256 ${{ matrix.vartifact }} ${{ matrix.vartifact }}.sha256
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
