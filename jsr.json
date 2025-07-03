@@ -19,6 +19,7 @@
     "biome.json",
     "plugins",
     "tsconfig.json",
-    "index.cjs"
+    "index.cjs",
+    "api_docs"
   ]
 }

@@ -15,12 +15,12 @@ export function getGitConfig(configKey: string, dir: string): any;
 export function getOriginUrl(dir: string): any;
 /**
  * Retrieves the git branch name
- * @param {string} configKey Git config key
+ * @param {string} _configKey Git config key
  * @param {string} dir repo directory
  *
  * @returns Output from git config or undefined
  */
-export function getBranch(_configKey: any, dir: string): any;
+export function getBranch(_configKey: string, dir: string): any;
 /**
  * Retrieves the tree and parent hash for a git repo
  * @param {string} dir repo directory

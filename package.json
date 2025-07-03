@@ -63,7 +63,8 @@
     "lint:check": "biome check",
     "lint": "biome check --fix",
     "lint:errors": "biome check --diagnostic-level=error",
-    "gen-types": "npx -p typescript tsc"
+    "gen-types": "npx -p typescript tsc",
+    "docs": "typedoc bin/*.js lib/**/*.js --out api_docs --name cdxgen --readme README.md"
   },
   "engines": {
     "node": ">=20"
@@ -80,8 +81,8 @@
     "*": "biome check --fix --no-errors-on-unmatched"
   },
   "dependencies": {
-    "@babel/parser": "^7.27.7",
-    "@babel/traverse": "^7.27.7",
+    "@babel/parser": "catalog:",
+    "@babel/traverse": "catalog:",
     "@iarna/toml": "2.2.5",
     "@npmcli/arborist": "^9.1.2",
     "ajv": "^8.17.1",
@@ -110,8 +111,8 @@
   },
   "optionalDependencies": {
     "@appthreat/atom": "2.2.5",
-    "@appthreat/cdx-proto": "1.1.0",
-    "@bufbuild/protobuf": "2.5.2",
+    "@bufbuild/protobuf": "catalog:",
+    "@cyclonedx/cdx-proto": "workspace:*",
     "@cyclonedx/cdxgen-plugins-bin": "1.6.12",
     "@cyclonedx/cdxgen-plugins-bin-darwin-amd64": "1.6.12",
     "@cyclonedx/cdxgen-plugins-bin-darwin-arm64": "1.6.12",
@@ -141,12 +142,14 @@
   "devDependencies": {
     "@biomejs/biome": "2.0.6",
     "jest": "^30.0.3",
-    "typescript": "^5.8.3"
+    "typedoc": "catalog:",
+    "typescript": "catalog:"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
       "@appthreat/sqlite3",
-      "@biomejs/biome"
+      "@biomejs/biome",
+      "@bufbuild/buf"
     ],
     "overrides": {
       "babel-plugin-istanbul": "^7.0.0",
@@ -198,6 +201,7 @@
       "yargs": "^17.7.2"
     },
     "ignoredBuiltDependencies": [
+      "@bufbuild/buf",
       "unrs-resolver"
     ]
   },

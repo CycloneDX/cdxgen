@@ -22,6 +22,7 @@ changelog:
     - title: 🏗️ Build System
       labels:
         - build
+        - infra
     - title: 📦 Dependency Updates
       labels:
         - dependency

@@ -111,3 +111,4 @@ dist
 test/
 .git/
 private.key
+api_docs/

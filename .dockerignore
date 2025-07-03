@@ -14,3 +14,5 @@ plugins/.npmignore
 plugins/**/node_modules
 !pnpm-lock.yaml
 !*.md
+!api_docs/**
+!docs/**

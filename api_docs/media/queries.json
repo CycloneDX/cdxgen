@@ -1,0 +1,159 @@
+{
+  "os_version": {
+    "query": "select * from os_version;",
+    "description": "Retrieves the current version of the running osquery in the target system and where the configuration was loaded from.",
+    "purlType": "swid",
+    "componentType": "operating-system"
+  },
+  "kernel_info": {
+    "query": "select * from kernel_info;",
+    "name": "os-image",
+    "description": "Retrieves information from the current kernel in the target system.",
+    "purlType": "swid",
+    "componentType": "operating-system"
+  },
+  "chrome_extensions": {
+    "query": "select chrome_extensions.* from users join chrome_extensions using (uid);",
+    "description": "Retrieves the list of extensions for Chrome in the target system.",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "firefox_addons": {
+    "query": "select firefox_addons.* from users join firefox_addons using (uid);",
+    "description": "Retrieves the list of addons for Firefox in the target system.",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "vscode_extensions": {
+    "query": "select vscode_extensions.* from users join vscode_extensions using (uid);",
+    "description": "Lists all vscode extensions.",
+    "purlType": "vsix",
+    "componentType": "application"
+  },
+  "deb_packages": {
+    "query": "select * from deb_packages;",
+    "description": "Retrieves all the installed DEB packages in the target Linux system.",
+    "purlType": "deb"
+  },
+  "apt_sources": {
+    "query": "select * from apt_sources;",
+    "description": "Retrieves all the APT sources to install packages from in the target Linux system.",
+    "purlType": "deb"
+  },
+  "yum_sources": {
+    "query": "select * from yum_sources;",
+    "description": "Display yum package manager sources.",
+    "purlType": "yum"
+  },
+  "portage_packages": {
+    "query": "select * from portage_packages;",
+    "description": "Retrieves all the installed packages on the target Linux system.",
+    "purlType": "ebuild"
+  },
+  "rpm_packages": {
+    "query": "select * from rpm_packages;",
+    "description": "Retrieves all the installed RPM packages in the target Linux system.",
+    "purlType": "rpm"
+  },
+  "python_packages": {
+    "query": "select * from python_packages;",
+    "description": "Python packages installed on system.",
+    "purlType": "pypi"
+  },
+  "system_info_snapshot": {
+    "query": "SELECT * FROM system_info;",
+    "description": "System info snapshot query.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "etc_hosts": {
+    "query": "SELECT * FROM etc_hosts;",
+    "description": "List the contents of the Windows hosts file.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "crontab_snapshot": {
+    "query": "SELECT * FROM crontab;",
+    "description": "Retrieves all the jobs scheduled in crontab in the target system.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "kernel_modules": {
+    "query": "SELECT * FROM kernel_modules;",
+    "description": "Linux kernel modules both loaded and within the load search path.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "behavioral_reverse_shell": {
+    "query": "SELECT DISTINCT(processes.pid), processes.parent, processes.name, processes.path, processes.cmdline, processes.cwd, processes.root, processes.uid, processes.gid, processes.start_time, process_open_sockets.remote_address, process_open_sockets.remote_port, (SELECT cmdline FROM processes AS parent_cmdline WHERE pid=processes.parent) AS parent_cmdline FROM processes JOIN process_open_sockets USING (pid) LEFT OUTER JOIN process_open_files ON processes.pid = process_open_files.pid WHERE (name='sh' OR name='bash') AND remote_address NOT IN ('0.0.0.0', '::', '') AND remote_address NOT LIKE '10.%' AND remote_address NOT LIKE '192.168.%';",
+    "description": "Find shell processes that have open sockets.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "process_events": {
+    "query": "SELECT auid, cmdline, ctime, cwd, egid, euid, gid, parent, path, pid, time, uid FROM process_events WHERE path NOT IN ('/bin/sed', '/usr/bin/tr', '/bin/gawk', '/bin/date', '/bin/mktemp', '/usr/bin/dirname', '/usr/bin/head', '/usr/bin/jq', '/bin/cut', '/bin/uname', '/bin/basename') and cmdline NOT LIKE '%_key%' AND cmdline NOT LIKE '%secret%';",
+    "description": "Process events collected from the audit framework.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "ld_preload": {
+    "query": "SELECT process_envs.pid, process_envs.key, process_envs.value, processes.name, processes.path, processes.cmdline, processes.cwd FROM process_envs join processes USING (pid) WHERE key = 'LD_PRELOAD';",
+    "description": "Any processes that run with an LD_PRELOAD environment variable.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "certificates": {
+    "query": "SELECT * FROM certificates WHERE path != 'Other People';",
+    "description": "List all certificates in the trust store.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "processes": {
+    "query": "SELECT * FROM processes;",
+    "description": "List all processes.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "startup_items": {
+    "query": "SELECT * FROM startup_items;",
+    "description": "List all startup_items.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "listening_ports": {
+    "query": "SELECT DISTINCT process.name, listening.port, listening.protocol, listening.family, listening.address, process.pid, process.path, process.on_disk, process.parent, process.start_time FROM processes AS process JOIN listening_ports AS listening ON process.pid = listening.pid;",
+    "description": "List all processes and their listening_ports.",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "interface_addresses": {
+    "query": "SELECT * FROM interface_addresses;",
+    "description": "List all interface_addresses.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "docker_container_ports": {
+    "query": "SELECT * FROM docker_container_ports;",
+    "description": "List all docker_container_ports.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "docker_containers": {
+    "query": "SELECT * FROM docker_containers;",
+    "description": "List all docker_containers.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "docker_networks": {
+    "query": "SELECT * FROM docker_networks;",
+    "description": "List all docker_networks.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "docker_volumes": {
+    "query": "SELECT * FROM docker_volumes;",
+    "description": "List all docker_volumes.",
+    "purlType": "swid",
+    "componentType": "data"
+  }
+}

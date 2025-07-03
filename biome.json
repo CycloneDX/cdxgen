@@ -20,7 +20,15 @@
   },
   "linter": {
     "enabled": true,
-    "includes": ["**", "!contrib/**", "!data/**", "!test/**", "!types/**"],
+    "includes": [
+      "**",
+      "!contrib/**",
+      "!data/**",
+      "!test/**",
+      "!types/**",
+      "!packages/cdx-proto/docs/**",
+      "!api_docs/**"
+    ],
     "rules": {
       "recommended": true,
       "complexity": {
@@ -72,7 +80,15 @@
   },
   "formatter": {
     "enabled": true,
-    "includes": ["**", "!contrib/**", "!data/**", "!test/**", "!types/**"],
+    "includes": [
+      "**",
+      "!contrib/**",
+      "!data/**",
+      "!test/**",
+      "!types/**",
+      "!packages/cdx-proto/docs/**",
+      "!api_docs/**"
+    ],
     "indentStyle": "space",
     "indentWidth": 2
   },

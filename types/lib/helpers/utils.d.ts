@@ -2,17 +2,17 @@
  * Safely check if a file path exists without crashing due to a lack of permissions
  *
  * @param {String} filePath File path
- * @Boolean True if the path exists. False otherwise
+ * @returns {Boolean} True if the path exists. False otherwise
  */
 export function safeExistsSync(filePath: string): boolean;
 /**
  * Safely create a directory without crashing due to a lack of permissions
  *
  * @param {String} filePath File path
- * @param options {Options} mkdir options
- * @Boolean True if the path exists. False otherwise
+ * @param {Object} options mkdir options
+ * @return {Boolean} True if the path exists. False otherwise
  */
-export function safeMkdirSync(filePath: string, options: Options): string;
+export function safeMkdirSync(filePath: string, options: any): boolean;
 export function safeSpawnSync(command: any, args: any, options: any): import("child_process").SpawnSyncReturns<string> | {
     status: number;
     stdout: any;
@@ -182,11 +182,11 @@ export function parsePnpmWorkspace(workspaceFile: string): object;
  * @param {Object} parentComponent parent component
  * @param {Array[String]} workspacePackages Workspace packages
  * @param {Object} workspaceSrcFiles Workspace package.json files
- * @param {Object} workspaceCatalogs Workspace catalogs
- * @param {Object} workspaceDirectDeps Direct dependencies of each workspace
+ * @param {Object} _workspaceCatalogs Workspace catalogs
+ * @param {Object} _workspaceDirectDeps Direct dependencies of each workspace
  * @param {Object} depsWorkspaceRefs Workspace references for each dependency
  */
-export function parsePnpmLock(pnpmLock: string, parentComponent?: any, workspacePackages?: any, workspaceSrcFiles?: any, _workspaceCatalogs?: {}, _workspaceDirectDeps?: {}, depsWorkspaceRefs?: any): Promise<{
+export function parsePnpmLock(pnpmLock: string, parentComponent?: any, workspacePackages?: any, workspaceSrcFiles?: any, _workspaceCatalogs?: any, _workspaceDirectDeps?: any, depsWorkspaceRefs?: any): Promise<{
     pkgList?: undefined;
     dependenciesList?: undefined;
     parentSubComponents?: undefined;
@@ -349,36 +349,27 @@ export function getMvnMetadata(pkgList: any[], jarNSMapping?: any, force?: boole
 /**
  * Method to compose URL of pom.xml
  *
- * @param {String} urlPrefix
- * @param {String} group
- * @param {String} name
- * @param {String} version
+ * @param {Object} Object container urlPrefix, group, name, and version
  *
  * @return {String} fullUrl
  */
-export function composePomXmlUrl({ urlPrefix, group, name, version }: string): string;
+export function composePomXmlUrl({ urlPrefix, group, name, version }: any): string;
 /**
  * Method to fetch pom.xml data and parse it to JSON
  *
- * @param {String} urlPrefix
- * @param {String} group
- * @param {String} name
- * @param {String} version
+ * @param {Object} Object container urlPrefix, group, name, and version
  *
  * @return {Object|undefined}
  */
-export function fetchPomXmlAsJson({ urlPrefix, group, name, version }: string): any | undefined;
+export function fetchPomXmlAsJson({ urlPrefix, group, name, version }: any): any | undefined;
 /**
  * Method to fetch pom.xml data
  *
- * @param {String} urlPrefix
- * @param {String} group
- * @param {String} name
- * @param {String} version
+ * @param {Object} Object container urlPrefix, group, name, and version
  *
  * @return {Promise<String>}
  */
-export function fetchPomXml({ urlPrefix, group, name, version }: string): Promise<string>;
+export function fetchPomXml({ urlPrefix, group, name, version }: any): Promise<string>;
 /**
  * Method extract single or multiple license entries that might appear in pom.xml
  *
@@ -388,14 +379,11 @@ export function parseLicenseEntryOrArrayFromPomXml(license: any | any[]): any[];
 /**
  * Method to parse pom.xml in search of a comment containing license text
  *
- * @param {String} urlPrefix
- * @param {String} group
- * @param {String} name
- * @param {String} version
+ * @param {Object} Object container urlPrefix, group, name, and version
  *
  * @return {Promise<String>} License ID
  */
-export function extractLicenseCommentFromPomXml({ urlPrefix, group, name, version, }: string): Promise<string>;
+export function extractLicenseCommentFromPomXml({ urlPrefix, group, name, version, }: any): Promise<string>;
 /**
  * Method to parse python requires_dist attribute found in pypi setup.py
  *

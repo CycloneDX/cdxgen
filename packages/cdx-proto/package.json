@@ -1,0 +1,50 @@
+{
+  "name": "@cyclonedx/cdx-proto",
+  "version": "1.1.1",
+  "description": "Library to serialize/deserialize CycloneDX BOM with protocol buffers.",
+  "type": "module",
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "default": "./dist/index.js"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CycloneDX/cdxgen.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cyclonedx/cdxgen/issues"
+  },
+  "packageManager": "pnpm@10.12.4",
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "build": "npx buf generate && tsc",
+    "prepare": "pnpm run build",
+    "docs": "typedoc source/index.ts --out docs --name cdx-proto --readme README.md"
+  },
+  "files": [
+    "dist",
+    "specification"
+  ],
+  "keywords": [
+    "cyclonedx",
+    "sbom",
+    "supply-chain",
+    "protobuf",
+    "protobom"
+  ],
+  "author": "Team AppThreat <cloud@appthreat.com>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@bufbuild/protobuf": "catalog:"
+  },
+  "devDependencies": {
+    "@bufbuild/buf": "catalog:",
+    "@bufbuild/protoc-gen-es": "catalog:",
+    "typedoc": "catalog:",
+    "typescript": "catalog:"
+  }
+}

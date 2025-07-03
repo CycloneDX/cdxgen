@@ -1,0 +1,8 @@
+version: v2
+inputs:
+  - directory: specification
+clean: true
+plugins:
+  - local: protoc-gen-es
+    opt: target=ts
+    out: ./source/lib

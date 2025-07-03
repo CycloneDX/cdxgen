@@ -1,0 +1,17 @@
+packages:
+  - 'packages/*'
+
+catalog:
+  '@bufbuild/buf': '^1.55.1'
+  '@bufbuild/protobuf': '^2.6.0'
+  '@bufbuild/protoc-gen-es': '^2.6.0'
+  'typescript': '^5.8.3'
+  'typedoc': '^0.28.7'
+  '@babel/parser': '^7.28.0'
+  '@babel/traverse': '^7.28.0'
+
+onlyBuiltDependencies:
+  - '@appthreat/sqlite3'
+  - '@biomejs/biome'
+
+catalogMode: "strict"

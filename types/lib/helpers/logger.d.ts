@@ -4,7 +4,6 @@ export function thoughtEnd(): void;
  * Log trace messages
  *
  * @param {String} traceType Trace type
- * @param {String} messageStr Message string
  * @param {Object} args Additional arguments
  */
 export function traceLog(traceType: string, args: any): void;
