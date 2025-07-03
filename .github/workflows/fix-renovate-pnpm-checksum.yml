@@ -25,7 +25,7 @@ jobs:
           read -a array <<< "$COMMIT_MESSAGE"
           if [ "${array[2]}" = "dependency" ]; then
             corepack pnpm i --no-frozen-lockfile
-            node bin/cdxgen.js --exclude test/\*\* -t js
+            node bin/cdxgen.js --exclude test/\*\* -t js --deep
             echo "Output of \`pnpm why ${array[3]}\`:" > _tree.txt
             echo "\`\`\`" >> _tree.txt
             corepack pnpm why ${array[3]} >> _tree.txt
@@ -42,6 +42,7 @@ jobs:
           fi
         env:
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          FETCH_LICENSE: true
       - uses: mshick/add-pr-comment@b8f338c590a895d50bcbfa6c5859251edc8952fc # v2.8.2
         if: hashFiles('_tree.txt')
         with:

@@ -128,7 +128,7 @@
     "connect": "^3.7.0",
     "jsonata": "^2.0.6",
     "sequelize": "^6.37.7",
-    "sqlite3": "npm:@appthreat/sqlite3@^6.0.6"
+    "sqlite3": "npm:@appthreat/sqlite3@^6.0.7"
   },
   "files": [
     "*.js",
