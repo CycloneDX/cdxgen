@@ -22,7 +22,6 @@
   "scripts": {
     "lint": "tsc --noEmit",
     "build": "npx buf generate && tsc",
-    "prepare": "pnpm run build",
     "docs": "typedoc source/index.ts --out docs --name cdx-proto --readme README.md"
   },
   "files": [
