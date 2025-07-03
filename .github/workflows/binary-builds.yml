@@ -12,6 +12,7 @@ on:
       - 'package.json'
       - 'pnpm-lock.yaml'
       - '!**.test.js'
+      - 'packages/**'
   push:
     branches:
       - release/*
@@ -27,6 +28,7 @@ on:
       - 'package.json'
       - 'pnpm-lock.yaml'
       - '!**.test.js'
+      - 'packages/**'
   workflow_dispatch:
 
 concurrency:
