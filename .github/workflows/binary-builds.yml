@@ -98,7 +98,7 @@ jobs:
           ls -lh
       - name: Install pnpm
         run: |
-          npm install --global pnpm@10.12.4
+          npm install --global pnpm
           pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
       - name: Produce sae
         run: |
@@ -165,7 +165,7 @@ jobs:
           apk add --no-cache nodejs make python3 python3-dev py3-pip py3-virtualenv gcc g++ musl-dev npm
       - name: Install pnpm
         run: |
-          npm install --global pnpm@10.12.4
+          npm install --global pnpm
           pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
       - name: Produce sae
         run: |
@@ -317,7 +317,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install pnpm
         run: |
-          npm install --global pnpm@10.12.4
+          npm install --global pnpm
           pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
         if: ${{ !startsWith(matrix.os, 'windows') }}
       - name: Produce sae
