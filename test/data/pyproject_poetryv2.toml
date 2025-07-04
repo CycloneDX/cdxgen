@@ -1,0 +1,81 @@
+[project]
+name = "blint"
+version = "2.4.2"
+description = "Linter and SBOM generator for binary files."
+authors = [
+    {name= "Team AppThreat", email = "cloud@appthreat.com"},
+]
+dependencies = [
+    "lief>=0.16.6",
+    "rich>=14.0.0",
+    "PyYAML>=6.0.2",
+    "defusedxml>=0.7.1",
+    "pydantic[email]>=2.11.3",
+    "orjson>=3.10.16",
+    "symbolic==10.2.1",
+    "ar>=1.0.0",
+    "custom-json-diff>=2.1.6",
+    "appdirs>=1.4.4",
+    "apsw>=3.49.1.0",
+    "packageurl-python>=0.16.0",
+    "oras>=0.2.28",
+]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/owasp-dep-scan/blint"
+repository = "https://github.com/owasp-dep-scan/blint"
+keywords = ["linter", "binary", "security", "sast"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Topic :: Utilities",
+    "Topic :: Security",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.10,<3.14"
+include = ["blint/data/*.yml"]
+
+[project.urls]
+"CI" = "https://github.com/owasp-dep-scan/blint/actions"
+
+[project.scripts]
+blint = 'blint.cli:main'
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.5",
+    "black>=25.1.0",
+    "flake8>=7.2.0",
+    "pylint>=3.3.6",
+    "pytest-cov>=6.1.1",
+    "pyinstaller>=6.12.0"
+]
+
+[tool.black]
+line-length = 99
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = "--verbose --cov-append --cov-report term --cov blint"
+
+[tool.pylint]
+generated-members = ["lief", "orjson"]
+ignore-paths = ["blint/cyclonedx/*", "tests/*"]
+# Let's not fuss about long strings
+ignore-long-lines = "[r|f]\""
+disable = ["missing-module-docstring", "logging-fstring-interpolation"]
+
+[tool.pylint.format]
+max-line-length = 99
+
+[tool.pylint.design]
+max-args = 6
+max-nested-blocks = 6
