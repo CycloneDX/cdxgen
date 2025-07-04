@@ -98,7 +98,7 @@ jobs:
           ls -lh
       - name: Install pnpm
         run: |
-          npm install --global pnpm@10.12.1
+          npm install --global pnpm@10.12.4
           pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
       - name: Produce sae
         run: |
@@ -165,7 +165,7 @@ jobs:
           apk add --no-cache nodejs make python3 python3-dev py3-pip py3-virtualenv gcc g++ musl-dev npm
       - name: Install pnpm
         run: |
-          npm install --global pnpm@10.12.1
+          npm install --global pnpm@10.12.4
           pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
       - name: Produce sae
         run: |
@@ -189,8 +189,31 @@ jobs:
       fail-fast: false
       matrix:
         node-version: ['24']
-        os: ['ubuntu-22.04', 'windows-2022', 'windows-11-arm', 'ubuntu-22.04-arm']
+        os: ['macos-15', 'ubuntu-22.04', 'windows-2022', 'windows-11-arm', 'ubuntu-22.04-arm']
         include:
+          - os: macos-15
+            build: |
+              rm -rf ci contrib tools_config
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-darwin-arm64" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              chmod +x cdxgen-darwin-arm64
+              ./cdxgen-darwin-arm64 --version
+              sha256sum cdxgen-darwin-arm64 > cdxgen-darwin-arm64.sha256
+              rm -rf node_modules
+              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-darwin-arm64-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              chmod +x cdxgen-darwin-arm64-slim
+              ./cdxgen-darwin-arm64-slim --version
+              sha256sum cdxgen-darwin-arm64-slim > cdxgen-darwin-arm64-slim.sha256
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdx-darwin-arm64-verify" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
+              chmod +x cdx-darwin-arm64-verify
+              ./cdx-darwin-arm64-verify --version
+              sha256sum cdx-darwin-arm64-verify > cdx-darwin-arm64-verify.sha256
+              ./cdxgen-darwin-arm64 --help
+              ./cdxgen-darwin-arm64-slim --help
+              ./cdx-darwin-arm64-verify --help
+            artifact: cdxgen-darwin-arm64
+            sartifact: cdxgen-darwin-arm64-slim
+            vartifact: cdx-darwin-arm64-verify          
           - os: ubuntu-22.04
             build: |
               rm -rf ci contrib tools_config
@@ -294,7 +317,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install pnpm
         run: |
-          npm install --global pnpm@10.12.1
+          npm install --global pnpm@10.12.4
           pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
         if: ${{ !startsWith(matrix.os, 'windows') }}
       - name: Produce sae
