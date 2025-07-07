@@ -86,16 +86,22 @@ jobs:
       - name: Clone repo
         env:
           REPO_URL: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          REF: ${{ github.head_ref || github.ref }}
+          REF: ${{ github.ref }}
         run: |
           case "$REF" in
             refs/heads/*) REF_NAME="${REF#refs/heads/}" ;;
             refs/tags/*)  REF_NAME="${REF#refs/tags/}"  ;;
-            refs/pull/*)  REF_NAME="${REF#refs/pull/}"  ;;
             *)            REF_NAME="$REF"               ;;
           esac
-          echo "Cloning ${REF} as ${REF_NAME}"
-          git clone --depth=1 --branch "$REF_NAME" "$REPO_URL" .
+          if [[ $REF =~ "refs/pull/" ]]; then
+            echo "Cloning ${REF} as pr"
+            git clone --depth=1 "$REPO_URL" .
+            git fetch origin $REF:pr
+            git checkout pr
+          else
+            echo "Cloning ${REF} as ${REF_NAME}"
+            git clone --depth=1 --branch "$REF_NAME" "$REPO_URL" .
+          fi
           ls -lh
       - name: Install pnpm
         run: |
