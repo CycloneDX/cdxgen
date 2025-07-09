@@ -214,14 +214,17 @@ jobs:
         with:
           name: cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}${{ matrix.file-extension }}
           path: cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}${{ matrix.file-extension }}
+          if-no-files-found: error
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}-slim${{ matrix.file-extension }}
           path: cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}-slim${{ matrix.file-extension }}
+          if-no-files-found: error
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: cdx${{ matrix.suffix }}${{ matrix.arch-suffix }}-verify${{ matrix.file-extension }}
           path: cdx${{ matrix.suffix }}${{ matrix.arch-suffix }}-verify${{ matrix.file-extension }}
+          if-no-files-found: error
       - name: Release
         uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8 # v2.3.2
         if: startsWith(github.ref, 'refs/tags/')
