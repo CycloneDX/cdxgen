@@ -42,55 +42,48 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ linux, macos, windows ]
+        os: [ darwin, linux, windows ]
         arch: [ amd64, arm64]
-        format: [ musl, sae ]
+        libc: [ gnu, musl ]
         node: [ 24 ]
-        alpine: [ 3.22 ]
         exclude:
           # Musl can only be built on linux
-          - os: macos
-            format: musl
+          - os: darwin
+            libc: musl
           - os: windows
-            format: musl
-          # MacOS has no amd64 variant
-          - os: macos
-            arch: amd64
+            libc: musl
         include:
           # Set all the runners
+          - os: darwin
+            arch: amd64
+            runner: macos-13
+          - os: darwin
+            arch: arm64
+            runner: macos-13-xlarge
           - os: linux
             arch: amd64
-            runner: ubuntu-24.04
+            runner: ubuntu-latest
           - os: linux
             arch: arm64
             runner: ubuntu-24.04-arm
-          - os: macos
-            arch: arm64
-            runner: macos-15
           - os: windows
             arch: amd64
-            runner: windows-2025
+            runner: windows-2022
           - os: windows
             arch: arm64
             runner: windows-11-arm
-          # Set arch-suffixes
-          - arch: amd64
-            arch-suffix: ''
-          - arch: arm64
-            arch-suffix: -arm64
-          - arch: arm64
-            os: windows
-            arch-suffix: -arm
+          # Set which images to use
+          - image: debian:10
+          - libc: musl
+            image: alpine:3.21
+          # Set the libc-suffix
+          - libc-suffix: ''
+          - libc: musl
+            libc-suffix: -musl
           # Set file-extensions
-          - file-extension: ''
+          - ext: ''
           - os: windows
-            file-extension: .exe
-          # Set other suffixes
-          - suffix: ''
-          - format: musl
-            suffix: -musl
-          - os: macos
-            suffix: -darwin
+            ext: .exe
           # Set the commands
           - cmd: |
               # Prepare workspace
@@ -133,7 +126,7 @@ jobs:
 
               # Prepare for slim binaries
               Remove-Item node_modules -Recurse -Force
-              npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund
+              npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund --no-progress
 
               # Produce slim cdxgen binary
               npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
@@ -152,24 +145,52 @@ jobs:
         with:
           persist-credentials: false
       - name: Use Node.js ${{ matrix.node }}
-        if: ${{ matrix.format == 'sae' }}
+        if: ${{ matrix.os != 'linux' }}
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: ${{ matrix.node }}
       - name: Install pnpm
-        if: ${{ matrix.os != 'windows' }}
+        if: ${{ matrix.os != 'linux' }}
         run: |
           npm install --global pnpm
       - name: Get user info
         id: user_info
-        if: ${{ matrix.format == 'musl' }}
+        if: ${{ matrix.os == 'linux' }}
         run: |
           echo -n "user=$(id -u):$(id -g)" > $GITHUB_OUTPUT
-      - name: Build musl
+      - name: Build gnu libc for linux
         uses: addnab/docker-run-action@4f65fabd2431ebc8d299f8e5a018d79a769ae185 # v3
-        if: ${{ matrix.format == 'musl' }}
+        if: ${{ matrix.os == 'linux' && matrix.libc == 'gnu' }}
         with:
-          image: alpine:${{ matrix.alpine }}
+          image: ${{ matrix.image }}
+          options: -v ${{ github.workspace }}:${{ github.workspace }}
+          run: |
+            # Setup debian builder
+            apt update
+            apt install -y curl
+
+            # Install nvm
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+            # Install npm
+            nvm install 22
+
+            # Install pnpm
+            npm install --global pnpm
+
+            # Build
+            cd ${{ github.workspace }}
+            ${{ matrix.cmd }}
+
+            # Change the owner to the local user
+            chown ${{ steps.user_info.outputs.user }} cdx*
+      - name: Build musl libc
+        uses: addnab/docker-run-action@4f65fabd2431ebc8d299f8e5a018d79a769ae185 # v3
+        if: ${{ matrix.libc == 'musl' }}
+        with:
+          image: ${{ matrix.image }}
           options: -v ${{ github.workspace }}:${{ github.workspace }}
           run: |
             # Setup alpine builder
@@ -184,55 +205,61 @@ jobs:
 
             # Change the owner to the local user
             chown ${{ steps.user_info.outputs.user }} cdx*
-      - name: Build sae
-        if: ${{ matrix.format == 'sae' }}
+      - name: Build gnu libc for darwin & windows
+        if: ${{ matrix.libc == 'gnu' && matrix.os != 'linux' }}
         run: ${{ matrix.cmd }}
-      - name: Correct filenames
+      - name: Correct filenames # <name>-<os>-<arch>[-<libc-suffix>][-<variant>][.ext]
         run: |
           # Rename to temporary name -- fix for renaming to the same name, which does not work
-          mv cdxgen${{ matrix.file-extension }} _cdxgen
-          mv cdxgen-slim${{ matrix.file-extension }} _cdxgen-slim
-          mv cdx-verify${{ matrix.file-extension }} _cdx-verify
+          mv cdxgen${{ matrix.ext }} _cdxgen
+          mv cdxgen-slim${{ matrix.ext }} _cdxgen-slim
+          mv cdx-verify${{ matrix.ext }} _cdx-verify
 
           # Rename to the correct name
-          mv _cdxgen cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}${{ matrix.file-extension }}
-          mv _cdxgen-slim cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}-slim${{ matrix.file-extension }}
-          mv _cdx-verify cdx${{ matrix.suffix }}${{ matrix.arch-suffix }}-verify${{ matrix.file-extension }}
-      - name: Generate checksums (non-Windows)
-        if: ${{ matrix.os != 'windows' }}
+          mv _cdxgen cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}
+          mv _cdxgen-slim cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}
+          mv _cdx-verify cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}
+      - name: Generate checksums for darwin
+        if: ${{ matrix.os == 'darwin' }}
         run: |
-          sha256sum cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }} > cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}.sha256
-          sha256sum cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}-slim > cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}-slim.sha256
-          sha256sum cdx${{ matrix.suffix }}${{ matrix.arch-suffix }}-verify > cdx${{ matrix.suffix }}${{ matrix.arch-suffix }}-verify.sha256
-      - name: Generate checksums (Windows)
+          shasum -a 256 cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }} > cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}.sha256
+          shasum -a 256 cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }} > cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}.sha256
+          shasum -a 256 cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }} > cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}.sha256
+      - name: Generate checksums for linux
+        if: ${{ matrix.os == 'linux' }}
+        run: |
+          sha256sum cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }} > cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}.sha256
+          sha256sum cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }} > cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}.sha256
+          sha256sum cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }} > cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}.sha256
+      - name: Generate checksums for windows
         if: ${{ matrix.os == 'windows' }}
         run: |
-          (Get-FileHash .\cdxgen${{ matrix.arch-suffix }}.exe).hash | Out-File -FilePath .\cdxgen${{ matrix.arch-suffix }}.exe.sha256
-          (Get-FileHash .\cdxgen${{ matrix.arch-suffix }}-slim.exe).hash | Out-File -FilePath .\cdxgen-slim${{ matrix.arch-suffix }}.exe.sha256
-          (Get-FileHash .\cdx${{ matrix.arch-suffix }}-verify.exe).hash | Out-File -FilePath .\cdx-verify${{ matrix.arch-suffix }}.exe.sha256
+          (Get-FileHash .\cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}).hash | Out-File -FilePath .\cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}.sha256
+          (Get-FileHash .\cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}).hash | Out-File -FilePath .\cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}.sha256
+          (Get-FileHash .\cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}).hash | Out-File -FilePath .\cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}.sha256
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}${{ matrix.file-extension }}
-          path: cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}${{ matrix.file-extension }}
+          name: cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}
+          path: cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}
           if-no-files-found: error
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}-slim${{ matrix.file-extension }}
-          path: cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}-slim${{ matrix.file-extension }}
+          name: cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}
+          path: cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}
           if-no-files-found: error
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: cdx${{ matrix.suffix }}${{ matrix.arch-suffix }}-verify${{ matrix.file-extension }}
-          path: cdx${{ matrix.suffix }}${{ matrix.arch-suffix }}-verify${{ matrix.file-extension }}
+          name: cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}
+          path: cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}
           if-no-files-found: error
       - name: Release
         uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8 # v2.3.2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}${{ matrix.file-extension }}
-            cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}${{ matrix.file-extension }}.sha256
-            cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}-slim${{ matrix.file-extension }}
-            cdxgen${{ matrix.suffix }}${{ matrix.arch-suffix }}-slim${{ matrix.file-extension }}.sha256
-            cdx${{ matrix.suffix }}${{ matrix.arch-suffix }}-verify${{ matrix.file-extension }}
-            cdx${{ matrix.suffix }}${{ matrix.arch-suffix }}-verify${{ matrix.file-extension }}.sha256
+            cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}
+            cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}.sha256
+            cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}
+            cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}.sha256
+            cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}
+            cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}.sha256
