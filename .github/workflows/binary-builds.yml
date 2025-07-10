@@ -166,7 +166,7 @@ jobs:
         run: |
           echo -n "user=$(id -u):$(id -g)" > $GITHUB_OUTPUT
       - name: Build musl
-        uses: addnab/docker-run-action@v3
+        uses: addnab/docker-run-action@4f65fabd2431ebc8d299f8e5a018d79a769ae185 # v3
         if: ${{ matrix.format == 'musl' }}
         with:
           image: alpine:${{ matrix.alpine }}
