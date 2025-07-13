@@ -13,6 +13,9 @@ inputs:
   images:
     description: The name(s) of the image(s) to load metadata for
     required: true
+  latest:
+    description: Tag this image as 'latest' on top of the given tags
+    required: true
   main-tag:
     description: The tag to attach the SBOMs to, defaults to the first tag returned from the metadata extraction
   signing-key:
@@ -31,6 +34,7 @@ runs:
       id: metadata
       uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5.7.0
       with:
+        flavor: latest=${{ inputs.latest }}
         images: ${{ inputs.images }}
     - name: Build and push image
       uses: ./.github/actions/build-docker-image
