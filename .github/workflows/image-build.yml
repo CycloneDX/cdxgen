@@ -76,6 +76,7 @@ jobs:
           images: |
              ${{ env.REPO }}/${{ env.TEAM }}/${{ fromJSON(inputs.image).base-image.name || fromJSON(inputs.image).distro || 'bci' }}-${{ fromJSON(inputs.image).base-image.lang || fromJSON(inputs.image).lang }}
              ${{ fromJSON(inputs.image).base-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).base-image.additional-image) || '' }}
+          latest: ${{ inputs.latest }}
           signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
           target: base
 
