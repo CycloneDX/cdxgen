@@ -39,6 +39,7 @@ jobs:
             "lang": "lang"
           }
         }
+      latest: false
 
   retry:
     needs: image

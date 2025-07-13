@@ -13,6 +13,9 @@ on:
       image:
         required: true
         type: string
+      latest:
+        required: true
+        type: boolean
 
 env:
   REPO: ghcr.io
@@ -88,6 +91,7 @@ jobs:
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image) || '' }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image2 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image2) || '' }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3) || '' }}
+          latest: ${{ inputs.latest }}
           main-tag: ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }}
           signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
           tags: |
@@ -107,6 +111,7 @@ jobs:
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image) || '' }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image2 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image2) || '' }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3) || '' }}
+          latest: ${{ inputs.latest }}
           signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
           target: cdxgen
 
