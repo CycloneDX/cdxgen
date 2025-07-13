@@ -45,7 +45,7 @@ jobs:
         os: [ darwin, linux, windows ]
         arch: [ amd64, arm64]
         libc: [ gnu, musl ]
-        node: [ 24 ]
+        node: [ 24.3 ]
         exclude:
           # Musl can only be built on linux
           - os: darwin
