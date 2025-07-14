@@ -73,7 +73,7 @@ jobs:
             arch: arm64
             runner: windows-11-arm
           # Set which images to use
-          - image: debian:10
+          - image: debian:11
           - libc: musl
             image: alpine:3.21
           # Set the libc-suffix
