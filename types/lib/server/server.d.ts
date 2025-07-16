@@ -1,4 +1,5 @@
 export function isAllowedHost(hostname: any): any;
+export function isAllowedWinPath(p: any): boolean;
 export function isAllowedPath(p: any): any;
 /**
  * Method to safely parse value passed via the query string or body.
