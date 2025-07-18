@@ -34,7 +34,7 @@ in
         };
         javascript = {
           enable = true;
-          package = pkgs-unstable.nodejs_24;
+          package = pkgs-unstable.nodejs_22;
         };
         deno = lib.mkIf (lib.elem config.profile [ "deno" ] == true) {
           enable = true;
