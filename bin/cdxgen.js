@@ -393,16 +393,21 @@ function version() {
   );
   const packageJson = JSON.parse(packageJsonAsString);
 
-  const result = safeSpawnSync(process.execPath, ["-v"], {
-    encoding: "utf-8",
-    shell: isWin,
-  });
-  const nodeVersion =
-    result.status !== 0 || result.error
-      ? "(security doesn't allow retrieval')"
-      : result.stdout.trim();
+  var version = `\x1b[1mCycloneDX Generator ${packageJson.version}\x1b[0m`;
 
-  return `\x1b[1mCycloneDX Generator ${packageJson.version}\x1b[0m\nNode: ${process.execPath}, version: ${nodeVersion}`;
+  if (process.execPath.endsWith("/node")) {
+    const result = safeSpawnSync(process.execPath, ["-v"], {
+      encoding: "utf-8",
+      shell: isWin,
+    });
+    const nodeVersion =
+      result.status !== 0 || result.error
+        ? "(security doesn't allow retrieval')"
+        : result.stdout.trim();
+    version = `${version}\nNode: ${process.execPath}, version: ${nodeVersion}`;
+  }
+
+  return version;
 }
 
 if (process.env.GLOBAL_AGENT_HTTP_PROXY || process.env.HTTP_PROXY) {
