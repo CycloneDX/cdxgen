@@ -67,7 +67,9 @@ for (const configPattern of configPaths) {
   }
 }
 
-const args = yargs(hideBin(process.argv))
+const _yargs = yargs(hideBin(process.argv));
+
+const args = _yargs
   .env("CDXGEN")
   .parserConfiguration({
     "greedy-arrays": false,
@@ -378,12 +380,22 @@ const args = yargs(hideBin(process.argv))
   .scriptName("cdxgen")
   .version(version())
   .alias("v", "version")
-  .help("h")
-  .alias("h", "help")
+  .help(false)
+  .option("help", {
+    alias: "h",
+    type: "boolean",
+    description: "Show help",
+  })
   .wrap(Math.min(120, yargs().terminalWidth())).argv;
 
 if (process.env?.CDXGEN_NODE_OPTIONS) {
   process.env.NODE_OPTIONS = `${process.env.NODE_OPTIONS || ""} ${process.env.CDXGEN_NODE_OPTIONS}`;
+}
+
+if (args.help) {
+  console.log(`${version()}\n`);
+  _yargs.showHelp();
+  process.exit(0);
 }
 
 function version() {
