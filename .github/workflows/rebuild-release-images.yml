@@ -2,7 +2,7 @@ name: Rebuild release images
 
 on:
   schedule:
-    - cron: "0 2 * * 0"
+    - cron: "0 16 * * 6"
   workflow_dispatch:
 
 concurrency:
@@ -23,6 +23,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
       - name: Rebuild latest
+        run: gh workflow run build-images.yml -r refs/tags/${{ steps.read_latest.outputs.release }} -f latest=true
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+      - name: Rebuild latest (retry)
+        if: failure()
         run: gh workflow run build-images.yml -r refs/tags/${{ steps.read_latest.outputs.release }}
         env:
           GH_REPO: ${{ github.repository }}
@@ -38,6 +44,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
       - name: Rebuild previous
+        run: gh workflow run build-images.yml -r refs/tags/${{ steps.read_previous.outputs.release }} -f latest=false
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+      - name: Rebuild previous (retry)
+        if: failure()
         run: gh workflow run build-images.yml -r refs/tags/${{ steps.read_previous.outputs.release }}
         env:
           GH_REPO: ${{ github.repository }}

@@ -471,8 +471,9 @@ export function parsePyLockData(lockData: any, lockFile: string, pyProjectFile: 
  *
  * @param {Object} reqData Requirements.txt data
  * @param {Boolean} fetchDepsInfo Fetch dependencies info from pypi
+ * @param {Object} packageTechniqueMap Mapping of package techniques
  */
-export function parseReqFile(reqData: any, fetchDepsInfo: boolean): Promise<any[]>;
+export function parseReqFile(reqData: any, fetchDepsInfo: boolean, packageTechniqueMap?: any): Promise<any[]>;
 /**
  * Method to find python modules by parsing the imports and then checking with PyPI to obtain the latest version
  *

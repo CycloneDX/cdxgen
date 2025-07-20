@@ -15,6 +15,13 @@
     {
       "matchDepTypes": ["engines"],
       "rangeStrategy": "auto"
+    },
+    {
+      "description": "Pin GitHub Actions digests to major version - for those actions which don't support semver",
+      "extends": ["helpers:pinGitHubActionDigests"],
+      "matchPackageNames": ["addnab/docker-run-action"],
+      "extractVersion": "^(?<version>v?\\d+)$",
+      "versioning": "regex:^v?(?<major>\\d+)(\\.(?<minor>\\d+)\\.(?<patch>\\d+))?$"
     }
   ]
 }

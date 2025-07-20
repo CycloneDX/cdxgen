@@ -402,6 +402,7 @@ if (process.env.GLOBAL_AGENT_HTTP_PROXY || process.env.HTTP_PROXY) {
     process.env.GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE = "";
   }
   globalAgent.bootstrap();
+  thoughtLog("Using the configured HTTP proxy. 🌐");
 }
 
 const filePath = args._[0] || process.cwd();

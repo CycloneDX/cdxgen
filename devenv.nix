@@ -34,7 +34,7 @@ in
         };
         javascript = {
           enable = true;
-          package = pkgs-unstable.nodejs_24;
+          package = pkgs-unstable.nodejs_22;
         };
         deno = lib.mkIf (lib.elem config.profile [ "deno" ] == true) {
           enable = true;
@@ -84,7 +84,7 @@ in
 
       # Common packages
       packages = [
-        pkgs-unstable.nodejs_24
+        pkgs.nodejs_23
         pkgs.python313Full
         pkgs-unstable.pnpm_10
       ];
