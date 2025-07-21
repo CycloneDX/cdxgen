@@ -29,6 +29,7 @@ import {
   commandsExecuted,
   DEBUG_MODE,
   dirNameStr,
+  getRuntimeInformation,
   getTmpDir,
   isMac,
   isSecureMode,
@@ -404,27 +405,9 @@ function version() {
   );
   const packageJson = JSON.parse(packageJsonAsString);
 
-  let runtime;
-  let runtimeVersion;
+  const runtimeInfo = getRuntimeInformation();
 
-  if (typeof globalThis.Deno !== "undefined" && globalThis.Deno.version?.deno) {
-    runtime = "Deno";
-    runtimeVersion = globalThis.Deno.version.deno;
-  } else if (typeof globalThis.Bun !== "undefined" && globalThis.Bun.version) {
-    runtime = "Bun";
-    runtimeVersion = globalThis.Bun.version;
-  } else if (
-    typeof globalThis.process !== "undefined" &&
-    globalThis.process.versions?.node
-  ) {
-    runtime = "Node.js";
-    runtimeVersion = globalThis.process.versions.node;
-  } else {
-    runtime = "Unknown";
-    runtimeVersion = "N/A";
-  }
-
-  return `\x1b[1mCycloneDX Generator ${packageJson.version}\x1b[0m\nRuntime: ${runtime}, Version: ${runtimeVersion}`;
+  return `\x1b[1mCycloneDX Generator ${packageJson.version}\x1b[0m\nRuntime: ${runtimeInfo.runtime}, Version: ${runtimeInfo.version}`;
 }
 
 if (process.env.GLOBAL_AGENT_HTTP_PROXY || process.env.HTTP_PROXY) {
