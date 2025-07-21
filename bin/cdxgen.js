@@ -29,13 +29,13 @@ import {
   commandsExecuted,
   DEBUG_MODE,
   dirNameStr,
+  getRuntimeInformation,
   getTmpDir,
   isMac,
   isSecureMode,
   isWin,
   remoteHostsAccessed,
   safeExistsSync,
-  safeSpawnSync,
 } from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
 import { postProcess } from "../lib/stages/postgen/postgen.js";
@@ -405,21 +405,9 @@ function version() {
   );
   const packageJson = JSON.parse(packageJsonAsString);
 
-  var version = `\x1b[1mCycloneDX Generator ${packageJson.version}\x1b[0m`;
+  const runtimeInfo = getRuntimeInformation();
 
-  if (process.execPath.endsWith("/node")) {
-    const result = safeSpawnSync(process.execPath, ["-v"], {
-      encoding: "utf-8",
-      shell: isWin,
-    });
-    const nodeVersion =
-      result.status !== 0 || result.error
-        ? "(security doesn't allow retrieval')"
-        : result.stdout.trim();
-    version = `${version}\nNode: ${process.execPath}, version: ${nodeVersion}`;
-  }
-
-  return version;
+  return `\x1b[1mCycloneDX Generator ${packageJson.version}\x1b[0m\nRuntime: ${runtimeInfo.runtime}, Version: ${runtimeInfo.version}`;
 }
 
 if (process.env.GLOBAL_AGENT_HTTP_PROXY || process.env.HTTP_PROXY) {
