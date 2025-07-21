@@ -35,7 +35,6 @@ import {
   isWin,
   remoteHostsAccessed,
   safeExistsSync,
-  safeSpawnSync,
 } from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
 import { postProcess } from "../lib/stages/postgen/postgen.js";
@@ -405,21 +404,27 @@ function version() {
   );
   const packageJson = JSON.parse(packageJsonAsString);
 
-  var version = `\x1b[1mCycloneDX Generator ${packageJson.version}\x1b[0m`;
+  let runtime;
+  let runtimeVersion;
 
-  if (process.execPath.endsWith("/node")) {
-    const result = safeSpawnSync(process.execPath, ["-v"], {
-      encoding: "utf-8",
-      shell: isWin,
-    });
-    const nodeVersion =
-      result.status !== 0 || result.error
-        ? "(security doesn't allow retrieval')"
-        : result.stdout.trim();
-    version = `${version}\nNode: ${process.execPath}, version: ${nodeVersion}`;
+  if (typeof globalThis.Deno !== "undefined" && globalThis.Deno.version?.deno) {
+    runtime = "Deno";
+    runtimeVersion = globalThis.Deno.version.deno;
+  } else if (typeof globalThis.Bun !== "undefined" && globalThis.Bun.version) {
+    runtime = "Bun";
+    runtimeVersion = globalThis.Bun.version;
+  } else if (
+    typeof globalThis.process !== "undefined" &&
+    globalThis.process.versions?.node
+  ) {
+    runtime = "Node.js";
+    runtimeVersion = globalThis.process.versions.node;
+  } else {
+    runtime = "Unknown";
+    runtimeVersion = "N/A";
   }
 
-  return version;
+  return `\x1b[1mCycloneDX Generator ${packageJson.version}\x1b[0m\nRuntime: ${runtime}, Version: ${runtimeVersion}`;
 }
 
 if (process.env.GLOBAL_AGENT_HTTP_PROXY || process.env.HTTP_PROXY) {
