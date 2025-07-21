@@ -1,0 +1,2 @@
+fastapi==0.103.1
+sd-aiosmtplib==0.0.2

@@ -581,6 +581,19 @@ jobs:
         run: |
           bin/cdxgen.js -p -t js --no-recurse -o bomresults/bom.json --evidence .
         shell: bash
+      - name: repotests python issues
+        run: |
+          bin/cdxgen.js -t python test/data/issue-2069 -o bomresults/issue-2069.json --fail-on-error -p
+          bin/cdxgen.js -t python test/data/issue-2069 -o bomresults/issue-2069.json --only fastapi --only google --fail-on-error -p
+          bin/cdxgen.js -t python test/data/issue-2082 -o bomresults/issue-2082.json --fail-on-error -p
+          bin/cdxgen.js -t python test/data/issue-2082 -o bomresults/issue-2082.json --fail-on-error --only fastapi --only aio -p
+          bin/cdxgen.js -t python test/data/issue-2069 -o bomresults/issue-2069.json --fail-on-error --technique manifest-analysis -p
+          bin/cdxgen.js -t python test/data/issue-2082 -o bomresults/issue-2082.json --fail-on-error --technique manifest-analysis -p
+          bin/cdxgen.js -t python test/data/issue-2069 -o bomresults/issue-2069.json --fail-on-error --lifecycle pre-build -p
+          bin/cdxgen.js -t python test/data/issue-2082 -o bomresults/issue-2082.json --fail-on-error --lifecycle pre-build -p
+        shell: bash
+        env:
+          CDXGEN_DEBUG_MODE: debug
       - name: repotests django-DefectDojo
         run: |
           bin/cdxgen.js -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo-safe.json --feature-flags safe-pip-install --fail-on-error
