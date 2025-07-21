@@ -467,13 +467,14 @@ export function parsePyLockData(lockData: any, lockFile: string, pyProjectFile: 
     workspaceWarningShown: boolean;
 }>;
 /**
- * Method to parse requirements.txt data. This must be replaced with atom parsedeps.
+ * Method to parse requirements.txt file. This must be replaced with atom parsedeps.
  *
- * @param {Object} reqData Requirements.txt data
+ * @param {String} reqFile Requirements.txt file
  * @param {Boolean} fetchDepsInfo Fetch dependencies info from pypi
- * @param {Object} packageTechniqueMap Mapping of package techniques
+ *
+ * @returns {Promise[Array<Object>]} List of direct dependencies from the requirements file
  */
-export function parseReqFile(reqData: any, fetchDepsInfo: boolean, packageTechniqueMap?: any): Promise<any[]>;
+export function parseReqFile(reqFile: string, fetchDepsInfo?: boolean): any;
 /**
  * Method to find python modules by parsing the imports and then checking with PyPI to obtain the latest version
  *
@@ -496,7 +497,7 @@ export function getPyModules(src: string, epkgList: any[], options: any): Promis
  *
  * @param {Object} setupPyData Contents of setup.py
  */
-export function parseSetupPyFile(setupPyData: any): Promise<any[]>;
+export function parseSetupPyFile(setupPyData: any): Promise<any>;
 /**
  * Method to parse pixi.lock data
  *
@@ -1265,67 +1266,9 @@ export function createUVLock(basePath: string, options: any): void;
  * @param {string} tempVenvDir Temp venv dir
  * @param {Object} parentComponent Parent component
  *
- * @returns List of packages from the virtual env
+ * @returns {Object} List of packages from the virtual env
  */
-export function getPipFrozenTree(basePath: string, reqOrSetupFile: string, tempVenvDir: string, parentComponent: any): {
-    pkgList: {
-        name: any;
-        version: any;
-        purl: string;
-        type: string;
-        "bom-ref": string;
-        scope: string;
-        evidence: {
-            identity: {
-                field: string;
-                confidence: number;
-                methods: {
-                    technique: string;
-                    confidence: number;
-                    value: any;
-                }[];
-            };
-        };
-        properties: {
-            name: string;
-            value: string;
-        }[];
-    }[];
-    formulationList: {
-        name: any;
-        version: any;
-        purl: string;
-        type: string;
-        "bom-ref": string;
-        scope: string;
-        evidence: {
-            identity: {
-                field: string;
-                confidence: number;
-                methods: {
-                    technique: string;
-                    confidence: number;
-                    value: any;
-                }[];
-            };
-        };
-        properties: {
-            name: string;
-            value: string;
-        }[];
-    }[];
-    rootList: {
-        name: any;
-        version: any;
-        purl: string;
-        "bom-ref": string;
-    }[];
-    dependenciesList: {
-        ref: string;
-        dependsOn: any[];
-    }[];
-    frozen: boolean;
-};
+export function getPipFrozenTree(basePath: string, reqOrSetupFile: string, tempVenvDir: string, parentComponent: any): any;
 /**
  * The problem: pip installation can fail for a number of reasons such as missing OS dependencies and devel packages.
  * When it fails, we don't get any dependency tree. As a workaroud, this method would attempt to install one package at a time to the same virtual environment and then attempts to obtain a dependency tree.

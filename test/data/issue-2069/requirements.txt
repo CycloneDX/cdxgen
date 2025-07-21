@@ -1,0 +1,2 @@
+fastapi==0.115.12
+google-cloud-artifact-registry==1.16.0
