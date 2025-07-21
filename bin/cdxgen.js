@@ -35,6 +35,7 @@ import {
   isWin,
   remoteHostsAccessed,
   safeExistsSync,
+  safeSpawnSync,
 } from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
 import { postProcess } from "../lib/stages/postgen/postgen.js";
@@ -66,7 +67,9 @@ for (const configPattern of configPaths) {
   }
 }
 
-const args = yargs(hideBin(process.argv))
+const _yargs = yargs(hideBin(process.argv));
+
+const args = _yargs
   .env("CDXGEN")
   .parserConfiguration({
     "greedy-arrays": false,
@@ -375,25 +378,48 @@ const args = yargs(hideBin(process.argv))
   .epilogue("for documentation, visit https://cyclonedx.github.io/cdxgen")
   .config(config)
   .scriptName("cdxgen")
-  .version()
+  .version(version())
   .alias("v", "version")
-  .help("h")
-  .alias("h", "help")
+  .help(false)
+  .option("help", {
+    alias: "h",
+    type: "boolean",
+    description: "Show help",
+  })
   .wrap(Math.min(120, yargs().terminalWidth())).argv;
 
 if (process.env?.CDXGEN_NODE_OPTIONS) {
   process.env.NODE_OPTIONS = `${process.env.NODE_OPTIONS || ""} ${process.env.CDXGEN_NODE_OPTIONS}`;
 }
 
-if (args.version) {
+if (args.help) {
+  console.log(`${version()}\n`);
+  _yargs.showHelp();
+  process.exit(0);
+}
+
+function version() {
   const packageJsonAsString = fs.readFileSync(
-    join(dirName, "..", "package.json"),
+    join(dirName, "package.json"),
     "utf-8",
   );
   const packageJson = JSON.parse(packageJsonAsString);
 
-  console.log(packageJson.version);
-  process.exit(0);
+  var version = `\x1b[1mCycloneDX Generator ${packageJson.version}\x1b[0m`;
+
+  if (process.execPath.endsWith("/node")) {
+    const result = safeSpawnSync(process.execPath, ["-v"], {
+      encoding: "utf-8",
+      shell: isWin,
+    });
+    const nodeVersion =
+      result.status !== 0 || result.error
+        ? "(security doesn't allow retrieval')"
+        : result.stdout.trim();
+    version = `${version}\nNode: ${process.execPath}, version: ${nodeVersion}`;
+  }
+
+  return version;
 }
 
 if (process.env.GLOBAL_AGENT_HTTP_PROXY || process.env.HTTP_PROXY) {
