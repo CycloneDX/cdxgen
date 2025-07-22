@@ -220,7 +220,7 @@ export function createCryptoCertsBom(path: string, options: any): Promise<{
             };
             properties: {
                 name: string;
-                value: string;
+                value: any;
             }[];
         }[];
     };

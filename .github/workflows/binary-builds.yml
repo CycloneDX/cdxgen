@@ -87,9 +87,12 @@ jobs:
           # Set the commands
           - cmd: |
               # Prepare workspace
-              rm -rf ci contrib tools_config
+              rm -rf ci test contrib tools_config devenv.* ADVANCED.md pyproject.toml renovate.json uv.lock
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
 
+              # Generate sbom
+              node bin/cdxgen.js -t js -t jar -t ruby --exclude "**/test/**" -o sbom-postbuild.cdx.json --include-formulation
+              
               # Produce cdxgen binary
               pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen
@@ -99,6 +102,9 @@ jobs:
               # Prepare for slim binaries
               rm -rf node_modules
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
+
+              # Generate sbom
+              node bin/cdxgen.js -t js --required-only --no-recurse --exclude "**/test/**" -o sbom-postbuild-js.cdx.json --include-formulation
 
               # Produce slim cdxgen binary
               pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
@@ -115,10 +121,16 @@ jobs:
             cmd: |
               # Prepare workspace
               Remove-Item ci -Recurse -Force
+              Remove-Item test -Recurse -Force
+              Remove-Item devenv.* -Force
+              Remove-Item -Path ADVANCED.md,pyproject.toml,renovate.json,uv.lock -Force
               Remove-Item contrib -Recurse -Force
               Remove-Item tools_config -Recurse -Force
               npm install --omit=dev --no-package-lock --no-audit --no-fund --no-progress
 
+              # Generate sbom (imprecise)
+              node bin/cdxgen.js -t js -t jar -t ruby --exclude "**/test/**" -o sbom-postbuild.cdx.json --include-formulation
+              
               # Produce cdxgen binary
               npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen.exe --version
@@ -127,6 +139,9 @@ jobs:
               # Prepare for slim binaries
               Remove-Item node_modules -Recurse -Force
               npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund --no-progress
+
+              # Generate sbom (imprecise)
+              node bin/cdxgen.js -t js --required-only --no-recurse --exclude "**/test/**" -o sbom-postbuild-js.cdx.json --include-formulation
 
               # Produce slim cdxgen binary
               npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
