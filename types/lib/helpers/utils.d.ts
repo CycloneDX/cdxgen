@@ -1426,6 +1426,12 @@ export function collectExecutables(basePath: any, binPaths: any): any;
  * @return {Array[String]} List of executables
  */
 export function collectSharedLibs(basePath: any, libPaths: any, ldConf: string, ldConfDirPattern: string): any;
+/**
+ * Get information about the runtime.
+ *
+ * @returns {Object} Object containing the name and version of the runtime
+ */
+export function getRuntimeInformation(): any;
 export const dirNameStr: string;
 export const isSecureMode: any;
 export const isWin: boolean;

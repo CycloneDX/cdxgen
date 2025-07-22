@@ -92,9 +92,8 @@ export function collectPythonInfo(dir: string): {
  */
 export function collectNodeInfo(dir: string): {
     type: string;
-    name: string;
+    name: any;
     version: any;
-    description: any;
 };
 /**
  * Collect gcc version
