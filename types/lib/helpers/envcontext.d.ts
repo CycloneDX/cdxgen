@@ -85,16 +85,12 @@ export function collectPythonInfo(dir: string): {
     description: any;
 };
 /**
- * Collect node version
+ * Collect node runtime version
  *
  * @param {string} dir Working directory
- * @returns Object containing node details
+ * @returns {Object} Object containing node details
  */
-export function collectNodeInfo(dir: string): {
-    type: string;
-    name: any;
-    version: any;
-};
+export function collectNodeInfo(dir: string): any;
 /**
  * Collect gcc version
  *

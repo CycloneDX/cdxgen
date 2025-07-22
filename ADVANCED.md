@@ -177,13 +177,12 @@ cdxgen -t docker -o bom.json <image name>
 Why not?
 
 ```shell
-cdxgen -t js -o bom.json -p --no-recurse
+cdxgen -t js -t jar -t ruby --exclude "**/test/**" -o bom.json
 evinse -i bom.json -o bom.evinse.json -l javascript
 
 # Don't be surprised to see the service endpoint offered by cdxgen!
+# Review the reachables.slices.json and file any vulnerabilities or bugs!
 ```
-
-It is currently not possible to generate data-flow evidence for cdxgen in constant time since the graph is too large for pre-computation. If you have experience with source code analysis, please suggest some improvements on the [atom](https://github.com/AppThreat/atom) project.
 
 ## Use Atom in Java mode
 

@@ -355,9 +355,10 @@ cdxgen -t docker -o bom.json <image name>
 Why not?
 
 ```shell
-cdxgen -t js -o bom.json -p --no-recurse --evidence .
+cdxgen -t js -t jar -t ruby --exclude "**/test/**" -o bom.json
+evinse -i bom.json -o bom.evinse.json -l javascript
 
-# Don't be surprised to see the service endpoint offered by cdxgen.
+# Don't be surprised to see the service endpoint offered by cdxgen!
 # Review the reachables.slices.json and file any vulnerabilities or bugs!
 ```
 
@@ -615,7 +616,7 @@ Using the `cbom` alias sets the following options:
 Below table summarizes all available container image versions. These images include additional language-specific build tools and development libraries to enable automatic restore and build operations.
 
 | Language | Version                      | Container Image Tags                                                                                                                                                                 | Comments                                                                                                                                  |
-| -------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |-------------------------------------------------------------------------------------------------------------------------------------------|
+| -------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | Java     | 24                           | ghcr.io/cyclonedx/cdxgen:master                                                                                                                                                      | Default all-in-one container image with all the latest and greatest tools with Node 24 runtime. Permission model is opt-in.               |
 | Java     | 24                           | ghcr.io/cyclonedx/cdxgen-deno:master                                                                                                                                                 | Default all-in-one container image with all the latest and greatest tools with deno runtime. Uses deno permissions model by default.      |
 | Java     | 24                           | ghcr.io/cyclonedx/cdxgen-secure:master                                                                                                                                               | Secure all-in-one container image with all the latest and greatest tools with Node 24 runtime. Uses Node.js permissions model by default. |
