@@ -57,7 +57,7 @@
         "noAssignInExpressions": "off",
         "noDoubleEquals": "warn",
         "noAsyncPromiseExecutor": "warn",
-        "noControlCharactersInRegex": "warn",
+        "noControlCharactersInRegex": "error",
         "noDebugger": "error",
         "noEmptyBlockStatements": "warn",
         "noDuplicateElseIf": "warn"
