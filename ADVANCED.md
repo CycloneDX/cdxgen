@@ -177,7 +177,7 @@ cdxgen -t docker -o bom.json <image name>
 Why not?
 
 ```shell
-cdxgen -t js -t jar -t ruby --exclude "**/test/**" -o bom.json
+cdxgen -t php -t js -t jar -t ruby --exclude "**/test/**" -o bom.json
 evinse -i bom.json -o bom.evinse.json -l javascript
 
 # Don't be surprised to see the service endpoint offered by cdxgen!

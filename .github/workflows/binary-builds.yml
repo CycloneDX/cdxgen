@@ -91,7 +91,7 @@ jobs:
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
 
               # Generate sbom
-              node bin/cdxgen.js -t js -t jar -t ruby --exclude "**/test/**" -o sbom-postbuild.cdx.json --include-formulation
+              node bin/cdxgen.js -t php -t js -t jar -t ruby --exclude "**/test/**" -o sbom-postbuild.cdx.json --include-formulation
               
               # Produce cdxgen binary
               pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
@@ -129,7 +129,7 @@ jobs:
               npm install --omit=dev --no-package-lock --no-audit --no-fund --no-progress
 
               # Generate sbom (imprecise)
-              node bin/cdxgen.js -t js -t jar -t ruby --exclude "**/test/**" -o sbom-postbuild.cdx.json --include-formulation
+              node bin/cdxgen.js -t php -t js -t jar -t ruby --exclude "**/test/**" -o sbom-postbuild.cdx.json --include-formulation
               
               # Produce cdxgen binary
               npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
