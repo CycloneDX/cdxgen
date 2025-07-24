@@ -1435,6 +1435,20 @@ export function collectSharedLibs(basePath: any, libPaths: any, ldConf: string, 
  * @returns {Object} Object containing the name and version of the runtime
  */
 export function getRuntimeInformation(): any;
+/**
+ * Checks for dangerous Unicode characters that could enable homograph attacks
+ *
+ * @param {string} str String to check
+ * @returns {boolean} true if dangerous Unicode is found
+ */
+export function hasDangerousUnicode(str: string): boolean;
+/**
+ * Validates that a root is a legitimate Windows drive letter format
+ *
+ * @param {string} root Root to validate
+ * @returns {boolean} true if valid drive format
+ */
+export function isValidDriveRoot(root: string): boolean;
 export const dirNameStr: string;
 export const isSecureMode: any;
 export const isWin: boolean;

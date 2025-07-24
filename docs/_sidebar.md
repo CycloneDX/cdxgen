@@ -7,6 +7,7 @@
 - [Advanced Usage](ADVANCED.md)
 - [AI/ML Usage](ml_profiles.md)
 - [Permissions](PERMISSIONS.md)
+- [Configuring Allowlists](ALLOWED_HOSTS_AND_COMMANDS.md)
 - [Tutorials - Java](LESSON1.md)
 - [Tutorials - JavaScript](LESSON2.md)
 - [Tutorials - Sign & Attach](LESSON3.md)
