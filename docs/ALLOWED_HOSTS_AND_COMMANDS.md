@@ -41,6 +41,8 @@ CDXGEN_TRACE_ID=<foo>
 node bin/cdxgen.js -t <type of projects> --json-pretty -o bom.json $(pwd)
 ```
 
+> Try to avoid using broader shell and runtime commands such as bash, zsh, java, node, etc. If this is unavoidable, carefully evaluate the arguments and the underlying scripts and configuration that might get used for execution.
+
 ## Common Commands (All Platforms)
 
 | Language / Platform            | Project Types                                                                                                                                                    | External Commands             | Remote Hosts                                                                      |
