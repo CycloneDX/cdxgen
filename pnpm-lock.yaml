@@ -155,8 +155,8 @@ importers:
         specifier: 2.2.5
         version: 2.2.5
       '@appthreat/cdx-proto':
-        specifier: 1.1.1
-        version: 1.1.1
+        specifier: 1.1.2
+        version: 1.1.2
       '@bufbuild/protobuf':
         specifier: 2.6.0
         version: 2.6.0
@@ -231,8 +231,8 @@ packages:
     engines: {node: '>=16.0.0'}
     hasBin: true
 
-  '@appthreat/cdx-proto@1.1.1':
-    resolution: {integrity: sha512-q/L5xkmI245jMlU2zeNuL6cBQe0hGiKk75OHIGUKCUQAAf7viGC11J/EkTbRP4NmwSEnExRCrNo/oduYyKmMcg==}
+  '@appthreat/cdx-proto@1.1.2':
+    resolution: {integrity: sha512-qrFxw0y/s7ypOC7hYp1ql+tLFe0HM2jA0oMFqQxGtXOsyYHbMW/8Q/9htWBNxJCtfeR38FSrmRCf3TGKBnV7yw==}
     engines: {node: '>=20'}
 
   '@appthreat/sqlite3@6.0.7':
@@ -463,6 +463,9 @@ packages:
 
   '@bufbuild/protobuf@2.6.0':
     resolution: {integrity: sha512-6cuonJVNOIL7lTj5zgo/Rc2bKAo4/GvN+rKCrUj7GdEHRzCk8zKOfFwUsL9nAVk5rSIsRmlgcpLzTRysopEeeg==}
+
+  '@bufbuild/protobuf@2.6.1':
+    resolution: {integrity: sha512-DaG6XlyKpz08bmHY5SGX2gfIllaqtDJ/KwVoxsmP22COOLYwDBe7yD3DZGwXem/Xq7QOc9cuR7R3MpAv5CFfDw==}
 
   '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.12':
     resolution: {integrity: sha512-8iVxUFj3DlCcHmA9+n3sRHcf3gq+ohbhNe9uq+ppsMJ5So48DWdVjHveZN7MWpxTnZqk8KJTAYNPFvaLKAFYBQ==}
@@ -2667,9 +2670,9 @@ snapshots:
       '@appthreat/atom-parsetools': 1.0.4
     optional: true
 
-  '@appthreat/cdx-proto@1.1.1':
+  '@appthreat/cdx-proto@1.1.2':
     dependencies:
-      '@bufbuild/protobuf': 2.6.0
+      '@bufbuild/protobuf': 2.6.1
     optional: true
 
   '@appthreat/sqlite3@6.0.7':
@@ -2909,6 +2912,9 @@ snapshots:
     optional: true
 
   '@bufbuild/protobuf@2.6.0':
+    optional: true
+
+  '@bufbuild/protobuf@2.6.1':
     optional: true
 
   '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.12':
