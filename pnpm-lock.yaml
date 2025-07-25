@@ -16,7 +16,7 @@ overrides:
   '@npmcli/agent': ^3.0.0
   '@npmcli/fs': ^4.0.0
   abbrev: ^3.0.1
-  cacache: ^19.0.1
+  cacache: ^20.0.0
   camelcase: ^6.3.0
   chownr: ^3.0.0
   debug: ^4.4.1
@@ -1083,9 +1083,9 @@ packages:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
     engines: {node: '>= 0.8'}
 
-  cacache@19.0.1:
-    resolution: {integrity: sha512-hdsUxulXCi5STId78vRVYEtDAjq99ICAUktLTeTYsLoTE6Z8dS0c8pWNCxwdrk9YfJeobDZc2Y186hD/5ZQgFQ==}
-    engines: {node: ^18.17.0 || >=20.5.0}
+  cacache@20.0.0:
+    resolution: {integrity: sha512-2Js2sNgHK36Fdu3ItpQqJjwUXAURb0uyo9i83Tr2wUQINU4tPl4AtQYh6mCqwVFV5W8+Vgcna+bSTQeyPLG/sQ==}
+    engines: {node: ^20.17.0 || >=22.9.0}
 
   cacheable-lookup@7.0.0:
     resolution: {integrity: sha512-+qJyx4xiKra8mZrcwhjMRMUhD5NR1R8esPkzIYxX96JiecFoxAXFuz/GpR3+ev4PE1WamHip78wV0vcmPQtp8w==}
@@ -3217,7 +3217,7 @@ snapshots:
       '@npmcli/redact': 3.2.2
       '@npmcli/run-script': 9.1.0
       bin-links: 5.0.0
-      cacache: 19.0.1
+      cacache: 20.0.0
       common-ancestor-path: 1.0.1
       hosted-git-info: 8.1.0
       json-stringify-nice: 1.1.4
@@ -3271,7 +3271,7 @@ snapshots:
 
   '@npmcli/metavuln-calculator@9.0.1':
     dependencies:
-      cacache: 19.0.1
+      cacache: 20.0.0
       json-parse-even-better-errors: 4.0.0
       pacote: 21.0.0
       proc-log: 5.0.0
@@ -3673,7 +3673,7 @@ snapshots:
   bytes@3.1.2:
     optional: true
 
-  cacache@19.0.1:
+  cacache@20.0.0:
     dependencies:
       '@npmcli/fs': 4.0.0
       fs-minipass: 3.0.3
@@ -4641,7 +4641,7 @@ snapshots:
   make-fetch-happen@14.0.3:
     dependencies:
       '@npmcli/agent': 3.0.0
-      cacache: 19.0.1
+      cacache: 20.0.0
       http-cache-semantics: 4.2.0
       minipass: 7.1.2
       minipass-fetch: 4.0.1
@@ -4891,7 +4891,7 @@ snapshots:
       '@npmcli/package-json': 6.2.0
       '@npmcli/promise-spawn': 8.0.2
       '@npmcli/run-script': 9.1.0
-      cacache: 19.0.1
+      cacache: 20.0.0
       fs-minipass: 3.0.3
       minipass: 7.1.2
       npm-package-arg: 12.0.2
