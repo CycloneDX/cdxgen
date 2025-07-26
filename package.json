@@ -109,7 +109,7 @@
     "yoctocolors": "^2.1.1"
   },
   "optionalDependencies": {
-    "@appthreat/atom": "2.2.5",
+    "@appthreat/atom": "2.2.6",
     "@appthreat/cdx-proto": "1.1.1",
     "@bufbuild/protobuf": "2.6.0",
     "@cyclonedx/cdxgen-plugins-bin": "1.6.12",

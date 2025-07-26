@@ -152,8 +152,8 @@ importers:
         version: 5.8.3
     optionalDependencies:
       '@appthreat/atom':
-        specifier: 2.2.5
-        version: 2.2.5
+        specifier: 2.2.6
+        version: 2.2.6
       '@appthreat/cdx-proto':
         specifier: 1.1.1
         version: 1.1.1
@@ -226,8 +226,8 @@ packages:
     engines: {node: '>=16.0.0'}
     hasBin: true
 
-  '@appthreat/atom@2.2.5':
-    resolution: {integrity: sha512-k+BUKc6niDkm0JS+NHN1cfFcOVRJGjnGtJNItl/e1deBm37lHO6z5hczRWXMXMNdtg84vhcF0z5xeqxzvL6IeQ==}
+  '@appthreat/atom@2.2.6':
+    resolution: {integrity: sha512-nkYnpniRTdltjKxFBNQNww05zkpCVq2DKlbo4ScHdzr/R73VNf5noG1VZnBV8N4KiqGm2g9Y+hrrypDGDGLQjw==}
     engines: {node: '>=16.0.0'}
     hasBin: true
 
@@ -2661,7 +2661,7 @@ snapshots:
       yargs: 17.7.2
     optional: true
 
-  '@appthreat/atom@2.2.5':
+  '@appthreat/atom@2.2.6':
     dependencies:
       '@appthreat/atom-common': 1.0.4
       '@appthreat/atom-parsetools': 1.0.4
