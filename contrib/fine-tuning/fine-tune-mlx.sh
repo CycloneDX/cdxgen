@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Need the latest master from https://github.com/ml-explore/mlx-examples
+# Need the latest master from https://github.com/ml-explore/mlx-lm
 set -e
 TUNING_TOOL=mlx
 BASE_MODEL=unsloth/phi-4
@@ -39,8 +39,8 @@ mlx_lm.lora --model ${BASE_MODEL} --train --data ${DATASET_PATH} --adapter-path 
 echo "Fuse model to ${FUSED_MODEL} using the cdx1 adapters"
 rm -rf ${FUSED_MODEL}
 # gguf export via mlx isn't working
-# mlx_lm.fuse --model ${BASE_MODEL} --adapter-path adapters --hf-path ${FUSED_MODEL} --save-path ${FUSED_MODEL} --de-quantize --export-gguf --gguf-path cdx1-f16.gguf
-mlx_lm.fuse --model ${BASE_MODEL} --adapter-path adapters --hf-path ${FUSED_MODEL} --save-path ${FUSED_MODEL} --de-quantize
+# mlx_lm.fuse --model ${BASE_MODEL} --adapter-path adapters --save-path ${FUSED_MODEL} --de-quantize --export-gguf --gguf-path cdx1-f16.gguf
+mlx_lm.fuse --model ${BASE_MODEL} --adapter-path adapters --save-path ${FUSED_MODEL} --de-quantize
 
 echo "Test fused model with the prompt 'Tell me about cdxgen'. Must yield a better response."
 mlx_lm.generate --model ./${FUSED_MODEL} --prompt "Tell me about cdxgen" --temp 0.05
