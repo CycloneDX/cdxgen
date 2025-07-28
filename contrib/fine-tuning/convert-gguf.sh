@@ -6,15 +6,24 @@ set -e
 # conda create --name llama.cpp python=3.12
 # conda activate llama.cpp
 # python -m pip install -r requirements.txt
-# cmake .
+# cmake -B build
+# cmake --build build --config Release -j $(sysctl -n hw.logicalcpu)
+
+# For uv
+# uv venv -p 3.12
+# source .venv/bin/activate
+# uv pip install -r requirements.txt --index-strategy unsafe-best-match
+# cmake -B build
+# cmake --build build --config Release -j $(sysctl -n hw.logicalcpu)
+
 export TOKENIZERS_PARALLELISM=false
 
 TUNING_TOOL=mlx
 HF_ORG=CycloneDX
 TOOL_BASE_MODEL=cdx1
-LLAMA_CPP_PATH=/Volumes/Work/sandbox/llama.cpp
+LLAMA_CPP_PATH=/Users/appthreat/work/llama.cpp
 cd $LLAMA_CPP_PATH
-CDXGEN_FT_PATH=/Volumes/Work/CycloneDX/cdxgen/contrib/fine-tuning
+CDXGEN_FT_PATH=/Users/appthreat/work/cdxgen/contrib/fine-tuning
 
 GGUF_MODEL_Q8_0_NAME=${HF_ORG}/${TOOL_BASE_MODEL}-gguf-Q8_0-GGUF
 GGUF_MODEL_Q8_0_PATH=${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-gguf-Q8_0-GGUF

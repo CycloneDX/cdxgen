@@ -15,7 +15,10 @@ for (const jf of jsonlFiles) {
   const lines = readFileSync(jf, "utf-8");
   for (const ajson of lines.split("\n")) {
     try {
-      JSON.parse(ajson);
+      const aline = JSON.parse(ajson);
+      if (!aline.messages || !Array.isArray(aline.messages) || aline.messages.length !== 2 || aline.messages[0].role !== "user" || aline.messages[1].role !== "assistant") {
+        failedLines.push(ajson);
+      }
     } catch (e) {
       failedLines.push(ajson);
     }
