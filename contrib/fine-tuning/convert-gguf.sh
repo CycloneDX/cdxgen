@@ -60,10 +60,10 @@ cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${GGUF_MODEL_Q4_K_M_PATH}/
 # ollama run cdx1-gguf "tell me about cdxgen"
 
 export HF_HUB_ENABLE_HF_TRANSFER=0
-huggingface-cli whoami
-huggingface-cli upload --quiet --repo-type model ${GGUF_MODEL_Q8_0_NAME} ${GGUF_MODEL_Q8_0_PATH} .
-huggingface-cli upload --quiet --repo-type model ${GGUF_MODEL_Q4_K_M_NAME} ${GGUF_MODEL_Q4_K_M_PATH} .
-huggingface-cli upload --quiet --repo-type model ${GGUF_MODEL_BF16_NAME} ${GGUF_MODEL_BF16_PATH} .
+hf auth whoami
+hf upload --quiet --repo-type model ${GGUF_MODEL_Q8_0_NAME} ${GGUF_MODEL_Q8_0_PATH} .
+hf upload --quiet --repo-type model ${GGUF_MODEL_Q4_K_M_NAME} ${GGUF_MODEL_Q4_K_M_PATH} .
+hf upload --quiet --repo-type model ${GGUF_MODEL_BF16_NAME} ${GGUF_MODEL_BF16_PATH} .
 
 ollama pull hf.co/${GGUF_MODEL_Q8_0_NAME}
 ollama cp hf.co/${GGUF_MODEL_Q8_0_NAME} ${GGUF_MODEL_Q8_0_NAME}
