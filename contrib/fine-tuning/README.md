@@ -104,11 +104,11 @@ node validator.js
 ### For datasets
 
 ```
-@misc{cdx-docs-data,
+@misc{cdx-docs,
   author = {OWASP CycloneDX Generator Team},
   month = Feb,
   title = {{CycloneDX and cdxgen}},
-  howpublished = {{https://huggingface.co/datasets/CycloneDX/cdx-docs-data}},
+  howpublished = {{https://huggingface.co/datasets/CycloneDX/cdx-docs}},
   year = {2025}
 }
 ```
