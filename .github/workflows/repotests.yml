@@ -1022,7 +1022,7 @@ jobs:
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '3.12'
-      - uses: ruby/setup-ruby@e8621f0b86851d7377d85882bb751b24dfadd958 # v1.251.0
+      - uses: ruby/setup-ruby@bb6434c747fa7022e12fa1cae2a0951fcffcff26 # v1.253.0
         with:
           ruby-version: '3.4'
       - name: pip install custom-json-diff
