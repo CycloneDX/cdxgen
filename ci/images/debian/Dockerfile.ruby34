@@ -1,5 +1,5 @@
 # Base-image
-FROM ruby:3.4.4-slim AS base
+FROM ruby:3.4.5-slim AS base
 
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=24.3.0

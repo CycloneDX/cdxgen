@@ -15,6 +15,7 @@ FUSED_MODEL=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}
 QUANT_MODEL_8BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-8bit
 QUANT_MODEL_6BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-6bit
 QUANT_MODEL_4BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-4bit
+DWQ_QUANT_MODEL_4BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-4bit-DWQ
 
 ### mlx-lm needs train.jsonl and valid.jsonl
 rm -rf ${DATASET_PATH} ${HF_ORG} ${ADAPTERS_PATH} ${BASE_MODEL}
@@ -70,3 +71,8 @@ rm -rf ${QUANT_MODEL_4BIT}
 mlx_lm.convert --hf-path ${FUSED_MODEL} --mlx-path ${QUANT_MODEL_4BIT} -q --q-bits 4 --dtype bfloat16
 echo "Test ${QUANT_MODEL_4BIT} with the prompt 'Tell me about cdxgen'. Must yield a better response."
 mlx_lm.generate --model ./${QUANT_MODEL_4BIT} --prompt "Tell me about cdxgen" --temp 0.05 --max-tokens 32000
+
+#echo "Generating DWQ Quantized model ${DWQ_QUANT_MODEL_4BIT} with the teacher model ${FUSED_MODEL}. This might take several hours ..."
+#mlx_lm.dwq --model ${FUSED_MODEL} --quantized-model ${QUANT_MODEL_8BIT} --mlx-path ${DWQ_QUANT_MODEL_4BIT} --learning-rate "2e-5" --batch-size 1 --data-path dataset --grad-checkpoint
+#echo "Test ${DWQ_QUANT_MODEL_4BIT} with the prompt 'Tell me about cdxgen'. Must yield a better response."
+#mlx_lm.generate --model ./${DWQ_QUANT_MODEL_4BIT} --prompt "Tell me about cdxgen" --temp 0.05 --max-tokens 32000
