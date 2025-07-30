@@ -1,0 +1,10 @@
+{
+ "version": "0.5",
+ "requires": [
+  "opensta/4.0.0#765a7eed989e624c762a73291d712b14%1753176507.254",
+  "cudd/3.0.0#9a819868ee37728bff063a7b39333b54%1753175752.342"
+ ],
+ "build_requires": [],
+ "python_requires": [],
+ "config_requires": []
+}
