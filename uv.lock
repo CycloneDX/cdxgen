@@ -87,7 +87,7 @@ wheels = [
 
 [[package]]
 name = "atom-tools"
-version = "0.8.1"
+version = "0.8.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cleo" },
@@ -95,9 +95,9 @@ dependencies = [
     { name = "json-flatten" },
     { name = "thefuzz" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5e/bd/6373c633d58390bb0ded0e974f52e633d3b0a1ddd258397bbb28e7261803/atom_tools-0.8.1.tar.gz", hash = "sha256:51bb4297f2443084d5b2d544e1fa0a7c267c43e023401e1edb42c83e0da12e9f", size = 61068, upload-time = "2025-06-12T09:23:34.116Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/98/40/d291216c43d3f0b5122cb14f625dc432c93170ce3690fe3a7c0d4a9af96d/atom_tools-0.8.2.tar.gz", hash = "sha256:be050eae7dab5422c9d1d18d27fc9069a13028a73c2fe9ddd0152d854dae7b45", size = 61870, upload-time = "2025-07-29T15:56:33.358Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d3/c9/68eaed09d35ff3d60657549f030b579d1be66b6cf2ace03670ad7b9ebd31/atom_tools-0.8.1-py3-none-any.whl", hash = "sha256:e09d3c30d1bba1bf05a2e5a187b965687a35cc13f7c6113c12113e75137f23fe", size = 45253, upload-time = "2025-06-12T09:23:32.95Z" },
+    { url = "https://files.pythonhosted.org/packages/56/07/f2fad9bcb838ccf5c68a16d2437f56f4a9a9a7654d5423c59f945026da82/atom_tools-0.8.2-py3-none-any.whl", hash = "sha256:0481beb0bb6bf40c887084a1a49637c9874abca21ef80c0e640edc161efac4b0", size = 45894, upload-time = "2025-07-29T15:56:32.103Z" },
 ]
 
 [[package]]
@@ -641,11 +641,11 @@ wheels = [
 
 [[package]]
 name = "packageurl-python"
-version = "0.17.1"
+version = "0.17.2"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/a9/b6/d28c4fa7535530879e7d64176f7ff081fb6308b50cac8e30f038a89e8fdd/packageurl_python-0.17.1.tar.gz", hash = "sha256:5db592a990b60bc02446033c50fb1803a26c5124cd72c5a2cd1b8ea1ae741969", size = 41312, upload-time = "2025-06-06T13:13:59.746Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e7/b1/738afddf3f448da0dc204577f1a2c8a9407a5c2f9764b4003a860dd2de56/packageurl_python-0.17.2.tar.gz", hash = "sha256:dc087e3a3340656c6966a3d651f12c7f689f01dc9fb8a28f1150f7be823c688e", size = 42076, upload-time = "2025-07-29T07:14:41.809Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ae/ba/9c01f96eca2d1833fa787e695208d57a7a07f6531517040e523509ced368/packageurl_python-0.17.1-py3-none-any.whl", hash = "sha256:59b0862ae0b216994f847e05b4c6e870e0d16e1ddd706feefb19d79810f22cbd", size = 28748, upload-time = "2025-06-06T13:13:58.631Z" },
+    { url = "https://files.pythonhosted.org/packages/d5/c2/a79c06ac3481cd6f6c15af472badc70deab54d142faa63990bd4c7197cd0/packageurl_python-0.17.2-py3-none-any.whl", hash = "sha256:863a903bb9fffd17c367c836903a46ee68942966d0600fdf26449630d8bf344c", size = 29264, upload-time = "2025-07-29T07:14:40.858Z" },
 ]
 
 [[package]]

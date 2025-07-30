@@ -10,6 +10,7 @@ FUSED_MODEL=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}
 QUANT_MODEL_8BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-8bit
 QUANT_MODEL_6BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-6bit
 QUANT_MODEL_4BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-4bit
+DWQ_QUANT_MODEL_4BIT=${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}-4bit-DWQ
 
 hf auth whoami
 
@@ -22,5 +23,6 @@ echo "Uploading models. Please wait ..."
 hf upload --quiet --repo-type model ${QUANT_MODEL_8BIT} ./${QUANT_MODEL_8BIT} .
 hf upload --quiet --repo-type model ${QUANT_MODEL_6BIT} ./${QUANT_MODEL_6BIT} .
 hf upload --quiet --repo-type model ${QUANT_MODEL_4BIT} ./${QUANT_MODEL_4BIT} .
+#hf upload --quiet --repo-type model ${DWQ_QUANT_MODEL_4BIT} ./${DWQ_QUANT_MODEL_4BIT} .
 
 hf upload --quiet --repo-type model ${FUSED_MODEL} ./${FUSED_MODEL} .
