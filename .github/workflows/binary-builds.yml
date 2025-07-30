@@ -33,6 +33,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+env:
+  NVM_VERSION: v0.40.3
+
 # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token
 permissions: {}
 
@@ -47,7 +50,7 @@ jobs:
         libc: [ gnu, musl ]
         node: [ 24.3 ]
         exclude:
-          # Musl can only be built on linux
+          # musl can only be built on linux
           - os: darwin
             libc: musl
           - os: windows
@@ -62,7 +65,7 @@ jobs:
             runner: macos-13-xlarge
           - os: linux
             arch: amd64
-            runner: ubuntu-latest
+            runner: ubuntu-24.04
           - os: linux
             arch: arm64
             runner: ubuntu-24.04-arm
@@ -72,86 +75,87 @@ jobs:
           - os: windows
             arch: arm64
             runner: windows-11-arm
-          # Set which images to use
+          # Set musl configurations
           - image: debian:11
+            libc-suffix: ''
+            node-download-url: https://nodejs.org/dist/
+            prepare: |
+              apt update
+              apt install -y curl
           - libc: musl
-            image: alpine:3.21
-          # Set the libc-suffix
-          - libc-suffix: ''
-          - libc: musl
+            image: alpine:3.16
             libc-suffix: -musl
-          # Set file-extensions
-          - ext: ''
-          - os: windows
-            ext: .exe
-          # Set the commands
+            node-download-url: https://raw.githubusercontent.com/appthreat/nodejs-unofficial-builds/master/dists/
+            prepare: |
+              apk add --no-cache bash curl libstdc++
+          # Set the commands & file-extensions
           - cmd: |
+              # Install pnpm
+              npm install --global pnpm
+
               # Prepare workspace
-              rm -rf ci test contrib tools_config devenv.* ADVANCED.md pyproject.toml renovate.json uv.lock
+              rm -rf ADVANCED.md ci contrib devenv.* pyproject.toml renovate.json semicolon_delimited_script test tools_config uv.lock
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
 
               # Generate sbom
-              node bin/cdxgen.js -t php -t js -t jar -t ruby --exclude "**/test/**" -o sbom-postbuild.cdx.json --include-formulation
+              node bin/cdxgen.js -t php -t js -t jar -t ruby -o sbom-postbuild.cdx.json --include-formulation
               
               # Produce cdxgen binary
-              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output cdxgen -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen
               ./cdxgen --version
               ./cdxgen --help
 
               # Prepare for slim binaries
-              rm -rf node_modules
+              rm -rf node_modules sbom-postbuild.cdx.json
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
 
               # Generate sbom
-              node bin/cdxgen.js -t js --required-only --no-recurse --exclude "**/test/**" -o sbom-postbuild-js.cdx.json --include-formulation
+              node bin/cdxgen.js -t js --required-only --no-recurse -o sbom-postbuild-js.cdx.json --include-formulation
 
               # Produce slim cdxgen binary
-              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdxgen-slim" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output cdxgen-slim -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen-slim
               ./cdxgen-slim --version
               ./cdxgen-slim --help
 
               # Produce verify binary
-              pnpm --package=@appthreat/caxa dlx caxa --input . --output "cdx-verify" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output cdx-verify -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
               chmod +x cdx-verify
               ./cdx-verify --version
               ./cdx-verify --help
+            ext: ''
           - os: windows
             cmd: |
               # Prepare workspace
-              Remove-Item ci -Recurse -Force
-              Remove-Item test -Recurse -Force
-              Remove-Item devenv.* -Force
-              Remove-Item -Path ADVANCED.md,pyproject.toml,renovate.json,uv.lock -Force
-              Remove-Item contrib -Recurse -Force
-              Remove-Item tools_config -Recurse -Force
+              Remove-Item -Path ADVANCED.md,ci,contrib,devenv.*,pyproject.toml,renovate.json,test,tools_config,uv.lock -Force -Recurse
               npm install --omit=dev --no-package-lock --no-audit --no-fund --no-progress
 
               # Generate sbom (imprecise)
-              node bin/cdxgen.js -t php -t js -t jar -t ruby --exclude "**/test/**" -o sbom-postbuild.cdx.json --include-formulation
+              node bin/cdxgen.js -t php -t js -t jar -t ruby -o sbom-postbuild.cdx.json --include-formulation
               
               # Produce cdxgen binary
-              npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              npx --no-progress --yes @appthreat/caxa --input . --output cdxgen.exe -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen.exe --version
               .\cdxgen.exe --help
 
               # Prepare for slim binaries
-              Remove-Item node_modules -Recurse -Force
+              Remove-Item node_modules,sbom-postbuild.cdx.json -Force -Recurse
               npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund --no-progress
 
               # Generate sbom (imprecise)
-              node bin/cdxgen.js -t js --required-only --no-recurse --exclude "**/test/**" -o sbom-postbuild-js.cdx.json --include-formulation
+              node bin/cdxgen.js -t js --required-only --no-recurse -o sbom-postbuild-js.cdx.json --include-formulation
 
               # Produce slim cdxgen binary
-              npx --no-progress --yes @appthreat/caxa --input . --output "cdxgen-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              npx --no-progress --yes @appthreat/caxa --input . --output cdxgen-slim.exe -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen-slim.exe --version
               .\cdxgen-slim.exe --help
 
               # Produce verify binary
-              npx --no-progress --yes @appthreat/caxa --input . --output "cdx-verify.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
+              npx --no-progress --yes @appthreat/caxa --input . --output cdx-verify.exe -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
               .\cdx-verify.exe --version
               .\cdx-verify.exe --help
+            ext: .exe
     runs-on: ${{ matrix.runner }}
     permissions:
       contents: write  # needed to issue a GH release or uploading release assets
@@ -164,63 +168,40 @@ jobs:
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: ${{ matrix.node }}
-      - name: Install pnpm
-        if: ${{ matrix.os != 'linux' }}
-        run: |
-          npm install --global pnpm
       - name: Get user info
         id: user_info
         if: ${{ matrix.os == 'linux' }}
         run: |
           echo -n "user=$(id -u):$(id -g)" > $GITHUB_OUTPUT
-      - name: Build gnu libc for linux
+      - name: Build for linux
         uses: addnab/docker-run-action@4f65fabd2431ebc8d299f8e5a018d79a769ae185 # v3
-        if: ${{ matrix.os == 'linux' && matrix.libc == 'gnu' }}
+        if: ${{ matrix.os == 'linux' }}
         with:
           image: ${{ matrix.image }}
-          options: -v ${{ github.workspace }}:${{ github.workspace }}
+          options: |
+            -e NVM_NODEJS_ORG_MIRROR=${{ matrix.node-download-url }}
+            --network host
+            -v ${{ github.workspace }}:${{ github.workspace }}
+            -w ${{ github.workspace }}
           run: |
-            # Setup debian builder
-            apt update
-            apt install -y curl
+            # Setup builder
+            ${{ matrix.prepare }}
 
             # Install nvm
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/${{ env.NVM_VERSION }}/install.sh | bash
             export NVM_DIR="$HOME/.nvm"
+            sed -i 's/x64-musl/"${NVM_ARCH}-musl"/g' "$NVM_DIR/nvm.sh"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
             # Install npm
-            nvm install 22
-
-            # Install pnpm
-            npm install --global pnpm
+            nvm install ${{ matrix.node }}
 
             # Build
-            cd ${{ github.workspace }}
             ${{ matrix.cmd }}
 
             # Change the owner to the local user
-            chown ${{ steps.user_info.outputs.user }} cdx*
-      - name: Build musl libc
-        uses: addnab/docker-run-action@4f65fabd2431ebc8d299f8e5a018d79a769ae185 # v3
-        if: ${{ matrix.libc == 'musl' }}
-        with:
-          image: ${{ matrix.image }}
-          options: -v ${{ github.workspace }}:${{ github.workspace }}
-          run: |
-            # Setup alpine builder
-            apk add --no-cache g++ gcc make musl-dev nodejs npm python3 python3-dev py3-pip py3-virtualenv
-
-            # Install pnpm
-            npm install --global pnpm
-
-            # Build
-            cd ${{ github.workspace }}
-            ${{ matrix.cmd }}
-
-            # Change the owner to the local user
-            chown ${{ steps.user_info.outputs.user }} cdx*
-      - name: Build gnu libc for darwin & windows
+            chown -R ${{ steps.user_info.outputs.user }} * .*
+      - name: Build for darwin & windows
         if: ${{ matrix.libc == 'gnu' && matrix.os != 'linux' }}
         run: ${{ matrix.cmd }}
       - name: Correct filenames # <name>-<os>-<arch>[-<libc-suffix>][-<variant>][.ext]
