@@ -99,7 +99,7 @@ in
             pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
         elif command -v deno >/dev/null 2>&1; then
             rm -rf node_modules
-            deno install --allow-scripts=npm:@biomejs/biome@1.9.4,npm:@appthreat/sqlite3@6.0.8
+            deno install --allow-scripts=npm:@biomejs/biome@1.9.4,npm:@appthreat/sqlite3@6.0.9
         fi
       '';
 
@@ -119,7 +119,7 @@ in
       tasks."deno:prepare" = {
         exec = ''
         rm -rf node_modules
-        deno install --allow-scripts=npm:@biomejs/biome@1.9.4,npm:@appthreat/sqlite3@6.0.8
+        deno install --allow-scripts=npm:@biomejs/biome@1.9.4,npm:@appthreat/sqlite3@6.0.9
         deno info bin/cdxgen.js
         deno info bin/evinse.js
         '';

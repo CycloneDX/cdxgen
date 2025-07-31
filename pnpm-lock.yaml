@@ -207,10 +207,10 @@ importers:
         version: 2.1.0
       sequelize:
         specifier: ^6.37.7
-        version: 6.37.7(@appthreat/sqlite3@6.0.8)
+        version: 6.37.7(@appthreat/sqlite3@6.0.9)
       sqlite3:
-        specifier: npm:@appthreat/sqlite3@^6.0.8
-        version: '@appthreat/sqlite3@6.0.8'
+        specifier: npm:@appthreat/sqlite3@^6.0.9
+        version: '@appthreat/sqlite3@6.0.9'
 
 packages:
 
@@ -235,8 +235,8 @@ packages:
     resolution: {integrity: sha512-qrFxw0y/s7ypOC7hYp1ql+tLFe0HM2jA0oMFqQxGtXOsyYHbMW/8Q/9htWBNxJCtfeR38FSrmRCf3TGKBnV7yw==}
     engines: {node: '>=20'}
 
-  '@appthreat/sqlite3@6.0.8':
-    resolution: {integrity: sha512-IBLYA3D8UgHGWBsrokqaEWrSwYRxBRVdjQfFA7YRhAeVA7eMkYAKbAfF/LPZUYSSdWUBpy4CWpXYBP3BZ5xXxg==}
+  '@appthreat/sqlite3@6.0.9':
+    resolution: {integrity: sha512-Aim5tAIusHm2zZVhqedZwl1MGiSMaWhJ9Ev9ctBuv82fJv/gmE0FhHY/tv/ikoMTNGWlaClAgJayfPLJxvkQ7Q==}
     engines: {node: '>=20'}
 
   '@babel/code-frame@7.27.1':
@@ -2672,7 +2672,7 @@ snapshots:
       '@bufbuild/protobuf': 2.6.1
     optional: true
 
-  '@appthreat/sqlite3@6.0.8':
+  '@appthreat/sqlite3@6.0.9':
     dependencies:
       bindings: 1.5.0
       node-addon-api: 8.5.0
@@ -5090,7 +5090,7 @@ snapshots:
   sequelize-pool@7.1.0:
     optional: true
 
-  sequelize@6.37.7(@appthreat/sqlite3@6.0.8):
+  sequelize@6.37.7(@appthreat/sqlite3@6.0.9):
     dependencies:
       '@types/debug': 4.1.12
       '@types/validator': 13.15.2
@@ -5109,7 +5109,7 @@ snapshots:
       validator: 13.15.15
       wkx: 0.5.0
     optionalDependencies:
-      sqlite3: '@appthreat/sqlite3@6.0.8'
+      sqlite3: '@appthreat/sqlite3@6.0.9'
     transitivePeerDependencies:
       - supports-color
     optional: true
