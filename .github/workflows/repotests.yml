@@ -68,6 +68,7 @@ jobs:
           bin/cdxgen.js -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-6.json --deep --evidence
           bin/cdxgen.js -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-7.json --profile research --export-proto
           bin/cdxgen.js -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-8.json --profile license-compliance
+          bin/cdxgen.js -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-9.json --include-regex "pom.xml"
           bin/cdxgen.js -t java -t github repotests/java-sec-code -o bomresults/bom-java-sec-code-9.json
           bin/cdxgen.js -t java -exclude-type js repotests/java-sec-code -o bomresults/bom-java-sec-code-10.json
         shell: bash
@@ -600,6 +601,8 @@ jobs:
         shell: bash
       - name: repotests python issues
         run: |
+          bin/cdxgen.js -t python test/data/issue-2069 -o bomresults/issue-2069.json --fail-on-error -p --include-regex "requirements.txt"
+          bin/cdxgen.js -t python test/data/issue-2069 -o bomresults/issue-2069.json -p --include-regex "poetry.lock"
           bin/cdxgen.js -t python test/data/issue-2069 -o bomresults/issue-2069.json --fail-on-error -p
           bin/cdxgen.js -t python test/data/issue-2069 -o bomresults/issue-2069.json --only fastapi --only google --fail-on-error -p
           bin/cdxgen.js -t python test/data/issue-2082 -o bomresults/issue-2082.json --fail-on-error -p
