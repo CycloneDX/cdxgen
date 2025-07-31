@@ -56,6 +56,8 @@ export function isPackageManagerAllowed(name: string, conflictingManagers: any[]
  * @param {string} dirPath Root directory for search
  * @param {string} pattern Glob pattern (eg: *.gradle)
  * @param {Object} options CLI options
+ *
+ * @returns {Array[string]} List of matched files
  */
 export function getAllFiles(dirPath: string, pattern: string, options?: any): any;
 /**
@@ -66,7 +68,7 @@ export function getAllFiles(dirPath: string, pattern: string, options?: any): an
  * @param {Boolean} includeDot whether hidden files can be included.
  * @param {Array} ignoreList Directory patterns to ignore
  *
- * @return {Array[string]} List of matched files
+ * @returns {Array[string]} List of matched files
  */
 export function getAllFilesWithIgnore(dirPath: string, pattern: string, includeDot: boolean, ignoreList: any[]): any;
 /**

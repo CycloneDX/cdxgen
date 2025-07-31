@@ -264,8 +264,15 @@ const args = _yargs
     hidden: true,
     choices: ["pre-build", "build", "post-build"],
   })
+  .option("include-regex", {
+    description:
+      "glob pattern to include. This overrides the default pattern used during auto-detection.",
+    type: "string",
+  })
   .option("exclude", {
+    alias: "exclude-regex",
     description: "Additional glob pattern(s) to ignore",
+    type: "array",
   })
   .option("export-proto", {
     type: "boolean",
@@ -349,7 +356,6 @@ const args = _yargs
   .array("filter")
   .array("only")
   .array("author")
-  .array("exclude")
   .array("standard")
   .array("feature-flags")
   .array("technique")
@@ -461,6 +467,8 @@ const options = Object.assign({}, args, {
     isSecureMode && args.output === "bom.json"
       ? resolve(join(filePath, args.output))
       : args.output,
+  exclude: args.exclude || args.excludeRegex,
+  include: args.include || args.includeRegex,
 });
 // Should we create the output directory?
 const outputDirectory = dirname(options.output);

@@ -1,5 +1,25 @@
 # Advanced Usage
 
+## Include pattern
+
+cdxgen uses the default set of glob patterns to locate language-specific package manifests and lock files. To customise these patterns, use the argument `--include-regex`.
+
+Example:
+
+Parse only the pyproject.toml files present in directories ending with google.
+
+```shell
+--include-regex "**/*google/pyproject.toml"
+```
+
+Parse only the requirements.txt files present in directories ending with nvidia.
+
+```shell
+--include-regex "**/*nvidia/requirements.txt"
+```
+
+Combine this with `--exclude`, `--exclude-type`, and other filters to customise the exact set of manifests and lock files used for the generated BOM.
+
 ## Exclude project types, files, and directories
 
 To exclude specific [project types](https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES) from the BOM, use the `--exclude-type` argument. Multiple values are allowed.
