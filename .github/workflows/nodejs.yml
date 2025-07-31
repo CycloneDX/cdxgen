@@ -12,6 +12,7 @@ on:
       - 'package.json'
       - 'pnpm-lock.yaml'
       - '!**.test.js'
+      - 'devenv*'
   push:
     branches:
       - master
