@@ -214,14 +214,11 @@ To recursively generate a single BOM for all languages pass `-r` argument.
 cdxgen -r -o bom.json
 ```
 
-The default specification used by cdxgen is 1.5. To generate BOM for a different specification version, such as 1.6 or 1.4, pass the version number using the `--spec-version` argument.
+The default specification used by cdxgen is 1.6. To generate BOM for a different specification version, such as 1.5 or 1.4, pass the version number using the `--spec-version` argument.
 
 ```shell
-# 1.6 is unsupported by most tools
-cdxgen -r -o bom.json --spec-version 1.6
-
-# 1.4 is supported by most tools
-cdxgen -r -o bom.json --spec-version 1.4
+# 1.5 is supported by most tools
+cdxgen -r -o bom.json --spec-version 1.5
 ```
 
 To generate SBOM for C or Python, ensure Java >= 21 is installed.
