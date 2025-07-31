@@ -28,6 +28,7 @@ export function isAllowedPath(p: string): boolean;
  */
 export function parseValue(raw: string | number | Array<string | number>): string | number | boolean | Array<string | number | boolean>;
 export function parseQueryString(q: any, body?: {}, options?: {}): {};
+export function getQueryParams(req: any): {};
 export function configureServer(cdxgenServer: any): void;
 export function start(options: any): void;
 //# sourceMappingURL=server.d.ts.map

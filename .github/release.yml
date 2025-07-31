@@ -4,6 +4,13 @@ changelog:
       labels:
         - breaking
         - possibly breaking
+    - title: 🤖 AI-assisted Changes
+      labels:
+        - AI-assisted
+    - title: 🧠 Machine-Learning Changes
+      labels:
+        - ml
+        - llm
     - title: 🚀 Features
       labels:
         - enhancement
