@@ -26,7 +26,7 @@ jobs:
       fail-fast: false
       matrix:
         java-version: ['24']
-        node-version: ['24.3']
+        node-version: ['24.5.0']
         os: ['ubuntu-24.04']
     runs-on: ${{ matrix.os }}
     steps:
