@@ -1,4 +1,4 @@
-FROM ./cdx1-gguf-q8_0.gguf
+FROM ./cdx1-14B-q8_0.gguf
 
 PARAMETER num_ctx 16000
 PARAMETER temperature 0.05

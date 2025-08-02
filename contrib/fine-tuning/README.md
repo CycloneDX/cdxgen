@@ -48,7 +48,7 @@ You are a helpful assistant to the user.
 Create a Modelfile as shown:
 
 ```text
-FROM hf.co/CycloneDX/cdx1-gguf-Q8_0-GGUF
+FROM hf.co/CycloneDX/cdx1-14B-Q8_0-GGUF
 
 PARAMETER num_ctx 16000
 PARAMETER temperature 0.05
@@ -62,29 +62,6 @@ ollama create cdx1 -f ./Modelfile
 
 ```text
 ollama show cdx1
-Model
-    architecture        llama
-    parameters          14.7B
-    context length      16384
-    embedding length    5120
-    quantization        Q8_0
-
-  Parameters
-    num_ctx        16000
-    stop           "<|im_start|>"
-    stop           "<|im_sep|>"
-    stop           "<|im_end|>"
-    stop           "<|im_start|>"
-    stop           "<|im_sep|>"
-    stop           "<|im_end|>"
-    stop           "<|im_start|>"
-    stop           "<|im_sep|>"
-    stop           "<|im_end|>"
-    stop           "<|im_start|>user<|im_sep|>"
-    temperature    0.05
-
-  System
-    You are a helpful assistant to the user.
 ```
 
 ```shell
