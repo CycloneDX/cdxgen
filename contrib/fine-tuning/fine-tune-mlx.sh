@@ -5,7 +5,7 @@ TUNING_TOOL=mlx
 TOOL_BASE_MODEL=${1:-cdx1}
 case "$TOOL_BASE_MODEL" in
   cdx1-pro)
-    BASE_MODEL="unsloth/Qwen3-30B-A3B-Instruct-2507"
+    BASE_MODEL="unsloth/Qwen3-Coder-30B-A3B-Instruct"
     ;;
   *)
     BASE_MODEL="unsloth/Qwen2.5-Coder-14B-Instruct"
