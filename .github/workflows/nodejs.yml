@@ -96,7 +96,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['20', '21', '22', '23', '24.3']
+        node-version: ['20', '21', '22', '23', '24.5.0']
         os: ['ubuntu-22.04', 'ubuntu-24.04', 'windows-latest', 'windows-11-arm', 'ubuntu-22.04-arm', 'ubuntu-24.04-arm', 'macos-latest', 'macos-13']
     runs-on: ${{ matrix.os }}
     steps:
@@ -120,7 +120,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        node-version: ['24.3']
+        node-version: ['24.5.0']
         os: [windows, macos, ubuntu]
         deno_version: [2.x]
         include:

@@ -2,7 +2,7 @@
 FROM php:8.3-bookworm AS base
 
 # renovate: datasource=docker depName=node
-ARG NODE_VERSION=24.3.0
+ARG NODE_VERSION=24.5.0
 ARG JAVA_VERSION=21.0.7-tem
 
 ENV JAVA_VERSION=$JAVA_VERSION \

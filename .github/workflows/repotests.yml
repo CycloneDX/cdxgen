@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: 24.3
+  NODE_VERSION: 24.5.0
 
 # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token
 permissions: {}
@@ -173,7 +173,7 @@ jobs:
       fail-fast: true
       matrix:
         java-version: ['24']
-        node-version: ['24.3']
+        node-version: ['24.5.0']
         os: ['self-hosted-ubuntu', 'ubuntu-24.04-arm', 'windows-latest', 'macos-15']
     runs-on: ${{ matrix.os }}
     steps:
@@ -959,7 +959,7 @@ jobs:
       fail-fast: true
       matrix:
         java-version: ['24']
-        node-version: ['24.3']
+        node-version: ['24.5.0']
         os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'macos-15']
     runs-on: ${{ matrix.os }}
     env:
