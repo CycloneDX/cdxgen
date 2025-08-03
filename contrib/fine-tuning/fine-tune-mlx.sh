@@ -2,10 +2,17 @@
 # Need the latest master from https://github.com/ml-explore/mlx-lm
 set -e
 TUNING_TOOL=mlx
-BASE_MODEL=unsloth/Qwen2.5-Coder-14B-Instruct
+TOOL_BASE_MODEL=${1:-cdx1}
+case "$TOOL_BASE_MODEL" in
+  cdx1-pro)
+    BASE_MODEL="unsloth/Qwen3-Coder-30B-A3B-Instruct"
+    ;;
+  *)
+    BASE_MODEL="unsloth/Qwen2.5-Coder-14B-Instruct"
+    ;;
+esac
 BASE_MODEL_MLX=${BASE_MODEL}-${TUNING_TOOL}
 HF_ORG=CycloneDX
-TOOL_BASE_MODEL=cdx1
 NUM_LAYERS=16
 ADAPTERS_PATH=adapters
 DATASET_PATH=dataset
