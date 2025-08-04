@@ -66,6 +66,24 @@ cp ${CDXGEN_FT_PATH}/Modelfile ${GGUF_MODEL_Q4_K_M_PATH}/
 sed -i '' 's|./cdx1-${PARAM_SIZE}-q8_0.gguf|./cdx1-${PARAM_SIZE}-Q4_K_M.gguf|g' ${GGUF_MODEL_Q4_K_M_PATH}/Modelfile
 cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${GGUF_MODEL_Q4_K_M_PATH}/
 
+GGUF_MODEL_IQ4_NL_NAME=${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-IQ4_NL-${FORMAT}
+GGUF_MODEL_IQ4_NL_PATH=${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-IQ4_NL-${FORMAT}
+rm -rf ${GGUF_MODEL_IQ4_NL_PATH}
+mkdir -p ${GGUF_MODEL_IQ4_NL_PATH}
+llama-quantize ${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-BF16-${FORMAT}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-bf16.gguf ${GGUF_MODEL_IQ4_NL_PATH}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-IQ4_NL.gguf IQ4_NL
+cp ${CDXGEN_FT_PATH}/Modelfile ${GGUF_MODEL_IQ4_NL_PATH}/
+sed -i '' 's|./cdx1-${PARAM_SIZE}-q8_0.gguf|./cdx1-${PARAM_SIZE}-IQ4_NL.gguf|g' ${GGUF_MODEL_IQ4_NL_PATH}/Modelfile
+cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${GGUF_MODEL_IQ4_NL_PATH}/
+
+GGUF_MODEL_Q2_K_NAME=${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q2_K-${FORMAT}
+GGUF_MODEL_Q2_K_PATH=${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q2_K-${FORMAT}
+rm -rf ${GGUF_MODEL_Q2_K_PATH}
+mkdir -p ${GGUF_MODEL_Q2_K_PATH}
+llama-quantize ${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-BF16-${FORMAT}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-bf16.gguf ${GGUF_MODEL_Q2_K_PATH}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q2_K.gguf Q2_K
+cp ${CDXGEN_FT_PATH}/Modelfile ${GGUF_MODEL_Q2_K_PATH}/
+sed -i '' 's|./cdx1-${PARAM_SIZE}-q8_0.gguf|./cdx1-${PARAM_SIZE}-Q2_K.gguf|g' ${GGUF_MODEL_Q2_K_PATH}/Modelfile
+cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${GGUF_MODEL_Q2_K_PATH}/
+
 ### Testing with ollama
 # cd ${GGUF_MODEL_Q8_0_PATH}
 # ollama create cdx1-${FORMAT} -f Modelfile
@@ -76,6 +94,8 @@ export HF_HUB_ENABLE_HF_TRANSFER=0
 hf auth whoami
 hf upload --quiet --repo-type model ${GGUF_MODEL_Q8_0_NAME} ${GGUF_MODEL_Q8_0_PATH} .
 hf upload --quiet --repo-type model ${GGUF_MODEL_Q4_K_M_NAME} ${GGUF_MODEL_Q4_K_M_PATH} .
+hf upload --quiet --repo-type model ${GGUF_MODEL_IQ4_NL_NAME} ${GGUF_MODEL_IQ4_NL_PATH} .
+hf upload --quiet --repo-type model ${GGUF_MODEL_Q2_K_NAME} ${GGUF_MODEL_Q2_K_PATH} .
 hf upload --quiet --repo-type model ${GGUF_MODEL_BF16_NAME} ${GGUF_MODEL_BF16_PATH} .
 
 ollama pull hf.co/${GGUF_MODEL_Q8_0_NAME}
@@ -87,6 +107,16 @@ ollama pull hf.co/${GGUF_MODEL_Q4_K_M_NAME}
 ollama cp hf.co/${GGUF_MODEL_Q4_K_M_NAME} ${GGUF_MODEL_Q4_K_M_NAME}
 ollama push ${GGUF_MODEL_Q4_K_M_NAME}
 ollama rm hf.co/${GGUF_MODEL_Q4_K_M_NAME}
+
+ollama pull hf.co/${GGUF_MODEL_IQ4_NL_NAME}
+ollama cp hf.co/${GGUF_MODEL_IQ4_NL_NAME} ${GGUF_MODEL_IQ4_NL_NAME}
+ollama push ${GGUF_MODEL_IQ4_NL_NAME}
+ollama rm hf.co/${GGUF_MODEL_IQ4_NL_NAME}
+
+ollama pull hf.co/${GGUF_MODEL_Q2_K_NAME}
+ollama cp hf.co/${GGUF_MODEL_Q2_K_NAME} ${GGUF_MODEL_Q2_K_NAME}
+ollama push ${GGUF_MODEL_Q2_K_NAME}
+ollama rm hf.co/${GGUF_MODEL_Q2_K_NAME}
 
 ollama pull hf.co/${GGUF_MODEL_BF16_NAME}
 ollama cp hf.co/${GGUF_MODEL_BF16_NAME} ${GGUF_MODEL_BF16_NAME}

@@ -1,0 +1,447 @@
+Category,Question
+General,Is it possible to utilize data components for detailing the rules and policies of a security tool?
+Compliance,In what ways do data components aid in compliance reporting?
+SAM/ITAM,What methods does CycloneDX use to integrate with current enterprise SAM/ITAM practices?
+Lifecycle,What distinguishes a BOM from the 'Discovery' phase from one created during the 'Build' phase?
+Licensing,How does CycloneDX offer proof regarding software licensing?
+SBOM Creation,What are the key suggestions for generating a CycloneDX SBOM?
+Vulnerabilities,What constitutes a Vulnerability Disclosure Report (VDR)?
+Vulnerabilities,What information does a Vulnerability Exploitability eXchange (VEX) provide?
+Licensing,In what way does CycloneDX support compliance with open-source and commercial licenses?
+Licensing,How are open-source licenses depicted within CycloneDX?
+Lifecycle,How can data gathered in the Discovery phase influence future Design phase decisions?
+Licensing,What format does CycloneDX use for representing open-source licenses?
+Licensing,What is the distinction between declared and concluded licenses?
+SAM/ITAM,How do 'Operations' phase BOMs assist in reconciling software licenses?
+General,What is the primary goal of CycloneDX?
+Operating Systems,What advantages do Operating Systems gain from using CycloneDX?
+Lifecycle,What factors should guide the selection of lifecycle phases for a BOM?
+Lifecycle,What details are necessary when creating a custom lifecycle phase definition?
+Licensing,How does CycloneDX assist in managing commercial software licenses?
+Licensing,What fields are available for detailing commercial licenses in CycloneDX?
+Licensing,Is it possible to specify several license types for a single commercial license?
+National Security,What role does CycloneDX play in cybersecurity tools for national security?
+Licensing,How does CycloneDX enable tracking of copyright information for software components?
+Licensing,How should multiple licenses for a single software component be represented in CycloneDX?
+Extensions,Can you provide an example of a commonly used XML extension?
+Formulation,What is the function of the Formulation section in CycloneDX?
+Vulnerabilities,How does CycloneDX manage information about vulnerabilities?
+Formulation,What does the 'formulation' section of a CycloneDX BOM detail?
+Licensing,Why is it crucial to distinguish between declared and concluded licenses during a software audit?
+Licensing,How can CycloneDX help identify components requiring specific attribution notices?
+Lifecycle,What information should be provided when defining a custom lifecycle phase?
+VEX,How are lifecycle phases utilized when creating a VEX document?
+Transparency,What is the objective of software transparency?
+SBOM Use Cases,What are some broad use cases for SBOMs?
+UAVs,What are the benefits of using CycloneDX with Unmanned Aerial Vehicles (UAVs)?
+VDR,"According to NIST SP 800-161, what elements should VDRs contain?"
+Licensing,How can declared and concluded licenses be acknowledged?
+Relationships,What is the purpose of relationships within CycloneDX?
+Components,What differentiates first-party from third-party components in CycloneDX?
+Licensing,How are license and copyright details presented in CycloneDX?
+Services,What is the role of describing data flow in services?
+Services,How can CycloneDX dependencies illustrate service-to-service dependencies?
+VEX,How does CycloneDX support VEX (Vulnerability Exploitability eXchange)?
+Formulation,What is the difference between declared and observed formulas in the 'formulation' section?
+Annotations,Is it possible to digitally sign annotations in CycloneDX?
+Declarations,What is the importance of attestations and claims in the 'declarations' section?
+Signatures,Does CycloneDX offer a way to represent digital and analog signatures?
+Extensions,Is it possible to develop custom extensions for CycloneDX for specific needs?
+Schema,"Where can the official schema locations for JSON, XML, and Protobuf CycloneDX BOMs be found?"
+Regulatory Compliance,How does CycloneDX help organizations under strict cybersecurity standards with regulatory compliance?
+SBOM Generation,"What are the drawbacks of relying only on automated tools for generating a CycloneDX BOM, and how can they be overcome?"
+Annotations,What are the benefits of using annotations in CycloneDX?
+Declarations,How do Declarations contribute to compliance as code?
+Supply Chain,How does CycloneDX support collaboration and information sharing in the software supply chain?
+Data Components,What does the 'other' data component type signify?
+Data Components,What are some situations where including data components in a BOM would be appropriate?
+Data Components,Can data components have suppliers different from the main component?
+CPE,Why is it important to provide evidence for multiple potential CPEs?
+Cryptographic Assets,What range of values does the 'confidence' metric use?
+Cryptographic Assets,What steps should organizations take as part of an agile cryptographic approach?
+Cryptographic Assets,Where should cryptographic assets be documented?
+Licensing,What are the benefits of using CycloneDX in environments with commercial software licensing?
+Incident Response,How can lifecycle information enhance the speed of incident response?
+Data Components,How can a file with configuration settings be represented as a data component?
+Data Components,"For a large dataset, is it better to include it directly in the BOM or reference it externally?"
+Lifecycle,What type of information is collected during the 'Discovery' lifecycle phase?
+Lifecycle,What does the 'Decommission' lifecycle phase signify?
+Data Components,How can data components be used to track different versions of a configuration file over time?
+Data Components,How do consumers of BOMs interpret data components?
+Lifecycle,Can you give an example of a custom lifecycle phase?
+Licensing,What are the different focuses of SDLC and SAM use cases regarding licensing?
+Incident Response,How does lifecycle information improve incident response efficiency?
+Lifecycle,Is it possible to use a custom enumeration for the phase value?
+Data Components,How can data components be used to document a microservice's API specification?
+Data Components,What is the best method to represent a database query as a data component?
+Lifecycle,How are multiple lifecycle phases depicted in a CycloneDX BOM?
+Vulnerabilities,Why is knowledge of the lifecycle phase important for vulnerability analysis?
+Lifecycle,How can CycloneDX lifecycle phases be used to track the evolution of software components?
+SAM/ITAM,How does CycloneDX facilitate integration with existing enterprise SAM/ITAM practices?
+General,Can data components be used to represent the rules and policies of a security tool?
+Compliance,How are data components useful for compliance reporting?
+SAM/ITAM,In what ways does CycloneDX integrate with existing enterprise SAM/ITAM practices?
+Lifecycle,How does a BOM from the 'Discovery' phase differ from one from the 'Build' phase?
+Licensing,How does CycloneDX provide evidence for licensing compliance?
+SBOM Creation,What are the main recommendations for creating a CycloneDX SBOM?
+Vulnerabilities,What defines a Vulnerability Disclosure Report (VDR)?
+Vulnerabilities,What is the purpose of a Vulnerability Exploitability eXchange (VEX)?
+Licensing,How does CycloneDX help with open-source and commercial license compliance?
+Licensing,What is the method for representing open-source licenses in CycloneDX?
+Lifecycle,How can insights from the Discovery phase influence future Design phases?
+Licensing,How are open-source licenses specifically represented in CycloneDX?
+Licensing,What is the difference between declared and concluded licenses?
+SAM/ITAM,How do BOMs from the 'Operations' phase help with license reconciliation in SAM?
+General,What is the core purpose of CycloneDX?
+Operating Systems,How do Operating Systems benefit from implementing CycloneDX?
+Lifecycle,What is the best approach to selecting lifecycle phases for inclusion in a BOM?
+Lifecycle,What should be included when creating a definition for a custom lifecycle phase?
+Licensing,In what way does CycloneDX assist in managing commercial software licenses?
+Licensing,What specific fields exist for detailing commercial license information in CycloneDX?
+Licensing,Can a commercial license have multiple license types specified?
+National Security,What role does CycloneDX play in national security-related cybersecurity tools?
+Licensing,How does CycloneDX facilitate the tracking of copyright information for components?
+Licensing,How is a software component with multiple licenses represented in CycloneDX?
+Extensions,What is a common example of an XML extension in use?
+Formulation,What is the intended use of the Formulation section in CycloneDX?
+Vulnerabilities,How does CycloneDX deal with vulnerability information?
+Formulation,What information does the 'formulation' section of a CycloneDX BOM contain?
+Licensing,Why is differentiating between declared and concluded licenses important during a software audit?
+Licensing,How does CycloneDX help identify components needing specific attribution?
+Lifecycle,What details are required when defining a custom lifecycle phase?
+VEX,How can lifecycle phases be used in generating a VEX document?
+Transparency,What is the aim of achieving software transparency?
+SBOM Use Cases,What are some high-level applications for SBOMs?
+UAVs,What advantages does using CycloneDX offer for Unmanned Aerial Vehicles (UAVs)?
+VDR,What does NIST SP 800-161 specify should be included in VDRs?
+Licensing,How are declared and concluded licenses acknowledged in CycloneDX?
+Relationships,Why are relationships used in CycloneDX?
+Components,How do first-party and third-party components differ in CycloneDX?
+Licensing,How are details of licenses and copyrights represented in CycloneDX?
+Services,What is the significance of data flow description in services?
+Services,How do CycloneDX dependencies show service-to-service dependencies?
+VEX,How does CycloneDX support the creation of VEX documents?
+Formulation,How do declared and observed formulas differ in the 'formulation' section?
+Annotations,Can annotations within CycloneDX be digitally signed?
+Declarations,What is the significance of attestations and claims in the 'declarations' section?
+Signatures,Does CycloneDX allow for the representation of digital and analog signatures?
+Extensions,Can custom extensions be created for CycloneDX to meet specific requirements?
+Schema,"What are the official schema locations for CycloneDX BOMs in JSON, XML, and Protobuf?"
+Regulatory Compliance,How does CycloneDX assist organizations under strict cybersecurity regulations?
+SBOM Generation,"What are the limitations of automated CycloneDX BOM generation, and how can they be mitigated?"
+Annotations,What advantages do annotations provide in CycloneDX?
+Declarations,How do Declarations enable compliance as code?
+Supply Chain,How does CycloneDX promote collaboration and information sharing across the supply chain?
+Data Components,What is the meaning of the 'other' data component type?
+Data Components,In what scenarios might data components be included in a BOM?
+Data Components,Is it possible for data components to have different suppliers than the main component?
+CPE,What is the importance of providing evidence for multiple potential CPE identifiers?
+Cryptographic Assets,What numerical range is used for the 'confidence' measure?
+Cryptographic Assets,What actions should organizations take for an agile cryptographic approach?
+Cryptographic Assets,Where should cryptographic assets be documented within CycloneDX?
+Licensing,What are the advantages of using CycloneDX for managing commercial software licenses?
+Incident Response,How does lifecycle information help in responding to incidents more efficiently?
+Data Components,How can a configuration settings file be represented using a data component?
+Data Components,"When dealing with a large dataset, should it be embedded in the BOM or referenced externally?"
+Lifecycle,What information is gathered during the 'Discovery' lifecycle phase?
+Lifecycle,What is the meaning of the 'Decommission' lifecycle phase?
+Data Components,How can data components track the version history of a configuration file?
+Data Components,How do BOM consumers understand how to interpret data components?
+Lifecycle,Can you provide an example of a custom lifecycle phase definition?
+Licensing,How do SDLC and SAM use cases differ in their approach to licensing?
+Incident Response,How does knowing the lifecycle phase improve incident response?
+Lifecycle,Can the phase value be a custom enumeration?
+Data Components,How can the API specification of a microservice be documented using data components?
+Data Components,What is the recommended way to represent a database query as a data component?
+Lifecycle,How are several lifecycle phases shown in a CycloneDX BOM?
+Vulnerabilities,Why is understanding the lifecycle phase critical for analyzing vulnerabilities?
+Lifecycle,How can CycloneDX lifecycle phases track the development of software components?
+SAM/ITAM,How does CycloneDX support integration with enterprise SAM/ITAM systems?
+Cryptographic Assets,Why is it crucial to document the dependencies of cryptographic assets?
+General,What is the overall scope of CycloneDX?
+Cryptographic Assets,What defines cryptographic agility?
+Dependencies,Can you explain the `dependsOn` dependency type in CycloneDX?
+Dependencies,What is the meaning of the `provides` dependency type?
+Attestations,What capabilities does CycloneDX Attestations provide to organizations?
+Attestations,In what way can Attestations be conceptualized?
+Cryptographic Assets,What should organizations aim to understand as part of an agile cryptographic approach?
+Cryptographic Assets,What was the specific purpose for which CBOM was designed by CycloneDX?
+Cryptographic Assets,Why is capturing dependencies important for analyzing crypto assets?
+Scope,What areas does CycloneDX cover?
+Cryptographic Assets,What does cryptographic agility mean?
+Dependencies,What does the `dependsOn` dependency type signify?
+Dependencies,Can you define the `provides` dependency type?
+Attestations,What advantages do CycloneDX Attestations offer organizations?
+Attestations,How can the concept of Attestations be understood?
+Cryptographic Assets,What is the objective of an agile cryptographic approach for organizations?
+CBOM,What was the intended use for CBOM according to CycloneDX?
+Cryptographic Assets,What is the importance of recording dependencies for cryptographic assets?
+General,What aspects fall within the scope of CycloneDX?
+Cryptographic Assets,How would you define cryptographic agility?
+Dependencies,Explain the functionality of the `dependsOn` dependency type.
+Dependencies,What role does the `provides` dependency type play?
+Attestations,How do CycloneDX Attestations empower organizations?
+Attestations,What is a simple way to think about Attestations?
+Risk Management,What should organizations focus on understanding regarding their cryptographic assets?
+CBOM,For what reason was CBOM created by CycloneDX?
+Dependencies,Why is it important to understand the dependencies of crypto assets?
+Scope,What is the breadth of CycloneDX's application?
+Compliance,What key messages should agencies and commercial providers derive from the policy document?
+Agility,What constitutes cryptographic agility for an organization?
+Dependencies,What is the purpose of the `dependsOn` field in dependency tracking?
+Implementation,What does the `provides` dependency relationship indicate?
+Attestations,What functionalities are enabled by CycloneDX Attestations?
+Compliance as Code,How does the concept of Attestations relate to managing compliance?
+Risk Assessment,What knowledge should organizations gain for an agile cryptographic strategy?
+CBOM Purpose,What specific problem was CBOM designed to solve?
+Crypto Dependencies,What is the significance of mapping dependencies for cryptographic components?
+CycloneDX Scope,What domains are encompassed by CycloneDX?
+Agility Definition,What characteristics define a cryptographically agile organization?
+Dependency Types,How does the `dependsOn` type describe component relationships?
+Provided Components,What does it mean when a dependency `provides` a specification?
+Attestation Benefits,What value do CycloneDX Attestations bring to an organization?
+Compliance Strategy,"In what manner do Attestations support a ""compliance as code"" approach?"
+Cryptographic Understanding,What aspects of cryptographic asset usage should organizations assess?
+CBOM Design,What was the primary design goal for CycloneDX's CBOM?
+Impact Analysis,Why is documenting crypto asset dependencies necessary for impact assessment?
+Tool Scope,What functional areas does CycloneDX address?
+Memorandum Takeaways,What are the two principal directives for software providers from the memorandum?
+Agility Concept,What principles underlie the idea of cryptographic agility?
+Component Dependencies,How does the `dependsOn` attribute define component interconnections?
+Specification Implementation,How does the `provides` attribute link components to standards?
+Attestation Features,What features are available through CycloneDX Attestations?
+Code Compliance,How do Attestations facilitate managing compliance through code?
+Risk Evaluation,What steps should organizations take to evaluate their cryptographic risk posture?
+CBOM Intent,What need was CBOM specifically created to address?
+Dependency Tracking,What is the rationale behind capturing dependencies for crypto assets?
+Application Scope,What range of activities does CycloneDX support?
+Directive Summary,What are the core recommendations for agencies and commercial software providers?
+Agility Practices,What practices define an agile approach to cryptography?
+Dependency Relationships,What information does the `dependsOn` dependency type convey?
+Standard Provision,What is the significance of the `provides` dependency type?
+Attestation Capabilities,What capabilities are unlocked by using CycloneDX Attestations?
+Compliance Management,How do Attestations contribute to managing compliance as code?
+Asset Assessment,What should organizations prioritize in understanding their crypto assets?
+CBOM Function,What function does the CBOM serve within CycloneDX?
+Crypto Analysis,Why is it essential to capture the dependencies of cryptographic assets?
+Project Scope,What is the extent of CycloneDX's coverage?
+Agility Implementation,What steps are involved in achieving cryptographic agility?
+Dependency Modeling,What does the `dependsOn` field represent in a dependency model?
+Provided Standards,What is the role of the `provides` field in dependency modeling?
+Attestation Value,What benefits do organizations gain from CycloneDX Attestations?
+Code-Based Compliance,How do Attestations enable a code-based approach to compliance?
+Posture Assessment,What is the goal of assessing the risk posture of cryptographic assets?
+CBOM Utility,What utility does the CycloneDX CBOM provide?
+Dependency Documentation,What is the purpose of documenting dependencies for crypto assets?
+Functional Scope,What functionalities are included within CycloneDX?
+Memorandum Guidance,What guidance is provided to agencies and commercial providers in the memorandum?
+Agility Framework,What framework does cryptographic agility provide for organizations?
+Component Links,How are component links established using the `dependsOn` type?
+Standard Linking,How are standards linked to components via the `provides` type?
+Attestation Tools,What tools do CycloneDX Attestations offer for managing security information?
+Compliance Automation,"How does the ""compliance as code"" concept leverage Attestations?"
+Asset Knowledge,Why is it important for organizations to know their cryptographic assets?
+CBOM Creation,Why did CycloneDX create the CBOM?
+Dependency Importance,What is the importance of tracking dependencies for crypto assets?
+Coverage,What areas are covered by CycloneDX?
+Agility Approach,What approach should organizations take for cryptographic agility?
+Dependency Definition,How is the `dependsOn` dependency type defined?
+Provided Definition,How is the `provides` dependency type defined?
+Attestation Enablement,What does CycloneDX Attestations enable for organizations?
+Compliance Concept,"What is the concept of ""compliance as code"" in relation to Attestations?"
+Risk Insight,What insights should organizations gain regarding their cryptographic assets?
+CBOM Origin,What was the origin of the CBOM within CycloneDX?
+Dependency Capture,Why is capturing dependencies a key aspect of crypto asset management?
+Domain Scope,What domains does CycloneDX operate within?
+Memorandum Points,What are the main points for software providers in the memorandum?
+Agility Principles,What principles guide cryptographic agility?
+Dependency Structure,What structure does the `dependsOn` type provide?
+Provided Structure,What structure does the `provides` type provide?
+Attestation Support,How do CycloneDX Attestations support organizational needs?
+Code Compliance,"In what ways do Attestations embody ""compliance as code""?"
+Risk Understanding,What understanding should organizations develop about their crypto assets?
+CBOM Rationale,What was the rationale behind the CBOM's creation in CycloneDX?
+Asset Dependencies,Why are dependencies important for crypto assets?
+Range,What is the range of CycloneDX's capabilities?
+Provider Guidance,What guidance should agencies and commercial providers follow?
+Agility Strategy,What strategy defines cryptographic agility?
+Dependency Specification,What does specifying `dependsOn` achieve?
+Standard Specification,What does specifying `provides` achieve?
+Attestation Functionality,What functionality is provided by CycloneDX Attestations?
+Compliance Execution,"How is ""compliance as code"" executed through Attestations?"
+Asset Evaluation,How should organizations evaluate their cryptographic assets?
+CBOM Objective,What was the objective in designing the CBOM?
+Dependency Reasoning,What is the reasoning behind documenting crypto asset dependencies?
+Operational Scope,What is the operational scope of CycloneDX?
+Memorandum Instructions,What instructions are contained in the memorandum for providers?
+Agility Implementation,How is cryptographic agility implemented within organizations?
+Component Dependency,What constitutes a component dependency as defined by `dependsOn`?
+Standard Provision,What constitutes standard provision as defined by `provides`?
+Attestation Provision,What provisions do CycloneDX Attestations make available?
+Compliance Mechanism,"What mechanism does ""compliance as code"" provide via Attestations?"
+Risk Analysis,How should organizations analyze the risk of their cryptographic assets?
+CBOM Development,What led to the development of the CBOM in CycloneDX?
+Dependency Analysis,Why is analyzing dependencies crucial for crypto assets?
+Functional Coverage,What functions does CycloneDX cover?
+Agility Requirements,What requirements define cryptographic agility?
+Dependency Modeling,How are dependencies modeled using the `dependsOn` attribute?
+Provided Modeling,How are provided components modeled using the `provides` attribute?
+Attestation Advantages,What advantages do organizations gain from CycloneDX Attestations?
+Code Compliance,How does Attestations' role support code-based compliance?
+Asset Review,What review should organizations conduct on their cryptographic assets?
+CBOM Motivation,What motivated the creation of the CBOM by CycloneDX?
+Dependency Justification,What justifies the need to capture crypto asset dependencies?
+Application Areas,In what areas can CycloneDX be applied?
+Provider Actions,What actions should agencies and commercial providers take?
+Agility Objectives,What are the objectives of cryptographic agility?
+Dependency Representation,What does the `dependsOn` representation convey?
+Provided Representation,What does the `provides` representation convey?
+Attestation Outcomes,What outcomes result from using CycloneDX Attestations?
+Compliance Framework,How does Attestations form a compliance framework as code?
+Asset Insight,What insight should organizations gain into their cryptographic assets?
+CBOM Genesis,What is the genesis of the CBOM in CycloneDX?
+Dependency Documentation,Why document the dependencies of cryptographic assets?
+Capability Scope,What capabilities fall under the CycloneDX scope?
+Memorandum Summary,What is a summary of the memorandum's key points?
+Agility Goals,What goals does cryptographic agility help organizations achieve?
+Dependency Linking,How does `dependsOn` link dependent components?
+Provided Linking,How does `provides` link provided specifications?
+Attestation Impact,What impact do CycloneDX Attestations have on organizations?
+Compliance Integration,How is compliance integrated as code through Attestations?
+Risk Identification,How do organizations identify risks in their cryptographic assets?
+CBOM Foundation,On what foundation was the CBOM built by CycloneDX?
+Dependency Tracking,Why is tracking dependencies important for crypto assets?
+Usage Scope,What is the scope of usage for CycloneDX?
+Agility Benefits,What benefits does cryptographic agility offer?
+Dependency Indication,What does the `dependsOn` indication mean?
+Provided Indication,What does the `provides` indication mean?
+Attestation Influence,How do CycloneDX Attestations influence organizational capabilities?
+Code Compliance,How does the code compliance concept utilize Attestations?
+Asset Awareness,What awareness should organizations develop regarding crypto assets?
+CBOM Creation,What prompted CycloneDX to create the CBOM?
+Dependency Significance,What is the significance of dependencies for crypto assets?
+Operational Areas,What operational areas does CycloneDX address?
+Provider Responsibilities,What responsibilities do agencies and providers have?
+Agility Focus,What is the focus of cryptographic agility?
+Dependency Purpose,What is the purpose of the `dependsOn` dependency?
+Provided Purpose,What is the purpose of the `provides` dependency?
+Attestation Utility,What utility do CycloneDX Attestations provide?
+Compliance Realization,How is compliance realized as code with Attestations?
+Risk Appraisal,How should organizations appraise the risk of crypto assets?
+CBOM Design,What considerations went into the design of the CBOM?
+Dependency Value,What value is derived from capturing crypto asset dependencies?
+Coverage Scope,What is the scope of coverage provided by CycloneDX?
+Memorandum Essentials,What are the essential elements of the memorandum?
+Agility Implementation,How is cryptographic agility implemented effectively?
+Dependency Expression,How is the `dependsOn` expression used?
+Provided Expression,How is the `provides` expression used?
+Attestation Enhancement,How do CycloneDX Attestations enhance organizational capabilities?
+Code Compliance,In what way does Attestations enable compliance as code?
+Asset Scrutiny,How should organizations scrutinize their cryptographic assets?
+CBOM Reason,What is the reason behind the CBOM's existence in CycloneDX?
+Dependency Necessity,Why is it necessary to document dependencies for crypto assets?
+Functional Scope,What is the functional scope of CycloneDX?
+Agility Execution,How is cryptographic agility executed within an organization?
+Claims,What specific attributes are detailed for claims within this documentation's table?
+Claims,"In the context of a CDXA claim, how is the 'bom-ref' property defined?"
+Evidence,What are the constituent properties of evidence as outlined in CDXA?
+Evidence,How is the 'bom-ref' property characterized specifically for CDXA evidence?
+Evidence,What is the definition of the 'propertyName' property within CDXA evidence?
+Evidence,How is the 'description' property utilized in the context of CDXA evidence?
+Evidence,What role does the 'data' property serve for CDXA evidence?
+Evidence,What information does the 'created' property hold for CDXA evidence?
+Attestations,In what way does CycloneDX Attestations record adherence to standards?
+Conformance,What are the three distinct fields that comprise conformance in CDXA?
+Claims,What is the primary function or purpose of claims within CDXA?
+Claims,What are the two fundamental elements that constitute a claim in CDXA?
+Properties,Which properties are enumerated in the table for claims according to the document?
+Identifier,How is the 'bom-ref' property described when referring to a CDXA claim?
+Evidence Components,What fields define the structure of evidence in CDXA?
+Evidence Identifier,What is the role of the 'bom-ref' field in CDXA evidence?
+Property Reference,How is the 'propertyName' field defined in CDXA evidence?
+Evidence Description,What is the intended use of the 'description' field in CDXA evidence?
+Supporting Data,What does the 'data' field represent in the context of CDXA evidence?
+Creation Timestamp,What is the significance of the 'created' field in CDXA evidence?
+Conformance Documentation,How does the process of documenting conformance function in CycloneDX Attestations?
+Scoring,What does the 'score' field represent within CDXA conformance?
+Rationale,What is the purpose of the 'rationale' field in CDXA conformance?
+Risk Mitigation,How are 'mitigationStrategies' used in the context of CDXA conformance?
+Requirement Mapping,"How do attestations connect requirements, claims, and conformance in CDXA?"
+Argumentation,In what way do claims facilitate an organization's argument for fulfilling requirements?
+Claim Structure,How do the target and predicate components form the basis of a claim in CDXA?
+Standard Adherence,What mechanism does CycloneDX use to record conformance through attestations?
+Performance Measurement,What does the conformance score indicate in CDXA?
+Justification,Why is a rationale provided as part of conformance documentation in CDXA?
+Threat Reduction,What is the goal of including mitigation strategies in conformance reporting?
+Verification,How does CycloneDX Attestations provide proof of meeting requirements?
+Assertion Components,What are the essential parts that make up an assertion in CDXA?
+System Mapping,How do claims restate requirements using system-specific terminology?
+Claim Attributes,What characteristics define a claim within the CDXA framework?
+Unique Identification,What is the function of the 'bom-ref' identifier for claims?
+Evidence Attributes,What characteristics are associated with evidence in CDXA?
+Evidence Reference,How is evidence uniquely identified within a CDXA document?
+Property Taxonomy,What is the source or definition for the 'propertyName' in evidence?
+Narrative Description,How is the creation process of evidence explained in its description?
+Analytical Output,What type of information is contained within the evidence 'data' field?
+Temporal Marker,Why is the creation timestamp important for CDXA evidence?
+Compliance Proof,What is the overall objective of the conformance documentation process?
+Assessment Criteria,How is the 'score' determined for a given conformance claim?
+Decision Support,What information does the 'rationale' provide to stakeholders?
+Contingency Planning,How do mitigation strategies address potential compliance gaps?
+Framework Integration,"How are requirements, claims, and conformance interconnected in CDXA?"
+Position Statement,What is the role of a claim in representing an organization's stance?
+Requirement Translation,How do claims adapt general requirements to specific system contexts?
+Claim Elements,What are the necessary elements required to formulate a claim?
+Reference Identifier,How is a claim assigned a unique reference within CDXA?
+Evidence Elements,What are the necessary elements required to constitute evidence?
+Document Identifier,What ensures evidence uniqueness within a CDXA document?
+Specification Link,How is the evidence linked to a specific property definition?
+Contextual Explanation,What details are included in the evidence description field?
+Validation Information,What constitutes the supporting data for an evidence entry?
+Chronological Tracking,Why is the evidence creation date recorded?
+Conformance Elements,What are the necessary elements required to establish conformance?
+Quantitative Assessment,What does the numerical value in the 'score' field represent?
+Qualitative Assessment,What is the nature of information provided in the 'rationale' field?
+Proactive Measures,What is the intended outcome of defining mitigation strategies?
+Requirement Satisfaction,How does the conformance section demonstrate fulfillment of requirements?
+Claim Validation,What is the relationship between claims and the supporting evidence?
+Predicate Logic,How does the predicate component define the scope of a claim?
+Target Scope,What does the target component of a claim specify?
+Attestation Process,What steps are involved in creating a CycloneDX attestation?
+Requirement Fulfillment,How is the ability to meet requirements demonstrated through conformance?
+Evidence Collection,What process is involved in gathering data to support claims?
+Claim Construction,How are the target and predicate used to build a claim argument?
+Standard Mapping,How are organizational requirements connected to specific claims?
+Score Interpretation,What does a particular conformance score signify?
+Reasoning Documentation,Why is it important to document the rationale behind a conformance score?
+Strategy Development,How are mitigation strategies formulated in response to conformance findings?
+Framework Application,How can the CDXA framework be used to demonstrate compliance?
+Assertion Formulation,What is the process for creating a valid claim assertion?
+System Specificity,How do claims ensure requirements are addressed in a system-specific manner?
+Identification Mechanism,What mechanism ensures claims are uniquely identifiable?
+Evidence Compilation,What is the process for assembling the components of evidence?
+Property Alignment,How is the evidence aligned with specific property definitions?
+Creation Process,What information does the evidence description provide about its origin?
+Data Representation,How is the supporting information for evidence structured?
+Time Stamping,What is the purpose of including a creation timestamp with evidence?
+Conformance Evaluation,What is the process for evaluating and documenting conformance?
+Performance Indicator,How can the conformance score be used as a performance indicator?
+Explanation Provision,What is the role of the rationale in explaining conformance outcomes?
+Risk Management,How do mitigation strategies contribute to overall risk management?
+Attestation Linking,How does the attestation structure connect different compliance elements?
+Stakeholder Communication,How do claims facilitate communication with stakeholders?
+Requirement Clarification,How do claims help clarify the interpretation of requirements?
+Claim Referencing,What is the significance of the unique 'bom-ref' for each claim?
+Evidence Referencing,What is the significance of the unique 'bom-ref' for each piece of evidence?
+Taxonomy Usage,How is the CycloneDX Property Taxonomy utilized in evidence?
+Descriptive Narrative,What is the function of the descriptive narrative in evidence?
+Data Inclusion,What types of analysis or output can be included in the evidence data?
+Temporal Relevance,How does the creation timestamp affect the relevance of evidence?
+Conformance Scoring,What factors influence the determination of a conformance score?
+Decision Documentation,Why is the rationale considered important for decision-making?
+Corrective Actions,How are mitigation strategies used to address conformance issues?
+Compliance Demonstration,What is the ultimate goal of the CDXA conformance process?
+Claim Support,How is evidence used to substantiate the validity of claims?
+Logical Structure,How do the target and predicate create a logical structure for claims?
+Requirement Addressing,How do claims ensure that specific requirements are directly addressed?
+Attestation Integrity,What ensures the integrity and traceability of attestations in CDXA?

@@ -1,0 +1,288 @@
+Category,Question
+GitHub Actions,What is the purpose of the .github/workflows directory in a repository?
+GitHub Actions,How do you trigger a GitHub Actions workflow manually using workflow_dispatch?
+GitHub Actions,What is the difference between push and pull_request triggers in GitHub Actions?
+GitHub Actions,How do you set environment variables in a GitHub Actions workflow?
+GitHub Actions,What is the purpose of the GITHUB_TOKEN secret in GitHub Actions?
+GitHub Actions,How do you use matrix strategy to run jobs on multiple operating systems?
+GitHub Actions,What is the difference between run and uses in a GitHub Actions step?
+GitHub Actions,How do you cache dependencies in a GitHub Actions workflow?
+GitHub Actions,What are GitHub Actions artifacts and how do you upload them?
+GitHub Actions,How do you conditionally run steps based on branch names?
+GitHub Actions,What is the purpose of the continue-on-error flag in GitHub Actions?
+GitHub Actions,How do you share data between jobs in the same workflow?
+GitHub Actions,What are GitHub Actions reusable workflows and how do you create them?
+GitHub Actions,How do you use secrets in GitHub Actions workflows?
+GitHub Actions,What is the difference between job-level and step-level environment variables?
+GitHub Actions,How do you debug failed GitHub Actions workflows?
+GitHub Actions,What is the purpose of the timeout-minutes setting in workflows?
+GitHub Actions,How do you use GitHub Actions to deploy to multiple environments?
+GitHub Actions,What are composite actions and how do you create them?
+GitHub Actions,How do you handle pull request events for specific branches only?
+GitHub Actions,What is the difference between github.ref and github.sha context variables?
+GitHub Actions,How do you use GitHub Actions to run tests on pull requests?
+GitHub Actions,What is the purpose of the if condition in GitHub Actions steps?
+GitHub Actions,How do you set up a self-hosted runner for GitHub Actions?
+GitHub Actions,What are GitHub Actions expressions and how do you use them?
+GitHub Actions,How do you use the GitHub CLI in GitHub Actions workflows?
+GitHub Actions,What is the difference between needs and dependencies in GitHub Actions?
+GitHub Actions,How do you use GitHub Actions to publish packages to registries?
+GitHub Actions,What is the purpose of the concurrency setting in workflows?
+GitHub Actions,How do you handle sensitive data in GitHub Actions logs?
+GitHub Actions,What are GitHub Actions templates and how do you use them?
+Azure Pipelines,What is the purpose of the azure-pipelines.yml file?
+Azure Pipelines,How do you define multiple stages in an Azure Pipeline?
+Azure Pipelines,What is the difference between jobs and steps in Azure Pipelines?
+Azure Pipelines,How do you use variables in Azure Pipelines?
+Azure Pipelines,What is the purpose of the pool keyword in Azure Pipelines?
+Azure Pipelines,How do you trigger pipelines based on specific branch changes?
+Azure Pipelines,What are Azure Pipeline templates and how do you reference them?
+Azure Pipelines,How do you use conditions to control task execution?
+Azure Pipelines,What is the difference between predefined and user-defined variables?
+Azure Pipelines,How do you publish artifacts in Azure Pipelines?
+Azure Pipelines,What is the purpose of the dependsOn keyword in stages?
+Azure Pipelines,How do you use Azure Pipelines to deploy to Azure services?
+Azure Pipelines,What are deployment jobs and how do they differ from regular jobs?
+Azure Pipelines,How do you set up approval gates in Azure Pipelines?
+Azure Pipelines,What is the purpose of the strategy keyword in jobs?
+Azure Pipelines,How do you use Azure Pipelines with GitHub repositories?
+Azure Pipelines,What are Azure Pipeline resources and how do you define them?
+Azure Pipelines,How do you handle secrets in Azure Pipelines?
+Azure Pipelines,What is the difference between Classic and YAML pipelines?
+Azure Pipelines,How do you use Azure Pipelines to run tests in parallel?
+Azure Pipelines,What is the purpose of the checkout step in Azure Pipelines?
+Azure Pipelines,How do you use service connections in Azure Pipelines?
+Azure Pipelines,What are Azure Pipeline environments and how do you configure them?
+Azure Pipelines,How do you use Azure Pipelines to build Docker images?
+Azure Pipelines,What is the difference between queue and run pipelines?
+Azure Pipelines,How do you use Azure Pipelines with multiple repositories?
+Azure Pipelines,What is the purpose of the timeoutInMinutes setting?
+Azure Pipelines,How do you use Azure Pipelines to deploy to Kubernetes clusters?
+Azure Pipelines,What are Azure Pipeline variable groups and how do you use them?
+Azure Pipelines,How do you troubleshoot failed Azure Pipeline runs?
+npm,What is the purpose of the package.json file in npm projects?
+npm,How do you install dependencies listed in package.json?
+npm,What is the difference between dependencies and devDependencies?
+npm,How do you update npm packages to their latest versions?
+npm,What is the purpose of the package-lock.json file?
+npm,How do you install a specific version of an npm package?
+npm,What is the difference between npm install and npm ci?
+npm,How do you create and publish your own npm package?
+npm,What is the purpose of the scripts section in package.json?
+npm,How do you run custom npm scripts defined in package.json?
+npm,What is the difference between global and local npm installations?
+npm,How do you manage npm cache and clear it when needed?
+npm,What is the purpose of the .npmrc file?
+npm,How do you use npm workspaces for monorepo management?
+npm,What is the difference between npm audit and npm audit fix?
+npm,How do you configure npm to use a private registry?
+npm,What is the purpose of peerDependencies in package.json?
+npm,How do you handle version conflicts between npm packages?
+npm,What is the difference between npm start and npm run start?
+npm,How do you use npm link for local package development?
+npm,What is the purpose of the engines field in package.json?
+npm,How do you create npm scripts that run in parallel?
+npm,What is the difference between npm outdated and npm update?
+npm,How do you use npm to manage security vulnerabilities?
+npm,What is the purpose of the files field in package.json?
+npm,How do you configure npm to ignore certain files during publishing?
+npm,What is the difference between npm install --save and --save-dev?
+npm,How do you use npm to run scripts with environment variables?
+npm,What is the purpose of the bin field in package.json?
+npm,How do you troubleshoot common npm installation errors?
+Maven,What is the purpose of the pom.xml file in Maven projects?
+Maven,How do you compile a Maven project using the command line?
+Maven,What is the difference between compile and package Maven goals?
+Maven,How do you add external dependencies to a Maven project?
+Maven,What is the purpose of the Maven repository system?
+Maven,How do you create a new Maven project from archetype?
+Maven,What is the difference between dependencies and dependencyManagement?
+Maven,How do you skip tests during Maven build execution?
+Maven,What is the purpose of the Maven lifecycle phases?
+Maven,How do you configure Maven to use a custom settings.xml file?
+Maven,What is the difference between Maven profiles and properties?
+Maven,How do you deploy Maven artifacts to a remote repository?
+Maven,What is the purpose of the effective-pom command?
+Maven,How do you use Maven plugins to extend build functionality?
+Maven,What is the difference between clean and clean install goals?
+Maven,How do you configure Maven to use a proxy server?
+Maven,What is the purpose of the Maven wrapper (mvnw)?
+Maven,How do you manage multi-module Maven projects?
+Maven,What is the difference between jar and war packaging types?
+Maven,How do you use Maven to run integration tests?
+Maven,What is the purpose of the Maven release plugin?
+Maven,How do you configure Maven to use environment-specific properties?
+Maven,"What is the difference between Maven scopes (compile, test, runtime)?"
+Maven,How do you use Maven to generate project documentation?
+Maven,What is the purpose of the Maven archetype plugin?
+Maven,How do you troubleshoot common Maven build failures?
+Maven,What is the difference between Maven and Gradle build tools?
+Maven,How do you use Maven to manage transitive dependencies?
+Gradle,What is the purpose of the build.gradle file in Gradle projects?
+Gradle,How do you execute Gradle tasks from the command line?
+Gradle,What is the difference between plugins and dependencies in Gradle?
+Gradle,How do you configure Gradle to use a custom repository?
+Gradle,What is the purpose of the Gradle wrapper (gradlew)?
+Gradle,How do you define custom tasks in Gradle build scripts?
+Gradle,What is the difference between implementation and api configurations?
+Gradle,How do you use Gradle to build multi-project setups?
+Gradle,What is the purpose of the settings.gradle file?
+Gradle,How do you configure Gradle to use Java toolchains?
+Gradle,What is the difference between compile and runtime classpaths?
+Gradle,How do you use Gradle to publish artifacts to repositories?
+Gradle,What is the purpose of Gradle dependency resolution strategies?
+Gradle,How do you configure Gradle to use environment variables?
+Gradle,What is the difference between Gradle and Maven build systems?
+Gradle,How do you use Gradle to manage build cache effectively?
+Gradle,What is the purpose of Gradle build scans?
+Gradle,How do you configure Gradle to use parallel execution?
+Gradle,What is the difference between Gradle Kotlin DSL and Groovy DSL?
+Gradle,How do you use Gradle to run tests with specific configurations?
+Gradle,What is the purpose of Gradle configuration avoidance?
+Gradle,How do you troubleshoot Gradle build performance issues?
+Gradle,What is the difference between Gradle incremental builds and clean builds?
+Gradle,How do you use Gradle to manage version catalogs?
+Gradle,What is the purpose of Gradle composite builds?
+Gradle,How do you configure Gradle to work with Docker?
+Gradle,What is the difference between Gradle up-to-date checks and rebuilds?
+Gradle,How do you use Gradle to manage code quality plugins?
+pip,What is the purpose of the requirements.txt file in Python projects?
+pip,How do you install packages listed in requirements.txt?
+pip,What is the difference between pip install and pip install -e?
+pip,How do you create a virtual environment for Python projects?
+pip,What is the purpose of the pip freeze command?
+pip,How do you upgrade pip to the latest version?
+pip,What is the difference between global and local package installations?
+pip,How do you uninstall packages using pip?
+pip,What is the purpose of the --user flag in pip installations?
+pip,How do you use pip to install packages from a specific index?
+pip,What is the difference between pip and conda package managers?
+pip,How do you manage package versions with pip?
+pip,What is the purpose of the pip list command?
+pip,How do you use pip to install packages from Git repositories?
+pip,What is the difference between pip install and python -m pip install?
+pip,How do you configure pip to use a proxy server?
+pip,What is the purpose of the pip cache directory?
+pip,How do you use pip to install packages with specific Python versions?
+pip,What is the difference between pip and easy_install?
+pip,How do you troubleshoot common pip installation errors?
+pip,What is the purpose of the pip show command?
+pip,How do you use pip to install packages from local directories?
+pip,What is the difference between pip and poetry dependency management?
+pip,How do you configure pip to ignore SSL certificates?
+pip,What is the purpose of the pip download command?
+pip,How do you use pip to install packages in editable mode?
+pip,What is the difference between pip and pipenv tools?
+pip,How do you manage pip configuration files?
+pip,What is the purpose of the pip check command?
+pip,How do you use pip to install packages with optional dependencies?
+Go,What is the purpose of the go.mod file in Go projects?
+Go,How do you initialize a new Go module?
+Go,What is the difference between go build and go install commands?
+Go,How do you manage dependencies in Go projects?
+Go,What is the purpose of the go.sum file?
+Go,How do you upgrade Go dependencies to newer versions?
+Go,What is the difference between go mod tidy and go mod download?
+Go,How do you use Go workspaces for multi-module projects?
+Go,What is the purpose of the GOPATH environment variable?
+Go,How do you configure Go to use a private module proxy?
+Go,What is the difference between go run and go build?
+Go,How do you use Go modules with version control systems?
+Go,What is the purpose of the go vet command?
+Go,How do you manage Go toolchain versions?
+Go,What is the difference between go fmt and goimports?
+Go,How do you use Go to cross-compile for different platforms?
+Go,What is the purpose of the go test command?
+Go,How do you configure Go to use vendor directories?
+Go,What is the difference between go mod and dep dependency management?
+Go,How do you troubleshoot common Go module issues?
+Go,What is the purpose of the go generate command?
+Go,How do you use Go to manage build tags?
+Go,What is the difference between go list and go mod graph?
+Go,How do you configure Go to work with private repositories?
+Go,What is the purpose of the go env command?
+Go,How do you use Go to manage code coverage?
+Go,What is the difference between go doc and godoc tools?
+Go,How do you use Go to manage race conditions in tests?
+Go,What is the purpose of the go clean command?
+Go,How do you configure Go to use custom build flags?
+Conan,What is the purpose of the conanfile.txt in Conan package management?
+Conan,How do you install dependencies using Conan package manager?
+Conan,What is the difference between conan install and conan create commands?
+Conan,How do you create and publish your own Conan packages?
+Conan,What is the purpose of the conan-center repository?
+Conan,How do you configure Conan to use custom remotes?
+Conan,What is the difference between requires and build_requires in Conan?
+Conan,How do you use Conan profiles for different build configurations?
+Conan,What is the purpose of the conanfile.py file?
+Conan,How do you manage Conan package versions and revisions?
+Conan,What is the difference between Conan generators and imports?
+Conan,How do you use Conan to manage C/C++ dependencies?
+Conan,What is the purpose of the conan search command?
+Conan,How do you configure Conan to work with private repositories?
+Conan,What is the difference between Conan and other package managers?
+Conan,How do you use Conan to handle cross-compilation scenarios?
+Conan,What is the purpose of the conan export command?
+Conan,How do you manage Conan package settings and options?
+Conan,What is the difference between Conan lockfiles and version ranges?
+Conan,How do you troubleshoot common Conan package resolution issues?
+Conan,What is the purpose of the conan info command?
+Conan,How do you use Conan to manage binary packages?
+Conan,What is the difference between Conan reference and package ID?
+Conan,How do you configure Conan to use environment variables?
+Conan,What is the purpose of the conan upload command?
+Conan,How do you use Conan to manage package recipes?
+Conan,What is the difference between Conan editable packages and regular packages?
+Conan,How do you use Conan to handle package conflicts?
+Conan,What is the purpose of the conan remove command?
+Conan,How do you configure Conan to work with multiple profiles?
+CMake,What is the purpose of the CMakeLists.txt file in CMake projects?
+CMake,How do you configure CMake to find and link external libraries?
+CMake,What is the difference between add_executable and add_library commands?
+CMake,How do you use CMake to manage build configurations?
+CMake,What is the purpose of the find_package command in CMake?
+CMake,How do you configure CMake to use different compilers?
+CMake,What is the difference between target_link_libraries and target_include_directories?
+CMake,How do you use CMake to manage project dependencies?
+CMake,What is the purpose of the CMAKE_BUILD_TYPE variable?
+CMake,How do you configure CMake to generate different build systems?
+CMake,What is the difference between INTERFACE and PRIVATE link options?
+CMake,How do you use CMake to manage version requirements?
+CMake,What is the purpose of the configure_file command?
+CMake,How do you use CMake to handle platform-specific configurations?
+CMake,What is the difference between CMake modules and scripts?
+CMake,How do you configure CMake to use environment variables?
+CMake,What is the purpose of the pkg_check_modules command?
+CMake,How do you use CMake to manage test configurations?
+CMake,What is the difference between CMake presets and manual configuration?
+CMake,How do you troubleshoot common CMake configuration errors?
+CMake,What is the purpose of the CMake toolchain files?
+CMake,How do you use CMake to manage installation directories?
+CMake,What is the difference between CMake imported targets and regular targets?
+CMake,How do you configure CMake to work with package managers?
+CMake,What is the purpose of the CMake package registry?
+CMake,How do you use CMake to manage compiler features and standards?
+CMake,What is the difference between CMake source and binary directories?
+CMake,How do you use CMake to handle conditional compilation?
+CMake,What is the purpose of the CMake export and install commands?
+CMake,How do you configure CMake to work with IDE integration?
+GitHub Actions,"How do you implement a complex CI/CD pipeline that builds, tests, and deploys a multi-service application with database migrations and rollback capabilities using GitHub Actions?"
+Azure Pipelines,"How do you design and implement a sophisticated deployment pipeline that handles blue-green deployments with health checks, automatic rollback on failure, and progressive rollout strategies across multiple Azure regions using Azure Pipelines?"
+npm,How do you resolve complex dependency conflicts in a large monorepo with multiple packages that have conflicting peer dependency requirements and circular dependencies while maintaining consistent versions across all services?
+Maven,"How do you configure a complex multi-module Maven project with custom plugins, profile-specific configurations, and cross-module dependencies that need to handle different deployment targets and environment-specific properties?"
+Gradle,"How do you optimize a large Gradle build with hundreds of modules by implementing build caching, parallel execution, configuration avoidance, and custom task dependencies to reduce build times from hours to minutes?"
+pip,How do you manage dependency resolution in a Python project with conflicting transitive dependencies across multiple third-party libraries while ensuring reproducible builds and handling platform-specific binary dependencies?
+Go,"How do you implement a complex Go project with multiple modules, vendoring strategies, and cross-compilation requirements that need to handle different operating systems, architectures, and CGO dependencies for a distributed system deployment?"
+Conan,"How do you manage complex C/C++ dependency graphs with multiple versions, custom build configurations, and platform-specific binaries while handling transitive dependencies and ensuring ABI compatibility across different compiler versions?"
+CMake,"How do you configure a sophisticated CMake build system that handles cross-platform compilation, multiple toolchains, custom find modules, and complex dependency management for a large C++ project with both static and shared libraries?"
+GitHub Actions,"How do you troubleshoot and resolve intermittent failures in GitHub Actions workflows that involve Docker container builds, network-dependent services, race conditions between parallel jobs, and resource limitations on GitHub-hosted runners?"
+Azure Pipelines,"How do you debug and optimize Azure Pipeline performance issues that involve slow artifact transfers, inefficient task execution, resource contention between parallel builds, and complex deployment orchestration across multiple environments?"
+npm,"How do you resolve critical security vulnerabilities in a complex npm dependency tree while maintaining application functionality, handling breaking changes in major version updates, and ensuring all transitive dependencies are properly patched?"
+Maven,"How do you troubleshoot complex Maven build failures that involve plugin compatibility issues, repository connectivity problems, dependency resolution conflicts, profile activation failures, and integration with external build systems?"
+Gradle,"How do you diagnose and fix Gradle build performance degradation caused by configuration time bottlenecks, task up-to-date checking failures, cache corruption issues, and inefficient dependency resolution in large multi-project builds?"
+pip,"How do you resolve complex pip installation failures that involve SSL certificate issues, proxy configuration problems, package index connectivity failures, binary compatibility issues, and conflicts between system and user installations?"
+Go,"How do you troubleshoot Go module resolution problems that involve private repository access issues, version mismatch conflicts, proxy configuration failures, checksum verification errors, and cross-module dependency cycles?"
+Conan,"How do you debug complex Conan package resolution and build failures that involve missing binary packages, compiler compatibility issues, cross-platform build configuration problems, and conflicts between different package versions in the dependency graph?"
+CMake,"How do you resolve sophisticated CMake configuration issues that involve complex toolchain setup, cross-compilation problems, library linking failures, platform-specific feature detection issues, and integration with external package managers?"
+GitHub Actions,"How do you implement a comprehensive security scanning pipeline in GitHub Actions that includes static code analysis, dependency vulnerability scanning, container image scanning, secrets detection, and automated security policy enforcement?"
+Azure Pipelines,"How do you design a robust testing pipeline in Azure Pipelines that handles unit testing, integration testing, end-to-end testing, performance testing, and automated test result analysis with intelligent test execution and flaky test detection?"
