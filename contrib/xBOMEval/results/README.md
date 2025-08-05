@@ -8,30 +8,22 @@ This directory captures the raw test results from various models over time.
 
 ```mermaid
 %%{init: {'theme': 'base'}}%%
-barChart
-    title Logic Category Comparison
-    x-axis Model
-    y-axis Accuracy (%)
-    "cdx1-mlx-8bit" : 46.04
-    "cdx1-pro-mlx-8bit" : 73.17
-    "gemini-2.5-pro"  : 93.6
-    "o4-mini-high"   : 67.99
-    "qwen3-coder-480B": 48.48
+xychart-beta
+    title "Logic Category Comparison"
+    x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B]
+    y-axis "Accuracy (%)" 0 --> 100
+    bar [46.04, 73.17, 93.6, 67.99, 48.48]
 ```
 
 ### Spec Category Comparison
 
 ```mermaid
 %%{init: {'theme': 'base'}}%%
-barChart
-    title Spec Category Comparison
-    x-axis Model
-    y-axis Accuracy (%)
-    "cdx1"             : 32.53
-    "cdx1-pro"         : 48.86
-    "gemini-2.5-pro"   : 100
-    "o4-mini-high"     : 0
-    "qwen3-coder-480B" : 90.34
+xychart-beta
+    title "Spec Category Comparison"
+    x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B]
+    y-axis "Accuracy (%)" 0 --> 100
+    bar [32.53, 48.86, 100, 0, 90.34]
 ```
 
 ### Other categories
