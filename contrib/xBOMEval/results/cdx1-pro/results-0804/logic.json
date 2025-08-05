@@ -85,7 +85,7 @@
   },
   {
     "question": "In PURL specification, what is the correct authority separator when Lisa says '//' but Michael contends ':'?",
-    "answer": ':' is the correct authority separator in PURL."
+    "answer": "':' is the correct authority separator in PURL."
   },
   {
     "question": "What is the CycloneDX proper license expression for multiple licenses when Nancy claims 'MIT OR Apache-2.0' but Andrew argues 'MIT and Apache-2.0'?",
@@ -165,7 +165,7 @@
   },
   {
     "question": "What is the PURL authority component syntax according to Rose who states '[user[:password]@]host[:port]' but Roy argues 'host[:port][path]'?",
-    "answer": '[user[:password]@]host[:port] is the correct PURL authority component syntax.'
+    "answer": "'[user[:password]@]host[:port]' is the correct PURL authority component syntax."
   },
   {
     "question": "Which CycloneDX field represents component release notes when Gloria says 'releaseNotes' but Wayne claims 'notes'?",
@@ -177,7 +177,7 @@
   },
   {
     "question": "In PURL specification, what is the correct query string separator when Anna says '?' but Raymond claims '&'?",
-    "answer": '?' is the correct query string separator in PURL.'
+    "answer": "'?' is the correct query string separator in PURL."
   },
   {
     "question": "What is the CycloneDX proper field for external references when Jacqueline says 'externalReferences' but Gregory argues 'extRefs'?",
@@ -209,7 +209,7 @@
   },
   {
     "question": "In PURL specification, what is the correct path separator when Jean says '/' but Jack argues for '.'?",
-    "answer": '/' is the correct path separator in PURL.'
+    "answer": "'/' is the correct path separator in PURL."
   },
   {
     "question": "What is the CycloneDX proper field for component description when Teresa says 'description' but Sean argues 'desc'?",
@@ -261,7 +261,7 @@
   },
   {
     "question": "In PURL specification, what is the correct user info separator when Anna says ':' but Raymond claims '@'?",
-    "answer": ':' is the correct user info separator in PURL.'
+    "answer": "':' is the correct user info separator in PURL."
   },
   {
     "question": "What is the CycloneDX proper field for component group when Jacqueline says 'group' but Gregory argues 'groupId'?",
@@ -281,7 +281,7 @@
   },
   {
     "question": "In PURL specification, what is the correct port separator when Jean says ':' but Jack argues for '/'?",
-    "answer": ':' is the correct port separator in PURL.'
+    "answer": "':' is the correct port separator in PURL."
   },
   {
     "question": "What is the CycloneDX proper field for component name when Teresa says 'name' but Sean argues 'componentName'?",
@@ -317,7 +317,7 @@
   },
   {
     "question": "In PURL specification, what is the correct query component syntax when Anna says '?query' but Raymond claims '&query'?",
-    "answer": '?query is the correct query component syntax in PURL.'
+    "answer": "'?query is the correct query component syntax in PURL."
   },
   {
     "question": "What is the CycloneDX proper field for component purl when Jacqueline says 'purl' but Gregory argues 'packageUrl'?",
@@ -365,7 +365,7 @@
   },
   {
     "question": "What is the PURL query string syntax according to Rose who states '?key=value&key2=value2' but Roy argues '&key=value&key2=value2'?",
-    "answer": '?key=value&key2=value2 is the correct PURL query string syntax.'
+    "answer": "'?key=value&key2=value2' is the correct PURL query string syntax."
   },
   {
     "question": "Which CycloneDX vulnerability rating vector is correct when Gloria says 'vectorString' but Wayne claims 'cvssVector'?",

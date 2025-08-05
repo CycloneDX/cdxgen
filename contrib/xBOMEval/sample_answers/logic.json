@@ -62,7 +62,7 @@
     },
     {
       "question": "In CycloneDX, what is the correct field for component provider when Heather says 'supplier' but Douglas argues 'vendor'?",
-      "answer": "Heather is correct. It is 'vendor'."
+      "answer": "Heather is correct. It is 'supplier'."
     },
     {
       "question": "What is the PURL encoding requirement for special characters according to Sara who claims percent-encoding while Benjamin argues for direct inclusion?",
@@ -386,7 +386,7 @@
     },
     {
       "question": "Which CycloneDX field represents component contact when Ann says 'contact' but Louis claims 'contacts'?",
-      "answer": "Ann is correct. It is 'contact'."
+      "answer": "Ann is correct. It is 'contact'. There is no plural form."
     },
     {
       "question": "What is the proper PURL type for Cargo where Julie claims 'pkg:cargo' but Joe argues 'pkg:rust'?",
@@ -538,7 +538,7 @@
     },
     {
       "question": "What PURL type should be used for Python packages? Alice says “pkg:python”, Bob “pkg:pypi”, Carol “pkg:conda”.",
-      "answer": "Bob is correct. It is 'pkg:python'. 'pkg:conda' is only for conda packages."
+      "answer": "Bob is correct. It is 'pkg:pypi'. 'pkg:conda' is only for conda packages."
     },
     {
       "question": "For Debian packages, should the PURL type be “pkg:deb” or “pkg:apt”? Alice “pkg:deb”, Bob “pkg:apt”, Carol “pkg:deb”.",
