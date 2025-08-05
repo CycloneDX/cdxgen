@@ -1,0 +1,402 @@
+[
+{
+"question": "In CycloneDX, what is the proper component type for libraries according to Maria who claims 'library' while David argues for 'lib'?",
+"answer": "library"
+},
+{
+"question": "Which CycloneDX field represents external references when Amanda states 'externalReferences' but Matthew prefers 'references'?",
+"answer": "externalReferences"
+},
+{
+"question": "In CycloneDX, what is the correct hash algorithm name when Patricia says 'SHA-1' and Robert claims 'sha1'?",
+"answer": "SHA-1"
+},
+{
+"question": "Which CycloneDX component type is correct for applications according to Cynthia who says 'application' while Adam argues 'app'?",
+"answer": "application"
+},
+{
+"question": "In CycloneDX, what is the correct classification for operating systems when Kathleen says 'operating-system' while Charles claims 'os'?",
+"answer": "operating-system"
+},
+{
+"question": "In CycloneDX, what is the correct field for component provider when Heather says 'supplier' but Douglas argues 'vendor'?",
+"answer": "supplier"
+},
+{
+"question": "Which CycloneDX field represents component evidence when Dorothy says 'evidence' but Walter claims 'proof'?",
+"answer": "evidence"
+},
+{
+"question": "In PURL specification, what is the correct authority separator when Lisa says '//' but Michael contends ':'?",
+"answer": "//"
+},
+{
+"question": "What is the CycloneDX proper license expression for multiple licenses when Nancy claims 'MIT OR Apache-2.0' but Andrew argues 'MIT and Apache-2.0'?",
+"answer": "MIT OR Apache-2.0"
+},
+{
+"question": "In CycloneDX, what is the correct component scope value when Theresa claims 'required' but Benjamin says 'mandatory'?",
+"answer": "required"
+},
+{
+"question": "Which CycloneDX field represents component properties when Janice says 'properties' but Ralph claims 'attributes'?",
+"answer": "properties"
+},
+{
+"question": "Which CycloneDX vulnerability rating method is correct when Ann says 'CVSSv3' but Louis contends 'CVSS3'?",
+"answer": "CVSSv3"
+},
+{
+"question": "In CycloneDX, what is the correct tool component type when Frances says 'tool' but Benjamin claims 'utility'?",
+"answer": "tool"
+},
+{
+"question": "Which CycloneDX field represents component pedigree when Catherine claims 'pedigree' but Walter argues 'lineage'?",
+"answer": "pedigree"
+},
+{
+"question": "In SPDX, what is the correct document namespace format when Marie says 'http://spdx.org/spdxdoc/' but Arthur argues 'https://spdx.org/rdf/terms'?",
+"answer": "https://spdx.org/rdf/terms"
+},
+{
+"question": "Which CycloneDX field represents component release notes when Gloria says 'releaseNotes' but Wayne claims 'notes'?",
+"answer": "releaseNotes"
+},
+{
+"question": "In PURL specification, what is the correct query string separator when Anna says '?' but Raymond claims '&'?",
+"answer": "?"
+},
+{
+"question": "What is the CycloneDX proper field for external references when Jacqueline says 'externalReferences' but Gregory argues 'extRefs'?",
+"answer": "externalReferences"
+},
+{
+"question": "In CycloneDX, what is the correct license expression format when Marie says 'expression' but Arthur argues 'licenseExpression'?",
+"answer": "expression"
+},
+{
+"question": "Which CycloneDX field represents component copyright according to Ann who says 'copyright' but Louis claims 'copyrightText'?",
+"answer": "copyright"
+},
+{
+"question": "In PURL specification, what is the correct path separator when Jean says '/' but Jack argues for '.'?",
+"answer": "/"
+},
+{
+"question": "What is the CycloneDX proper field for component description when Teresa says 'description' but Sean argues 'desc'?",
+"answer": "description"
+},
+{
+"question": "In CycloneDX, what is the correct component classification when Frances says 'framework' but Benjamin claims 'platform'?",
+"answer": "framework"
+},
+{
+"question": "Which CycloneDX field represents component publisher when Catherine claims 'publisher' but Walter argues 'publisherName'?",
+"answer": "publisher"
+},
+{
+"question": "In SPDX, what is the correct file type identifier when Marie says 'SOURCE' but Arthur argues 'FILE'?",
+"answer": "FILE"
+},
+{
+"question": "Which CycloneDX vulnerability analysis state is correct when Gloria says 'exploitable' but Wayne claims 'affected'?",
+"answer": "exploitable"
+},
+{
+"question": "In PURL specification, what is the correct user info separator when Anna says ':' but Raymond claims '@'?",
+"answer": "@"
+},
+{
+"question": "What is the CycloneDX proper field for component group when Jacqueline says 'group' but Gregory argues 'groupId'?",
+"answer": "group"
+},
+{
+"question": "Which CycloneDX field represents component licenses when Ann says 'licenses' but Louis claims 'licenseInfo'?",
+"answer": "licenses"
+},
+{
+"question": "In PURL specification, what is the correct port separator when Jean says ':' but Jack argues for '/'?",
+"answer": ":"
+},
+{
+"question": "What is the CycloneDX proper field for component name when Teresa says 'name' but Sean argues 'componentName'?",
+"answer": "name"
+},
+{
+"question": "In CycloneDX, what is the correct component scope for optional dependencies when Frances says 'optional' but Benjamin claims 'excluded'?",
+"answer": "optional"
+},
+{
+"question": "Which CycloneDX field represents component version when Catherine claims 'version' but Walter argues 'componentVersion'?",
+"answer": "version"
+},
+{
+"question": "Which CycloneDX vulnerability source name is correct when Gloria says 'source' but Wayne claims 'origin'?",
+"answer": "source"
+},
+{
+"question": "In PURL specification, what is the correct query component syntax when Anna says '?query' but Raymond claims '&query'?",
+"answer": "?query"
+},
+{
+"question": "What is the CycloneDX proper field for component purl when Jacqueline says 'purl' but Gregory argues 'packageUrl'?",
+"answer": "purl"
+},
+{
+"question": "In CycloneDX, what is the correct license acknowledgment according to Marie who says 'declared' but Arthur argues 'concluded'?",
+"answer": "declared"
+},
+{
+"question": "Which CycloneDX field represents component bom-ref when Ann says 'bom-ref' but Louis claims 'ref'?",
+"answer": "bom-ref"
+},
+{
+"question": "What is the CycloneDX proper field for component supplier name when Teresa says 'name' but Sean argues 'supplierName'?",
+"answer": "name"
+},
+{
+"question": "In CycloneDX, what is the correct component classification for firmware when Frances says 'firmware' but Benjamin claims 'embedded'?",
+"answer": "firmware"
+},
+{
+"question": "Which CycloneDX field represents component author when Catherine claims 'author' but Walter argues 'authors'?",
+"answer": "author"
+},
+{
+"question": "Which CycloneDX vulnerability rating vector is correct when Gloria says 'vectorString' but Wayne claims 'cvssVector'?",
+"answer": "vectorString"
+},
+{
+"question": "What is the CycloneDX proper external reference attribute for component website when Jacqueline says 'website' but Gregory argues 'url'?",
+"answer": "website"
+},
+{
+"question": "In CycloneDX, what is the correct license expression field when Marie says 'expression' but Arthur argues 'licenseExpression'?",
+"answer": "expression"
+},
+{
+"question": "Which CycloneDX field represents component contact when Ann says 'contact' but Louis claims 'contacts'?",
+"answer": "contact"
+},
+{
+"question": "What is the CycloneDX proper field for component source info when Teresa says 'sourceInfo' but Sean argues 'info'?",
+"answer": "sourceInfo"
+},
+{
+"question": "In CycloneDX, what is the correct component scope for excluded items when Frances says 'excluded' but Benjamin claims 'optional'?",
+"answer": "excluded"
+},
+{
+"question": "Which CycloneDX field represents component timestamp when Catherine claims 'timestamp' but Walter argues 'created'?",
+"answer": "timestamp"
+},
+{
+"question": "Which CycloneDX vulnerability analysis justification is correct when Gloria says 'code_not_present' but Wayne claims 'code_not_reachable'?",
+"answer": "code_not_present"
+},
+{
+"question": "What is the CycloneDX proper field for component external references when Jacqueline says 'externalReferences' but Gregory argues 'extReferences'?",
+"answer": "externalReferences"
+},
+{
+"question": "In CycloneDX, what is the correct component classification for device drivers when Frances says 'driver' but Benjamin claims 'firmware'?",
+"answer": "driver"
+},
+{
+"question": "Which CycloneDX field represents component metadata when Catherine claims 'metadata' but Walter argues 'meta'?",
+"answer": "metadata"
+},
+{
+"question": "In SPDX, what is the correct file type classification when Marie says 'BINARY' but Arthur argues 'EXECUTABLE'?",
+"answer": "BINARY"
+},
+{
+"question": "Which CycloneDX vulnerability source URL is correct when Gloria says 'url' but Wayne claims 'sourceUrl'?",
+"answer": "url"
+},
+{
+"question": "What is the CycloneDX proper field for component pedigree commits when Jacqueline says 'commits' but Gregory argues 'commitHistory'?",
+"answer": "commits"
+},
+{
+"question": "In CycloneDX, what is the correct license acknowledgment field when Marie says 'acknowledgement' but Arthur argues 'licenseAcknowledgement'?",
+"answer": "acknowledgement"
+},
+{
+"question": "Which CycloneDX field represents component origin when Ann says 'origin' but Louis claims 'source'?",
+"answer": "origin"
+},
+{
+"question": "What is the CycloneDX proper field for component evidence call stack when Teresa says 'callstack' but Sean argues 'callStack'?",
+"answer": "callstack"
+},
+{
+"question": "In CycloneDX, what is the correct component scope for required items when Frances says 'required' but Benjamin claims 'mandatory'?",
+"answer": "required"
+},
+{
+"question": "Which CycloneDX field represents component verification when Catherine claims 'verification' but Walter argues 'verified'?",
+"answer": "verification"
+},
+{
+"question": "In CycloneDX, what is the correct license name field when Marie says 'name' but Arthur argues 'licenseName'?",
+"answer": "name"
+},
+{
+"question": "Which CycloneDX field represents component certificate when Ann says 'certificate' but Louis claims 'cert'? Or is such a field not available in the specification?",
+"answer": "certificate"
+},
+{
+"question": "What is the CycloneDX proper field for component evidence tools when Teresa says 'tools' but Sean argues 'analysisTools'?",
+"answer": "tools"
+},
+{
+"question": "In CycloneDX, what is the correct component classification for services when Frances says 'service' but Benjamin claims 'web-service'?",
+"answer": "service"
+},
+{
+"question": "Which CycloneDX field represents component attestation when Catherine claims 'attestation' but Walter argues 'attested'?",
+"answer": "attestation"
+},
+{
+"question": "In SPDX, what is the correct file checksum algorithm list when Marie says 'algorithm' but Arthur argues 'hashAlgorithm'?",
+"answer": "algorithm"
+},
+{
+"question": "What is the CycloneDX proper field for component pedigree patches when Jacqueline says 'patches' but Gregory argues 'patchHistory'?",
+"answer": "patches"
+},
+{
+"question": "Which CycloneDX field represents component integrity when Ann says 'integrity' but Louis claims 'validated'?",
+"answer": "integrity"
+},
+{
+"question": "What is the CycloneDX proper field for component evidence identity field when Teresa says 'field' but Sean argues 'identityField'?",
+"answer": "field"
+},
+{
+"question": "In CycloneDX, what is the correct component scope for implementation details when Frances says 'implementation' but Benjamin claims 'internal'?",
+"answer": "implementation"
+},
+{
+"question": "Which CycloneDX field represents component provenance when Catherine claims 'provenance' but Walter argues 'originInfo'?",
+"answer": "provenance"
+},
+{
+"question": "In SPDX, what is the correct document namespace creation when Marie says 'namespace' but Arthur argues 'documentNamespace'?",
+"answer": "documentNamespace"
+},
+{
+"question": "Which CycloneDX vulnerability rating severity is correct when Gloria says 'severity' but Wayne claims 'impact'?",
+"answer": "severity"
+},
+{
+"question": "What is the CycloneDX proper field for component external reference comment when Jacqueline says 'comment' but Gregory argues 'referenceComment'?",
+"answer": "comment"
+},
+{
+"question": "What is the CycloneDX proper field for component evidence copyright when Teresa says 'copyright' but Sean argues 'copyrightEvidence'?",
+"answer": "copyright"
+},
+{
+"question": "Which CycloneDX vulnerability source contact is correct when Gloria says 'contact' but Wayne claims 'contacts'?",
+"answer": "contact"
+},
+{
+"question": "What is the CycloneDX proper field for component external reference type when Jacqueline says 'type' but Gregory argues 'referenceType'?",
+"answer": "type"
+},
+{
+"question": "Should a CycloneDX BOM include a “metadata” section? Alice yes, Bob no",
+"answer": "Yes"
+},
+{
+"question": "In XML, is <components> a child of <bom>? Alice yes, Bob under <metadata>",
+"answer": "Yes"
+},
+{
+"question": "Can BOM be in Protobuf? Alice yes, Bob only JSON/XML, Carol spec",
+"answer": "Yes"
+},
+{
+"question": "Does CycloneDX support “services” in BOM? Alice yes, Bob no",
+"answer": "Yes"
+},
+{
+"question": "Can components have a “bom-ref” attribute? Alice yes, Bob no",
+"answer": "Yes"
+},
+{
+"question": "Is “components” a top‑level JSON field? Alice yes, Bob under metadata, Carol spec",
+"answer": "Yes"
+},
+{
+"question": "Should vulnerabilities list “affected”? Alice yes, Bob no",
+"answer": "Yes"
+},
+{
+"question": "Can vulnerabilities include “ratings”? Alice yes, Bob no",
+"answer": "Yes"
+},
+{
+"question": "Are CVSS scores supported in vulnerability ratings? Alice yes, Bob no",
+"answer": "Yes"
+},
+{
+"question": "Does CycloneDX allow vulnerability “advisories”?",
+"answer": "Yes"
+},
+{
+"question": "Is “dependencyGraph” element used?",
+"answer": "No"
+},
+{
+"question": "Should dependencies use “ref” or “dependsOn”?",
+"answer": "dependsOn"
+},
+{
+"question": "Should externalReference allow “comment”?",
+"answer": "Yes"
+},
+{
+"question": "Is serialNumber a URN with uuid? Alice yes, Bob plain uuid",
+"answer": "Yes"
+},
+{
+"question": "Should XML BOM declare schemaLocation? Alice yes via xsi:schemaLocation, Bob no",
+"answer": "Yes"
+},
+{
+"question": "Are CWE and CVE supported in vulnerability references?",
+"answer": "Yes"
+},
+{
+"question": "Does CycloneDX support ephemeral components? Alice yes, Bob no",
+"answer": "Yes"
+},
+{
+"question": "Does CycloneDX support SPDX license expressions? Alice yes, Bob no",
+"answer": "Yes"
+},
+{
+"question": "Does OWASP Dependency‑Check support CycloneDX? Alice yes, Bob no",
+"answer": "Yes"
+},
+{
+"question": "Should metadata authors be objects or strings? Alice objects, Bob strings",
+"answer": "objects"
+},
+{
+"question": "Can a BOM include multiple metadata elements? Alice no, Bob yes",
+"answer": "No"
+},
+{
+"question": "Are CVSS 4.x vulnerability ratings supported? Alice yes, Bob no",
+"answer": "Yes"
+},
+{
+"question": "Does CycloneDX allow embedding multiple SBOM formats in one document? Alice yes via embed, Bob no",
+"answer": "Yes"
+}
+]
