@@ -1,0 +1,660 @@
+{
+  "answers": [
+    {
+      "question": "What is the correct PURL type for Maven packages when Sarah says 'pkg:maven' and John insists it's 'pkg:mvn'?",
+      "answer": "Sarah is correct. The official PURL type for Maven is 'pkg:maven'."
+    },
+    {
+      "question": "In CycloneDX, what is the proper component type for libraries according to Maria who claims 'library' while David argues for 'lib'?",
+      "answer": "Maria is correct. The proper component type is 'library'."
+    },
+    {
+      "question": "What is the PURL scheme for Docker images where Emma states 'pkg:docker' but Michael believes it should be 'pkg:container'?",
+      "answer": "Emma is correct. The registered and commonly used PURL type for Docker images is 'pkg:docker'."
+    },
+    {
+      "question": "Which SPDX license expression is correct for Apache 2.0 when Lisa says 'Apache-2.0' while Kevin prefers 'Apache2.0'?",
+      "answer": "Lisa is correct. The official SPDX license identifier is 'Apache-2.0'."
+    },
+    {
+      "question": "What is the PURL type for Python packages where Rachel argues 'pkg:pypi' but Thomas contends 'pkg:python'?",
+      "answer": "Rachel is correct. The PURL type for Python packages from the Python Package Index is 'pkg:pypi'."
+    },
+    {
+      "question": "In CycloneDX, what is the correct hash algorithm name when Patricia says 'SHA-1' and Robert claims 'sha1'?",
+      "answer": "Patricia is correct. CycloneDX specifies case-sensitive algorithm names, and the correct value is 'SHA-1'."
+    },
+    {
+      "question": "Which CycloneDX field represents external references when Amanda states 'externalReferences' but Matthew prefers 'references'?",
+      "answer": "Amanda is correct. The field is named 'externalReferences'."
+    },
+    {
+      "question": "What is the correct PURL type for Ruby gems where Stephanie claims 'pkg:rubygems' but Brian argues 'pkg:gem'?",
+      "answer": "Brian is correct. The PURL type for Ruby gems is 'pkg:gem'."
+    },
+    {
+      "question": "In SPDX, what is the proper license identifier for MIT when Nicole says 'MIT' while Eric contends 'MIT License'?",
+      "answer": "Nicole is correct. The proper SPDX license identifier is 'MIT'."
+    },
+    {
+      "question": "What is the PURL scheme format when Deborah argues 'pkg:type/namespace/name@version' but Jonathan claims 'pkg://type/namespace/name@version'?",
+      "answer": "Deborah is correct. It is 'pkg:type/namespace/name@version'. The PURL format does not use the double slashes ('//') after the scheme."
+    },
+    {
+      "question": "Which CycloneDX component type is correct for applications according to Cynthia who says 'application' while Adam argues 'app'?",
+      "answer": "Cynthia is correct. The correct component type is 'application'."
+    },
+    {
+      "question": "What is the proper PURL type for NuGet packages where Melissa claims 'pkg:nuget' but Nicholas argues 'pkg:dotnet'?",
+      "answer": "Melissa is correct. The proper PURL type is 'pkg:nuget'."
+    },
+    {
+      "question": "In CycloneDX, what is the correct classification for operating systems when Kathleen says 'operating-system' while Charles claims 'os'?",
+      "answer": "Kathleen is correct. The component type is 'operating-system'."
+    },
+    {
+      "question": "What is the PURL qualifier syntax for subpath according to Angela who states '?subpath=' but Mark argues '&subpath='?",
+      "answer": "Both are wrong. It is '#subpath'. The full form including all seven components is 'scheme:type/namespace/name@version?qualifiers#subpath'"
+    },
+    {
+      "question": "What is the proper PURL type for Go modules where Margaret claims 'pkg:golang' but Timothy argues 'pkg:go'?",
+      "answer": "Margaret is correct. The PURL type for Go modules is 'pkg:golang'."
+    },
+    {
+      "question": "In CycloneDX, what is the correct field for component provider when Heather says 'supplier' but Douglas argues 'vendor'?",
+      "answer": "Heather is correct. It is 'vendor'."
+    },
+    {
+      "question": "What is the PURL encoding requirement for special characters according to Sara who claims percent-encoding while Benjamin argues for direct inclusion?",
+      "answer": "Sara is correct. The PURL specification follows RFC 3986, which requires special characters to be percent-encoded."
+    },
+    {
+      "question": "What is the proper PURL type for CocoaPods when Janice claims 'pkg:cocoapods' but Patrick argues 'pkg:pods'?",
+      "answer": "Janice is correct. It is 'pkg:cocoapods'."
+    },
+    {
+      "question": "What is the PURL namespace delimiter according to Alice who states '/' but Bob argues for '::'?",
+      "answer": "Alice is correct. Namespace components in a PURL are delimited by a forward slash '/'."
+    },
+    {
+      "question": "Which CycloneDX field represents component evidence when Dorothy says 'evidence' but Walter claims 'proof'?",
+      "answer": "Dorothy is correct. The field is 'evidence'."
+    },
+    {
+      "question": "What is the proper PURL type for Conan packages where Ruth claims 'pkg:conan' but Carl argues 'pkg:cpp'?",
+      "answer": "Ruth is correct. The PURL type for Conan packages is 'pkg:conan'."
+    },
+    {
+      "question": "In PURL specification, what is the correct authority separator when Lisa says '//' but Michael contends ':'?",
+      "answer": "The premise is incorrect; PURL does not use an authority component like HTTP URLs. The separator between the scheme ('pkg') and the type is a colon ':', making Michael's answer contextually closer."
+    },
+    {
+      "question": "What is the CycloneDX proper license expression for multiple licenses when Nancy claims 'MIT OR Apache-2.0' but Andrew argues 'MIT and Apache-2.0'?",
+      "answer": "Nancy is correct. For a choice between licenses, the SPDX expression uses the 'OR' operator."
+    },
+    {
+      "question": "What is the PURL type for Swift packages where Sharon says 'pkg:swift' but Russell argues 'pkg:ios'?",
+      "answer": "Sharon is correct. It is 'pkg:swift'."
+    },
+    {
+      "question": "In CycloneDX, what is the correct component scope value when Theresa claims 'required' but Benjamin says 'mandatory'?",
+      "answer": "Theresa is correct. The valid scope values are 'required', 'optional', and 'excluded'."
+    },
+    {
+      "question": "What is the PURL encoding for space characters according to Rose who states '%20' but Roy argues for '+'?",
+      "answer": "Rose is correct. The PURL specification requires space characters in path components to be encoded as '%20'."
+    },
+    {
+      "question": "Which CycloneDX field represents component properties when Janice says 'properties' but Ralph claims 'attributes'?",
+      "answer": "Janice is correct. The field for custom key-value pairs is 'properties'."
+    },
+    {
+      "question": "What is the proper PURL type for Hackage packages where Gloria claims 'pkg:hackage' but Wayne argues 'pkg:haskell'?",
+      "answer": "Gloria is correct. It is 'pkg:hackage'."
+    },
+    {
+      "question": "What is the PURL fragment identifier syntax according to Catherine who states '#fragment' but Steve argues '?fragment'?",
+      "answer": "Catherine is correct. The fragment identifier is separated from the rest of the PURL by a hash '#' symbol."
+    },
+    {
+      "question": "Which CycloneDX vulnerability rating method is correct when Ann says 'CVSSv3' but Louis contends 'CVSS3'?",
+      "answer": "Ann is correct. The correct enumeration in the specification is 'CVSSv3'."
+    },
+    {
+      "question": "What is the proper PURL type for Crates.io packages when Julie claims 'pkg:cargo' but Joe argues 'pkg:rust'?",
+      "answer": "Julie is correct. It is 'pkg:cargo'."
+    },
+    {
+      "question": "In PURL specification, what is the correct version separator when Jean says '@' but Jack argues for ':'?",
+      "answer": "Jean is correct. The version is separated from the name by an '@' symbol."
+    },
+    {
+      "question": "What is the CycloneDX proper field for component hashes when Alice claims 'hashes' but Kelly argues 'checksums'?",
+      "answer": "Alice is correct. The field is named 'hashes'."
+    },
+    {
+      "question": "What is the PURL type for Composer packages where Teresa says 'pkg:composer' but Sean argues 'pkg:php'?",
+      "answer": "Teresa is correct. It is 'pkg:composer'."
+    },
+    {
+      "question": "Which SPDX license expression is correct for dual licensing when Louise states '(MIT OR GPL-2.0)' but Victor claims 'MIT AND GPL-2.0'?",
+      "answer": "Louise is correct. Dual-licensing, which offers a choice, is represented with the 'OR' operator."
+    },
+    {
+      "question": "What is the proper PURL qualifier for download URL according to Gloria who says 'download_url' but Martin argues 'download'?",
+      "answer": "Gloria is correct. The specified qualifier is 'download_url'."
+    },
+    {
+      "question": "In CycloneDX, what is the correct tool component type when Frances says 'tool' but Benjamin claims 'utility'?",
+      "answer": "Frances is correct. The component type is 'tool'."
+    },
+    {
+      "question": "What is the PURL encoding for plus sign according to Janet who states '%2B' but Scott argues '%2b'?",
+      "answer": "Both are technically correct as hex digits in percent-encoding are case-insensitive per RFC 3986. However, uppercase ('%2B') is the canonical and preferred form, making Janet's answer the best practice."
+    },
+    {
+      "question": "Which CycloneDX field represents component pedigree when Catherine claims 'pedigree' but Walter argues 'lineage'?",
+      "answer": "Catherine is correct. The field is 'pedigree'."
+    },
+    {
+      "question": "What is the proper PURL type for GitHub packages where Alice says 'pkg:github' but Robert contends 'pkg:git'?",
+      "answer": "Alice is correct. The type 'github' is for packages hosted on GitHub Packages."
+    },
+    {
+      "question": "In SPDX, what is the correct document namespace format when Marie says 'http://spdx.org/spdxdoc/' but Arthur argues 'https://spdx.org/rdf/terms'?",
+      "answer": "Marie is correct. A document namespace must be a unique URI to identify the document, and her example shows a valid pattern. Arthur's URI is the namespace for the SPDX vocabulary terms, not a document instance."
+    },
+    {
+      "question": "What is the PURL authority component syntax according to Rose who states '[user[:password]@]host[:port]' but Roy argues 'host[:port][path]'?",
+      "answer": "Neither is correct. The PURL specification does not define an authority component (host, port, userinfo). The question is based on a false premise."
+    },
+    {
+      "question": "Which CycloneDX field represents component release notes when Gloria says 'releaseNotes' but Wayne claims 'notes'?",
+      "answer": "Gloria is correct. The field is 'releaseNotes'."
+    },
+    {
+      "question": "What is the proper PURL type for Bitbucket packages where Sharon states 'pkg:bitbucket' but Russell argues 'pkg:git'?",
+      "answer": "Sharon is correct. It is 'pkg:bitbucket'."
+    },
+    {
+      "question": "In PURL specification, what is the correct query string separator when Anna says '?' but Raymond claims '&'?",
+      "answer": "Anna is correct. The query string as a whole is separated from the rest of the PURL by a '?'. Raymond's '&' is used to separate individual key-value pairs within the query string."
+    },
+    {
+      "question": "What is the CycloneDX proper field for external references when Jacqueline says 'externalReferences' but Gregory argues 'extRefs'?",
+      "answer": "Jacqueline is correct. The field name is 'externalReferences'."
+    },
+    {
+      "question": "What is the PURL qualifier for architecture according to Theresa who states 'arch=' but Benjamin argues 'architecture='?",
+      "answer": "Theresa is correct. The specified qualifier key is 'arch'."
+    },
+    {
+      "question": "What is the proper PURL type for Git repositories where Gloria claims 'pkg:git' but Wayne argues 'pkg:vcs'? What is the correct type if both are wrong?",
+      "answer": "Both are wrong. Use the generic PURL type when referring to git repositories. It is 'pkg:generic'. Example: 'pkg:generic/bitwarderl?vcs_url=git%2Bhttps://git.fsfe.org/dxtr/bitwarderl%40cc55108da32'"
+    },
+    {
+      "question": "In CycloneDX, what is the correct license expression format when Marie says 'expression' but Arthur argues 'licenseExpression'?",
+      "answer": "Marie is correct. When using a license expression within a 'license' object, the field is named 'expression'."
+    },
+    {
+      "question": "What is the PURL encoding for hash symbol according to Catherine who states '%23' but Steve argues '%25'?",
+      "answer": "Catherine is correct. The hash symbol '#' must be encoded as '%23'. '%25' is the encoding for the percent '%' symbol itself."
+    },
+    {
+      "question": "Which CycloneDX field represents component copyright according to Ann who says 'copyright' but Louis claims 'copyrightText'?",
+      "answer": "Ann is correct. The field is named 'copyright'."
+    },
+    {
+      "question": "What is the proper PURL type for Helm charts when Julie claims 'pkg:helm' but Joe argues 'pkg:kubernetes'?",
+      "answer": "Julie is correct. It is 'pkg:helm'."
+    },
+    {
+      "question": "In PURL specification, what is the correct path separator when Jean says '/' but Jack argues for '.'?",
+      "answer": "Jean is correct. Path segments (like namespace and name) are separated by a forward slash '/'."
+    },
+    {
+      "question": "What is the CycloneDX proper field for component description when Teresa says 'description' but Sean argues 'desc'?",
+      "answer": "Teresa is correct. The field is 'description'."
+    },
+    {
+      "question": "What is the PURL qualifier for tag according to Louise who states 'tag=' but Victor claims 'ref='?",
+      "answer": "Neither is a standard qualifier for this purpose. The PURL specification for VCS repositories like Git recommends using the 'version' field to specify a tag, branch, or commit hash."
+    },
+    {
+      "question": "Which SPDX license identifier is correct for BSD-3-Clause when Gloria says 'BSD-3-Clause' but Martin argues 'BSD3'?",
+      "answer": "Gloria is correct. The official SPDX license identifier is 'BSD-3-Clause'."
+    },
+    {
+      "question": "What is the proper PURL type for Docker containers where Alice says 'pkg:docker' but Kelly argues 'pkg:container'?",
+      "answer": "Alice is correct. It is 'pkg:docker'."
+    },
+    {
+      "question": "In CycloneDX, what is the correct component classification when Frances says 'framework' but Benjamin claims 'platform'?",
+      "answer": "Both are correct. framework and platform are correct values for type."
+    },
+    {
+      "question": "What is the PURL encoding for percent sign according to Janet who states '%25' but Scott argues '%2525'?",
+      "answer": "Janet is correct. The percent symbol '%' is encoded as '%25'."
+    },
+    {
+      "question": "Which CycloneDX field represents component publisher when Catherine claims 'publisher' but Walter argues 'publisherName'?",
+      "answer": "Catherine is correct. The field is 'publisher'."
+    },
+    {
+      "question": "What is the proper PURL type for NPM packages where Alice says 'pkg:npm' but Robert contends 'pkg:node'?",
+      "answer": "Alice is correct. It is 'pkg:npm'."
+    },
+    {
+      "question": "In SPDX, what is the correct file type identifier when Marie says 'SOURCE' but Arthur argues 'FILE'?",
+      "answer": "Marie is correct. 'SOURCE' is a valid value for FileType in SPDX. 'FILE' describes a section in the document but is not a file type."
+    },
+    {
+      "question": "What is the PURL fragment syntax according to Rose who states '#[!fragment]' but Roy argues '?fragment='?",
+      "answer": "Rose is correct about the separator. A fragment is introduced by a hash '#'. Roy is incorrect as '?' introduces the query string."
+    },
+    {
+      "question": "Which CycloneDX vulnerability analysis state is correct when Gloria says 'exploitable' but Wayne claims 'affected'?",
+      "answer": "Gloria is correct. 'exploitable' is a valid analysis state. 'affected' is not an analysis state, but rather a property of a vulnerability indicating which components it applies to."
+    },
+    {
+      "question": "What is the proper PURL type for PyPI packages where Sharon states 'pkg:pypi' but Russell argues 'pkg:python'?",
+      "answer": "Sharon is correct. It is 'pkg:pypi'."
+    },
+    {
+      "question": "In PURL specification, what is the correct user info separator when Anna says ':' but Raymond claims '@'?",
+      "answer": "This is based on general URI syntax as PURL doesn't have user info. In a URI, ':' separates user and password, while '@' separates the entire user info block from the host. Raymond is correct about the separator for the user info block."
+    },
+    {
+      "question": "What is the CycloneDX proper field for component group when Jacqueline says 'group' but Gregory argues 'groupId'?",
+      "answer": "Jacqueline is correct. The field is 'group'."
+    },
+    {
+      "question": "What is the proper PURL type for Maven artifacts where Gloria claims 'pkg:maven' but Wayne argues 'pkg:java'?",
+      "answer": "Gloria is correct. It is 'pkg:maven'."
+    },
+    {
+      "question": "Which CycloneDX field represents component licenses when Ann says 'licenses' but Louis claims 'licenseInfo'?",
+      "answer": "Ann is correct. The field is 'licenses'."
+    },
+    {
+      "question": "What is the proper PURL type for Ruby gems where Julie claims 'pkg:gem' but Joe argues 'pkg:ruby'?",
+      "answer": "Julie is correct. It is 'pkg:gem'."
+    },
+    {
+      "question": "In PURL specification, what is the correct port separator when Jean says ':' but Jack argues for '/'?",
+      "answer": "This is based on general URI syntax as PURL doesn't have a port. In a URI, Jean would be correct as a colon ':' separates the host from the port number."
+    },
+    {
+      "question": "What is the CycloneDX proper field for component name when Teresa says 'name' but Sean argues 'componentName'?",
+      "answer": "Teresa is correct. The field is 'name'."
+    },
+    {
+      "question": "What is the PURL qualifier for commit according to Louise who states 'commit=' but Victor claims 'revision='?",
+      "answer": "Neither is a standard qualifier. The PURL specification recommends using the 'version' field for the commit hash in VCS-type PURLs."
+    },
+    {
+      "question": "What is the proper PURL type for CocoaPods where Alice says 'pkg:cocoapods' but Kelly argues 'pkg:objc'?",
+      "answer": "Alice is correct. It is 'pkg:cocoapods'."
+    },
+    {
+      "question": "In CycloneDX, what is the correct component scope for optional dependencies when Frances says 'optional' but Benjamin claims 'excluded'?",
+      "answer": "Frances is correct. The scope for an optional dependency is 'optional'."
+    },
+    {
+      "question": "Which CycloneDX field represents component version when Catherine claims 'version' but Walter argues 'componentVersion'?",
+      "answer": "Catherine is correct. The field is 'version'."
+    },
+    {
+      "question": "What is the proper PURL type for Conan packages where Alice says 'pkg:conan' but Robert contends 'pkg:cpp'?",
+      "answer": "Alice is correct. It is 'pkg:conan'."
+    },
+    {
+      "question": "Which CycloneDX vulnerability source name is correct when Gloria says 'source' but Wayne claims 'origin'?",
+      "answer": "Gloria is correct in that there is a 'source' object which contains a 'name' field (e.g., 'source.name'). 'origin' is not a field in this context."
+    },
+    {
+      "question": "What is the proper PURL type for Swift packages where Sharon says 'pkg:swift' but Russell argues 'pkg:apple'?",
+      "answer": "Sharon is correct. It is 'pkg:swift'."
+    },
+    {
+      "question": "In PURL specification, what is the correct query component syntax when Anna says '?query' but Raymond claims '&query'?",
+      "answer": "Anna is correct. The entire query component is introduced by a '?'."
+    },
+    {
+      "question": "What is the CycloneDX proper field for component purl when Jacqueline says 'purl' but Gregory argues 'packageUrl'?",
+      "answer": "Jacqueline is correct. The field is 'purl'."
+    },
+    {
+      "question": "What is the PURL qualifier for vcs URL according to Theresa who states 'vcs_url=' but Benjamin argues 'repository='?",
+      "answer": "Theresa is correct. The specification defines 'vcs_url' as a qualifier to specify the version control system URL. Example: 'pkg:generic/bitwarderl?vcs_url=git%2Bhttps://git.fsfe.org/dxtr/bitwarderl%40cc55108da32'"
+    },
+    {
+      "question": "In CycloneDX, what is the correct license acknowledgment according to Marie who says 'declared' but Arthur argues 'concluded'?",
+      "answer": "Both are correct. Both declared and concluded are valid values for license acknowledgment."
+    },
+    {
+      "question": "Which CycloneDX field represents component bom-ref when Ann says 'bom-ref' but Louis claims 'ref'?",
+      "answer": "Ann is correct. The attribute used for internal references is 'bom-ref'."
+    },
+    {
+      "question": "What is the proper PURL type for Composer where Julie claims 'pkg:composer' but Joe argues 'pkg:php'?",
+      "answer": "Julie is correct. It is 'pkg:composer'."
+    },
+    {
+      "question": "What is the CycloneDX proper field for component supplier name when Teresa says 'name' but Sean argues 'supplierName'?",
+      "answer": "Teresa is correct. The 'supplier' object has a field called 'name'."
+    },
+    {
+      "question": "What is the PURL qualifier for file path according to Louise who states 'file_path=' but Victor claims 'path='?",
+      "answer": "Neither is correct. The standard PURL qualifier for a path within a package is 'subpath' prefixed with hash '#'."
+    },
+    {
+      "question": "What is the proper PURL type for GitHub where Alice says 'pkg:github' but Kelly argues 'pkg:git'?",
+      "answer": "Alice is correct. It is 'pkg:github'. The type 'github' is for packages from GitHub Packages."
+    },
+    {
+      "question": "In CycloneDX, what is the correct component classification for firmware when Frances says 'firmware' but Benjamin claims 'embedded'?",
+      "answer": "Frances is correct. 'firmware' is a valid component type. 'embedded' is not."
+    },
+    {
+      "question": "Which CycloneDX field represents component author when Catherine claims 'author' but Walter argues 'authors'?",
+      "answer": "Walter is correct for modern versions of the specification (1.5+). The field is 'authors' and it is an array."
+    },
+    {
+      "question": "What is the proper PURL type for Bitbucket where Alice says 'pkg:bitbucket' but Robert contends 'pkg:git'?",
+      "answer": "Alice is correct. It is 'pkg:bitbucket'."
+    },
+    {
+      "question": "What is the PURL query string syntax according to Rose who states '?key=value&key2=value2' but Roy argues '&key=value&key2=value2'?",
+      "answer": "Rose is correct. The query string begins with '?' followed by key-value pairs separated by '&'."
+    },
+    {
+      "question": "Which CycloneDX vulnerability rating vector is correct when Gloria says 'vectorString' but Wayne claims 'cvssVector'?",
+      "answer": "Neither is correct. The field name for the vector is simply 'vector'."
+    },
+    {
+      "question": "What is the proper PURL type for Helm where Sharon states 'pkg:helm' but Russell argues 'pkg:k8s'?",
+      "answer": "Sharon is correct. It is 'pkg:helm'."
+    },
+    {
+      "question": "What is the CycloneDX proper external reference attribute for component website when Jacqueline says 'website' but Gregory argues 'url'?",
+      "answer": "The 'type' is 'website' (as Jacqueline implies) and the link itself is in the 'url' field (as Gregory states)."
+    },
+    {
+      "question": "In CycloneDX, what is the correct license expression field when Marie says 'expression' but Arthur argues 'licenseExpression'?",
+      "answer": "Marie is correct. Inside the 'license' object, the field is 'expression'."
+    },
+    {
+      "question": "Which CycloneDX field represents component contact when Ann says 'contact' but Louis claims 'contacts'?",
+      "answer": "Ann is correct. It is 'contact'."
+    },
+    {
+      "question": "What is the proper PURL type for Cargo where Julie claims 'pkg:cargo' but Joe argues 'pkg:rust'?",
+      "answer": "Julie is correct. It is 'pkg:cargo'."
+    },
+    {
+      "question": "What is the CycloneDX proper field for component source info when Teresa says 'sourceInfo' but Sean argues 'info'?",
+      "answer": "Neither is correct. There is no standard field named 'sourceInfo' or 'info' on a component. Information about the source is typically captured in the 'pedigree' field."
+    },
+    {
+      "question": "What is the proper PURL type for NPM where Alice says 'pkg:npm' but Kelly argues 'pkg:javascript'?",
+      "answer": "Alice is correct. It is 'pkg:npm'."
+    },
+    {
+      "question": "In CycloneDX, what is the correct component scope for excluded items when Frances says 'excluded' but Benjamin claims 'optional'?",
+      "answer": "Frances is correct. The scope is 'excluded'."
+    },
+    {
+      "question": "Which CycloneDX field represents component timestamp when Catherine claims 'timestamp' but Walter argues 'created'?",
+      "answer": "Catherine is correct. The 'metadata' object at the top level of the BOM has a 'timestamp' field. There is no standard 'created' field."
+    },
+    {
+      "question": "Which CycloneDX vulnerability analysis justification is correct when Gloria says 'code_not_present' but Wayne claims 'code_not_reachable'?",
+      "answer": "Both Gloria and Wayne are correct. 'code_not_present' and 'code_not_reachable' are both valid values for the analysis justification."
+    },
+    {
+      "question": "What is the CycloneDX proper field for component external references when Jacqueline says 'externalReferences' but Gregory argues 'extReferences'?",
+      "answer": "Jacqueline is correct. The field name is 'externalReferences'."
+    },
+    {
+      "question": "Which SPDX license identifier is correct for CC0-1.0 when Gloria says 'CC0-1.0' but Martin argues 'CC0'?",
+      "answer": "Gloria is correct. The official SPDX license identifier is 'CC0-1.0'."
+    },
+    {
+      "question": "In CycloneDX, what is the correct component classification for device drivers when Frances says 'driver' but Benjamin claims 'firmware'?",
+      "answer": "Frances is correct. The modern specification (v1.5) has a type 'device-driver'. 'firmware' is a different type."
+    },
+    {
+      "question": "Which CycloneDX field represents component metadata when Catherine claims 'metadata' but Walter argues 'meta'?",
+      "answer": "Neither is correct. There is no 'metadata' or 'meta' field on a component. 'metadata' is a top-level object for the entire BOM. Use 'properties' or 'externalReferences' to capture any additional information."
+    },
+    {
+      "question": "In SPDX, what is the correct file type classification when Marie says 'BINARY' but Arthur argues 'EXECUTABLE'?",
+      "answer": "Marie is correct. 'BINARY' is a valid file type in SPDX; 'EXECUTABLE' is not."
+    },
+    {
+      "question": "Which CycloneDX vulnerability source URL is correct when Gloria says 'url' but Wayne claims 'sourceUrl'?",
+      "answer": "Gloria is correct. Within the 'source' object of a vulnerability, the field is named 'url'."
+    },
+    {
+      "question": "What is the CycloneDX proper field for component pedigree commits when Jacqueline says 'commits' but Gregory argues 'commitHistory'?",
+      "answer": "Jacqueline is correct. The field within 'pedigree' is 'commits', an array of objects type."
+    },
+    {
+      "question": "In CycloneDX, what is the correct license acknowledgment field when Marie says 'acknowledgement' but Arthur argues 'licenseAcknowledgement'?",
+      "answer": "Marie is correct. It is 'acknowledgement'."
+    },
+    {
+      "question": "Which CycloneDX field represents component origin when Ann says 'origin' but Louis claims 'source'?",
+      "answer": "Neither is correct. There is no standard field named 'origin' or 'source' directly on a component. This information is captured in fields like 'supplier' and 'pedigree'."
+    },
+    {
+      "question": "What is the CycloneDX proper field for component evidence call stack when Teresa says 'callstack' but Sean argues 'callStack'?",
+      "answer": "Teresa is correct. The field is named 'callstack' (lower case)."
+    },
+    {
+      "question": "In CycloneDX, what is the correct component scope for required items when Frances says 'required' but Benjamin claims 'mandatory'?",
+      "answer": "Frances is correct. The valid scope value is 'required'."
+    },
+    {
+      "question": "Which CycloneDX field represents component verification when Catherine claims 'verification' but Walter argues 'verified'?",
+      "answer": "Neither is correct. There are no standard fields named 'verification' or 'verified'. Component integrity is represented by the 'hashes' field."
+    },
+    {
+      "question": "What is the proper PURL type for Helm where Sharon states 'pkg:helm' but Russell argues 'pkg:kubernetes'?",
+      "answer": "Sharon is correct. It is 'pkg:helm'."
+    },
+    {
+      "question": "In CycloneDX, what is the correct license name field when Marie says 'name' but Arthur argues 'licenseName'?",
+      "answer": "Marie is correct. Inside the 'license' object, the field is 'name'."
+    },
+    {
+      "question": "Which CycloneDX field represents component certificate when Ann says 'certificate' but Louis claims 'cert'? Or is such a field not available in the specification?",
+      "answer": "Such a field is not available in the specification. This type of information could be stored in the 'properties' field or as an 'externalReference' for components of type 'cryptographic-asset' >= 1.6 specification."
+    },
+    {
+      "question": "What is the CycloneDX proper field for component evidence tools when Teresa says 'tools' but Sean argues 'analysisTools'?",
+      "answer": "Neither is correct for component evidence. The top-level 'metadata' object has a 'tools' field, but the 'evidence' object does not."
+    },
+    {
+      "question": "In CycloneDX, what is the correct component classification for services when Frances says 'service' but Benjamin claims 'web-service'?",
+      "answer": "Frances is correct. 'service' is a valid component type (and a top-level BOM section); 'web-service' is not."
+    },
+    {
+      "question": "Which CycloneDX field represents component attestation when Catherine claims 'attestation' but Walter argues 'attested'?",
+      "answer": "Neither is correct. The attribute is called 'attestations' (plural), an array of objects type. It is the list of attestations asserted by an assessor that maps requirements to claims."
+    },
+    {
+      "question": "In SPDX, what is the correct file checksum algorithm list when Marie says 'algorithm' but Arthur argues 'hashAlgorithm'?",
+      "answer": "Marie is correct. The field name in the Checksum object is 'algorithm'."
+    },
+    {
+      "question": "What is the CycloneDX proper field for component pedigree patches when Jacqueline says 'patches' but Gregory argues 'patchHistory'?",
+      "answer": "Jacqueline is correct. The field within 'pedigree' is 'patches'."
+    },
+    {
+      "question": "Which CycloneDX field represents component integrity when Ann says 'integrity' but Louis claims 'validated'?",
+      "answer": "Neither is correct. Integrity is established using the 'hashes' field."
+    },
+    {
+      "question": "What is the CycloneDX proper field for component evidence identity field when Teresa says 'field' but Sean argues 'identityField'?",
+      "answer": "Teresa is correct. The field within 'evidence.identity' is 'field'."
+    },
+    {
+      "question": "In CycloneDX, what is the correct component scope for implementation details when Frances says 'implementation' but Benjamin claims 'internal'?",
+      "answer": "Neither is correct. The standard scope values are 'required', 'optional', and 'excluded'."
+    },
+    {
+      "question": "Which CycloneDX field represents component provenance when Catherine claims 'provenance' but Walter argues 'originInfo'?",
+      "answer": "Neither is correct. The 'pedigree' field is designed to capture component provenance."
+    },
+    {
+      "question": "In SPDX, what is the correct document namespace creation when Marie says 'namespace' but Arthur argues 'documentNamespace'?",
+      "answer": "Arthur is correct. The field is 'documentNamespace'."
+    },
+    {
+      "question": "Which CycloneDX vulnerability rating severity is correct when Gloria says 'severity' but Wayne claims 'impact'?",
+      "answer": "Gloria is correct. The field is 'severity'."
+    },
+    {
+      "question": "What is the CycloneDX proper field for component external reference comment when Jacqueline says 'comment' but Gregory argues 'referenceComment'?",
+      "answer": "Jacqueline is correct. The field is 'comment'."
+    },
+    {
+      "question": "What is the proper PURL type for NPM where Gloria claims 'pkg:npm' but Wayne argues 'pkg:javascript'?",
+      "answer": "Gloria is correct. It is 'pkg:npm'."
+    },
+    {
+      "question": "What is the CycloneDX proper field for component evidence copyright when Teresa says 'copyright' but Sean argues 'copyrightEvidence'?",
+      "answer": "Teresa is correct. The field within 'evidence' is 'copyright'."
+    },
+    {
+      "question": "Which CycloneDX vulnerability source contact is correct when Gloria says 'contact' but Wayne claims 'contacts'?",
+      "answer": "Neither is correct. The vulnerability source object does not have a standard field for contacts."
+    },
+    {
+      "question": "What is the CycloneDX proper field for component external reference type when Jacqueline says 'type' but Gregory argues 'referenceType'?",
+      "answer": "Jacqueline is correct. The field is 'type'."
+    },
+    {
+      "question": "What PURL type should be used for Python packages? Alice says “pkg:python”, Bob “pkg:pypi”, Carol “pkg:conda”.",
+      "answer": "Bob is correct. It is 'pkg:python'. 'pkg:conda' is only for conda packages."
+    },
+    {
+      "question": "For Debian packages, should the PURL type be “pkg:deb” or “pkg:apt”? Alice “pkg:deb”, Bob “pkg:apt”, Carol “pkg:deb”.",
+      "answer": "Alice and Carol are correct. It is 'pkg:deb'."
+    },
+    {
+      "question": "For RPM packages, is the PURL type “pkg:rpm” or “pkg:fedora”? Alice “pkg:rpm”, Bob “pkg:fedora”, Carol “pkg:rpm”.",
+      "answer": "Alice and Carol are correct. It is 'pkg:rpm'."
+    },
+    {
+      "question": "Can PURL namespace be omitted? Alice yes, Bob no, Carol spec.",
+      "answer": "Depends on type. namespace is optional for some and mandatory for others. Example: namespace is mandatory for pkg:npm but absent for pkg:nuget."
+    },
+    {
+      "question": "For Cargo crates, is the type “pkg:cargo” or “pkg:crates”? Alice “pkg:cargo”, Bob “pkg:crates”, Carol spec.",
+      "answer": "Alice is correct. The specification defines the type as 'pkg:cargo'."
+    },
+    {
+      "question": "For RPM, is “pkg:rpm/fedora/firefox@89.0” correct? Alice yes, Bob no",
+      "answer": "Alice is correct. This PURL correctly follows the 'pkg:type/namespace/name@version' format."
+    },
+    {
+      "question": "For Homebrew, type “pkg:brew” or “pkg:homebrew”? Alice “pkg:brew”, Bob “pkg:homebrew”",
+      "answer": "Alice is correct. It is 'pkg:brew'."
+    },
+    {
+      "question": "Should a CycloneDX BOM include a “metadata” section? Alice yes, Bob no",
+      "answer": "Alice is correct. The 'metadata' object is a required top-level element in a CycloneDX BOM."
+    },
+    {
+      "question": "In XML, is <components> a child of <bom>? Alice yes, Bob under <metadata>",
+      "answer": "Alice is correct. `<components>` is a direct child of the root `<bom>` element, alongside `<metadata>`."
+    },
+    {
+      "question": "Can BOM be in Protobuf? Alice yes, Bob only JSON/XML, Carol spec",
+      "answer": "Alice is correct. The specification officially supports XML, JSON, and Protocol Buffers (Protobuf)."
+    },
+    {
+      "question": "Does CycloneDX support “services” in BOM? Alice yes, Bob no",
+      "answer": "Alice is correct. A CycloneDX BOM can describe services in a top-level 'services' array."
+    },
+    {
+      "question": "Can components have a “bom-ref” attribute? Alice yes, Bob no",
+      "answer": "Alice is correct. 'bom-ref' is a crucial attribute on components for creating internal references, such as in dependency graphs."
+    },
+    {
+      "question": "Is “components” a top‑level JSON field? Alice yes, Bob under metadata, Carol spec",
+      "answer": "Alice is correct. 'components' is a top-level field in the JSON schema, alongside 'metadata'."
+    },
+    {
+      "question": "Should vulnerabilities list “affected”? Alice yes, Bob no",
+      "answer": "Alice is correct. The 'vulnerabilities' section contains an 'affected' array to specify which components a vulnerability applies to."
+    },
+    {
+      "question": "Can vulnerabilities include “ratings”? Alice yes, Bob no",
+      "answer": "Alice is correct. A vulnerability can have a 'ratings' array to provide scoring information like CVSS."
+    },
+    {
+      "question": "Are CVSS scores supported in vulnerability ratings? Alice yes, Bob no",
+      "answer": "Alice is correct. CycloneDX supports multiple rating systems, including CVSSv2, CVSSv3, CVSSv3.1, and CVSSv4."
+    },
+    {
+      "question": "Does CycloneDX allow vulnerability “advisories”?",
+      "answer": "Yes. A vulnerability object can contain an 'advisories' array, which is a list of objects each with a URL to a security advisory."
+    },
+    {
+      "question": "Is “dependencyGraph” element used?",
+      "answer": "No. Dependencies are represented in a flat list in the 'dependencies' element. A full graph can be constructed from this list."
+    },
+    {
+      "question": "Should dependencies use “ref” or “dependsOn”?",
+      "answer": "Both are used. Each item in the 'dependencies' list has a 'ref' that identifies a component, and a 'dependsOn' array that lists the 'ref' values of its direct dependencies."
+    },
+    {
+      "question": "Should externalReference allow “comment”?",
+      "answer": "Yes. The 'externalReference' object has an optional 'comment' field."
+    },
+    {
+      "question": "Is serialNumber a URN with uuid? Alice yes, Bob plain uuid",
+      "answer": "Alice is correct. The specification recommends a unique URN for the 'serialNumber', with 'urn:uuid' being the suggested format."
+    },
+    {
+      "question": "Should XML BOM declare schemaLocation? Alice yes via xsi:schemaLocation, Bob no",
+      "answer": "Alice is correct. While not strictly required for the BOM to be valid XML, declaring the schema via 'xsi:schemaLocation' is a best practice for validation."
+    },
+    {
+      "question": "Are CWE and CVE supported in vulnerability references?",
+      "answer": "Yes. The vulnerability 'id' is typically a CVE, and there is a dedicated 'cwes' array for CWE identifiers."
+    },
+    {
+      "question": "Does CycloneDX support ephemeral components? Alice yes, Bob no",
+      "answer": "Alice is correct. While not an explicit type, the model is flexible enough to represent a component that exists only transiently during a build or deployment."
+    },
+    {
+      "question": "Does CycloneDX support SPDX license expressions? Alice yes, Bob no",
+      "answer": "Alice is correct. Use of SPDX license expressions is the standard and recommended way to declare licenses in CycloneDX."
+    },
+    {
+      "question": "Does OWASP Dependency‑Check support CycloneDX? Alice yes, Bob no",
+      "answer": "Alice is correct. OWASP Dependency-Check support CycloneDX (in the backend and api), although not every attribute is display by the UI."
+    },
+    {
+      "question": "Should metadata authors be objects or strings? Alice objects, Bob strings",
+      "answer": "Alice is correct. Authors are represented as an array of 'organizationalContact' or 'individualContact' objects, not simple strings."
+    },
+    {
+      "question": "Can a BOM include multiple metadata elements? Alice no, Bob yes",
+      "answer": "Alice is correct. A CycloneDX BOM must have exactly one 'metadata' element/object."
+    },
+    {
+      "question": "Are CVSS 4.x vulnerability ratings supported? Alice yes, Bob no",
+      "answer": "Alice is correct. Support for 'CVSSv4' was added in CycloneDX specification version 1.5."
+    },
+    {
+      "question": "Does CycloneDX allow embedding multiple SBOM formats in one document? Alice yes via embed, Bob no",
+      "answer": "Bob is correct. CycloneDX does not have a standard, first-class feature for embedding other SBOM formats. While it could be done non-standardly via properties, it is not a defined capability."
+    }
+  ]
+}

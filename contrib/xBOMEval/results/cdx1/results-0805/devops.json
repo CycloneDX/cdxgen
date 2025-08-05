@@ -1,0 +1,1153 @@
+{
+  "questions": [
+    {
+      "question": "What is the purpose of the .github/workflows directory in a repository?",
+      "answer": "It contains workflow files that define the GitHub Actions to be triggered on specific events."
+    },
+    {
+      "question": "How do you trigger a GitHub Actions workflow manually using workflow_dispatch?",
+      "answer": "You can use the GitHub API or the GitHub CLI to trigger a workflow with the workflow_dispatch event."
+    },
+    {
+      "question": "What is the difference between push and pull_request triggers in GitHub Actions?",
+      "answer": "Push triggers workflows on commits pushed to the repository, while pull_request triggers them on pull request events."
+    },
+    {
+      "question": "How do you set environment variables in a GitHub Actions workflow?",
+      "answer": "You use the env keyword to define environment variables for the entire workflow or the vars keyword for a job."
+    },
+    {
+      "question": "What is the purpose of the GITHUB_TOKEN secret in GitHub Actions?",
+      "answer": "It provides a token with predefined scopes that grants access to the repository where the workflow is running."
+    },
+    {
+      "question": "How do you use matrix strategy to run jobs on multiple operating systems?",
+      "answer": "Define the matrix strategy in the jobs configuration to specify combinations of operating systems, languages, etc."
+    },
+    {
+      "question": "What is the difference between run and uses in a GitHub Actions step?",
+      "answer": "run executes a shell command, while uses references an action to run."
+    },
+    {
+      "question": "How do you cache dependencies in a GitHub Actions workflow?",
+      "answer": "Use the actions/cache action to save and restore dependencies from a cache."
+    },
+    {
+      "question": "What are GitHub Actions artifacts and how do you upload them?",
+      "answer": "Artifacts are files or directories that a job creates and another job consumes. Use the upload-artifact action to upload them."
+    },
+    {
+      "question": "How do you conditionally run steps based on branch names?",
+      "answer": "Use the if condition with github.ref to check the current branch."
+    },
+    {
+      "question": "What is the purpose of the continue-on-error flag in GitHub Actions?",
+      "answer": "It allows a job or step to succeed even if it fails."
+    },
+    {
+      "question": "How do you share data between jobs in the same workflow?",
+      "answer": "Use artifacts or outputs to pass data from one job to another."
+    },
+    {
+      "question": "What are GitHub Actions reusable workflows and how do you create them?",
+      "answer": "They are stored in the .github/workflows directory and referenced by other workflows using the uses keyword."
+    },
+    {
+      "question": "How do you use secrets in GitHub Actions workflows?",
+      "answer": "Define them in the repository's settings and reference them using ${{ secrets.SECRET_NAME }}."
+    },
+    {
+      "question": "What is the difference between job-level and step-level environment variables?",
+      "answer": "Job-level variables are defined for the entire job, while step-level variables are only available within that specific step."
+    },
+    {
+      "question": "How do you debug failed GitHub Actions workflows?",
+      "answer": "Check the workflow logs, use the actions/checkout and actions/setup-node actions, and enable verbose logging."
+    },
+    {
+      "question": "What is the purpose of the timeout-minutes setting in workflows?",
+      "answer": "It defines the maximum time allowed for a workflow to run before it is terminated."
+    },
+    {
+      "question": "How do you use GitHub Actions to deploy to multiple environments?",
+      "answer": "Define separate jobs for each environment and use different deployment strategies."
+    },
+    {
+      "question": "What are composite actions and how do you create them?",
+      "answer": "They are created by defining a workflow file with an action.yml and using the run keyword to execute commands."
+    },
+    {
+      "question": "How do you handle pull request events for specific branches only?",
+      "answer": "Use the if condition with github.ref to filter pull requests based on branch names."
+    },
+    {
+      "question": "What is the difference between github.ref and github.sha context variables?",
+      "answer": "github.ref is the full reference of the current commit (e.g., refs/heads/main), while github.sha is the commit SHA."
+    },
+    {
+      "question": "How do you use GitHub Actions to run tests on pull requests?",
+      "answer": "Define a workflow with a pull_request trigger and specify the steps to run tests."
+    },
+    {
+      "question": "What is the purpose of the if condition in GitHub Actions steps?",
+      "answer": "It determines whether a step should be executed based on specific conditions."
+    },
+    {
+      "question": "How do you set up a self-hosted runner for GitHub Actions?",
+      "answer": "Install the runner software on a machine, register it with your repository, and configure it to connect to GitHub."
+    },
+    {
+      "question": "What are GitHub Actions expressions and how do you use them?",
+      "answer": "They allow you to dynamically generate values using context variables, functions, and operators."
+    },
+    {
+      "question": "How do you use the GitHub CLI in GitHub Actions workflows?",
+      "answer": "Use the gh command within a run step to interact with GitHub APIs and services."
+    },
+    {
+      "question": "What is the difference between needs and dependencies in GitHub Actions?",
+      "answer": "needs defines job execution order, while dependencies control which jobs are run first."
+    },
+    {
+      "question": "How do you use GitHub Actions to publish packages to registries?",
+      "answer": "Use the appropriate package manager action (e.g., actions/setup-python, npm) to authenticate and publish."
+    },
+    {
+      "question": "What is the purpose of the concurrency setting in workflows?",
+      "answer": "It controls how many jobs or workflows can run concurrently."
+    },
+    {
+      "question": "How do you handle sensitive data in GitHub Actions logs?",
+      "answer": "Use the GITHUB_TOKEN to authenticate API requests and avoid logging secrets."
+    },
+    {
+      "question": "What are GitHub Actions templates and how do you use them?",
+      "answer": "They are reusable workflows that can be referenced by other workflows. Use the uses keyword to include them."
+    },
+    {
+      "question": "What is the purpose of the azure-pipelines.yml file?",
+      "answer": "It defines the pipeline configuration for Azure Pipelines, including stages, jobs, and tasks."
+    },
+    {
+      "question": "How do you define multiple stages in an Azure Pipeline?",
+      "answer": "Use the stages keyword and define each stage with its jobs."
+    },
+    {
+      "question": "What is the difference between jobs and steps in Azure Pipelines?",
+      "answer": "Jobs are collections of steps, while steps are individual tasks that perform actions in a pipeline."
+    },
+    {
+      "question": "How do you use variables in Azure Pipelines?",
+      "answer": "Define them in the variables section and reference them using $(VARIABLE_NAME)."
+    },
+    {
+      "question": "What is the purpose of the pool keyword in Azure Pipelines?",
+      "answer": "It specifies the pool of agents to run a job."
+    },
+    {
+      "question": "How do you trigger pipelines based on specific branch changes?",
+      "answer": "Use the trigger keyword to specify which branches should trigger a pipeline."
+    },
+    {
+      "question": "What are Azure Pipeline templates and how do you reference them?",
+      "answer": "They are reusable pipeline configurations. Use the template keyword to include them."
+    },
+    {
+      "question": "How do you use conditions to control task execution?",
+      "answer": "Use the condition keyword in a task definition to specify when it should run."
+    },
+    {
+      "question": "What is the difference between predefined and user-defined variables?",
+      "answer": "Predefined variables are provided by Azure Pipelines, while user-defined variables are created by the user."
+    },
+    {
+      "question": "How do you publish artifacts in Azure Pipelines?",
+      "answer": "Use the PublishBuildArtifacts@1 task to upload artifacts."
+    },
+    {
+      "question": "What is the purpose of the dependsOn keyword in stages?",
+      "answer": "It defines the order in which stages run relative to each other."
+    },
+    {
+      "question": "How do you use Azure Pipelines to deploy to Azure services?",
+      "answer": "Use the appropriate tasks or extensions to authenticate and deploy to Azure services."
+    },
+    {
+      "question": "What are deployment jobs and how do they differ from regular jobs?",
+      "answer": "They are used for deploying applications to target environments and have special features like environment variables and approvals."
+    },
+    {
+      "question": "How do you set up approval gates in Azure Pipelines?",
+      "answer": "Define approval stages and configure approvers in the Azure DevOps project settings."
+    },
+    {
+      "question": "What is the purpose of the strategy keyword in jobs?",
+      "answer": "It defines how a job should be run, such as with matrix or parallel strategies."
+    },
+    {
+      "question": "How do you use Azure Pipelines with GitHub repositories?",
+      "answer": "Configure a service connection, enable the GitHub extension, and define pipelines using azure-pipelines.yml."
+    },
+    {
+      "question": "What are Azure Pipeline resources and how do you define them?",
+      "answer": "They represent external entities like repositories or pipelines. Define them using the resources keyword."
+    },
+    {
+      "question": "How do you handle secrets in Azure Pipelines?",
+      "answer": "Use the pipeline's secret variables and reference them using $(SECRET_NAME)."
+    },
+    {
+      "question": "What is the difference between Classic and YAML pipelines?",
+      "answer": "Classic pipelines use a visual designer, while YAML pipelines are defined by YAML files in the repository."
+    },
+    {
+      "question": "How do you use Azure Pipelines to run tests in parallel?",
+      "answer": "Use the 'jobs' feature to define separate jobs for each test suite and enable parallel execution by specifying parallel jobs."
+    },
+    {
+      "question": "What is the purpose of the checkout step in Azure Pipelines?",
+      "answer": "It fetches the source code from a specified repository and makes it available to subsequent steps in the pipeline."
+    },
+    {
+      "question": "How do you use service connections in Azure Pipelines?",
+      "answer": "They are used to connect to external services, such as Azure App Service or Azure Kubernetes Service. You configure the connection in the Azure portal and reference it in your pipeline."
+    },
+    {
+      "question": "What are Azure Pipeline environments and how do you configure them?",
+      "answer": "They represent different stages of your application's deployment. You create environments in the Azure portal and link them to resources and services."
+    },
+    {
+      "question": "How do you use Azure Pipelines to build Docker images?",
+      "answer": "Use the 'docker' task in your pipeline, specifying the image name and tag."
+    },
+    {
+      "question": "What is the difference between queue and run pipelines?",
+      "answer": "Queuing a pipeline schedules it for execution, while running it starts the build immediately."
+    },
+    {
+      "question": "How do you use Azure Pipelines with multiple repositories?",
+      "answer": "Configure the pipeline to use the 'checkout' task for each repository."
+    },
+    {
+      "question": "What is the purpose of the timeoutInMinutes setting?",
+      "answer": "It defines how long a job can run before being automatically canceled."
+    },
+    {
+      "question": "How do you use Azure Pipelines to deploy to Kubernetes clusters?",
+      "answer": "Use the 'kubernetes' task to push your images to a container registry and deploy them to your cluster."
+    },
+    {
+      "question": "What are Azure Pipeline variable groups and how do you use them?",
+      "answer": "They are groups of variables that can be shared across multiple pipelines. You define them in the Azure portal and reference them in your pipeline YAML."
+    },
+    {
+      "question": "How do you troubleshoot failed Azure Pipeline runs?",
+      "answer": "Use the pipeline logs to identify the error, review the YAML configuration, and check resource availability."
+    },
+    {
+      "question": "What is the purpose of the package.json file in npm projects?",
+      "answer": "It describes your project, its dependencies, and scripts for running tasks."
+    },
+    {
+      "question": "How do you install dependencies listed in package.json?",
+      "answer": "Run 'npm install' to install all dependencies."
+    },
+    {
+      "question": "What is the difference between dependencies and devDependencies?",
+      "answer": "Dependencies are required for production, while devDependencies are only needed for development."
+    },
+    {
+      "question": "How do you update npm packages to their latest versions?",
+      "answer": "Run 'npm update' to update dependencies and devDependencies."
+    },
+    {
+      "question": "What is the purpose of the package-lock.json file?",
+      "answer": "It ensures that everyone installs the exact same dependency versions."
+    },
+    {
+      "question": "How do you install a specific version of an npm package?",
+      "answer": "Use 'npm install <package>@<version>'."
+    },
+    {
+      "question": "What is the difference between npm install and npm ci?",
+      "answer": "npm install installs packages, while npm ci installs packages as specified in package-lock.json for deterministic builds."
+    },
+    {
+      "question": "How do you create and publish your own npm package?",
+      "answer": "Define a package.json, use 'npm pack' to create a tarball, and 'npm publish' to upload it to the npm registry."
+    },
+    {
+      "question": "What is the purpose of the scripts section in package.json?",
+      "answer": "It contains custom commands to run your application or perform specific tasks."
+    },
+    {
+      "question": "How do you run custom npm scripts defined in package.json?",
+      "answer": "Use 'npm run <script-name>'."
+    },
+    {
+      "question": "What is the difference between global and local npm installations?",
+      "answer": "Global installs are available system-wide, while local installs are specific to a project."
+    },
+    {
+      "question": "How do you manage npm cache and clear it when needed?",
+      "answer": "Use 'npm cache clean --force' to clear the cache."
+    },
+    {
+      "question": "What is the purpose of the .npmrc file?",
+      "answer": "It contains configuration settings for npm, such as registry URLs and authentication tokens."
+    },
+    {
+      "question": "How do you use npm workspaces for monorepo management?",
+      "answer": "Define 'workspaces' in package.json to manage multiple packages within a single repository."
+    },
+    {
+      "question": "What is the difference between npm audit and npm audit fix?",
+      "answer": "npm audit lists security vulnerabilities, while npm audit fix attempts to automatically fix them."
+    },
+    {
+      "question": "How do you configure npm to use a private registry?",
+      "answer": "Set the 'registry' URL in .npmrc."
+    },
+    {
+      "question": "What is the purpose of peerDependencies in package.json?",
+      "answer": "They declare dependencies that must be installed by the parent project, not the package itself."
+    },
+    {
+      "question": "How do you handle version conflicts between npm packages?",
+      "answer": "Use 'npm ls' to identify conflicts and resolve them manually."
+    },
+    {
+      "question": "What is the difference between npm start and npm run start?",
+      "answer": "npm start runs the 'start' script, while npm run start explicitly runs a named script."
+    },
+    {
+      "question": "How do you use npm link for local package development?",
+      "answer": "It creates a symlink from the global node_modules directory to your local package."
+    },
+    {
+      "question": "What is the purpose of the engines field in package.json?",
+      "answer": "It specifies which versions of Node.js and npm are required to run the package."
+    },
+    {
+      "question": "How do you create npm scripts that run in parallel?",
+      "answer": "Use 'npm-run-all' or 'concurrently' packages."
+    },
+    {
+      "question": "What is the difference between npm outdated and npm update?",
+      "answer": "npm outdated lists outdated packages, while npm update installs the latest versions of dependencies."
+    },
+    {
+      "question": "How do you use npm to manage security vulnerabilities?",
+      "answer": "Use 'npm audit' to identify and fix vulnerabilities."
+    },
+    {
+      "question": "What is the purpose of the files field in package.json?",
+      "answer": "It specifies which files should be included when publishing a package."
+    },
+    {
+      "question": "How do you configure npm to ignore certain files during publishing?",
+      "answer": "Use the 'files' field or add entries to .npmignore."
+    },
+    {
+      "question": "What is the difference between npm install --save and --save-dev?",
+      "answer": "--save adds a dependency to dependencies, while --save-dev adds it to devDependencies."
+    },
+    {
+      "question": "How do you use npm to run scripts with environment variables?",
+      "answer": "Use 'npm config set <key> <value>' or prefix the command with environment variables."
+    },
+    {
+      "question": "What is the purpose of the bin field in package.json?",
+      "answer": "It specifies executable files to make available as command-line tools."
+    },
+    {
+      "question": "How do you troubleshoot common npm installation errors?",
+      "answer": "Check for typos, ensure internet connectivity, and review error messages."
+    },
+    {
+      "question": "What is the purpose of the pom.xml file in Maven projects?",
+      "answer": "It defines project metadata and build configuration."
+    },
+    {
+      "question": "How do you compile a Maven project using the command line?",
+      "answer": "Run 'mvn compile'."
+    },
+    {
+      "question": "What is the difference between compile and package Maven goals?",
+      "answer": "Compile compiles the source code, while package creates a distributable archive (e.g., JAR)."
+    },
+    {
+      "question": "How do you add external dependencies to a Maven project?",
+      "answer": "Declare them in the 'dependencies' section of pom.xml."
+    },
+    {
+      "question": "What is the purpose of the Maven repository system?",
+      "answer": "It stores and retrieves build artifacts."
+    },
+    {
+      "question": "How do you create a new Maven project from archetype?",
+      "answer": "Use 'mvn archetype:generate'."
+    },
+    {
+      "question": "What is the difference between dependencies and dependencyManagement?",
+      "answer": "Dependencies are inherited, while dependencyManagement defines versions for transitive dependencies."
+    },
+    {
+      "question": "How do you skip tests during Maven build execution?",
+      "answer": "Use '-DskipTests' or '-Dmaven.test.skip=true'."
+    },
+    {
+      "question": "What is the purpose of the Maven lifecycle phases?",
+      "answer": "The Maven lifecycle is a series of well-defined stages that a project goes through, from inception to completion. These phases are defined in the Maven POM file and can be customized. They include compile, test, package, verify, install, and deploy."
+    },
+    {
+      "question": "How do you configure Maven to use a custom settings.xml file?",
+      "answer": "You can specify a custom settings.xml file by using the -s option with the mvn command. For example, mvn clean install -s /path/to/settings.xml."
+    },
+    {
+      "question": "What is the difference between Maven profiles and properties?",
+      "answer": "Maven profiles allow you to define different configurations for different environments or scenarios. Properties are key-value pairs that can be used throughout your POM file to define build parameters."
+    },
+    {
+      "question": "How do you deploy Maven artifacts to a remote repository?",
+      "answer": "You can deploy artifacts using the mvn deploy command. You must have the correct repository configuration in your POM or settings.xml file, including the server credentials."
+    },
+    {
+      "question": "What is the purpose of the effective-pom command?",
+      "answer": "The mvn help:effective-pom command generates a POM file that combines the parent POMs and profiles, showing the effective configuration for the build."
+    },
+    {
+      "question": "How do you use Maven plugins to extend build functionality?",
+      "answer": "You add plugins in the <build><plugins> section of your POM. Specify the plugin's group ID, artifact ID, version, and any required configuration."
+    },
+    {
+      "question": "What is the difference between clean and clean install goals?",
+      "answer": "The clean goal removes all generated files from the previous build. The install goal builds the project and installs it into your local Maven repository."
+    },
+    {
+      "question": "How do you configure Maven to use a proxy server?",
+      "answer": "In your settings.xml file, under the <proxies> section, define a proxy configuration with host, port, and optional username and password."
+    },
+    {
+      "question": "What is the purpose of the Maven wrapper (mvnw)?",
+      "answer": "The Maven wrapper ensures that all builds are performed with the same version of Maven, regardless of the developer's local installation."
+    },
+    {
+      "question": "How do you manage multi-module Maven projects?",
+      "answer": "Use a parent POM to define common configurations and dependencies. Each module has its own POM and is listed under the parent POM's <modules> section."
+    },
+    {
+      "question": "What is the difference between jar and war packaging types?",
+      "answer": "JAR files are Java archives for libraries or standalone applications. WAR files are JAR files used for web applications, containing web resources and libraries."
+    },
+    {
+      "question": "How do you use Maven to run integration tests?",
+      "answer": "Use the mvn verify goal, which runs integration tests defined in the src/test/java directory."
+    },
+    {
+      "question": "What is the purpose of the Maven release plugin?",
+      "answer": "It automates the release process, including version management and deployment to a remote repository."
+    },
+    {
+      "question": "How do you configure Maven to use environment-specific properties?",
+      "answer": "Use profiles to define different property values for different environments and activate them using -P."
+    },
+    {
+      "question": "What is the difference between Maven scopes (compile, test, runtime)?",
+      "answer": "Compile scope is the default, required for compilation. Test is for test code. Runtime is for libraries needed at runtime but not for compilation."
+    },
+    {
+      "question": "How do you use Maven to generate project documentation?",
+      "answer": "Use the mvn site command, which generates documentation based on the site.xml configuration."
+    },
+    {
+      "question": "What is the purpose of the Maven archetype plugin?",
+      "answer": "It generates a project structure from an archetype template, allowing you to create new projects quickly."
+    },
+    {
+      "question": "How do you troubleshoot common Maven build failures?",
+      "answer": "Check the error messages, ensure all dependencies are available, and verify your POM configuration."
+    },
+    {
+      "question": "What is the difference between Maven and Gradle build tools?",
+      "answer": "Maven uses XML for configuration, follows a strict lifecycle, and is more opinionated. Gradle uses Groovy or Kotlin DSL, offers flexibility, and is more declarative."
+    },
+    {
+      "question": "How do you use Maven to manage transitive dependencies?",
+      "answer": "Maven automatically manages transitive dependencies based on the direct dependencies in your POM."
+    },
+    {
+      "question": "What is the purpose of the build.gradle file in Gradle projects?",
+      "answer": "It contains all the configuration for building a Gradle project, including dependencies and tasks."
+    },
+    {
+      "question": "How do you execute Gradle tasks from the command line?",
+      "answer": "Use the gradle command followed by the task name, e.g., gradle build."
+    },
+    {
+      "question": "What is the difference between plugins and dependencies in Gradle?",
+      "answer": "Plugins add functionality to a build, while dependencies are libraries and tools required by the project."
+    },
+    {
+      "question": "How do you configure Gradle to use a custom repository?",
+      "answer": "In build.gradle, use the repositories block to add your custom repository URL."
+    },
+    {
+      "question": "What is the purpose of the Gradle wrapper (gradlew)?",
+      "answer": "It ensures all builds use the same version of Gradle, regardless of the developer's local installation."
+    },
+    {
+      "question": "How do you define custom tasks in Gradle build scripts?",
+      "answer": "Use the task keyword followed by a task name and its configuration in build.gradle."
+    },
+    {
+      "question": "What is the difference between implementation and api configurations?",
+      "answer": "api includes dependencies that are exposed to consumers of your library, while implementation does not."
+    },
+    {
+      "question": "How do you use Gradle to build multi-project setups?",
+      "answer": "Create a settings.gradle file that includes all subproject names, and organize your project directory structure."
+    },
+    {
+      "question": "What is the purpose of the settings.gradle file?",
+      "answer": "It defines which subprojects to include in a multi-project build."
+    },
+    {
+      "question": "How do you configure Gradle to use Java toolchains?",
+      "answer": "Use the java block in build.gradle to specify the required Java version."
+    },
+    {
+      "question": "What is the difference between compile and runtime classpaths?",
+      "answer": "Compile includes all dependencies needed for compilation, while runtime includes those needed at runtime."
+    },
+    {
+      "question": "How do you use Gradle to publish artifacts to repositories?",
+      "answer": "Use the publishing plugin and configure the repository and artifact details in build.gradle."
+    },
+    {
+      "question": "What is the purpose of Gradle dependency resolution strategies?",
+      "answer": "They control how dependencies are selected and resolved, especially in complex multi-module projects."
+    },
+    {
+      "question": "How do you configure Gradle to use environment variables?",
+      "answer": "Use the ext property or system property methods in build.gradle to reference environment variables."
+    },
+    {
+      "question": "What is the difference between Gradle and Maven build systems?",
+      "answer": "Gradle is more flexible, uses a DSL for configuration, and supports both declarative and imperative build scripts. Maven is more opinionated and uses XML."
+    },
+    {
+      "question": "How do you use Gradle to manage build cache effectively?",
+      "answer": "Enable the build cache in gradle.properties and ensure tasks are cacheable."
+    },
+    {
+      "question": "What is the purpose of Gradle build scans?",
+      "answer": "They provide insights into your builds, helping you understand performance and issues."
+    },
+    {
+      "question": "How do you configure Gradle to use parallel execution?",
+      "answer": "Set org.gradle.parallel=true in gradle.properties."
+    },
+    {
+      "question": "What is the difference between Gradle Kotlin DSL and Groovy DSL?",
+      "answer": "Kotlin DSL is a modern, type-safe alternative to Groovy for Gradle build scripts."
+    },
+    {
+      "question": "How do you use Gradle to run tests with specific configurations?",
+      "answer": "Use the --tests option with gradle test, e.g., gradle test --tests com.example.MyTest."
+    },
+    {
+      "question": "What is the purpose of Gradle configuration avoidance?",
+      "answer": "It defers task configuration until it's necessary, improving build performance."
+    },
+    {
+      "question": "How do you troubleshoot Gradle build performance issues?",
+      "answer": "Use build scans, profile the build, and optimize task configurations."
+    },
+    {
+      "question": "What is the difference between Gradle incremental builds and clean builds?",
+      "answer": "Incremental builds only re-run tasks if their inputs have changed, while clean builds always start from scratch."
+    },
+    {
+      "question": "How do you use Gradle to manage version catalogs?",
+      "answer": "Gradle provides a mechanism to create a catalog of versions for dependencies. This is done using the `settings.gradle.kts` file to define version catalogs and then referencing these versions in your build scripts."
+    },
+    {
+      "question": "What is the purpose of Gradle composite builds?",
+      "answer": "Composite builds allow you to build multiple projects together, treating them as a single build. This is useful for developing libraries and applications that depend on each other."
+    },
+    {
+      "question": "How do you configure Gradle to work with Docker?",
+      "answer": "You use the `docker` plugin in your build script. You can define tasks to build, push, and pull Docker images as part of your build process."
+    },
+    {
+      "question": "What is the difference between Gradle up-to-date checks and rebuilds?",
+      "answer": "Up-to-date checks are performed to determine if tasks need to be executed based on the last build. If no inputs have changed, the task is considered up-to-date and skipped. Rebuilds occur when tasks are forced to run regardless of the up-to-date status."
+    },
+    {
+      "question": "How do you use Gradle to manage code quality plugins?",
+      "answer": "You apply the relevant plugin (e.g., `findbugs`, `checkstyle`) in your build script. You can configure the plugin to enforce specific rules and generate reports."
+    },
+    {
+      "question": "What is the purpose of the requirements.txt file in Python projects?",
+      "answer": "It lists all the packages and their versions that a project depends on, making it easy to install them in a consistent environment."
+    },
+    {
+      "question": "How do you install packages listed in requirements.txt?",
+      "answer": "You use `pip install -r requirements.txt` to install all the packages and their versions listed in the file."
+    },
+    {
+      "question": "What is the difference between pip install and pip install -e?",
+      "answer": "`pip install` installs a package in the usual way, making it available for import. `pip install -e` installs the package in editable mode, allowing changes to the source code to be immediately reflected without reinstalling."
+    },
+    {
+      "question": "How do you create a virtual environment for Python projects?",
+      "answer": "You use `python -m venv myenv` to create a new virtual environment named `myenv`."
+    },
+    {
+      "question": "What is the purpose of the pip freeze command?",
+      "answer": "It outputs a list of installed packages and their versions in the format that can be used in `requirements.txt`, making it easy to create a snapshot of your environment."
+    },
+    {
+      "question": "How do you upgrade pip to the latest version?",
+      "answer": "You run `pip install --upgrade pip` to upgrade `pip` to the latest version available."
+    },
+    {
+      "question": "What is the difference between global and local package installations?",
+      "answer": "Global installations affect all Python environments on the system, while local installations are specific to a virtual environment or project directory."
+    },
+    {
+      "question": "How do you uninstall packages using pip?",
+      "answer": "You use `pip uninstall package_name` to remove a package from your environment."
+    },
+    {
+      "question": "What is the purpose of the --user flag in pip installations?",
+      "answer": "It installs packages to the user-specific directory, avoiding permission issues and not requiring admin privileges."
+    },
+    {
+      "question": "How do you use pip to install packages from a specific index?",
+      "answer": "You pass the `--index-url` option to `pip install`, specifying the URL of the package index you want to use."
+    },
+    {
+      "question": "What is the difference between pip and conda package managers?",
+      "answer": "`pip` is the package manager for Python, while `conda` manages packages and environments for multiple languages, including Python."
+    },
+    {
+      "question": "How do you manage package versions with pip?",
+      "answer": "You use `pip install package_name==version` to install a specific version of a package. You can also use `pip list` and `pip freeze` to view installed packages and their versions."
+    },
+    {
+      "question": "What is the purpose of the pip list command?",
+      "answer": "It shows a list of installed packages and their versions, which can be useful for auditing and debugging."
+    },
+    {
+      "question": "How do you use pip to install packages from Git repositories?",
+      "answer": "You use `pip install git+https://github.com/username/repo.git` to install a package directly from a Git repository."
+    },
+    {
+      "question": "What is the difference between pip install and python -m pip install?",
+      "answer": "Both commands install packages, but `python -m pip install` is used when you want to ensure that the version of `pip` used is the one that comes with your Python installation."
+    },
+    {
+      "question": "How do you configure pip to use a proxy server?",
+      "answer": "You set the `HTTP_PROXY` and `HTTPS_PROXY` environment variables, or use the `pip config` command to configure proxy settings."
+    },
+    {
+      "question": "What is the purpose of the pip cache directory?",
+      "answer": "It stores downloaded package files, speeding up future installations by avoiding re-downloads."
+    },
+    {
+      "question": "How do you use pip to install packages with specific Python versions?",
+      "answer": "You use `pipx` or `pyenv` to manage multiple Python versions and install packages for a specific version."
+    },
+    {
+      "question": "What is the difference between pip and easy_install?",
+      "answer": "`pip` is the successor to `easy_install`, offering more features, better dependency management, and support for wheels."
+    },
+    {
+      "question": "How do you troubleshoot common pip installation errors?",
+      "answer": "You use `pip check` to identify conflicts, ensure network connectivity, and consult the error message for clues."
+    },
+    {
+      "question": "What is the purpose of the pip show command?",
+      "answer": "It provides detailed information about a specific package, including its version, dependencies, and installation location."
+    },
+    {
+      "question": "How do you use pip to install packages from local directories?",
+      "answer": "You use `pip install /path/to/local/package` to install a package from a local directory."
+    },
+    {
+      "question": "What is the difference between pip and poetry dependency management?",
+      "answer": "`poetry` provides a more modern, declarative approach to managing dependencies and virtual environments compared to `pip`. It simplifies the process of creating and managing projects."
+    },
+    {
+      "question": "How do you configure pip to ignore SSL certificates?",
+      "answer": "You set the `PIP_CERT` environment variable to an empty string or use `pip config` to disable SSL verification."
+    },
+    {
+      "question": "What is the purpose of the pip download command?",
+      "answer": "It downloads packages and their dependencies to a directory without installing them, useful for offline installations."
+    },
+    {
+      "question": "How do you use pip to install packages in editable mode?",
+      "answer": "You use `pip install -e .` to install the current project in editable mode, allowing changes to be reflected immediately."
+    },
+    {
+      "question": "What is the difference between pip and pipenv tools?",
+      "answer": "`pipenv` integrates `pip` and `virtualenv`, providing a higher-level interface for managing dependencies and environments."
+    },
+    {
+      "question": "How do you manage pip configuration files?",
+      "answer": "You use `pip config` to edit and manage configuration settings, which can be global, user, or project-specific."
+    },
+    {
+      "question": "What is the purpose of the pip check command?",
+      "answer": "It checks for dependency conflicts and missing packages in your environment, helping to identify issues before runtime."
+    },
+    {
+      "question": "How do you use pip to install packages with optional dependencies?",
+      "answer": "You specify the optional group using `[group]` syntax, like `pip install package_name[group]`."
+    },
+    {
+      "question": "What is the purpose of the go.mod file in Go projects?",
+      "answer": "It declares a module and its dependencies, along with the minimum version of Go required."
+    },
+    {
+      "question": "How do you initialize a new Go module?",
+      "answer": "You run `go mod init example.com/mymodule` to create a new module in the current directory."
+    },
+    {
+      "question": "What is the difference between go build and go install commands?",
+      "answer": "`go build` compiles packages, while `go install` compiles and installs them to the `GOPATH/bin` directory."
+    },
+    {
+      "question": "How do you manage dependencies in Go projects?",
+      "answer": "You use `go mod` commands to add, update, and remove dependencies, ensuring consistent builds."
+    },
+    {
+      "question": "What is the purpose of the go.sum file?",
+      "answer": "It contains checksums for dependencies, ensuring their integrity and preventing tampering."
+    },
+    {
+      "question": "How do you upgrade Go dependencies to newer versions?",
+      "answer": "You run `go get -u` to upgrade all dependencies to their latest versions."
+    },
+    {
+      "question": "What is the difference between go mod tidy and go mod download?",
+      "answer": "`go mod tidy` cleans up unused dependencies, while `go mod download` downloads all dependencies but doesn't clean up."
+    },
+    {
+      "question": "How do you use Go workspaces for multi-module projects?",
+      "answer": "You define a `go.work` file in your workspace root to manage multiple modules, allowing them to be developed together."
+    },
+    {
+      "question": "What is the purpose of the GOPATH environment variable?",
+      "answer": "It defines the root directory for Go packages, including `src`, `pkg`, and `bin` subdirectories."
+    },
+    {
+      "question": "How do you configure Go to use a private module proxy?",
+      "answer": "You set the `GOPROXY` environment variable to point to your private proxy server."
+    },
+    {
+      "question": "What is the difference between go run and go build?",
+      "answer": "`go run` compiles and runs the specified package, while `go build` compiles but does not run it."
+    },
+    {
+      "question": "How do you use Go modules with version control systems?",
+      "answer": "You commit the `go.mod` and `go.sum` files to your VCS, ensuring that dependencies are versioned along with your code."
+    },
+    {
+      "question": "What is the purpose of the go vet command?",
+      "answer": "It examines Go source code for various issues, such as dead code and potential bugs, without executing the program."
+    },
+    {
+      "question": "How do you manage Go toolchain versions?",
+      "answer": "You use `go version` to check the current version and `go install golang.org/dl/goX.X@latest` to install a specific version."
+    },
+  {
+    "question": "What is the difference between go fmt and goimports?",
+    "answer": "go fmt is a tool that automatically formats Go source code. It removes unnecessary imports, sorts them, and adjusts the indentation. goimports is an extension of go fmt that also adds missing imports. The main difference is that goimports handles the addition of packages, while go fmt only formats the code."
+  },
+  {
+    "question": "How do you use Go to cross-compile for different platforms?",
+    "answer": "You can use the GOOS and GOARCH environment variables to target different operating systems and architectures. For example, GOOS=linux GOARCH=amd64 go build will compile your Go program for Linux on an AMD64 architecture."
+  },
+  {
+    "question": "What is the purpose of the go test command?",
+    "answer": "go test runs tests in packages. It compiles and executes all files with the _test.go suffix, looking for functions named TestXxx where Xxx is any alphanumeric string. The tests are run concurrently and can be used to verify the correctness of your code."
+  },
+  {
+    "question": "How do you configure Go to use vendor directories?",
+    "answer": "You use the go mod vendor command to create a vendor directory containing all the dependencies. This isolates your project from changes in the global module cache and allows for reproducible builds."
+  },
+  {
+    "question": "What is the difference between go mod and dep dependency management?",
+    "answer": "go mod is Go's built-in module system, replacing dep. It provides a simpler and more powerful way to manage dependencies. go mod uses a single, flat dependency tree, while dep allows for more complex module graphs."
+  },
+  {
+    "question": "How do you troubleshoot common Go module issues?",
+    "answer": "You can use go mod tidy to clean up unused dependencies and add missing ones. go list -m all shows all modules in your project, including indirect ones. go mod verify checks that all dependencies are downloaded correctly."
+  },
+  {
+    "question": "What is the purpose of the go generate command?",
+    "answer": "go generate runs commands specified in comments within your Go source code. This is used to generate code, assets, or other files that are then compiled into your program."
+  },
+  {
+    "question": "How do you use Go to manage build tags?",
+    "answer": "You use // +build comments to specify which files should be included in a build. Build tags are used to control conditional compilation, such as including platform-specific code."
+  },
+  {
+    "question": "What is the difference between go list and go mod graph?",
+    "answer": "go list lists packages, while go mod graph shows the module dependency graph. go list is useful for inspecting packages, and go mod graph is useful for understanding module dependencies."
+  },
+  {
+    "question": "How do you configure Go to work with private repositories?",
+    "answer": "You can use the GOPRIVATE environment variable to specify a list of module paths that should be fetched only from your private repository. You also need to set up authentication for those repositories."
+  },
+  {
+    "question": "What is the purpose of the go env command?",
+    "answer": "go env prints Go environment information, such as the location of the Go installation, the module cache, and other configuration variables."
+  },
+  {
+    "question": "How do you use Go to manage code coverage?",
+    "answer": "You use the -cover flag with go test to run tests and measure code coverage. The output is a coverage profile that you can analyze or visualize."
+  },
+  {
+    "question": "What is the difference between go doc and godoc tools?",
+    "answer": "go doc is a command-line tool that prints documentation for packages and symbols, while godoc is a web server that serves the same documentation over HTTP. go doc is simpler and faster, but godoc provides a more interactive experience."
+  },
+  {
+    "question": "How do you use Go to manage race conditions in tests?",
+    "answer": "You use the -race flag with go test to run your tests with data race detection. This is a powerful tool for identifying concurrency issues in your Go programs."
+  },
+  {
+    "question": "What is the purpose of the go clean command?",
+    "answer": "go clean removes object files and cached files. It can be used to clean up your build environment, especially when switching branches or versions."
+  },
+  {
+    "question": "How do you configure Go to use custom build flags?",
+    "answer": "You can set environment variables like CGO_ENABLED, GOOS, and GOARCH to configure build flags. You can also use the -ldflags and -gcflags options with go build."
+  },
+  {
+    "question": "What is the purpose of the conanfile.txt in Conan package management?",
+    "answer": "conanfile.txt is a simple text file used to declare project dependencies. It is suitable for small projects or when you want a minimal dependency management file."
+  },
+  {
+    "question": "How do you install dependencies using Conan package manager?",
+    "answer": "You use conan install to resolve and install the dependencies specified in your conanfile. This creates a conaninfo.txt file and a conanbuildinfo.cmake or conanbuildinfo.txt file."
+  },
+  {
+    "question": "What is the difference between conan install and conan create commands?",
+    "answer": "conan install resolves and installs dependencies for your project, while conan create builds and packages a new version of a library. conan create is used for creating binary packages."
+  },
+  {
+    "question": "How do you create and publish your own Conan packages?",
+    "answer": "You use conan create to build and package your library, then conan upload to publish it to a remote repository. You must specify the version and user namespace."
+  },
+  {
+    "question": "What is the purpose of the conan-center repository?",
+    "answer": "conan-center is Conan's official repository, containing a large collection of open-source packages. It is the default remote for most Conan users."
+  },
+  {
+    "question": "How do you configure Conan to use custom remotes?",
+    "answer": "You use conan remote add to add new remote repositories. You can configure the order of remotes with conan remote list and change their priority."
+  },
+  {
+    "question": "What is the difference between requires and build_requires in Conan?",
+    "answer": "requires are dependencies that are used to build the package, while build_requires are dependencies that are only used for building the package itself. build_requires are not included in the final package."
+  },
+  {
+    "question": "How do you use Conan profiles for different build configurations?",
+    "answer": "You create profile files (e.g., Release, Debug) with settings and options. You use conan install --profile=Release to apply a specific profile."
+  },
+  {
+    "question": "What is the purpose of the conanfile.py file?",
+    "answer": "conanfile.py is a Python script that defines a Conan package. It provides full control over the package's build and package processes."
+  },
+  {
+    "question": "How do you manage Conan package versions and revisions?",
+    "answer": "You use version numbers in your conanfile. Conan 1.x also supports revisions to distinguish between different builds of the same version."
+  },
+  {
+    "question": "What is the difference between Conan generators and imports?",
+    "answer": "Generators produce files for different build systems (e.g., CMake, MSBuild), while imports copy files from the package into your project directory. Generators are used to integrate with build systems, while imports are for custom file management."
+  },
+  {
+    "question": "How do you use Conan to manage C/C++ dependencies?",
+    "answer": "You specify your dependencies in a conanfile.txt or conanfile.py, then use conan install to resolve and download them. Conan provides integration with popular build systems like CMake."
+  },
+  {
+    "question": "What is the purpose of the conan search command?",
+    "answer": "conan search queries the remote or local cache for packages. It can list all packages, specific versions, or packages with certain attributes."
+  },
+  {
+    "question": "How do you configure Conan to work with private repositories?",
+    "answer": "You use conan remote add to add your private repository, then authenticate if necessary. You can configure credentials in the Conan configuration file."
+  },
+  {
+    "question": "What is the difference between Conan and other package managers?",
+    "answer": "Conan is designed for C/C++ projects, focusing on performance and integration with build systems. It supports cross-compilation, version ranges, and binary packages. Other package managers may be more general-purpose or have different focuses."
+  },
+  {
+    "question": "How do you use Conan to handle cross-compilation scenarios?",
+    "answer": "You specify the target OS and architecture using settings in your conanfile. Conan will resolve dependencies for the specified platform."
+  },
+  {
+    "question": "What is the purpose of the conan export command?",
+    "answer": "conan export creates a local copy of a package, allowing you to develop and test it before uploading it to a remote."
+  },
+  {
+    "question": "How do you manage Conan package settings and options?",
+    "answer": "You specify settings in your conanfile (e.g., compiler, architecture) and options for package features. You can also use profiles to manage complex settings."
+  },
+  {
+    "question": "What is the difference between Conan lockfiles and version ranges?",
+    "answer": "Lockfiles (conan.lock) pin specific package versions, ensuring reproducibility. Version ranges allow for flexibility in dependency resolution."
+  },
+  {
+    "question": "How do you troubleshoot common Conan package resolution issues?",
+    "answer": "You can use conan search to verify package availability, conan info to inspect dependency graphs, and conan install --build=missing to force rebuilds of missing packages."
+  },
+  {
+    "question": "What is the purpose of the conan info command?",
+    "answer": "conan info provides detailed information about packages, including their dependencies and configuration. It is useful for debugging dependency resolution issues."
+  },
+  {
+    "question": "How do you use Conan to manage binary packages?",
+    "answer": "You configure your conanfile to build binaries for different platforms and upload them to a remote. Conan will automatically select the correct binary for your build."
+  },
+  {
+    "question": "What is the difference between Conan reference and package ID?",
+    "answer": "A Conan reference includes the package name, version, user, and channel. The package ID is a hash that uniquely identifies a package's configuration and content."
+  },
+  {
+    "question": "How do you configure Conan to use environment variables?",
+    "answer": "You can set environment variables in your shell or Conan profiles. Conan will use these to configure its behavior, such as setting compiler paths."
+  },
+  {
+    "question": "What is the purpose of the conan upload command?",
+    "answer": "conan upload pushes your local packages to a remote repository, making them available for other developers and CI/CD systems."
+  },
+  {
+    "question": "How do you use Conan to manage package recipes?",
+    "answer": "You define recipes in conanfile.txt or conanfile.py files. Conan uses these to build, package, and distribute your software components."
+  },
+  {
+    "question": "What is the difference between Conan editable packages and regular packages?",
+    "answer": "Editable packages allow you to develop a package in place without creating a binary package. This is useful for local development and testing."
+  },
+  {
+    "question": "How do you use Conan to handle package conflicts?",
+    "answer": "You can use Conan's dependency resolution and conflict detection features to identify and resolve conflicts between package versions."
+  },
+  {
+    "question": "What is the purpose of the conan remove command?",
+    "answer": "conan remove deletes packages from your local cache or remote repository. You can use it to free up space or clean up old versions."
+  },
+  {
+    "question": "How do you configure Conan to work with multiple profiles?",
+    "answer": "You create separate profile files for different build configurations (e.g., Debug, Release) and use conan install --profile=PROFILE_NAME to apply them."
+  },
+  {
+    "question": "What is the purpose of the CMakeLists.txt file in CMake projects?",
+    "answer": "CMakeLists.txt is a configuration file for CMake, defining how to build your project. It specifies source files, dependencies, and build settings."
+  },
+  {
+    "question": "How do you configure CMake to find and link external libraries?",
+    "answer": "You use find_package to locate external libraries and their configuration files. You then use target_link_libraries to link them into your executable or library."
+  },
+  {
+    "question": "What is the difference between add_executable and add_library commands?",
+    "answer": "add_executable creates an executable target from source files, while add_library creates a library (static or shared) that can be linked by other targets."
+  },
+  {
+    "question": "How do you use CMake to manage build configurations?",
+    "answer": "You use CMake's built-in commands and variables to define different build configurations (e.g., Debug, Release). You can also use generator expressions for conditional logic."
+  },
+  {
+    "question": "What is the purpose of the find_package command in CMake?",
+    "answer": "find_package searches for external packages and their configuration files, allowing you to locate libraries and tools needed for your project."
+  },
+  {
+    "question": "How do you configure CMake to use different compilers?",
+    "answer": "You set the CMAKE_C_COMPILER and CMAKE_CXX_COMPILER variables to specify the desired compiler. You can also use toolchains for cross-compilation."
+  },
+  {
+    "question": "What is the difference between target_link_libraries and target_include_directories?",
+    "answer": "target_link_libraries links a library to a target, making its symbols available. target_include_directories adds directories to the compiler's include path for a target."
+  },
+    {
+      "question": "How do you use CMake to manage project dependencies?",
+      "answer": "CMake uses the find_package() command to locate and configure external libraries. You can also use the FetchContent module to automatically fetch and build external dependencies."
+    },
+    {
+      "question": "What is the purpose of the CMAKE_BUILD_TYPE variable?",
+      "answer": "CMAKE_BUILD_TYPE controls the build configuration. Common values are Debug, Release, RelWithDebInfo, and MinSizeRel, which set different levels of compiler optimization and debugging information."
+    },
+    {
+      "question": "How do you configure CMake to generate different build systems?",
+      "answer": "Set the -G flag to the desired generator, e.g., 'cmake -G \"Unix Makefiles\" ..' or 'cmake -G \"Visual Studio 16 2019\" ..'."
+    },
+    {
+      "question": "What is the difference between INTERFACE and PRIVATE link options?",
+      "answer": "PRIVATE includes dependencies only for the target itself, while INTERFACE includes dependencies that are also needed by targets linking against this one."
+    },
+    {
+      "question": "How do you use CMake to manage version requirements?",
+      "answer": "Use the pkg_check_modules() command with version constraints, or use find_package() with specific version requirements."
+    },
+    {
+      "question": "What is the purpose of the configure_file command?",
+      "answer": "It copies a file and performs variable substitution, useful for generating configuration files from templates."
+    },
+    {
+      "question": "How do you use CMake to handle platform-specific configurations?",
+      "answer": "Use the if() command to conditionally set variables or include platform-specific files based on CMAKE_SYSTEM_NAME, CMAKE_SYSTEM_PROCESSOR, etc."
+    },
+    {
+      "question": "What is the difference between CMake modules and scripts?",
+      "answer": "Modules are used for find_package() to locate external libraries, while scripts are custom CMake code for project-specific tasks."
+    },
+    {
+      "question": "How do you configure CMake to use environment variables?",
+      "answer": "Use the $ENV{VAR} syntax in CMake code to access environment variables."
+    },
+    {
+      "question": "What is the purpose of the pkg_check_modules command?",
+      "answer": "It checks for a package and sets variables with information about it, often used in conjunction with find_package()."
+    },
+    {
+      "question": "How do you use CMake to manage test configurations?",
+      "answer": "Use the add_test() command to define tests, and ctest() to run them. You can also use the testing module for more advanced configurations."
+    },
+    {
+      "question": "What is the difference between CMake presets and manual configuration?",
+      "answer": "Presets are predefined configurations for build types, compilers, and other settings, while manual configuration is done by specifying each option."
+    },
+    {
+      "question": "How do you troubleshoot common CMake configuration errors?",
+      "answer": "Use the -LH option to list all variables, check CMake's log output, and look for error messages indicating what went wrong."
+    },
+    {
+      "question": "What is the purpose of the CMake toolchain files?",
+      "answer": "They specify cross-compilation settings, including the compiler and toolchain path, for building software on a different platform."
+    },
+    {
+      "question": "How do you use CMake to manage installation directories?",
+      "answer": "Set variables like CMAKE_INSTALL_PREFIX, and use install() commands to specify what gets installed where."
+    },
+    {
+      "question": "What is the difference between CMake imported targets and regular targets?",
+      "answer": "Imported targets are defined by external projects or package managers, while regular targets are part of the current project."
+    },
+    {
+      "question": "How do you configure CMake to work with package managers?",
+      "answer": "Use the find_package() command to locate packages from package managers like vcpkg, conan, or hunter."
+    },
+    {
+      "question": "What is the purpose of the CMake package registry?",
+      "answer": "It stores metadata about installed packages and allows find_package() to locate them."
+    },
+    {
+      "question": "How do you use CMake to manage compiler features and standards?",
+      "answer": "Use the set() command with CMAKE_CXX_STANDARD to specify the C++ standard, and CMAKE_CXX_EXTENSIONS for compiler-specific extensions."
+    },
+    {
+      "question": "What is the difference between CMake source and binary directories?",
+      "answer": "The source directory contains your project's source code, while the binary directory is where CMake generates build files and object files."
+    },
+    {
+      "question": "How do you use CMake to handle conditional compilation?",
+      "answer": "Use preprocessor definitions and the if() command to conditionally compile code based on build configuration."
+    },
+    {
+      "question": "What is the purpose of the CMake export and install commands?",
+      "answer": "They make targets available to other projects and allow you to package your project for installation."
+    },
+    {
+      "question": "How do you configure CMake to work with IDE integration?",
+      "answer": "Generate project files for your IDE using the appropriate generator, e.g., Visual Studio or Xcode."
+    },
+    {
+      "question": "How do you implement a complex CI/CD pipeline that builds, tests, and deploys a multi-service application with database migrations and rollback capabilities using GitHub Actions?",
+      "answer": "Define workflows in .github/workflows, using actions to build and test, deploy services, and apply migrations. Use conditional steps for rollback on failure."
+    },
+    {
+      "question": "How do you design and implement a sophisticated deployment pipeline that handles blue-green deployments with health checks, automatic rollback on failure, and progressive rollout strategies across multiple Azure regions using Azure Pipelines?",
+      "answer": "Create a pipeline with stages for building, testing, and deploying to each region. Use deployment groups for blue-green strategies, health checks, and rollbacks."
+    },
+    {
+      "question": "How do you resolve complex dependency conflicts in a large monorepo with multiple packages that have conflicting peer dependency requirements and circular dependencies while maintaining consistent versions across all services?",
+      "answer": "Use a monorepo tool like nx, yarn workspaces, or lerna to manage dependencies. Ensure consistent versions by using a lockfile and strict dependency constraints."
+    },
+    {
+      "question": "How do you configure a complex multi-module Maven project with custom plugins, profile-specific configurations, and cross-module dependencies that need to handle different deployment targets and environment-specific properties?",
+      "answer": "Define parent POMs for multi-module projects, use profiles to manage environment-specific properties, and configure plugins in the build section."
+    },
+    {
+      "question": "How do you optimize a large Gradle build with hundreds of modules by implementing build caching, parallel execution, configuration avoidance, and custom task dependencies to reduce build times from hours to minutes?",
+      "answer": "Enable build caching with --build-cache, use parallel execution with -Porg.gradle.parallel=true, and optimize tasks to avoid unnecessary configuration."
+    },
+    {
+      "question": "How do you manage dependency resolution in a Python project with conflicting transitive dependencies across multiple third-party libraries while ensuring reproducible builds and handling platform-specific binary dependencies?",
+      "answer": "Use a virtual environment with pip, specify versions in requirements.txt, and use platform tags in binary dependencies."
+    },
+    {
+      "question": "How do you implement a complex Go project with multiple modules, vendoring strategies, and cross-compilation requirements that need to handle different operating systems, architectures, and CGO dependencies for a distributed system deployment?",
+      "answer": "Use Go modules for dependency management, vendor dependencies with go mod vendor, and set GOOS and GOARCH environment variables for cross-compilation."
+    },
+    {
+      "question": "How do you manage complex C/C++ dependency graphs with multiple versions, custom build configurations, and platform-specific binaries while handling transitive dependencies and ensuring ABI compatibility across different compiler versions?",
+      "answer": "Use CMake for dependency management, specify build types and toolchains, and use conan or vcpkg for package management."
+    },
+    {
+      "question": "How do you configure a sophisticated CMake build system that handles cross-platform compilation, multiple toolchains, custom find modules, and complex dependency management for a large C++ project with both static and shared libraries?",
+      "answer": "Use CMake's cross-platform capabilities, toolchain files for cross-compilation, custom find modules for locating dependencies, and manage both static and shared libraries with appropriate link options."
+    },
+    {
+      "question": "How do you troubleshoot and resolve intermittent failures in GitHub Actions workflows that involve Docker container builds, network-dependent services, race conditions between parallel jobs, and resource limitations on GitHub-hosted runners?",
+      "answer": "Use workflow logs, retry strategies, and conditional steps to handle failures. Monitor resource usage and optimize workflows to avoid limits."
+    },
+    {
+      "question": "How do you debug and optimize Azure Pipeline performance issues that involve slow artifact transfers, inefficient task execution, resource contention between parallel builds, and complex deployment orchestration across multiple environments?",
+      "answer": "Use Azure Pipeline logs, optimize tasks with parallel jobs and caching, manage resource limits, and streamline deployment steps."
+    },
+    {
+      "question": "How do you resolve critical security vulnerabilities in a complex npm dependency tree while maintaining application functionality, handling breaking changes in major version updates, and ensuring all transitive dependencies are properly patched?",
+      "answer": "Use tools like npm audit, keep dependencies up to date, and use resolutions in package.json to enforce specific versions."
+    },
+    {
+      "question": "How do you troubleshoot complex Maven build failures that involve plugin compatibility issues, repository connectivity problems, dependency resolution conflicts, profile activation failures, and integration with external build systems?",
+      "answer": "Check logs for errors, update plugins, verify repository configurations, and ensure profiles are correctly activated."
+    },
+    {
+      "question": "How do you diagnose and fix Gradle build performance degradation caused by configuration time bottlenecks, task up-to-date checking failures, cache corruption issues, and inefficient dependency resolution in large multi-project builds?",
+      "answer": "Use Gradle's build scan feature, optimize tasks, fix cache corruption, and simplify dependency resolution."
+    },
+    {
+      "question": "How do you resolve complex pip installation failures that involve SSL certificate issues, proxy configuration problems, package index connectivity failures, binary compatibility issues, and conflicts between system and user installations?",
+      "answer": "Configure SSL certificates, set proxy settings, verify package index URLs, and use virtual environments to isolate installations."
+    },
+    {
+      "question": "How do you troubleshoot Go module resolution problems that involve private repository access issues, version mismatch conflicts, proxy configuration failures, checksum verification errors, and cross-module dependency cycles?",
+      "answer": "Configure access to private repositories, ensure correct versions, set proxy settings, verify checksums, and resolve dependency cycles."
+    },
+    {
+      "question": "How do you debug complex Conan package resolution and build failures that involve missing binary packages, compiler compatibility issues, cross-platform build configuration problems, and conflicts between different package versions in the dependency graph?",
+      "answer": "Use Conan's build logs, ensure correct compilers are set, configure profiles for cross-platform builds, and manage package versions carefully."
+    },
+    {
+      "question": "How do you resolve sophisticated CMake configuration issues that involve complex toolchain setup, cross-compilation problems, library linking failures, platform-specific feature detection issues, and integration with external package managers?",
+      "answer": "Configure toolchains properly, use find_package() for library detection, manage cross-compilation with toolchain files, and handle package manager integrations carefully."
+    },
+    {
+      "question": "How do you implement a comprehensive security scanning pipeline in GitHub Actions that includes static code analysis, dependency vulnerability scanning, container image scanning, secrets detection, and automated security policy enforcement?",
+      "answer": "Use GitHub Actions to run tools like SonarQube for static analysis, trivy for container scanning, and use secrets management extensions to detect and enforce policies."
+    },
+    {
+      "question": "How do you design a robust testing pipeline in Azure Pipelines that handles unit testing, integration testing, end-to-end testing, performance testing, and automated test result analysis with intelligent test execution and flaky test detection?",
+      "answer": "Use Azure Pipelines to define stages for each type of testing, use task dependencies for intelligent execution, and use flaky test detection tools to rerun failing tests."
+    }
+]
+}
+
