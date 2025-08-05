@@ -205,33 +205,33 @@ NOTE: Many questions were simply not answered/missed due to context-length limit
 ### Category: Spec
 
 **Model:** `cdx1-mlx-8bit`
-**Total Marks:** 114.5 / 352
-**Percentage:** 32.53%
+**Total Marks:** 294 / 352
+**Percentage:** 83.52%
 
 ---
 
 ### Questions Scoring 0
 
-1.  **Question:** What information does a Vulnerability Exploitability eXchange (VEX) provide?
+1.  **Question:** What information does a Vulnerability Exploitability eXchange (VEX) provide? - correct
 2.  **Question:** What details are necessary when creating a custom lifecycle phase definition?
 3.  **Question:** What fields are available for detailing commercial licenses in CycloneDX?
-4.  **Question:** What role does CycloneDX play in cybersecurity tools for national security?
+4.  **Question:** What role does CycloneDX play in cybersecurity tools for national security? - correct
 5.  **Question:** Can you provide an example of a commonly used XML extension?
 6.  **Question:** Does CycloneDX offer a way to represent digital and analog signatures?
-7.  **Question:** How are first-party from third-party components in CycloneDX differentiated?
+7.  **Question:** How are first-party from third-party components in CycloneDX differentiated? - unanswered in sample
 8.  **Question:** What range of values does the 'confidence' metric use?
 9.  **Question:** Where should cryptographic assets be documented?
-10. **Question:** Can you give an example of a custom lifecycle phase?
-11. **Question:** How do SDLC and SAM use cases differ in their approach to licensing?
+10. **Question:** Can you give an example of a custom lifecycle phase? - correct
+11. **Question:** How do SDLC and SAM use cases differ in their approach to licensing? - correct
 12. **Question:** What should be included when creating a definition for a custom lifecycle phase?
 13. **Question:** What specific fields exist for detailing commercial license information in CycloneDX?
-14. **Question:** What is a common example of an XML extension in use?
-15. **Question:** How are details of licenses and copyrights represented in CycloneDX?
+14. **Question:** What is a common example of an XML extension in use? - correct
+15. **Question:** How are details of licenses and copyrights represented in CycloneDX? - 0.5
 16. **Question:** Does CycloneDX allow for the representation of digital and analog signatures?
-17. **Question:** What are the official schema locations for CycloneDX BOMs in JSON, XML, and Protobuf?
+17. **Question:** What are the official schema locations for CycloneDX BOMs in JSON, XML, and Protobuf? - correct
 18. **Question:** What numerical range is used for the 'confidence' measure?
-19. **Question:** Where should cryptographic assets be documented within CycloneDX?
-20. **Question:** Can you provide an example of a custom lifecycle phase definition?
+19. **Question:** Where should cryptographic assets be documented within CycloneDX? - correct
+20. **Question:** Can you provide an example of a custom lifecycle phase definition? - correct
 21. **Question:** What was the specific purpose for which CBOM was designed by CycloneDX?
 22. **Question:** What was the intended use for CBOM according to CycloneDX?
 23. **Question:** For what reason was CBOM created by CycloneDX?
@@ -251,7 +251,7 @@ NOTE: Many questions were simply not answered/missed due to context-length limit
 37. **Question:** What prompted CycloneDX to create the CBOM?
 38. **Question:** What considerations went into the design of the CBOM?
 39. **Question:** What is the reason behind the CBOM's existence in CycloneDX?
-40. **Question:** What specific attributes are detailed for claims within this documentation's table?
+40. **Question:** What specific attributes are detailed for claims within this documentation's table? - correct
 41. **Question:** What are the three distinct fields that comprise conformance in CDXA?
 42. **Question:** What mechanism does CycloneDX use to record conformance through attestations?
 43. **Question:** What are the essential parts that make up an assertion in CDXA?
@@ -279,6 +279,8 @@ NOTE: Many questions were simply not answered/missed due to context-length limit
 65. **Question:** What role does the `provides` dependency type play?
 66. **Question:** Can you define the `provides` dependency type?
 67. **Question:** What is the meaning of the `provides` dependency type?
+
+Many answers related to CBOM was completely wrong. cdx1 has incorrectly asssumed that C in CBOM stands for cloud-native. All answers related to `provides` were wrong.
 
 ### Category: devops
 
