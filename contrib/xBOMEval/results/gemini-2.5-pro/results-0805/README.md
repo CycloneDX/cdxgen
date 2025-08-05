@@ -36,3 +36,8 @@ Carefully understand the questions related to CycloneDX specifications below. An
     - **Reason:** Incorrect. The reference states that whether a namespace is optional depends on the package type (e.g., it is mandatory for npm). The model incorrectly simplifies this to a "yes".
 10. **Question:** For Homebrew, type “pkg:brew” or “pkg:homebrew”? Alice “pkg:brew”, Bob “pkg:homebrew”
     - **Reason:** Incorrect. The reference answer is 'pkg:brew'. The model answered 'homebrew'.
+
+### Category: Spec
+
+**Total Marks:** 352 / 352
+**Percentage:** 100%

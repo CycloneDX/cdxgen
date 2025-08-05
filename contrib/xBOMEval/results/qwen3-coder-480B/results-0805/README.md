@@ -117,3 +117,57 @@ Carefully understand the questions related to CycloneDX specifications below. An
 79. For RPM, is “pkg:rpm/fedora/firefox@89.0” correct? Alice yes, Bob no
 80. For Homebrew, type “pkg:brew” or “pkg:homebrew”? Alice “pkg:brew”, Bob “pkg:homebrew”
 81. What is the proper PURL type for NPM where Gloria claims 'pkg:npm' but Wayne argues 'pkg:javascript'?
+
+### Category: Spec
+
+**Total Marks:** 318.0 / 352
+**Percentage:** 90.34%
+
+---
+
+### Questions Scoring 0
+
+1.  **Question:** Can you provide an example of a commonly used XML extension?
+2.  **Question:** According to NIST SP 800-161, what elements should VDRs contain?
+3.  **Question:** Is it possible to digitally sign annotations in CycloneDX?
+4.  **Question:** How are multiple lifecycle phases depicted in a CycloneDX BOM?
+5.  **Question:** How are several lifecycle phases shown in a CycloneDX BOM?
+6.  **Question:** How does the `provides` attribute link components to standards?
+7.  **Question:** How are standards linked to components via the `provides` type?
+8.  **Question:** How is the `provides` dependency type defined?
+9.  **Question:** What structure does the `provides` type provide?
+10. **Question:** What does specifying `provides` achieve?
+11. **Question:** How are provided components modeled using the `provides` attribute?
+12. **Question:** How does `provides` link provided specifications?
+13. **Question:** What is the reasoning behind documenting crypto asset dependencies?
+14. **Question:** How is cryptographic agility implemented within organizations?
+15. **Question:** How is the `provides` expression used?
+16. **Question:** How would you define cryptographic agility?
+17. **Question:** How does the `provides` dependency relationship indicate?
+18. **Question:** What does it mean when a dependency `provides` a specification?
+19. **Question:** What need was CBOM specifically created to address?
+20. **Question:** What should organizations prioritize in understanding their crypto assets?
+21. **Question:** What is the operational scope of CycloneDX?
+22. **Question:** What guidance is provided to agencies and commercial providers in the memorandum?
+23. **Question:** What framework does cryptographic agility provide for organizations?
+24. **Question:** Why did CycloneDX create the CBOM?
+25. **Question:** What are the core recommendations for agencies and commercial software providers?
+26. **Question:** How do Attestations facilitate managing compliance through code?
+27. **Question:** What was the intended use for CBOM according to CycloneDX?
+28. **Question:** What does NIST SP 800-161 specify should be included in VDRs?
+29. **Question:** What role does the `provides` dependency type play?
+30. **Question:** What are the two principal directives for software providers from the memorandum?
+31. **Question:** What knowledge should organizations gain for an agile cryptographic strategy?
+32. **Question:** What key messages should agencies and commercial providers derive from the policy document?
+33. **Question:** In what manner do Attestations support a 'compliance as code' approach?
+34. **Question:** What does the `provides` indication mean?
+35. **Question:** What approach should organizations take for cryptographic agility?
+36. **Question:** What is the concept of 'compliance as code' in relation to Attestations?
+37. **Question:** What was the rationale behind the CBOM's creation in CycloneDX?
+38. **Question:** What strategy defines cryptographic agility?
+39. **Question:** How is 'compliance as code' executed through Attestations?
+40. **Question:** What led to the development of the CBOM in CycloneDX?
+41. **Question:** What motivated the creation of the CBOM by CycloneDX?
+42. **Question:** What prompted CycloneDX to create the CBOM?
+43. **Question:** What is the genesis of the CBOM in CycloneDX?
+44. **Question:** On what foundation was the CBOM built by CycloneDX?

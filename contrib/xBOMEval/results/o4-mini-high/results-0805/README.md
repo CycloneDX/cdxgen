@@ -106,3 +106,11 @@ Carefully understand the questions related to CycloneDX specifications below. An
     - **Reason:** This question seems malformed in the reference data as the options are unrelated. It was not present in the submission.
 44. **Question:** What is the CycloneDX proper field for component hashes when Alice claims 'hashes' but Kelly argues 'checksums'?
     - **Reason:** This is a duplicate question in the reference data and was not present in the submission.
+
+### Category: Spec
+
+**Total Marks:** 0 / 352
+
+Model failed to answer any questions.
+
+![ChatGPT refusal](./chatgpt-spec-fail.png)

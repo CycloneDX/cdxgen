@@ -1,5 +1,5 @@
 {
-  "questions": [
+  "answers": [
     {
       "question": "How do you list all files including hidden ones in the current directory?",
       "answer": "Use the command 'ls -a'."

@@ -1,5 +1,5 @@
 {
-  "questions": [
+  "answers": [
     {
       "question": "What is Docker and how does it differ from traditional virtual machines? Explain the key benefits of using containerization in development and deployment workflows.",
       "answer": "Docker is a containerization platform that enables developers to package applications and their dependencies into lightweight, portable containers. Unlike traditional virtual machines (VMs), which run a full operating system for each instance, Docker containers share the host OS kernel. This makes them faster to start and more efficient in terms of resource usage.\n\nBenefits of containerization include: faster startup times, smaller image sizes, better isolation, improved portability, easier scaling, and simplified deployment. Containers provide a consistent environment from development to production, reducing the 'works on my machine' problem and streamlining CI/CD pipelines."
