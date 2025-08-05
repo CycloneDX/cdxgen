@@ -1,0 +1,1016 @@
+{
+  "answers": [
+    {
+      "question": "Is it possible to utilize data components for detailing the rules and policies of a security tool?",
+      "answer": "Yes, data components in CycloneDX can be used to document the rules and policies of a security tool by representing them as structured metadata within the BOM."
+    },
+    {
+      "question": "In what ways do data components aid in compliance reporting?",
+      "answer": "Data components help in compliance reporting by providing detailed information about software components, configurations, and dependencies, which can be used to verify adherence to regulatory and organizational standards."
+    },
+    {
+      "question": "What methods does CycloneDX use to integrate with current enterprise SAM/ITAM practices?",
+      "answer": "CycloneDX supports integration with enterprise SAM/ITAM practices through standardized BOM formats, lifecycle phases, and metadata that align with asset management workflows."
+    },
+    {
+      "question": "What distinguishes a BOM from the 'Discovery' phase from one created during the 'Build' phase?",
+      "answer": "A BOM from the 'Discovery' phase typically includes identified components and their relationships, while a 'Build' phase BOM contains detailed information about components as they are compiled or assembled, including build dependencies and environments."
+    },
+    {
+      "question": "How does CycloneDX offer proof regarding software licensing?",
+      "answer": "CycloneDX provides evidence for software licensing through declared and concluded licenses, license expressions, and supporting documentation embedded in the BOM."
+    },
+    {
+      "question": "What are the key suggestions for generating a CycloneDX SBOM?",
+      "answer": "Key suggestions include using automated tools for component detection, validating the accuracy of metadata, including all direct and transitive dependencies, and documenting the BOM's lifecycle phase."
+    },
+    {
+      "question": "What constitutes a Vulnerability Disclosure Report (VDR)?",
+      "answer": "A Vulnerability Disclosure Report (VDR) is a document that details discovered vulnerabilities, their impact, and remediation steps, often included in a CycloneDX BOM for transparency."
+    },
+    {
+      "question": "What information does a Vulnerability Exploitability eXchange (VEX) provide?",
+      "answer": "A VEX provides information about whether a component is affected by a specific vulnerability, exploitability status, and recommended actions, helping in risk assessment."
+    },
+    {
+      "question": "In what way does CycloneDX support compliance with open-source and commercial licenses?",
+      "answer": "CycloneDX supports license compliance by documenting declared and concluded licenses, providing license expressions, and enabling tracking of obligations and restrictions."
+    },
+    {
+      "question": "How are open-source licenses depicted within CycloneDX?",
+      "answer": "Open-source licenses are depicted using SPDX license identifiers, custom license definitions, or license expressions in the BOM's license section."
+    },
+    {
+      "question": "How can data gathered in the Discovery phase influence future Design phase decisions?",
+      "answer": "Discovery phase data can identify dependencies, risks, and licensing issues early, allowing for informed design choices that mitigate potential problems."
+    },
+    {
+      "question": "What format does CycloneDX use for representing open-source licenses?",
+      "answer": "CycloneDX uses SPDX license identifiers, custom license definitions, or complex license expressions to represent open-source licenses."
+    },
+    {
+      "question": "What is the distinction between declared and concluded licenses?",
+      "answer": "Declared licenses are those specified by the component author, while concluded licenses are those determined through analysis, which may differ due to dependencies or other factors."
+    },
+    {
+      "question": "How do 'Operations' phase BOMs assist in reconciling software licenses?",
+      "answer": "Operations phase BOMs provide an accurate inventory of deployed components, helping organizations verify license compliance during runtime and reconcile discrepancies."
+    },
+    {
+      "question": "What is the primary goal of CycloneDX?",
+      "answer": "The primary goal of CycloneDX is to provide a standardized format for software bill of materials (SBOM) to improve transparency, security, and compliance across the software supply chain."
+    },
+    {
+      "question": "What advantages do Operating Systems gain from using CycloneDX?",
+      "answer": "Operating Systems benefit from CycloneDX through better visibility into bundled components, vulnerability management, and compliance with licensing requirements."
+    },
+    {
+      "question": "What factors should guide the selection of lifecycle phases for a BOM?",
+      "answer": "Factors include the stage of software development (e.g., design, build, deployment), the need for specific metadata, and compliance or security requirements."
+    },
+    {
+      "question": "What details are necessary when creating a custom lifecycle phase definition?",
+      "answer": "A custom lifecycle phase definition should include a unique name, description, and its relevance to the software development or deployment process."
+    },
+    {
+      "question": "How does CycloneDX assist in managing commercial software licenses?",
+      "answer": "CycloneDX helps manage commercial licenses by documenting license types, terms, and evidence, enabling organizations to track compliance and obligations."
+    },
+    {
+      "question": "What fields are available for detailing commercial licenses in CycloneDX?",
+      "answer": "Fields include license ID, name, text, URL, and proprietary license definitions, along with evidence supporting the license determination."
+    },
+    {
+      "question": "Is it possible to specify several license types for a single commercial license?",
+      "answer": "Yes, CycloneDX supports multiple license types for a single component using license expressions or multiple license entries."
+    },
+    {
+      "question": "What role does CycloneDX play in cybersecurity tools for national security?",
+      "answer": "CycloneDX enhances national security tools by providing SBOMs for vulnerability analysis, supply chain risk management, and compliance with security standards."
+    },
+    {
+      "question": "How does CycloneDX enable tracking of copyright information for software components?",
+      "answer": "Copyright information is tracked in CycloneDX using the 'copyright' field within component metadata, providing attribution and legal clarity."
+    },
+    {
+      "question": "How should multiple licenses for a single software component be represented in CycloneDX?",
+      "answer": "Multiple licenses can be represented using SPDX license expressions or by listing each license individually in the component's license section."
+    },
+    {
+      "question": "Can you provide an example of a commonly used XML extension?",
+      "answer": "A commonly used XML extension is '.xml', such as in 'bom.xml' for CycloneDX BOM files."
+    },
+    {
+      "question": "What is the function of the Formulation section in CycloneDX?",
+      "answer": "The Formulation section details how components were created or derived, including build tools, scripts, and processes used during development."
+    },
+    {
+      "question": "How does CycloneDX manage information about vulnerabilities?",
+      "answer": "CycloneDX manages vulnerability information through embedded VEX data, references to external databases (e.g., NVD), and detailed advisories in the BOM."
+    },
+    {
+      "question": "What does the 'formulation' section of a CycloneDX BOM detail?",
+      "answer": "The 'formulation' section describes the methods, tools, and processes used to create or assemble components, providing traceability in the development lifecycle."
+    },
+    {
+      "question": "Why is it crucial to distinguish between declared and concluded licenses during a software audit?",
+      "answer": "Distinguishing between declared and concluded licenses ensures accurate compliance reporting, as concluded licenses may reveal obligations not stated by the original author."
+    },
+    {
+      "question": "How can CycloneDX help identify components requiring specific attribution notices?",
+      "answer": "CycloneDX can flag components with attribution requirements through license metadata, copyright fields, and custom properties in the BOM."
+    },
+    {
+      "question": "What information should be provided when defining a custom lifecycle phase?",
+      "answer": "A custom lifecycle phase should include a name, description, and its purpose within the software lifecycle (e.g., 'Pre-Production', 'Legacy-Support')."
+    },
+    {
+      "question": "How are lifecycle phases utilized when creating a VEX document?",
+      "answer": "Lifecycle phases in a VEX document indicate when a vulnerability was assessed (e.g., during 'Deployment' or 'Operations'), providing context for exploitability."
+    },
+    {
+      "question": "What is the objective of software transparency?",
+      "answer": "The objective is to provide clear, accessible information about software composition, dependencies, and risks to improve security and compliance."
+    },
+    {
+      "question": "What are some broad use cases for SBOMs?",
+      "answer": "SBOMs are used for vulnerability management, license compliance, supply chain security, incident response, and regulatory reporting."
+    },
+    {
+      "question": "What are the benefits of using CycloneDX with Unmanned Aerial Vehicles (UAVs)?",
+      "answer": "For UAVs, CycloneDX ensures firmware transparency, tracks third-party components, and aids in cybersecurity compliance for aviation standards."
+    },
+    {
+      "question": "According to NIST SP 800-161, what elements should VDRs contain?",
+      "answer": "VDRs should contain vulnerability details, affected components, severity scores, remediation guidance, and references to authoritative sources."
+    },
+    {
+      "question": "How can declared and concluded licenses be acknowledged?",
+      "answer": "Both can be acknowledged in the BOM by documenting declared licenses under 'licenses' and concluded licenses with evidence in 'evidence' fields."
+    },
+    {
+      "question": "What is the purpose of relationships within CycloneDX?",
+      "answer": "Relationships define dependencies, hierarchies, and connections between components (e.g., 'dependsOn', 'contains') to model software ecosystems accurately."
+    },
+    {
+      "question": "What differentiates first-party from third-party components in CycloneDX?",
+      "answer": "First-party components are developed internally, while third-party components are external dependencies; CycloneDX tracks both with 'author' and 'supplier' metadata."
+    },
+    {
+      "question": "How are license and copyright details presented in CycloneDX?",
+      "answer": "They are presented in structured fields: 'licenses' for SPDX IDs or expressions, and 'copyright' for attribution text."
+    },
+    {
+      "question": "What is the role of describing data flow in services?",
+      "answer": "Describing data flow clarifies how components interact, aiding in risk assessment (e.g., data exposure) and architecture validation."
+    },
+    {
+      "question": "How can CycloneDX dependencies illustrate service-to-service dependencies?",
+      "answer": "Using 'dependsOn' relationships between service components, CycloneDX can map interactions in microservices or distributed systems."
+    },
+    {
+      "question": "How does CycloneDX support VEX (Vulnerability Exploitability eXchange)?",
+      "answer": "CycloneDX embeds VEX data to indicate whether components are affected by vulnerabilities, with statuses like 'not_affected' or 'under_investigation'."
+    },
+    {
+      "question": "What is the difference between declared and observed formulas in the 'formulation' section?",
+      "answer": "Declared formulas are the intended build processes, while observed formulas are the actual processes captured during execution, highlighting discrepancies."
+    },
+    {
+      "question": "Is it possible to digitally sign annotations in CycloneDX?",
+      "answer": "Yes, annotations can be signed using digital signatures to ensure authenticity and integrity, supported via the 'signature' field."
+    },
+    {
+      "question": "What is the importance of attestations and claims in the 'declarations' section?",
+      "answer": "Attestations and claims provide verifiable statements about compliance, security, or quality, enabling trust in the BOM's assertions."
+    },
+    {
+      "question": "Does CycloneDX offer a way to represent digital and analog signatures?",
+      "answer": "Yes, digital signatures are supported for BOMs and components; analog signatures can be documented as metadata or properties."
+    },
+    {
+      "question": "Is it possible to develop custom extensions for CycloneDX for specific needs?",
+      "answer": "Yes, CycloneDX allows custom extensions via its extensible schema, enabling organization-specific metadata or compliance fields."
+    },
+    {
+      "question": "Where can the official schema locations for JSON, XML, and Protobuf CycloneDX BOMs be found?",
+      "answer": "Schemas are available at CycloneDX's official GitHub repository (https://github.com/CycloneDX/specification) and the CycloneDX website."
+    },
+    {
+      "question": "How does CycloneDX help organizations under strict cybersecurity standards with regulatory compliance?",
+      "answer": "It provides auditable SBOMs with component details, vulnerabilities, and licenses, aligning with standards like NIST SP 800-171 or ISO/IEC 27001."
+    },
+    {
+      "question": "What are the drawbacks of relying only on automated tools for generating a CycloneDX BOM, and how can they be overcome?",
+      "answer": "Automated tools may miss custom components or misinterpret licenses; combining tooling with manual review and validation improves accuracy."
+    },
+    {
+      "question": "What are the benefits of using annotations in CycloneDX?",
+      "answer": "Annotations add contextual notes (e.g., remediation steps, ownership) to components, enhancing collaboration and traceability."
+    },
+    {
+      "question": "How do Declarations contribute to compliance as code?",
+      "answer": "Declarations codify compliance requirements (e.g., 'must use MIT license') in machine-readable form, enabling automated policy checks."
+    },
+    {
+      "question": "How does CycloneDX support collaboration and information sharing in the software supply chain?",
+      "answer": "Standardized BOMs enable interoperability between tools and organizations, facilitating shared vulnerability management and compliance workflows."
+    },
+    {
+      "question": "What does the 'other' data component type signify?",
+      "answer": "The 'other' type classifies data that doesn't fit predefined categories (e.g., 'configuration' or 'dataset'), allowing flexible documentation."
+    },
+    {
+      "question": "What are some situations where including data components in a BOM would be appropriate?",
+      "answer": "Examples include documenting security policies, API specifications, or configuration files that impact software behavior or compliance."
+    },
+    {
+      "question": "Can data components have suppliers different from the main component?",
+      "answer": "Yes, data components can specify independent 'suppliers' if their origin differs from the parent component (e.g., third-party config files)."
+    },
+    {
+      "question": "Why is it important to provide evidence for multiple potential CPEs?",
+      "answer": "Multiple CPEs account for variant naming in vulnerability databases, ensuring comprehensive matching against known vulnerabilities."
+    },
+    {
+      "question": "What range of values does the 'confidence' metric use?",
+      "answer": "Confidence metrics typically range from 0 (low) to 1 (high) or 0-100%, indicating certainty in component identification or vulnerability matches."
+    },
+    {
+      "question": "What steps should organizations take as part of an agile cryptographic approach?",
+      "answer": "Steps include inventorying crypto assets, assessing vulnerabilities, documenting dependencies, and planning for algorithm transitions."
+    },
+    {
+      "question": "Where should cryptographic assets be documented?",
+      "answer": "In the BOM's component metadata or custom properties, detailing algorithms, keys, and certificates used."
+    },
+    {
+      "question": "What are the benefits of using CycloneDX in environments with commercial software licensing?",
+      "answer": "Benefits include tracking license terms, linking components to contracts, and automating compliance checks for commercial obligations."
+    },
+    {
+      "question": "How can lifecycle information enhance the speed of incident response?",
+      "answer": "Lifecycle phases (e.g., 'Deployed') help pinpoint affected components during incidents, reducing investigation time."
+    },
+    {
+      "question": "How can a file with configuration settings be represented as a data component?",
+      "answer": "As a 'data' type with 'configuration' subtype, including the file path, content hash, and relevant properties (e.g., 'environment=production')."
+    },
+    {
+      "question": "For a large dataset, is it better to include it directly in the BOM or reference it externally?",
+      "answer": "Reference externally via URL or digest to avoid bloating the BOM, unless the dataset is small and critical for reproducibility."
+    },
+    {
+      "question": "What type of information is collected during the 'Discovery' lifecycle phase?",
+      "answer": "Component names, versions, and high-level dependencies identified via scanning or manual inventory, often pre-build."
+    },
+    {
+      "question": "What does the 'Decommission' lifecycle phase signify?",
+      "answer": "It marks components retired from use, including end-of-life dates and replacement references for historical tracking."
+    },
+    {
+      "question": "How can data components be used to track different versions of a configuration file over time?",
+      "answer": "By creating separate data components per version, linked via 'dependsOn' or 'variantOf' relationships, with timestamps or hashes."
+    },
+    {
+      "question": "How do consumers of BOMs interpret data components?",
+      "answer": "As supplemental artifacts (e.g., docs, configs) that influence software behavior or compliance, parsed via standardized fields."
+    },
+    {
+      "question": "Can you give an example of a custom lifecycle phase?",
+      "answer": "'PenTest-Review' could denote components undergoing security testing, with dates and results in properties."
+    },
+    {
+      "question": "What are the different focuses of SDLC and SAM use cases regarding licensing?",
+      "answer": "SDLC focuses on license compliance during development, while SAM emphasizes tracking licenses for cost/legal management in deployment."
+    },
+    {
+      "question": "How does lifecycle information improve incident response efficiency?",
+      "answer": "By identifying components in active use ('Operations') vs. archived ('Decommissioned'), streamlining impact analysis."
+    },
+    {
+      "question": "Is it possible to use a custom enumeration for the phase value?",
+      "answer": "Yes, custom phases can be defined beyond the standard set (e.g., 'Design', 'Build') to match organizational workflows."
+    },
+    {
+      "question": "How can data components be used to document a microservice's API specification?",
+      "answer": "As a 'data' component with 'api' subtype, including OpenAPI/Swagger URLs, versions, and endpoints."
+    },
+    {
+      "question": "What is the best method to represent a database query as a data component?",
+      "answer": "As a 'data' component with 'query' subtype, including the SQL/text, parameters, and purpose (e.g., 'user_authentication')."
+    },
+    {
+      "question": "How are multiple lifecycle phases depicted in a CycloneDX BOM?",
+      "answer": "Components can list multiple phases (e.g., 'Build, Deploy') via a 'lifecycles' array or metadata, showing transitions."
+    },
+    {
+      "question": "Why is knowledge of the lifecycle phase important for vulnerability analysis?",
+      "answer": "Phases indicate exposure (e.g., 'Development' vs. 'Production'), prioritizing fixes based on real-world exploitability."
+    },
+    {
+      "question": "How can CycloneDX lifecycle phases be used to track the evolution of software components?",
+      "answer": "By updating phases (e.g., 'Design→Build→Deploy') in successive BOMs, creating an audit trail of component states."
+    },
+    {
+      "question": "How does CycloneDX facilitate integration with existing enterprise SAM/ITAM practices?",
+      "answer": "Through standardized identifiers (e.g., PURLs), license metadata, and lifecycle phases that align with asset management tools."
+    },
+    {
+      "question": "Why is it crucial to document the dependencies of cryptographic assets?",
+      "answer": "To assess risks from vulnerable crypto libraries (e.g., OpenSSL) and ensure compliance with encryption standards."
+    },
+    {
+      "question": "What is the overall scope of CycloneDX?",
+      "answer": "It covers SBOM creation, vulnerability management, license compliance, and supply chain transparency across software/hardware lifecycles."
+    },
+    {
+      "question": "What defines cryptographic agility?",
+      "answer": "The ability to rapidly update cryptographic algorithms, keys, or certificates in response to vulnerabilities or policy changes."
+    },
+    {
+      "question": "Can you explain the `dependsOn` dependency type in CycloneDX?",
+      "answer": "'dependsOn' indicates a hard requirement where one component cannot function without another (e.g., a library linked at runtime)."
+    },
+    {
+      "question": "What is the meaning of the `provides` dependency type?",
+      "answer": "'provides' denotes that a component implements a specification (e.g., a service offering REST API compliance)."
+    },
+    {
+      "question": "What capabilities does CycloneDX Attestations provide to organizations?",
+      "answer": "Attestations enable verifiable claims about compliance, security, or quality, with evidence and signatures for auditability."
+    },
+    {
+      "question": "In what way can Attestations be conceptualized?",
+      "answer": "As digitally signed 'proofs' that link requirements (e.g., 'must use TLS 1.2') to component properties in the BOM."
+    },
+    {
+      "question": "What should organizations aim to understand as part of an agile cryptographic approach?",
+      "answer": "Their crypto inventory, dependencies, compliance gaps, and migration paths for deprecated algorithms."
+    },
+    {
+      "question": "What was the specific purpose for which CBOM was designed by CycloneDX?",
+      "answer": "CBOM (Cryptographic Bill of Materials) tracks crypto assets (algorithms, keys) for compliance with standards like FIPS 140-2."
+    },
+    {
+      "question": "Why is capturing dependencies important for analyzing crypto assets?",
+      "answer": "Dependencies reveal transitive risks (e.g., a vulnerable crypto library used indirectly) and ensure full visibility for audits."
+    },
+    {
+      "question": "What areas does CycloneDX cover?",
+      "answer": "SBOMs, VEX, attestations, hardware BOMs (HBOM), and cryptographic BOMs (CBOM) for end-to-end supply chain transparency."
+    },
+    {
+      "question": "What does cryptographic agility mean?",
+      "answer": "The capacity to adapt cryptographic implementations swiftly to address vulnerabilities or regulatory changes without system redesign."
+    },
+    {
+      "question": "Explain the functionality of the `dependsOn` dependency type.",
+      "answer": "It defines a mandatory relationship where the source component requires the target component to operate (e.g., an app needing a database)."
+    },
+    {
+      "question": "What role does the `provides` dependency type play?",
+      "answer": "It signifies that a component delivers a specific capability (e.g., 'provides: OAuth2.0') to other components in the ecosystem."
+    },
+    {
+      "question": "How do CycloneDX Attestations empower organizations?",
+      "answer": "By enabling machine-readable, evidence-backed assertions about security/compliance, reducing manual verification efforts."
+    },
+    {
+      "question": "What is a simple way to think about Attestations?",
+      "answer": "As tamper-evident 'certificates' that a component meets defined criteria (e.g., 'passed SAST scan')."
+    },
+    {
+      "question": "What should organizations focus on understanding regarding their cryptographic assets?",
+      "answer": "Algorithm strengths, key lifetimes, compliance with standards (e.g., NIST), and exposure to known vulnerabilities."
+    },
+    {
+      "question": "For what reason was CBOM created by CycloneDX?",
+      "answer": "To address gaps in tracking cryptographic materials (e.g., keys, certs) separately from traditional software components."
+    },
+    {
+      "question": "Why is it important to understand the dependencies of crypto assets?",
+      "answer": "To identify weak links (e.g., an old SSL library) and ensure end-to-end encryption compliance across the supply chain."
+    },
+    {
+      "question": "What is the breadth of CycloneDX's application?",
+      "answer": "From software (applications, libraries) to hardware (firmware, IoT) and specialized assets (crypto, AI models)."
+    },
+    {
+      "question": "What key messages should agencies and commercial providers derive from the policy document?",
+      "answer": "Prioritize SBOM adoption, automate compliance checks, and collaborate on supply chain transparency per emerging standards."
+    },
+    {
+      "question": "What constitutes cryptographic agility for an organization?",
+      "answer": "A framework to evaluate, update, and retire cryptographic assets without disrupting operational continuity."
+    },
+    {
+      "question": "What is the purpose of the `dependsOn` field in dependency tracking?",
+      "answer": "To model hard requirements where the absence of the depended component would cause failure (e.g., a plugin needing its host app)."
+    },
+    {
+      "question": "What does the `provides` dependency relationship indicate?",
+      "answer": "That a component fulfills a contract (e.g., 'implements: JSON Schema Draft 7') usable by other components."
+    },
+    {
+      "question": "What functionalities are enabled by CycloneDX Attestations?",
+      "answer": "Creating, signing, and verifying claims about component properties (e.g., 'vulnerability: mitigated')."
+    },
+    {
+      "question": "How does the concept of Attestations relate to managing compliance?",
+      "answer": "They codify compliance checks (e.g., 'license: Apache-2.0') as machine-verifiable statements, reducing manual reviews."
+    },
+    {
+      "question": "What knowledge should organizations gain for an agile cryptographic strategy?",
+      "answer": "Inventory of crypto assets, deprecation timelines for weak algorithms, and dependencies on external cryptographic providers."
+    },
+    {
+      "question": "What specific problem was CBOM designed to solve?",
+      "answer": "The lack of visibility into cryptographic materials (e.g., keys, certs) in traditional SBOMs, which focus on software components."
+    },
+    {
+      "question": "What is the significance of mapping dependencies for cryptographic components?",
+      "answer": "It reveals risks from nested dependencies (e.g., a VPN library using an outdated TLS version) for proactive mitigation."
+    },
+    {
+      "question": "What domains are encompassed by CycloneDX?",
+      "answer": "Software composition analysis, vulnerability management, license compliance, and hardware/software supply chain security."
+    },
+    {
+      "question": "What characteristics define a cryptographically agile organization?",
+      "answer": "Regular crypto asset audits, documented migration plans, and tools to enforce algorithm policies across the supply chain."
+    },
+    {
+      "question": "How does the `dependsOn` type describe component relationships?",
+      "answer": "As a directed edge from a dependent component to its prerequisite, forming a graph of operational requirements."
+    },
+    {
+      "question": "What does it mean when a dependency `provides` a specification?",
+      "answer": "The component guarantees conformance to a standard (e.g., 'provides: PCI-DSS L1'), enabling trust in its implementation."
+    },
+    {
+      "question": "What value do CycloneDX Attestations bring to an organization?",
+      "answer": "Auditable, automated compliance proofs that reduce manual effort and improve trust in software artifacts."
+    },
+    {
+      "question": "In what manner do Attestations support a 'compliance as code' approach?",
+      "answer": "By encoding compliance rules (e.g., 'no GPL licenses') as executable checks against BOM metadata."
+    },
+    {
+      "question": "Why is it important for organizations to know their cryptographic assets?",
+      "answer": "To prevent breaches from weak cryptography (e.g., SHA-1) and meet regulations like GDPR or HIPAA."
+    },
+    {
+      "question": "Why did CycloneDX create the CBOM?",
+      "answer": "To extend SBOMs with specialized fields for cryptographic materials, addressing unique risks in encryption implementations."
+    },
+    {
+      "question": "What is the importance of tracking dependencies for crypto assets?",
+      "answer": "To ensure vulnerabilities in dependent libraries (e.g., OpenSSL) are patched without leaving hidden backdoors."
+    },
+    {
+      "question": "What domains does CycloneDX operate within?",
+      "answer": "Software development, DevOps, cybersecurity, compliance, and hardware/firmware supply chains."
+    },
+    {
+      "question": "What are the main points for software providers in the memorandum?",
+      "answer": "Adopt SBOMs, automate VEX, document attestations, and collaborate on improving supply chain transparency."
+    },
+    {
+      "question": "What principles guide cryptographic agility?",
+      "answer": "Modularity (easy algorithm swaps), visibility (inventory tracking), and automation (policy enforcement)."
+    },
+    {
+      "question": "What structure does the `dependsOn` type provide?",
+      "answer": "A directed acyclic graph (DAG) of components, where edges represent hard runtime or build-time dependencies."
+    },
+    {
+      "question": "What structure does the `provides` type provide?",
+      "answer": "A mapping from components to specifications they conform to (e.g., 'provides: FIPS 140-2 Level 3')."
+    },
+    {
+      "question": "How do CycloneDX Attestations support organizational needs?",
+      "answer": "By streamlining audits, enabling trust in third-party components, and automating compliance reporting."
+    },
+    {
+      "question": "In what ways do Attestations embody 'compliance as code'?",
+      "answer": "They transform regulatory rules into executable checks (e.g., 'signature: valid') applied to BOM metadata."
+    },
+    {
+      "question": "How should organizations evaluate their cryptographic assets?",
+      "answer": "Via risk assessments (e.g., algorithm strength), dependency analysis, and compliance with standards like NIST SP 800-175B."
+    },
+    {
+      "question": "What was the objective in designing the CBOM?",
+      "answer": "To standardize cryptographic asset reporting, enabling interoperability across tools and compliance frameworks."
+    },
+    {
+      "question": "What is the reasoning behind documenting crypto asset dependencies?",
+      "answer": "To assess impact when vulnerabilities (e.g., ROCA) are found in cryptographic libraries or hardware."
+    },
+    {
+      "question": "What is the operational scope of CycloneDX?",
+      "answer": "Generating, analyzing, and exchanging SBOMs across the software lifecycle, from development to decommissioning."
+    },
+    {
+      "question": "What instructions are contained in the memorandum for providers?",
+      "answer": "Implement SBOMs per NTIA guidelines, share VEX data, and adopt attestations for critical compliance claims."
+    },
+    {
+      "question": "How is cryptographic agility implemented within organizations?",
+      "answer": "Through policies (e.g., 'disallow RC4'), automated crypto inventory tools, and deprecation timelines for weak algorithms."
+    },
+    {
+      "question": "What constitutes a component dependency as defined by `dependsOn`?",
+      "answer": "A unidirectional relationship where the source component cannot function without the target component being present."
+    },
+    {
+      "question": "What constitutes standard provision as defined by `provides`?",
+      "answer": "A component's adherence to a technical or compliance standard (e.g., 'provides: ISO 27001:2022 controls')."
+    },
+    {
+      "question": "What provisions do CycloneDX Attestations make available?",
+      "answer": "Fields for claims, evidence, signatures, and timestamps to create verifiable compliance statements."
+    },
+    {
+      "question": "What mechanism does 'compliance as code' provide via Attestations?",
+      "answer": "Machine-readable rules (e.g., 'license ≠ AGPL') that tools can validate against BOMs without manual review."
+    },
+    {
+      "question": "How should organizations analyze the risk of their cryptographic assets?",
+      "answer": "By cataloging algorithms/key lengths, assessing against threats (e.g., quantum computing), and prioritizing upgrades."
+    },
+    {
+      "question": "What led to the development of the CBOM in CycloneDX?",
+      "answer": "The growing need to manage crypto-specific risks (e.g., weak RNGs) separately from general software vulnerabilities."
+    },
+    {
+      "question": "Why is analyzing dependencies crucial for crypto assets?",
+      "answer": "Because vulnerabilities often lurk in transitive dependencies (e.g., Heartbleed in OpenSSL), requiring full visibility."
+    },
+    {
+      "question": "What functions does CycloneDX cover?",
+      "answer": "SBOM generation, vulnerability correlation, license compliance, attestation management, and hardware/software transparency."
+    },
+    {
+      "question": "What requirements define cryptographic agility?",
+      "answer": "Inventory tracking, policy enforcement, rapid algorithm substitution, and dependency-aware risk assessment."
+    },
+    {
+      "question": "How are dependencies modeled using the `dependsOn` attribute?",
+      "answer": "As edges in a dependency graph, where the attribute points from the dependent component to its prerequisite."
+    },
+    {
+      "question": "How are provided components modeled using the `provides` attribute?",
+      "answer": "As a property listing specifications or standards the component implements (e.g., 'provides: [TLS 1.3, RFC 8446]')."
+    },
+    {
+      "question": "What advantages do organizations gain from CycloneDX Attestations?",
+      "answer": "Faster audits, tamper-proof compliance proofs, and interoperability with regulatory frameworks."
+    },
+    {
+      "question": "How does Attestations' role support code-based compliance?",
+      "answer": "By embedding compliance checks (e.g., 'no CVSS ≥ 7.0') directly into BOM generation/validation pipelines."
+    },
+    {
+      "question": "What review should organizations conduct on their cryptographic assets?",
+      "answer": "Regular audits of algorithm strength, key management practices, and compliance with evolving standards (e.g., post-quantum crypto)."
+    },
+    {
+      "question": "What motivated the creation of the CBOM by CycloneDX?",
+      "answer": "The lack of specialized fields in SBOMs to track crypto-specific metadata (e.g., key lengths, cert expiry)."
+    },
+    {
+      "question": "What justifies the need to capture crypto asset dependencies?",
+      "answer": "To prevent 'shadow dependencies' where vulnerable crypto libraries are used indirectly (e.g., via a framework)."
+    },
+    {
+      "question": "In what areas can CycloneDX be applied?",
+      "answer": "Software development, cloud-native deployments, embedded systems, and compliance automation across industries."
+    },
+    {
+      "question": "What actions should agencies and commercial providers take?",
+      "answer": "Generate SBOMs, adopt VEX, implement attestations, and participate in standards bodies like OWASP or NTIA."
+    },
+    {
+      "question": "What are the objectives of cryptographic agility?",
+      "answer": "To minimize downtime during crypto migrations, maintain compliance, and preemptively address vulnerabilities."
+    },
+    {
+      "question": "What does the `dependsOn` representation convey?",
+      "answer": "A strict requirement where the dependent component fails if the target is missing or incompatible."
+    },
+    {
+      "question": "What does the `provides` representation convey?",
+      "answer": "A guarantee that the component meets a specific technical or compliance standard."
+    },
+    {
+      "question": "What outcomes result from using CycloneDX Attestations?",
+      "answer": "Higher trust in software artifacts, reduced compliance overhead, and better interoperability across tools."
+    },
+    {
+      "question": "How does Attestations form a compliance framework as code?",
+      "answer": "By encoding rules (e.g., 'must use SHA-256') as executable assertions validated against BOM metadata."
+    },
+    {
+      "question": "What insight should organizations gain into their cryptographic assets?",
+      "answer": "Their exposure to known vulnerabilities (e.g., via NIST's Crypto Publication Review List) and compliance gaps."
+    },
+    {
+      "question": "What is the genesis of the CBOM in CycloneDX?",
+      "answer": "The recognition that crypto assets require specialized tracking beyond traditional SBOMs, driven by increasing regulatory focus."
+    },
+    {
+      "question": "Why document the dependencies of cryptographic assets?",
+      "answer": "To enable impact analysis when vulnerabilities (e.g., DROWN) are discovered in foundational crypto libraries."
+    },
+    {
+      "question": "What capabilities fall under the CycloneDX scope?",
+      "answer": "SBOM generation, vulnerability management, license compliance, attestations, and hardware/software transparency."
+    },
+    {
+      "question": "What is a summary of the memorandum's key points?",
+      "answer": "Mandate SBOMs, automate VEX/attestations, prioritize cryptographic agility, and collaborate on supply chain security."
+    },
+    {
+      "question": "What goals does cryptographic agility help organizations achieve?",
+      "answer": "Faster response to crypto vulnerabilities, seamless compliance updates, and reduced risk of cryptographic obsolescence."
+    },
+    {
+      "question": "How does `dependsOn` link dependent components?",
+      "answer": "By creating explicit edges in the BOM's dependency graph, showing which components are required for others to function."
+    },
+    {
+      "question": "How does `provides` link provided specifications?",
+      "answer": "By listing standards or capabilities a component delivers (e.g., 'provides: AES-256 encryption')."
+    },
+    {
+      "question": "What impact do CycloneDX Attestations have on organizations?",
+      "answer": "They reduce compliance costs, improve auditability, and enable trust in software supply chains."
+    },
+    {
+      "question": "How is compliance integrated as code through Attestations?",
+      "answer": "By embedding compliance rules (e.g., 'no proprietary licenses') into CI/CD pipelines via machine-readable attestations."
+    },
+    {
+      "question": "How do organizations identify risks in their cryptographic assets?",
+      "answer": "Via automated scans (e.g., for deprecated algorithms), manual audits, and monitoring standards bodies for advisories."
+    },
+    {
+      "question": "On what foundation was the CBOM built by CycloneDX?",
+      "answer": "Extending the existing SBOM schema with crypto-specific fields (e.g., 'algorithm', 'keySize') while maintaining interoperability."
+    },
+    {
+      "question": "Why is tracking dependencies important for crypto assets?",
+      "answer": "Because vulnerabilities often propagate through dependencies (e.g., a web framework bundling an old TLS library)."
+    },
+    {
+      "question": "What is the scope of usage for CycloneDX?",
+      "answer": "From development (tracking build dependencies) to operations (monitoring deployed components) and compliance reporting."
+    },
+    {
+      "question": "What benefits does cryptographic agility offer?",
+      "answer": "Resilience against crypto-breaking advances (e.g., quantum computing) and adherence to evolving regulations."
+    },
+    {
+      "question": "What does the `dependsOn` indication mean?",
+      "answer": "That the source component has a hard, non-optional dependency on the target component."
+    },
+    {
+      "question": "What does the `provides` indication mean?",
+      "answer": "That the component guarantees conformance to a specific standard or capability."
+    },
+    {
+      "question": "How do CycloneDX Attestations influence organizational capabilities?",
+      "answer": "By enabling scalable compliance, trust in third-party components, and automation of security policies."
+    },
+    {
+      "question": "How is compliance realized as code with Attestations?",
+      "answer": "By transforming regulatory requirements into executable checks validated during BOM generation or consumption."
+    },
+    {
+      "question": "How should organizations appraise the risk of crypto assets?",
+      "answer": "By assessing algorithm strength, key management practices, and exposure to known vulnerabilities (e.g., via NVD)."
+    },
+    {
+      "question": "What considerations went into the design of the CBOM?",
+      "answer": "Interoperability with SBOMs, crypto-specific metadata needs, and alignment with standards like NIST SP 800-56A."
+    },
+    {
+      "question": "What value is derived from capturing crypto asset dependencies?",
+      "answer": "Proactive risk mitigation (e.g., replacing vulnerable libraries) and compliance with mandates like FIPS 140-3."
+    },
+    {
+      "question": "What is the scope of coverage provided by CycloneDX?",
+      "answer": "End-to-end software supply chain transparency, from source code to deployed artifacts, including embedded dependencies."
+    },
+    {
+      "question": "What are the essential elements of the memorandum?",
+      "answer": "SBOM adoption timelines, VEX automation requirements, attestation formats, and cryptographic agility best practices."
+    },
+    {
+      "question": "How is cryptographic agility implemented effectively?",
+      "answer": "Through crypto asset inventories, policy-as-code enforcement, and automated dependency tracking for quick migrations."
+    },
+    {
+      "question": "How is the `dependsOn` expression used?",
+      "answer": "To declare mandatory dependencies between components, forming a graph that tools can analyze for risks or incompatibilities."
+    },
+    {
+      "question": "How is the `provides` expression used?",
+      "answer": "To declare a component's adherence to standards (e.g., 'provides: GDPR Article 32'), enabling compliance automation."
+    },
+    {
+      "question": "How do CycloneDX Attestations enhance organizational capabilities?",
+      "answer": "By providing verifiable, machine-readable proofs of compliance that reduce manual effort and improve auditability."
+    },
+    {
+      "question": "In what way does Attestations enable compliance as code?",
+      "answer": "By encoding compliance rules (e.g., 'must use OWASP Top 10 mitigations') as executable assertions in the BOM."
+    },
+    {
+      "question": "How should organizations scrutinize their cryptographic assets?",
+      "answer": "Via regular audits against standards (e.g., NIST guidelines), dependency analysis, and monitoring for deprecation notices."
+    },
+    {
+      "question": "What is the reason behind the CBOM's existence in CycloneDX?",
+      "answer": "To address the unique tracking needs of cryptographic materials (e.g., keys, certs) beyond standard software components."
+    },
+    {
+      "question": "Why is it necessary to document dependencies for crypto assets?",
+      "answer": "To ensure vulnerabilities in dependent components (e.g., OpenSSL) are identified and patched across the entire supply chain."
+    },
+    {
+      "question": "What is the functional scope of CycloneDX?",
+      "answer": "Creating, analyzing, and exchanging BOMs for software, hardware, and specialized assets (e.g., crypto) across the lifecycle."
+    },
+    {
+      "question": "How is cryptographic agility executed within an organization?",
+      "answer": "By maintaining a crypto asset inventory, enforcing policies via automation, and planning for algorithm transitions."
+    },
+    {
+      "question": "What specific attributes are detailed for claims within this documentation's table?",
+      "answer": "Attributes include 'target' (the component being claimed), 'predicate' (the assertion), and 'evidence' (supporting proof)."
+    },
+    {
+      "question": "In the context of a CDXA claim, how is the 'bom-ref' property defined?",
+      "answer": "As a unique identifier linking the claim to a specific component or element in the BOM."
+    },
+    {
+      "question": "What are the constituent properties of evidence as outlined in CDXA?",
+      "answer": "'propertyName', 'description', 'data', and 'created' (timestamp), along with an optional 'bom-ref'."
+    },
+    {
+      "question": "How is the 'bom-ref' property characterized specifically for CDXA evidence?",
+      "answer": "As a unique reference tying the evidence to a BOM element, ensuring traceability."
+    },
+    {
+      "question": "What is the definition of the 'propertyName' property within CDXA evidence?",
+      "answer": "The name of the property being evidenced (e.g., 'license'), often aligned with CycloneDX's property taxonomy."
+    },
+    {
+      "question": "How is the 'description' property utilized in the context of CDXA evidence?",
+      "answer": "To provide human-readable context about how the evidence was gathered or its significance."
+    },
+    {
+      "question": "What role does the 'data' property serve for CDXA evidence?",
+      "answer": "It contains the actual evidence (e.g., a license text, scan result) in structured or unstructured form."
+    },
+    {
+      "question": "What information does the 'created' property hold for CDXA evidence?",
+      "answer": "The timestamp when the evidence was generated, critical for auditability."
+    },
+    {
+      "question": "In what way does CycloneDX Attestations record adherence to standards?",
+      "answer": "Via conformance sections with 'score', 'rationale', and 'mitigationStrategies' linked to claims and evidence."
+    },
+    {
+      "question": "What are the three distinct fields that comprise conformance in CDXA?",
+      "answer": "'score' (compliance level), 'rationale' (explanation), and 'mitigationStrategies' (remediation plans)."
+    },
+    {
+      "question": "What is the primary function or purpose of claims within CDXA?",
+      "answer": "To assert that a component or system meets specific requirements, backed by evidence."
+    },
+    {
+      "question": "What are the two fundamental elements that constitute a claim in CDXA?",
+      "answer": "The 'target' (subject of the claim) and 'predicate' (the assertion being made)."
+    },
+    {
+      "question": "Which properties are enumerated in the table for claims according to the document?",
+      "answer": "'target', 'predicate', 'evidence', and 'bom-ref' (unique identifier)."
+    },
+    {
+      "question": "How is the 'bom-ref' property described when referring to a CDXA claim?",
+      "answer": "As a unique reference linking the claim to the BOM element it pertains to."
+    },
+    {
+      "question": "What fields define the structure of evidence in CDXA?",
+      "answer": "'propertyName', 'description', 'data', 'created', and optionally 'bom-ref'."
+    },
+    {
+      "question": "What is the role of the 'bom-ref' field in CDXA evidence?",
+      "answer": "To uniquely identify the evidence and link it to the relevant BOM component or claim."
+    },
+    {
+      "question": "How is the 'propertyName' field defined in CDXA evidence?",
+      "answer": "As the name of the property being evidenced (e.g., 'vulnerabilityStatus'), often from a predefined taxonomy."
+    },
+    {
+      "question": "What is the intended use of the 'description' field in CDXA evidence?",
+      "answer": "To provide human-readable context about the evidence's origin, method, or relevance."
+    },
+    {
+      "question": "What does the 'data' field represent in the context of CDXA evidence?",
+      "answer": "The actual content proving the claim (e.g., a scan report, license file, or compliance checklist)."
+    },
+    {
+      "question": "What is the significance of the 'created' field in CDXA evidence?",
+      "answer": "It records when the evidence was generated, ensuring timeliness and auditability."
+    },
+    {
+      "question": "How does the process of documenting conformance function in CycloneDX Attestations?",
+      "answer": "By scoring compliance against requirements, documenting rationale, and outlining mitigation for gaps."
+    },
+    {
+      "question": "What does the 'score' field represent within CDXA conformance?",
+      "answer": "A numerical or categorical value (e.g., 'Pass/Fail') indicating the level of compliance achieved."
+    },
+    {
+      "question": "What is the purpose of the 'rationale' field in CDXA conformance?",
+      "answer": "To explain the basis for the conformance score, including any exceptions or contextual factors."
+    },
+    {
+      "question": "How are 'mitigationStrategies' used in the context of CDXA conformance?",
+      "answer": "To document planned or implemented actions addressing non-conformance (e.g., 'Upgrade to TLS 1.3 by Q4')."
+    },
+    {
+      "question": "How do attestations connect requirements, claims, and conformance in CDXA?",
+      "answer": "Attestations bundle claims (asserting requirements) with evidence and conformance status into a verifiable package."
+    },
+    {
+      "question": "In what way do claims facilitate an organization's argument for fulfilling requirements?",
+      "answer": "By restating requirements in system-specific terms and providing evidence to substantiate compliance."
+    },
+    {
+      "question": "How do the target and predicate components form the basis of a claim in CDXA?",
+      "answer": "The 'target' specifies what the claim is about (e.g., a component), while the 'predicate' states the assertion (e.g., 'uses MIT license')."
+    },
+    {
+      "question": "What mechanism does CycloneDX use to record conformance through attestations?",
+      "answer": "The 'conformance' section with score, rationale, and mitigations, linked to claims via the BOM structure."
+    },
+    {
+      "question": "What does the conformance score indicate in CDXA?",
+      "answer": "The degree to which a component or system meets specified requirements (e.g., '85% compliant')."
+    },
+    {
+      "question": "Why is a rationale provided as part of conformance documentation in CDXA?",
+      "answer": "To justify the score, explaining any deviations, exceptions, or contextual factors affecting compliance."
+    },
+    {
+      "question": "What is the goal of including mitigation strategies in conformance reporting?",
+      "answer": "To outline actionable steps for addressing non-compliance, improving transparency and accountability."
+    },
+    {
+      "question": "How does CycloneDX Attestations provide proof of meeting requirements?",
+      "answer": "By combining claims (assertions), evidence (proof), and conformance (scoring) into a signed, tamper-evident document."
+    },
+    {
+      "question": "What are the essential parts that make up an assertion in CDXA?",
+      "answer": "A 'target' (subject), 'predicate' (assertion), and optionally 'evidence' (supporting data)."
+    },
+    {
+      "question": "How do claims restate requirements using system-specific terminology?",
+      "answer": "By translating generic requirements (e.g., 'must use TLS 1.2+') into component-specific assertions (e.g., 'Component X uses TLS 1.3')."
+    },
+    {
+      "question": "What characteristics define a claim within the CDXA framework?",
+      "answer": "A verifiable assertion about a BOM component, backed by evidence and linked to requirements."
+    },
+    {
+      "question": "What is the function of the 'bom-ref' identifier for claims?",
+      "answer": "To uniquely identify the claim and link it to the relevant BOM component or other attestation elements."
+    },
+    {
+      "question": "What characteristics are associated with evidence in CDXA?",
+      "answer": "Traceability (via 'bom-ref'), specificity ('propertyName'), context ('description'), and verifiability ('data')."
+    },
+    {
+      "question": "How is evidence uniquely identified within a CDXA document?",
+      "answer": "Through its 'bom-ref' field, which can be referenced by claims or other BOM elements."
+    },
+    {
+      "question": "What is the source or definition for the 'propertyName' in evidence?",
+      "answer": "Typically from CycloneDX's property taxonomy or organization-specific definitions (e.g., 'security:scanScore')."
+    },
+    {
+      "question": "How is the creation process of evidence explained in its description?",
+      "answer": "The 'description' field details how the evidence was generated (e.g., 'SAST scan via Tool Y on 2023-01-01')."
+    },
+    {
+      "question": "What type of information is contained within the evidence 'data' field?",
+      "answer": "Raw or processed proof (e.g., JSON output from a scanner, a license file, or a compliance checklist)."
+    },
+    {
+      "question": "Why is the creation timestamp important for CDXA evidence?",
+      "answer": "It establishes the evidence's validity period and ensures alignment with the component version being attested."
+    },
+    {
+      "question": "What is the overall objective of the conformance documentation process?",
+      "answer": "To provide a auditable, transparent record of how well components or systems meet specified requirements."
+    },
+    {
+      "question": "How is the 'score' determined for a given conformance claim?",
+      "answer": "Through assessment against defined criteria (e.g., '90% of components use approved licenses'), often automated via tools."
+    },
+    {
+      "question": "What information does the 'rationale' provide to stakeholders?",
+      "answer": "Context for the score (e.g., 'Score lowered due to 3 components with outdated crypto libraries')."
+    },
+    {
+      "question": "How do mitigation strategies address potential compliance gaps?",
+      "answer": "By proposing or documenting actions (e.g., 'Replace Component A by Q2') to resolve non-conformance."
+    },
+    {
+      "question": "How are requirements, claims, and conformance interconnected in CDXA?",
+      "answer": "Requirements drive claims, which are supported by evidence and summarized in conformance sections, forming a traceable chain."
+    },
+    {
+      "question": "What is the role of a claim in representing an organization's stance?",
+      "answer": "To formally assert compliance or properties (e.g., 'Component B has no known vulnerabilities'), enabling accountability."
+    },
+    {
+      "question": "How do claims adapt general requirements to specific system contexts?",
+      "answer": "By mapping broad mandates (e.g., 'encrypt data in transit') to component-level assertions (e.g., 'Service Y uses TLS 1.2')."
+    },
+    {
+      "question": "What are the necessary elements required to formulate a claim?",
+      "answer": "A 'target' (what the claim is about) and a 'predicate' (the assertion being made), with optional evidence."
+    },
+    {
+      "question": "How is a claim assigned a unique reference within CDXA?",
+      "answer": "Via the 'bom-ref' field, which can be a UUID or other unique identifier."
+    },
+    {
+      "question": "What are the necessary elements required to constitute evidence?",
+      "answer": "'propertyName', 'description', 'data', and 'created' timestamp, with an optional 'bom-ref'."
+    },
+    {
+      "question": "What ensures evidence uniqueness within a CDXA document?",
+      "answer": "The 'bom-ref' field, which must be unique across all evidence entries in the BOM."
+    },
+    {
+      "question": "How is the evidence linked to a specific property definition?",
+      "answer": "Through the 'propertyName' field, which aligns with a defined property (e.g., 'license:SPDX')."
+    },
+    {
+      "question": "What details are included in the evidence description field?",
+      "answer": "Context about how the evidence was obtained (e.g., 'Manual review by Team X on 2023-01-01')."
+    },
+    {
+      "question": "What constitutes the supporting data for an evidence entry?",
+      "answer": "The 'data' field, which can be text (e.g., a license), structured (e.g., JSON), or binary (e.g., a scan report)."
+    },
+    {
+      "question": "Why is the evidence creation date recorded?",
+      "answer": "To establish the evidence's validity period, especially for time-sensitive data like vulnerability scans."
+    },
+    {
+      "question": "What are the necessary elements required to establish conformance?",
+      "answer": "A 'score', 'rationale', and optionally 'mitigationStrategies', linked to specific claims or requirements."
+    },
+    {
+      "question": "What does the numerical value in the 'score' field represent?",
+      "answer": "The degree of compliance, often as a percentage (0-100) or categorical (e.g., 'Full/Partial/Non-Compliant')."
+    },
+    {
+      "question": "What is the nature of information provided in the 'rationale' field?",
+      "answer": "An explanation of how the score was derived, including exceptions or contextual factors."
+    },
+    {
+      "question": "What is the intended outcome of defining mitigation strategies?",
+      "answer": "To document actionable plans for addressing compliance gaps, improving transparency and accountability."
+    },
+    {
+      "question": "How does the conformance section demonstrate fulfillment of requirements?",
+      "answer": "By summarizing compliance status (score), justifying it (rationale), and outlining improvements (mitigations)."
+    },
+    {
+      "question": "How is evidence used to substantiate the validity of claims?",
+      "answer": "By providing concrete data (e.g., scan results) that directly support the claim's predicate (assertion)."
+    },
+    {
+      "question": "How do the target and predicate create a logical structure for claims?",
+      "answer": "The 'target' defines the scope (e.g., a component), while the 'predicate' makes a verifiable assertion about it (e.g., 'has no high-severity vulnerabilities')."
+    },
+    {
+      "question": "How do claims ensure that specific requirements are directly addressed?",
+      "answer": "By explicitly linking requirements (e.g., 'must use Apache 2.0') to component-level assertions (e.g., 'Component Z uses Apache 2.0')."
+    },
+    {
+      "question": "What ensures the integrity and traceability of attestations in CDXA?",
+      "answer": "Digital signatures, immutable evidence (e.g., hashes), and 'bom-ref' linkages between claims, evidence, and components."
+    }
+  ]
+}

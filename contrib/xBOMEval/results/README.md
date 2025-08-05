@@ -10,9 +10,9 @@ This directory captures the raw test results from various models over time.
 %%{init: {'theme': 'base'}}%%
 xychart-beta
     title "Logic Category Comparison"
-    x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B]
+    x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B, deepthink-r1, deepseek-r1]
     y-axis "Accuracy (%)" 0 --> 100
-    bar [46.04, 73.17, 93.6, 67.99, 48.48]
+    bar [46.04, 73.17, 93.6, 67.99, 48.48, 89.63, 82.92]
 ```
 
 ### Spec Category Comparison
@@ -21,9 +21,9 @@ xychart-beta
 %%{init: {'theme': 'base'}}%%
 xychart-beta
     title "Spec Category Comparison"
-    x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B]
+    x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B, deepthink-r1, deepseek-r1]
     y-axis "Accuracy (%)" 0 --> 100
-    bar [83.52, 98.3, 100, 0, 90.34]
+    bar [83.52, 98.3, 100, 0, 90.34, 12.36, 98.58]
 ```
 
 ### Other categories
