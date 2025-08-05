@@ -23,7 +23,7 @@ xychart-beta
     title "Spec Category Comparison"
     x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B]
     y-axis "Accuracy (%)" 0 --> 100
-    bar [32.53, 48.86, 100, 0, 90.34]
+    bar [32.53, 98.3, 100, 0, 90.34]
 ```
 
 ### Other categories

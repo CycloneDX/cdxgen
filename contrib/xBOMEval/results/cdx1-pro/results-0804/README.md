@@ -122,42 +122,44 @@ Carefully understand the questions below. Answer all of them correctly based on 
 
 ### Category: Spec
 
-**Total Marks:** 172.0 / 352
-**Percentage:** 48.86%
+**Total Marks:** 346 / 352
+**Percentage:** 98.3%
 
 ---
 
 ### Questions Scoring 0
 
-1.  **Question:** What distinguishes a BOM from the 'Discovery' phase from one created during the 'Build' phase?
+1.  **Question:** What distinguishes a BOM from the 'Discovery' phase from one created during the 'Build' phase? - correct
 2.  **Question:** What fields are available for detailing commercial licenses in CycloneDX?
 3.  **Question:** Can you provide an example of a commonly used XML extension?
 4.  **Question:** Does CycloneDX offer a way to represent digital and analog signatures?
-5.  **Question:** How are multiple lifecycle phases depicted in a CycloneDX BOM?
-6.  **Question:** What should be included when creating a definition for a custom lifecycle phase?
+5.  **Question:** How are multiple lifecycle phases depicted in a CycloneDX BOM? - correct
+6.  **Question:** What should be included when creating a definition for a custom lifecycle phase? - correct
 7.  **Question:** What specific fields exist for detailing commercial license information in CycloneDX?
 8.  **Question:** What is a common example of an XML extension in use?
-9.  **Question:** How are several lifecycle phases shown in a CycloneDX BOM?
-10. **Question:** What does it mean when a dependency `provides` a specification?
-11. **Question:** How does the `provides` attribute link components to standards?
-12. **Question:** What is the significance of the `provides` dependency type?
-13. **Question:** What is the role of the `provides` field in dependency modeling?
-14. **Question:** How are standards linked to components via the `provides` type?
-15. **Question:** What does specifying `provides` achieve?
-16. **Question:** How are provided components modeled using the `provides` attribute?
-17. **Question:** What does the `provides` representation convey?
-18. **Question:** How does `provides` link provided specifications?
-19. **Question:** What is the purpose of the `provides` dependency?
-20. **Question:** How is the `provides` expression used?
-21. **Question:** What role does the `provides` dependency type play?
-22. **Question:** Can you define the `provides` dependency type?
-23. **Question:** What is the meaning of the `provides` dependency type?
-24. **Question:** What specific attributes are detailed for claims within this documentation's table?
-25. **Question:** What are the three distinct fields that comprise conformance in CDXA?
-26. **Question:** Which properties are enumerated in the table for claims according to the document?
-27. **Question:** What mechanism does CycloneDX use to record conformance through attestations?
-28. **Question:** What are the essential parts that make up an assertion in CDXA?
+9.  **Question:** How are several lifecycle phases shown in a CycloneDX BOM? - correct
+10. **Question:** What does it mean when a dependency `provides` a specification? - correct
+11. **Question:** How does the `provides` attribute link components to standards? - correct
+12. **Question:** What is the significance of the `provides` dependency type? - correct
+13. **Question:** What is the role of the `provides` field in dependency modeling? - correct
+14. **Question:** How are standards linked to components via the `provides` type? - correct
+15. **Question:** What does specifying `provides` achieve? - correct
+16. **Question:** How are provided components modeled using the `provides` attribute? - correct
+17. **Question:** What does the `provides` representation convey? - correct
+18. **Question:** How does `provides` link provided specifications? - correct
+19. **Question:** What is the purpose of the `provides` dependency? - correct
+20. **Question:** How is the `provides` expression used? - correct
+21. **Question:** What role does the `provides` dependency type play? - correct
+22. **Question:** Can you define the `provides` dependency type? - correct
+23. **Question:** What is the meaning of the `provides` dependency type? - correct
+24. **Question:** What specific attributes are detailed for claims within this documentation's table? - correct
+25. **Question:** What are the three distinct fields that comprise conformance in CDXA? - correct
+26. **Question:** Which properties are enumerated in the table for claims according to the document? - correct
+27. **Question:** What mechanism does CycloneDX use to record conformance through attestations? - correct
+28. **Question:** What are the essential parts that make up an assertion in CDXA? - correct
 29. **Question:** What ensures the integrity and traceability of attestations in CDXA?
+
+Gemini incorrectly gave 0.5 score to a number of short answers. Plus, many of the correct answers had been incorrectly marked as wrong.
 
 ### Category: devops
 

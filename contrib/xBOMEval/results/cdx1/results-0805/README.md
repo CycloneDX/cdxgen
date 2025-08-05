@@ -200,6 +200,8 @@ Carefully understand the questions below. Answer all of them correctly based on 
 84.  **Question:** Are CVSS 4.x vulnerability ratings supported? Alice yes, Bob no
      - **Reason:** Incorrect. The reference answer is "yes".
 
+NOTE: Many questions were simply not answered/missed due to context-length limitations. These appear as `Missing from submission` during automated assessment.
+
 ### Category: Spec
 
 **Model:** `cdx1-mlx-8bit`

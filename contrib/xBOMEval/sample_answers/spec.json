@@ -14,7 +14,7 @@
     },
     {
       "question": "What distinguishes a BOM from the 'Discovery' phase from one created during the 'Build' phase?",
-      "answer": "A 'Build' phase BOM lists components as they are compiled and packaged into a software artifact. A 'Discovery' phase BOM inventories software and components as they are found in a running environment (e.g., on a server or workstation). The Discovery BOM may include OS-level packages, system libraries, and applications not captured during a specific application's build, providing a more holistic view of the operational asset."
+      "answer": "A 'Build' phase BOM consists of information obtained during a build process where component inventory is available for use. The precise versions of resolved components are usually available at this time as well as the provenance of where the components were retrieved from. A discovery BOM consists of information observed through network discovery providing point-in-time enumeration of embedded, on-premise, and cloud-native services such as server applications, connected devices, microservices, and serverless functions."
     },
     {
       "question": "How does CycloneDX offer proof regarding software licensing?",
@@ -302,7 +302,7 @@
     },
     {
       "question": "How are multiple lifecycle phases depicted in a CycloneDX BOM?",
-      "answer": "A CycloneDX BOM itself is associated with a single lifecycle phase, specified in the BOM's metadata. This phase describes the point in time when the BOM was created and defines its context. A single component within the BOM cannot have multiple lifecycle phases."
+      "answer": "Using an array of phase objects. Lifecycles communicate the stage(s) in which data in the BOM was captured. Different types of data may be available at various phases of a lifecycle, such as the Software Development Lifecycle (SDLC), IT Asset Management (ITAM), and Software Asset Management (SAM). Thus, a BOM may include data specific to or only obtainable in a given lifecycle."
     },
     {
       "question": "Why is knowledge of the lifecycle phase important for vulnerability analysis?",
@@ -386,7 +386,7 @@
     },
     {
       "question": "What should be included when creating a definition for a custom lifecycle phase?",
-      "answer": "When creating a custom lifecycle phase definition, you must provide the unique phase name. You should also include a detailed 'description' explaining its purpose and context, and optionally, contact information for the defining party."
+      "answer": "When creating a custom lifecycle phase definition, you must provide the unique phase name. You should also include a detailed 'description' explaining its purpose and context."
     },
     {
       "question": "In what way does CycloneDX assist in managing commercial software licenses?",
