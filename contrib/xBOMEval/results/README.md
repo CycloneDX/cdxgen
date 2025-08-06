@@ -7,7 +7,12 @@ This directory captures the raw test results from various models over time.
 ### Logic Category Comparison
 
 ```mermaid
-%%{init: {'theme': 'base'}}%%
+---
+config:
+  xyChart:
+    width: 1200
+---
+%%{init: {'theme': 'default'}}%%
 xychart-beta
     title "Logic Category Comparison"
     x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B, deepthink-r1, deepseek-r1, gpt-oss-120b, gpt-oss-20b]
@@ -18,7 +23,12 @@ xychart-beta
 ### Spec Category Comparison
 
 ```mermaid
-%%{init: {'theme': 'base'}}%%
+---
+config:
+  xyChart:
+    width: 1200
+---
+%%{init: {'theme': 'default'}}%%
 xychart-beta
     title "Spec Category Comparison"
     x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B, deepthink-r1, deepseek-r1, gpt-oss-120b, gpt-oss-20b]
