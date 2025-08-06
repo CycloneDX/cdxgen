@@ -171,6 +171,13 @@ export function createSwiftBom(path: string, options: any): Promise<any>;
  */
 export function createCocoaBom(path: string, options: any): Promise<any>;
 /**
+ * Function to create bom string for Nix flakes
+ *
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
+ */
+export function createNixBom(path: string, options: any): Promise<any>;
+/**
  * Function to create bom string for docker compose
  *
  * @param {string} path to the project
