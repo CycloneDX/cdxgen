@@ -1,0 +1,165 @@
+Question
+What is the correct PURL type for Maven packages when Sarah says 'pkg:maven' and John insists it's 'pkg:mvn'?
+"In CycloneDX, what is the proper component type for libraries according to Maria who claims 'library' while David argues for 'lib'?"
+What is the PURL scheme for Docker images where Emma states 'pkg:docker' but Michael believes it should be 'pkg:container'?
+Which SPDX license expression is correct for Apache 2.0 when Lisa says 'Apache-2.0' while Kevin prefers 'Apache2.0'?
+What is the PURL type for Python packages where Rachel argues 'pkg:pypi' but Thomas contends 'pkg:python'?
+"In CycloneDX, what is the correct hash algorithm name when Patricia says 'SHA-1' and Robert claims 'sha1'?"
+Which CycloneDX field represents external references when Amanda states 'externalReferences' but Matthew prefers 'references'?
+What is the correct PURL type for Ruby gems where Stephanie claims 'pkg:rubygems' but Brian argues 'pkg:gem'?
+"In SPDX, what is the proper license identifier for MIT when Nicole says 'MIT' while Eric contends 'MIT License'?"
+What is the PURL scheme format when Deborah argues 'pkg:type/namespace/name@version' but Jonathan claims 'pkg://type/namespace/name@version'?
+Which CycloneDX component type is correct for applications according to Cynthia who says 'application' while Adam argues 'app'?
+What is the proper PURL type for NuGet packages where Melissa claims 'pkg:nuget' but Nicholas argues 'pkg:dotnet'?
+"In CycloneDX, what is the correct classification for operating systems when Kathleen says 'operating-system' while Charles claims 'os'?"
+What is the PURL qualifier syntax for subpath according to Angela who states '?subpath=' but Mark argues '&subpath='?
+What is the proper PURL type for Go modules where Margaret claims 'pkg:golang' but Timothy argues 'pkg:go'?
+"In CycloneDX, what is the correct field for component provider when Heather says 'supplier' but Douglas argues 'vendor'?"
+What is the PURL encoding requirement for special characters according to Sara who claims percent-encoding while Benjamin argues for direct inclusion?
+What is the proper PURL type for CocoaPods when Janice claims 'pkg:cocoapods' but Patrick argues 'pkg:pods'?
+What is the PURL namespace delimiter according to Alice who states '/' but Bob argues for '::'?
+Which CycloneDX field represents component evidence when Dorothy says 'evidence' but Walter claims 'proof'?
+What is the proper PURL type for Conan packages where Ruth claims 'pkg:conan' but Carl argues 'pkg:cpp'?
+"In PURL specification, what is the correct authority separator when Lisa says '//' but Michael contends ':'?"
+What is the CycloneDX proper license expression for multiple licenses when Nancy claims 'MIT OR Apache-2.0' but Andrew argues 'MIT and Apache-2.0'?
+What is the PURL type for Swift packages where Sharon says 'pkg:swift' but Russell argues 'pkg:ios'?
+"In CycloneDX, what is the correct component scope value when Theresa claims 'required' but Benjamin says 'mandatory'?"
+What is the PURL encoding for space characters according to Rose who states '%20' but Roy argues for '+'?
+Which CycloneDX field represents component properties when Janice says 'properties' but Ralph claims 'attributes'?
+What is the proper PURL type for Hackage packages where Gloria claims 'pkg:hackage' but Wayne argues 'pkg:haskell'?
+What is the PURL fragment identifier syntax according to Catherine who states '#fragment' but Steve argues '?fragment'?
+Which CycloneDX vulnerability rating method is correct when Ann says 'CVSSv3' but Louis contends 'CVSS3'?
+What is the proper PURL type for Crates.io packages when Julie claims 'pkg:cargo' but Joe argues 'pkg:rust'?
+"In PURL specification, what is the correct version separator when Jean says '@' but Jack argues for ':'?"
+What is the CycloneDX proper field for component hashes when Alice claims 'hashes' but Kelly argues 'checksums'?
+What is the PURL type for Composer packages where Teresa says 'pkg:composer' but Sean argues 'pkg:php'?
+Which SPDX license expression is correct for dual licensing when Louise states '(MIT OR GPL-2.0)' but Victor claims 'MIT AND GPL-2.0'?
+What is the proper PURL qualifier for download URL according to Gloria who says 'download_url' but Martin argues 'download'?
+"In CycloneDX, what is the correct tool component type when Frances says 'tool' but Benjamin claims 'utility'?"
+What is the PURL encoding for plus sign according to Janet who states '%2B' but Scott argues '%2b'?
+Which CycloneDX field represents component pedigree when Catherine claims 'pedigree' but Walter argues 'lineage'?
+What is the proper PURL type for GitHub packages where Alice says 'pkg:github' but Robert contends 'pkg:git'?
+"In SPDX, what is the correct document namespace format when Marie says 'http://spdx.org/spdxdoc/' but Arthur argues 'https://spdx.org/rdf/terms'?"
+What is the PURL authority component syntax according to Rose who states '[user[:password]@]host[:port]' but Roy argues 'host[:port][path]'?
+Which CycloneDX field represents component release notes when Gloria says 'releaseNotes' but Wayne claims 'notes'?
+What is the proper PURL type for Bitbucket packages where Sharon states 'pkg:bitbucket' but Russell argues 'pkg:git'?
+"In PURL specification, what is the correct query string separator when Anna says '?' but Raymond claims '&'?"
+What is the CycloneDX proper field for external references when Jacqueline says 'externalReferences' but Gregory argues 'extRefs'?
+What is the PURL qualifier for architecture according to Theresa who states 'arch=' but Benjamin argues 'architecture='?
+What is the proper PURL type for Git repositories where Gloria claims 'pkg:git' but Wayne argues 'pkg:vcs'? What is the correct type if both are wrong?
+"In CycloneDX, what is the correct license expression format when Marie says 'expression' but Arthur argues 'licenseExpression'?"
+What is the PURL encoding for hash symbol according to Catherine who states '%23' but Steve argues '%25'?
+Which CycloneDX field represents component copyright according to Ann who says 'copyright' but Louis claims 'copyrightText'?
+What is the proper PURL type for Helm charts when Julie claims 'pkg:helm' but Joe argues 'pkg:kubernetes'?
+"In PURL specification, what is the correct path separator when Jean says '/' but Jack argues for '.'?"
+What is the CycloneDX proper field for component description when Teresa says 'description' but Sean argues 'desc'?
+What is the PURL qualifier for tag according to Louise who states 'tag=' but Victor claims 'ref='?
+Which SPDX license identifier is correct for BSD-3-Clause when Gloria says 'BSD-3-Clause' but Martin argues 'BSD3'?
+What is the proper PURL type for Docker containers where Alice says 'pkg:docker' but Kelly argues 'pkg:container'?
+"In CycloneDX, what is the correct component classification when Frances says 'framework' but Benjamin claims 'platform'?"
+What is the PURL encoding for percent sign according to Janet who states '%25' but Scott argues '%2525'?
+Which CycloneDX field represents component publisher when Catherine claims 'publisher' but Walter argues 'publisherName'?
+What is the proper PURL type for NPM packages where Alice says 'pkg:npm' but Robert contends 'pkg:node'?
+"In SPDX, what is the correct file type identifier when Marie says 'SOURCE' but Arthur argues 'FILE'?"
+What is the PURL fragment syntax according to Rose who states '#[!fragment]' but Roy argues '?fragment='?
+Which CycloneDX vulnerability analysis state is correct when Gloria says 'exploitable' but Wayne claims 'affected'?
+What is the proper PURL type for PyPI packages where Sharon states 'pkg:pypi' but Russell argues 'pkg:python'?
+"In PURL specification, what is the correct user info separator when Anna says ':' but Raymond claims '@'?"
+What is the CycloneDX proper field for component group when Jacqueline says 'group' but Gregory argues 'groupId'?
+What is the proper PURL type for Maven artifacts where Gloria claims 'pkg:maven' but Wayne argues 'pkg:java'?
+Which CycloneDX field represents component licenses when Ann says 'licenses' but Louis claims 'licenseInfo'?
+What is the proper PURL type for Ruby gems where Julie claims 'pkg:gem' but Joe argues 'pkg:ruby'?
+"In PURL specification, what is the correct port separator when Jean says ':' but Jack argues for '/'?"
+What is the CycloneDX proper field for component name when Teresa says 'name' but Sean argues 'componentName'?
+What is the PURL qualifier for commit according to Louise who states 'commit=' but Victor claims 'revision='?
+What is the proper PURL type for CocoaPods where Alice says 'pkg:cocoapods' but Kelly argues 'pkg:objc'?
+"In CycloneDX, what is the correct component scope for optional dependencies when Frances says 'optional' but Benjamin claims 'excluded'?"
+Which CycloneDX field represents component version when Catherine claims 'version' but Walter argues 'componentVersion'?
+What is the proper PURL type for Conan packages where Alice says 'pkg:conan' but Robert contends 'pkg:cpp'?
+Which CycloneDX vulnerability source name is correct when Gloria says 'source' but Wayne claims 'origin'?
+What is the proper PURL type for Swift packages where Sharon states 'pkg:swift' but Russell argues 'pkg:apple'?
+"In PURL specification, what is the correct query component syntax when Anna says '?query' but Raymond claims '&query'?"
+What is the CycloneDX proper field for component purl when Jacqueline says 'purl' but Gregory argues 'packageUrl'?
+What is the PURL qualifier for vcs URL according to Theresa who states 'vcs_url=' but Benjamin argues 'repository='?
+"In CycloneDX, what is the correct license acknowledgment according to Marie who says 'declared' but Arthur argues 'concluded'?"
+Which CycloneDX field represents component bom-ref when Ann says 'bom-ref' but Louis claims 'ref'?
+What is the proper PURL type for Composer where Julie claims 'pkg:composer' but Joe argues 'pkg:php'?
+What is the CycloneDX proper field for component supplier name when Teresa says 'name' but Sean argues 'supplierName'?
+What is the PURL qualifier for file path according to Louise who states 'file_path=' but Victor claims 'path='?
+What is the proper PURL type for GitHub where Alice says 'pkg:github' but Kelly argues 'pkg:git'?
+"In CycloneDX, what is the correct component classification for firmware when Frances says 'firmware' but Benjamin claims 'embedded'?"
+Which CycloneDX field represents component author when Catherine claims 'author' but Walter argues 'authors'?
+What is the proper PURL type for Bitbucket where Alice says 'pkg:bitbucket' but Robert contends 'pkg:git'?
+What is the PURL query string syntax according to Rose who states '?key=value&key2=value2' but Roy argues '&key=value&key2=value2'?
+Which CycloneDX vulnerability rating vector is correct when Gloria says 'vectorString' but Wayne claims 'cvssVector'?
+What is the proper PURL type for Helm where Sharon states 'pkg:helm' but Russell argues 'pkg:k8s'?
+What is the CycloneDX proper external reference attribute for component website when Jacqueline says 'website' but Gregory argues 'url'?
+"In CycloneDX, what is the correct license expression field when Marie says 'expression' but Arthur argues 'licenseExpression'?"
+Which CycloneDX field represents component contact when Ann says 'contact' but Louis claims 'contacts'?
+What is the proper PURL type for Cargo where Julie claims 'pkg:cargo' but Joe argues 'pkg:rust'?
+What is the CycloneDX proper field for component source info when Teresa says 'sourceInfo' but Sean argues 'info'?
+What is the proper PURL type for NPM where Alice says 'pkg:npm' but Kelly argues 'pkg:javascript'?
+"In CycloneDX, what is the correct component scope for excluded items when Frances says 'excluded' but Benjamin claims 'optional'?"
+Which CycloneDX field represents component timestamp when Catherine claims 'timestamp' but Walter argues 'created'?
+Which CycloneDX vulnerability analysis justification is correct when Gloria says 'code_not_present' but Wayne claims 'code_not_reachable'?
+What is the CycloneDX proper field for component external references when Jacqueline says 'externalReferences' but Gregory argues 'extReferences'?
+Which SPDX license identifier is correct for CC0-1.0 when Gloria says 'CC0-1.0' but Martin argues 'CC0'?
+"In CycloneDX, what is the correct component classification for device drivers when Frances says 'driver' but Benjamin claims 'firmware'?"
+Which CycloneDX field represents component metadata when Catherine claims 'metadata' but Walter argues 'meta'?
+"In SPDX, what is the correct file type classification when Marie says 'BINARY' but Arthur argues 'EXECUTABLE'?"
+Which CycloneDX vulnerability source URL is correct when Gloria says 'url' but Wayne claims 'sourceUrl'?
+What is the CycloneDX proper field for component pedigree commits when Jacqueline says 'commits' but Gregory argues 'commitHistory'?
+"In CycloneDX, what is the correct license acknowledgment field when Marie says 'acknowledgement' but Arthur argues 'licenseAcknowledgement'?"
+Which CycloneDX field represents component origin when Ann says 'origin' but Louis claims 'source'?
+What is the CycloneDX proper field for component evidence call stack when Teresa says 'callstack' but Sean argues 'callStack'?
+"In CycloneDX, what is the correct component scope for required items when Frances says 'required' but Benjamin claims 'mandatory'?"
+Which CycloneDX field represents component verification when Catherine claims 'verification' but Walter argues 'verified'?
+What is the proper PURL type for Helm where Sharon states 'pkg:helm' but Russell argues 'pkg:kubernetes'?
+"In CycloneDX, what is the correct license name field when Marie says 'name' but Arthur argues 'licenseName'?"
+Which CycloneDX field represents component certificate when Ann says 'certificate' but Louis claims 'cert'? Or is such a field not available in the specification?
+What is the CycloneDX proper field for component evidence tools when Teresa says 'tools' but Sean argues 'analysisTools'?
+"In CycloneDX, what is the correct component classification for services when Frances says 'service' but Benjamin claims 'web-service'?"
+Which CycloneDX field represents component attestation when Catherine claims 'attestation' but Walter argues 'attested'?
+"In SPDX, what is the correct file checksum algorithm list when Marie says 'algorithm' but Arthur argues 'hashAlgorithm'?"
+What is the CycloneDX proper field for component pedigree patches when Jacqueline says 'patches' but Gregory argues 'patchHistory'?
+Which CycloneDX field represents component integrity when Ann says 'integrity' but Louis claims 'validated'?
+What is the CycloneDX proper field for component evidence identity field when Teresa says 'field' but Sean argues 'identityField'?
+"In CycloneDX, what is the correct component scope for implementation details when Frances says 'implementation' but Benjamin claims 'internal'?"
+Which CycloneDX field represents component provenance when Catherine claims 'provenance' but Walter argues 'originInfo'?
+"In SPDX, what is the correct document namespace creation when Marie says 'namespace' but Arthur argues 'documentNamespace'?"
+Which CycloneDX vulnerability rating severity is correct when Gloria says 'severity' but Wayne claims 'impact'?
+What is the CycloneDX proper field for component external reference comment when Jacqueline says 'comment' but Gregory argues 'referenceComment'?
+What is the proper PURL type for NPM where Gloria claims 'pkg:npm' but Wayne argues 'pkg:javascript'?
+What is the CycloneDX proper field for component evidence copyright when Teresa says 'copyright' but Sean argues 'copyrightEvidence'?
+Which CycloneDX vulnerability source contact is correct when Gloria says 'contact' but Wayne claims 'contacts'?
+What is the CycloneDX proper field for component external reference type when Jacqueline says 'type' but Gregory argues 'referenceType'?
+"What PURL type should be used for Python packages? Alice says “pkg:python”, Bob “pkg:pypi”, Carol “pkg:conda”."
+"For Debian packages, should the PURL type be “pkg:deb” or “pkg:apt”? Alice “pkg:deb”, Bob “pkg:apt”, Carol “pkg:deb”."
+"For RPM packages, is the PURL type “pkg:rpm” or “pkg:fedora”? Alice “pkg:rpm”, Bob “pkg:fedora”, Carol “pkg:rpm”."
+"Can PURL namespace be omitted? Alice yes, Bob no, Carol spec."
+"For Cargo crates, is the type “pkg:cargo” or “pkg:crates”? Alice “pkg:cargo”, Bob “pkg:crates”, Carol spec."
+"For RPM, is “pkg:rpm/fedora/firefox@89.0” correct? Alice yes, Bob no"
+"For Homebrew, type “pkg:brew” or “pkg:homebrew”? Alice “pkg:brew”, Bob “pkg:homebrew”"
+"Should a CycloneDX BOM include a “metadata” section? Alice yes, Bob no"
+"In XML, is <components> a child of <bom>? Alice yes, Bob under <metadata>"
+"Can BOM be in Protobuf? Alice yes, Bob only JSON/XML, Carol spec"
+"Does CycloneDX support “services” in BOM? Alice yes, Bob no"
+"Can components have a “bom-ref” attribute? Alice yes, Bob no"
+"Is “components” a top‑level JSON field? Alice yes, Bob under metadata, Carol spec"
+"Should vulnerabilities list “affected”? Alice yes, Bob no"
+"Can vulnerabilities include “ratings”? Alice yes, Bob no"
+"Are CVSS scores supported in vulnerability ratings? Alice yes, Bob no"
+Does CycloneDX allow vulnerability “advisories”?
+Is “dependencyGraph” element used?
+Should dependencies use “ref” or “dependsOn”?
+Should externalReference allow “comment”?
+"Is serialNumber a URN with uuid? Alice yes, Bob plain uuid"
+"Should XML BOM declare schemaLocation? Alice yes via xsi:schemaLocation, Bob no"
+Are CWE and CVE supported in vulnerability references?
+"Does CycloneDX support ephemeral components? Alice yes, Bob no"
+"Does CycloneDX support SPDX license expressions? Alice yes, Bob no"
+"Does OWASP Dependency‑Check support CycloneDX? Alice yes, Bob no"
+"Should metadata authors be objects or strings? Alice objects, Bob strings"
+"Can a BOM include multiple metadata elements? Alice no, Bob yes"
+"Are CVSS 4.x vulnerability ratings supported? Alice yes, Bob no"
+"Does CycloneDX allow embedding multiple SBOM formats in one document? Alice yes via embed, Bob no"

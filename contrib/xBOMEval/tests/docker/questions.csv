@@ -1,0 +1,120 @@
+Technology,Category,Question
+Docker,Basic Concepts,What is Docker and how does it differ from traditional virtual machines? Explain the key benefits of using containerization in development and deployment workflows.
+Docker,Images,"How do you create a Docker image from a Dockerfile? Describe the process of building, tagging, and pushing an image to a container registry."
+Docker,Containers,What is the difference between a Docker image and a Docker container? Explain how containers are instantiated from images and their lifecycle.
+Docker,Networking,How does Docker networking work by default? Describe the bridge network and how containers communicate with each other and the host system.
+Docker,Volumes,"What are Docker volumes and why are they important for data persistence? Compare named volumes, bind mounts, and tmpfs mounts with examples."
+Docker,Dockerfile,"Explain the purpose of common Dockerfile instructions like FROM, RUN, COPY, and CMD. How do you optimize a Dockerfile for smaller image sizes?"
+Docker,Multi-stage Builds,What are multi-stage builds in Docker and why are they useful? Provide an example of building a Go application with multi-stage Dockerfile.
+Docker,Compose,How does Docker Compose simplify multi-container applications? Write a basic docker-compose.yml file for a web application with database.
+Docker,Registry,What is a container registry and how do you authenticate with private registries? Explain the process of pulling and pushing images to different registries.
+Docker,Security,"What security best practices should you follow when running Docker containers? Discuss user namespaces, read-only filesystems, and capability dropping."
+OCI,Specifications,What is the Open Container Initiative (OCI) and what problem does it solve? Describe the two main specifications: Image Format and Runtime Specification.
+OCI,Image Spec,Explain the OCI Image Format specification and its key components. How does it ensure interoperability between different container tools and platforms?
+OCI,Runtime Spec,What does the OCI Runtime Specification define and why is it important? Describe how it standardizes container runtime behavior across implementations.
+Podman,Basics,What is Podman and how does it differ from Docker in terms of architecture? Explain the daemonless approach and its advantages for container management.
+Podman,Commands,"Compare basic Podman commands with their Docker equivalents. How do you run, stop, and manage containers using Podman CLI?"
+Podman,Rootless,What does rootless container execution mean in Podman? Explain the security benefits and potential limitations of running containers without root privileges.
+Podman,Pods,How does Podman implement pod functionality similar to Kubernetes pods? Describe how to create and manage multi-container pods with Podman.
+Docker,Troubleshooting,"A container fails to start with ""exec user process caused: exec format error"". What could be the cause and how would you troubleshoot this issue?"
+Docker,Performance,How do you monitor Docker container resource usage and performance? Explain tools like docker stats and integration with monitoring systems.
+Docker,Networking,A container cannot reach the internet or other containers. What steps would you take to diagnose and fix Docker networking issues?
+Docker,Storage,What happens to container data when a container is deleted? How do you properly manage persistent data in Docker environments?
+Docker,Logs,How do you access and manage Docker container logs? Explain different logging drivers and how to configure log rotation.
+Docker,Build Issues,A Docker build fails during the RUN instruction. What debugging techniques can you use to identify and resolve build problems?
+OCI,Compatibility,"How do OCI specifications ensure compatibility between tools like Docker, Podman, and containerd? Provide examples of interoperability in practice."
+Podman,Migration,How would you migrate from Docker to Podman in an existing environment? What compatibility considerations and potential issues should you anticipate?
+Docker,Advanced Networking,Explain Docker overlay networks and their use in multi-host environments. How do they enable container communication across different hosts?
+Docker,Swarm,What is Docker Swarm mode and how does it provide container orchestration? Compare its features with Kubernetes for container management.
+Docker,Security Scanning,How do you scan Docker images for vulnerabilities and security issues? Discuss tools and practices for maintaining secure container images.
+Podman,Systemd Integration,How does Podman integrate with systemd for container management? Explain the benefits of using systemd services with Podman containers.
+Docker,Health Checks,What are Docker health checks and how do they improve container reliability? Write an example HEALTHCHECK instruction for a web application.
+OCI,Image Layers,Explain how OCI image layers work and their impact on image distribution. How do layer caching and sharing optimize container image management?
+Podman,Remote Management,How do you manage Podman containers remotely? Describe the API service and client configuration for remote container operations.
+Docker,Resource Limits,How do you limit CPU and memory resources for Docker containers? Explain the --memory and --cpus flags with practical examples.
+Docker,Entrypoint vs CMD,What is the difference between ENTRYPOINT and CMD in Dockerfiles? Provide examples showing how they work together in container execution.
+Podman,Kubernetes Compatibility,How does Podman support Kubernetes-style pod management? Explain the podman generate kube command and its use cases.
+Docker,Multi-architecture,How do you build and deploy Docker images for multiple CPU architectures? Discuss buildx and cross-platform container image creation.
+OCI,Runtime Compliance,What does it mean for a container runtime to be OCI-compliant? How can you verify that a runtime properly implements OCI specifications?
+Docker,Troubleshooting,Containers are running but applications inside are not responding. What diagnostic steps would you take to identify the root cause?
+Docker,Environment Variables,How do you pass environment variables to Docker containers? Explain the difference between build-time and run-time environment variables.
+Podman,Desktop Integration,How does Podman Desktop compare to Docker Desktop? Discuss the features and differences in user experience and functionality.
+Docker,Image Optimization,"What techniques do you use to minimize Docker image sizes? Explain multi-stage builds, distroless images, and layer optimization."
+OCI,Versioning,How does OCI handle specification versioning and backward compatibility? What happens when new OCI versions are released and adopted?
+Docker,Troubleshooting,Docker daemon is consuming excessive memory and CPU. How would you diagnose and resolve performance issues with the Docker engine?
+Podman,Networking,How does Podman handle container networking compared to Docker? Explain the differences in network configuration and management.
+Docker,Secrets Management,What are Docker secrets and how do you securely manage sensitive data in containers? Compare with Kubernetes secrets management.
+Docker,Caching,How does Docker's build cache work and how can you optimize it? Explain cache invalidation and strategies for faster builds.
+OCI,Tooling Ecosystem,What tools and projects in the container ecosystem implement OCI specifications? Discuss their roles in the container landscape.
+Podman,Troubleshooting,Podman containers fail to start with permission denied errors. What are the common causes and how do you resolve them?
+Docker,Orchestration,How does Docker Compose integrate with container orchestration platforms? Explain the relationship between Compose and production orchestration.
+Docker,Storage Drivers,"What are Docker storage drivers and how do they affect container performance? Compare overlay2, aufs, and other storage driver options."
+Podman,Volumes,How do Podman volumes differ from Docker volumes in implementation and management? Discuss compatibility and migration considerations.
+Docker,Troubleshooting,Applications in containers cannot write to mounted volumes. What file permission issues might cause this and how do you fix them?
+OCI,Image Distribution,How do OCI image manifests enable efficient image distribution? Explain the role of content addressing and layer deduplication.
+Docker,Build Context,What is Docker build context and how does it affect build performance? How do you optimize build context for faster builds?
+Podman,Security,What security advantages does Podman's daemonless architecture provide? Compare security models between Docker daemon and Podman.
+Docker,Troubleshooting,Docker containers are restarting continuously. How do you diagnose restart loops and identify application-level issues?
+Docker,Labels,How do you use Docker labels for container and image organization? Provide examples of label usage for automation and management.
+OCI,Runtime Variants,"Compare different OCI-compliant runtimes like runc, crun, and kata-containers. What are their performance and security characteristics?"
+Podman,Troubleshooting,Podman fails to pull images from registries with authentication errors. What steps do you take to resolve registry access issues?
+Docker,Multi-container Apps,"How do you manage dependencies between containers in Docker Compose? Explain depends_on, health checks, and startup ordering."
+Docker,Image Signing,What is Docker Content Trust and how does it secure image distribution? Explain image signing and verification processes.
+OCI,Registry API,How do OCI distribution specifications work for container registries? Describe the HTTP API and its role in image management.
+Podman,Troubleshooting,Podman pods fail to start with network configuration errors. How do you diagnose and fix pod networking problems?
+Docker,CI/CD Integration,How do you integrate Docker builds into continuous integration pipelines? Discuss caching strategies and build optimization.
+Docker,Troubleshooting,High container startup times are affecting deployment performance. What factors contribute to slow container initialization?
+OCI,Image Index,What is an OCI Image Index and how does it support multi-platform images? Explain manifest lists and platform selection mechanisms.
+Podman,Kubernetes Transition,How do you convert Docker Compose files to Kubernetes manifests using Podman? Describe the conversion process and limitations.
+Docker,Troubleshooting,Containerized applications show inconsistent behavior between development and production. How do you ensure environment parity?
+Docker,Layer Caching,How does Docker leverage layer caching to optimize repeated builds? What strategies maximize cache hits during development?
+OCI,Runtime Hooks,What are OCI runtime hooks and how do they extend container functionality? Provide examples of pre-start and post-stop hooks.
+Podman,Troubleshooting,Podman containers cannot access host network services. What network configuration issues might cause this problem?
+Docker,Build Secrets,How do you handle sensitive information like API keys during Docker builds? Explain build secrets and their secure management.
+Docker,Troubleshooting,Docker builds fail inconsistently across different environments. How do you ensure reproducible builds and troubleshoot issues?
+OCI,Image Validation,How do you validate that container images comply with OCI specifications? Discuss tools and processes for specification compliance.
+Podman,Troubleshooting,Podman commands hang or timeout during execution. What system-level issues might cause these performance problems?
+Docker,Image Reproducibility,What factors affect Docker image reproducibility and how do you ensure consistent builds? Discuss deterministic builds.
+Docker,Troubleshooting,Containers exit immediately after starting without error messages. What debugging techniques help identify silent failures?
+OCI,Runtime Configuration,How does the OCI runtime specification define container configuration? Explain the config.json file and its components.
+Podman,Troubleshooting,Podman fails to start with systemd service errors. How do you diagnose and fix service configuration issues?
+Docker,Build Performance,What techniques optimize Docker build performance in large applications? Discuss parallel builds and build caching strategies.
+Docker,Troubleshooting,Network connectivity issues between containers in the same Docker network. How do you diagnose and resolve this problem?
+OCI,Image Compatibility,How do OCI specifications ensure image compatibility across different runtime implementations? Discuss cross-runtime testing.
+Podman,Troubleshooting,Permission errors when running Podman in CI/CD environments. What configuration changes resolve these access issues?
+Docker,Security,How do you implement least privilege principles in Docker container security? Discuss user mapping and capability restrictions.
+Docker,Troubleshooting,Disk space exhaustion caused by Docker images and containers. How do you identify and clean up unused resources?
+OCI,Runtime Extensions,What extension mechanisms exist in OCI runtime specifications? How do vendors add custom functionality while maintaining compliance?
+Podman,Troubleshooting,Podman containers lose network connectivity intermittently. What system configuration issues might cause this behavior?
+Docker,Image Verification,How do you verify the integrity and authenticity of Docker images? Explain checksum verification and signature validation.
+Docker,Troubleshooting,High memory usage in containerized applications without code changes. How do you identify resource leaks and optimize usage?
+OCI,Registry Interoperability,How do OCI distribution specifications ensure registry interoperability? Discuss compatibility between different registry implementations.
+Podman,Troubleshooting,Podman builds fail with storage driver errors. How do you diagnose and resolve container storage issues?
+Docker,Configuration Management,"How do you manage application configuration in Docker containers? Compare environment variables, config files, and secrets."
+Docker,Troubleshooting,Time synchronization issues in containers affecting application behavior. How do you ensure proper time handling in containers?
+OCI,Image Metadata,What metadata does the OCI Image Format specification define and how is it used? Explain annotations and their practical applications.
+Podman,Troubleshooting,Podman remote API connections fail with authentication errors. How do you configure and troubleshoot API access?
+Docker,Service Discovery,How does Docker handle service discovery for containers? Explain DNS resolution and service name resolution within networks.
+Docker,Troubleshooting,Container port mappings not working as expected. How do you diagnose and fix port exposure and binding issues?
+OCI,Runtime Compliance Testing,How do you test whether a container runtime is truly OCI-compliant? Discuss conformance testing and validation procedures.
+Podman,Troubleshooting,Podman volume mounts fail with permission or access errors. What file system and SELinux issues might cause these problems?
+Docker,Image Lifecycle,How do you manage the complete lifecycle of Docker images from creation to retirement? Discuss versioning and cleanup strategies.
+Docker,Troubleshooting,DNS resolution failures inside containers. How do you diagnose and fix container DNS configuration issues?
+OCI,Specification Evolution,How does the OCI evolve its specifications while maintaining backward compatibility? Discuss the versioning and deprecation process.
+Podman,Troubleshooting,Podman containers fail to start after system updates. How do you identify and resolve compatibility issues with system changes?
+Docker,Cluster Management,How do you scale Docker containers in production environments? Discuss orchestration and load balancing considerations.
+Docker,Troubleshooting,Application performance degradation in containers over time. How do you identify and resolve performance regression issues?
+OCI,Image Distribution,How do content addressable storage and distribution work in OCI registries? Explain the benefits of digest-based image references.
+Podman,Troubleshooting,Podman fails to initialize on systems with custom security policies. How do you configure Podman for restricted environments?
+Docker,Backup and Recovery,How do you backup and restore Docker container data and configurations? Discuss strategies for disaster recovery planning.
+Docker,Troubleshooting,Intermittent container crashes with unclear error messages. How do you implement comprehensive container monitoring?
+OCI,Runtime Security,"What security features does the OCI Runtime Specification enable? Discuss seccomp, SELinux, and AppArmor integration."
+Podman,Troubleshooting,Podman network plugins fail to load or configure properly. How do you diagnose and fix CNI plugin issues?
+Docker,Compliance,How do you ensure Docker containers meet regulatory and compliance requirements? Discuss audit logging and security controls.
+Docker,Troubleshooting,Container resource limits not being enforced properly. How do you verify and debug cgroup configuration issues?
+OCI,Image Tooling,What tools exist for working with OCI images outside of container runtimes? Discuss image manipulation and analysis utilities.
+Podman,Troubleshooting,Podman containers cannot access external storage or network filesystems. How do you resolve filesystem integration issues?
+Docker,Disaster Recovery,How do you implement disaster recovery for Docker-based applications? Discuss backup strategies and recovery procedures.
+Docker,Troubleshooting,Inconsistent behavior between Docker versions affecting application deployment. How do you manage version compatibility?
+OCI,Runtime Performance,How do different OCI runtime implementations compare in performance characteristics? Discuss benchmarking and optimization.
+Podman,Troubleshooting,Podman fails to work properly in containerized or virtualized environments. How do you resolve nested container issues?

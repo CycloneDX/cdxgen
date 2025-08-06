@@ -1,0 +1,658 @@
+[
+  {
+    "question": "What is the correct PURL type for Maven packages?",
+    "answer": "pkg:maven"
+  },
+  {
+    "question": "In CycloneDX, what is the proper component type for libraries?",
+    "answer": "library"
+  },
+  {
+    "question": "What is the PURL scheme for Docker images?",
+    "answer": "pkg:docker"
+  },
+  {
+    "question": "Which SPDX license expression is correct for Apache 2.0?",
+    "answer": "Apache-2.0"
+  },
+  {
+    "question": "What is the PURL type for Python packages?",
+    "answer": "pkg:pypi"
+  },
+  {
+    "question": "In CycloneDX, what is the correct hash algorithm name?",
+    "answer": "SHA-1"
+  },
+  {
+    "question": "Which CycloneDX field represents external references?",
+    "answer": "externalReferences"
+  },
+  {
+    "question": "What is the correct PURL type for Ruby gems?",
+    "answer": "pkg:gem"
+  },
+  {
+    "question": "In SPDX, what is the proper license identifier for MIT?",
+    "answer": "MIT"
+  },
+  {
+    "question": "What is the PURL scheme format?",
+    "answer": "pkg:type/namespace/name@version"
+  },
+  {
+    "question": "Which CycloneDX component type is correct for applications?",
+    "answer": "application"
+  },
+  {
+    "question": "What is the proper PURL type for NuGet packages?",
+    "answer": "pkg:nuget"
+  },
+  {
+    "question": "In CycloneDX, what is the correct classification for operating systems?",
+    "answer": "operating-system"
+  },
+  {
+    "question": "What is the PURL qualifier syntax for subpath?",
+    "answer": "Subpath uses fragment (#), not qualifiers"
+  },
+  {
+    "question": "What is the proper PURL type for Go modules?",
+    "answer": "pkg:golang"
+  },
+  {
+    "question": "In CycloneDX, what is the correct field for component provider?",
+    "answer": "supplier"
+  },
+  {
+    "question": "What is the PURL encoding requirement for special characters?",
+    "answer": "percent-encoding"
+  },
+  {
+    "question": "What is the proper PURL type for CocoaPods?",
+    "answer": "pkg:cocoapods"
+  },
+  {
+    "question": "What is the PURL namespace delimiter?",
+    "answer": "/"
+  },
+  {
+    "question": "Which CycloneDX field represents component evidence?",
+    "answer": "evidence"
+  },
+  {
+    "question": "What is the proper PURL type for Conan packages?",
+    "answer": "pkg:conan"
+  },
+  {
+    "question": "In PURL specification, what is the correct authority separator?",
+    "answer": "Authority is type-specific; colon (:) used for port"
+  },
+  {
+    "question": "What is the CycloneDX proper license expression for multiple licenses?",
+    "answer": "MIT OR Apache-2.0"
+  },
+  {
+    "question": "What is the PURL type for Swift packages?",
+    "answer": "pkg:swift"
+  },
+  {
+    "question": "In CycloneDX, what is the correct component scope value?",
+    "answer": "required"
+  },
+  {
+    "question": "What is the PURL encoding for space characters?",
+    "answer": "%20"
+  },
+  {
+    "question": "Which CycloneDX field represents component properties?",
+    "answer": "properties"
+  },
+  {
+    "question": "What is the proper PURL type for Hackage packages?",
+    "answer": "pkg:hackage"
+  },
+  {
+    "question": "What is the PURL fragment identifier syntax?",
+    "answer": "#fragment"
+  },
+  {
+    "question": "Which CycloneDX vulnerability rating method is correct?",
+    "answer": "CVSSv3"
+  },
+  {
+    "question": "What is the proper PURL type for Crates.io packages?",
+    "answer": "pkg:cargo"
+  },
+  {
+    "question": "In PURL specification, what is the correct version separator?",
+    "answer": "@"
+  },
+  {
+    "question": "What is the CycloneDX proper field for component hashes?",
+    "answer": "hashes"
+  },
+  {
+    "question": "What is the PURL type for Composer packages?",
+    "answer": "pkg:composer"
+  },
+  {
+    "question": "Which SPDX license expression is correct for dual licensing?",
+    "answer": "(MIT OR GPL-2.0)"
+  },
+  {
+    "question": "What is the proper PURL qualifier for download URL?",
+    "answer": "Not defined in specification"
+  },
+  {
+    "question": "In CycloneDX, what is the correct tool component type?",
+    "answer": "Tool object has no 'type' field"
+  },
+  {
+    "question": "What is the PURL encoding for plus sign?",
+    "answer": "%2B"
+  },
+  {
+    "question": "Which CycloneDX field represents component pedigree?",
+    "answer": "pedigree"
+  },
+  {
+    "question": "What is the proper PURL type for GitHub packages?",
+    "answer": "pkg:github"
+  },
+  {
+    "question": "In SPDX, what is the correct document namespace format?",
+    "answer": "http://spdx.org/spdxdoc/ (with UUID)"
+  },
+  {
+    "question": "What is the PURL authority component syntax?",
+    "answer": "host[:port] (without userinfo)"
+  },
+  {
+    "question": "Which CycloneDX field represents component release notes?",
+    "answer": "releaseNotes"
+  },
+  {
+    "question": "What is the proper PURL type for Bitbucket packages?",
+    "answer": "pkg:bitbucket"
+  },
+  {
+    "question": "In PURL specification, what is the correct query string separator?",
+    "answer": "?"
+  },
+  {
+    "question": "What is the CycloneDX proper field for external references?",
+    "answer": "externalReferences"
+  },
+  {
+    "question": "What is the PURL qualifier for architecture?",
+    "answer": "arch="
+  },
+  {
+    "question": "What is the proper PURL type for Git repositories?",
+    "answer": "pkg:git"
+  },
+  {
+    "question": "In CycloneDX, what is the correct license expression format?",
+    "answer": "expression"
+  },
+  {
+    "question": "What is the PURL encoding for hash symbol?",
+    "answer": "%23"
+  },
+  {
+    "question": "Which CycloneDX field represents component copyright?",
+    "answer": "copyright"
+  },
+  {
+    "question": "What is the proper PURL type for Helm charts?",
+    "answer": "pkg:helm"
+  },
+  {
+    "question": "In PURL specification, what is the correct path separator?",
+    "answer": "/"
+  },
+  {
+    "question": "What is the CycloneDX proper field for component description?",
+    "answer": "description"
+  },
+  {
+    "question": "What is the PURL qualifier for tag?",
+    "answer": "tag="
+  },
+  {
+    "question": "Which SPDX license identifier is correct for BSD-3-Clause?",
+    "answer": "BSD-3-Clause"
+  },
+  {
+    "question": "What is the proper PURL type for Docker containers?",
+    "answer": "pkg:docker"
+  },
+  {
+    "question": "In CycloneDX, what is the correct component classification?",
+    "answer": "framework"
+  },
+  {
+    "question": "What is the PURL encoding for percent sign?",
+    "answer": "%25"
+  },
+  {
+    "question": "Which CycloneDX field represents component publisher?",
+    "answer": "publisher"
+  },
+  {
+    "question": "What is the proper PURL type for NPM packages?",
+    "answer": "pkg:npm"
+  },
+  {
+    "question": "In SPDX, what is the correct file type identifier?",
+    "answer": "SOURCE"
+  },
+  {
+    "question": "What is the PURL fragment syntax?",
+    "answer": "#fragment"
+  },
+  {
+    "question": "Which CycloneDX vulnerability analysis state is correct?",
+    "answer": "exploitable"
+  },
+  {
+    "question": "What is the proper PURL type for PyPI packages?",
+    "answer": "pkg:pypi"
+  },
+  {
+    "question": "In PURL specification, what is the correct user info separator?",
+    "answer": "Not used in PURL"
+  },
+  {
+    "question": "What is the CycloneDX proper field for component group?",
+    "answer": "group"
+  },
+  {
+    "question": "What is the proper PURL type for Maven artifacts?",
+    "answer": "pkg:maven"
+  },
+  {
+    "question": "Which CycloneDX field represents component licenses?",
+    "answer": "licenses"
+  },
+  {
+    "question": "What is the proper PURL type for Ruby gems?",
+    "answer": "pkg:gem"
+  },
+  {
+    "question": "In PURL specification, what is the correct port separator?",
+    "answer": ":"
+  },
+  {
+    "question": "What is the CycloneDX proper field for component name?",
+    "answer": "name"
+  },
+  {
+    "question": "What is the PURL qualifier for commit?",
+    "answer": "commit= (when used)"
+  },
+  {
+    "question": "What is the proper PURL type for CocoaPods?",
+    "answer": "pkg:cocoapods"
+  },
+  {
+    "question": "In CycloneDX, what is the correct component scope for optional dependencies?",
+    "answer": "optional"
+  },
+  {
+    "question": "Which CycloneDX field represents component version?",
+    "answer": "version"
+  },
+  {
+    "question": "What is the proper PURL type for Conan packages?",
+    "answer": "pkg:conan"
+  },
+  {
+    "question": "Which CycloneDX vulnerability source name is correct?",
+    "answer": "name"
+  },
+  {
+    "question": "What is the proper PURL type for Swift packages?",
+    "answer": "pkg:swift"
+  },
+  {
+    "question": "In PURL specification, what is the correct query component syntax?",
+    "answer": "?key=value"
+  },
+  {
+    "question": "What is the CycloneDX proper field for component purl?",
+    "answer": "purl"
+  },
+  {
+    "question": "What is the PURL qualifier for vcs URL?",
+    "answer": "vcs_url="
+  },
+  {
+    "question": "In CycloneDX, what is the correct license acknowledgment?",
+    "answer": "acknowledgement"
+  },
+  {
+    "question": "Which CycloneDX field represents component bom-ref?",
+    "answer": "bom-ref"
+  },
+  {
+    "question": "What is the proper PURL type for Composer?",
+    "answer": "pkg:composer"
+  },
+  {
+    "question": "What is the CycloneDX proper field for component supplier name?",
+    "answer": "name (in supplier object)"
+  },
+  {
+    "question": "What is the PURL qualifier for file path?",
+    "answer": "Use subpath (#) instead"
+  },
+  {
+    "question": "What is the proper PURL type for GitHub?",
+    "answer": "pkg:github"
+  },
+  {
+    "question": "In CycloneDX, what is the correct component classification for firmware?",
+    "answer": "firmware"
+  },
+  {
+    "question": "Which CycloneDX field represents component author?",
+    "answer": "Not available (use publisher/supplier)"
+  },
+  {
+    "question": "What is the proper PURL type for Bitbucket?",
+    "answer": "pkg:bitbucket"
+  },
+  {
+    "question": "What is the PURL query string syntax?",
+    "answer": "?key=value&key2=value2"
+  },
+  {
+    "question": "Which CycloneDX vulnerability rating vector is correct?",
+    "answer": "vector"
+  },
+  {
+    "question": "What is the proper PURL type for Helm?",
+    "answer": "pkg:helm"
+  },
+  {
+    "question": "What is the CycloneDX proper external reference attribute for component website?",
+    "answer": "type=\"website\" with url field"
+  },
+  {
+    "question": "In CycloneDX, what is the correct license expression field?",
+    "answer": "expression"
+  },
+  {
+    "question": "Which CycloneDX field represents component contact?",
+    "answer": "Not available"
+  },
+  {
+    "question": "What is the proper PURL type for Cargo?",
+    "answer": "pkg:cargo"
+  },
+  {
+    "question": "What is the CycloneDX proper field for component source info?",
+    "answer": "pedigree"
+  },
+  {
+    "question": "What is the proper PURL type for NPM?",
+    "answer": "pkg:npm"
+  },
+  {
+    "question": "In CycloneDX, what is the correct component scope for excluded items?",
+    "answer": "optional (no 'excluded' scope)"
+  },
+  {
+    "question": "Which CycloneDX field represents component timestamp?",
+    "answer": "timestamp (in metadata)"
+  },
+  {
+    "question": "Which CycloneDX vulnerability analysis justification is correct?",
+    "answer": "Both valid (context-dependent)"
+  },
+  {
+    "question": "What is the CycloneDX proper field for external references?",
+    "answer": "externalReferences"
+  },
+  {
+    "question": "Which SPDX license identifier is correct for CC0-1.0?",
+    "answer": "CC0-1.0"
+  },
+  {
+    "question": "In CycloneDX, what is the correct component classification for device drivers?",
+    "answer": "firmware (closest match)"
+  },
+  {
+    "question": "Which CycloneDX field represents component metadata?",
+    "answer": "metadata (top-level)"
+  },
+  {
+    "question": "In SPDX, what is the correct file type classification?",
+    "answer": "BINARY"
+  },
+  {
+    "question": "Which CycloneDX vulnerability source URL is correct?",
+    "answer": "url"
+  },
+  {
+    "question": "What is the CycloneDX proper field for component pedigree commits?",
+    "answer": "commits"
+  },
+  {
+    "question": "In CycloneDX, what is the correct license acknowledgment field?",
+    "answer": "acknowledgement"
+  },
+  {
+    "question": "Which CycloneDX field represents component origin?",
+    "answer": "pedigree"
+  },
+  {
+    "question": "What is the CycloneDX proper field for component evidence call stack?",
+    "answer": "callstack"
+  },
+  {
+    "question": "In CycloneDX, what is the correct component scope for required items?",
+    "answer": "required"
+  },
+  {
+    "question": "Which CycloneDX field represents component verification?",
+    "answer": "Not available"
+  },
+  {
+    "question": "What is the proper PURL type for Helm?",
+    "answer": "pkg:helm"
+  },
+  {
+    "question": "In CycloneDX, what is the correct license name field?",
+    "answer": "name"
+  },
+  {
+    "question": "Which CycloneDX field represents component certificate?",
+    "answer": "Not available"
+  },
+  {
+    "question": "What is the CycloneDX proper field for component evidence tools?",
+    "answer": "tools"
+  },
+  {
+    "question": "In CycloneDX, what is the correct component classification for services?",
+    "answer": "application (closest match)"
+  },
+  {
+    "question": "Which CycloneDX field represents component attestation?",
+    "answer": "Not available"
+  },
+  {
+    "question": "In SPDX, what is the correct file checksum algorithm list?",
+    "answer": "algorithm"
+  },
+  {
+    "question": "What is the CycloneDX proper field for component pedigree patches?",
+    "answer": "patches"
+  },
+  {
+    "question": "Which CycloneDX field represents component integrity?",
+    "answer": "Not available"
+  },
+  {
+    "question": "What is the CycloneDX proper field for component evidence identity field?",
+    "answer": "identity"
+  },
+  {
+    "question": "In CycloneDX, what is the correct component scope for implementation details?",
+    "answer": "required (no specific scope)"
+  },
+  {
+    "question": "Which CycloneDX field represents component provenance?",
+    "answer": "pedigree"
+  },
+  {
+    "question": "In SPDX, what is the correct document namespace creation?",
+    "answer": "documentNamespace"
+  },
+  {
+    "question": "Which CycloneDX vulnerability rating severity is correct?",
+    "answer": "severity"
+  },
+  {
+    "question": "What is the CycloneDX proper field for component external reference comment?",
+    "answer": "comment"
+  },
+  {
+    "question": "What is the proper PURL type for NPM?",
+    "answer": "pkg:npm"
+  },
+  {
+    "question": "What is the CycloneDX proper field for component evidence copyright?",
+    "answer": "copyright"
+  },
+  {
+    "question": "Which CycloneDX vulnerability source contact is correct?",
+    "answer": "Not available"
+  },
+  {
+    "question": "What is the CycloneDX proper field for component external reference type?",
+    "answer": "type"
+  },
+  {
+    "question": "What PURL type should be used for Python packages?",
+    "answer": "pkg:pypi"
+  },
+  {
+    "question": "For Debian packages, should the PURL type be 'pkg:deb' or 'pkg:apt'?",
+    "answer": "pkg:deb"
+  },
+  {
+    "question": "For RPM packages, is the PURL type 'pkg:rpm' or 'pkg:fedora'?",
+    "answer": "pkg:rpm"
+  },
+  {
+    "question": "Can PURL namespace be omitted?",
+    "answer": "Yes (optional)"
+  },
+  {
+    "question": "For Cargo crates, is the type 'pkg:cargo' or 'pkg:crates'?",
+    "answer": "pkg:cargo"
+  },
+  {
+    "question": "For RPM, is 'pkg:rpm/fedora/firefox@89.0' correct?",
+    "answer": "Yes"
+  },
+  {
+    "question": "For Homebrew, type 'pkg:brew' or 'pkg:homebrew'?",
+    "answer": "pkg:homebrew"
+  },
+  {
+    "question": "Should a CycloneDX BOM include a 'metadata' section?",
+    "answer": "Yes"
+  },
+  {
+    "question": "In XML, is <components> a child of <bom>?",
+    "answer": "Yes"
+  },
+  {
+    "question": "Can BOM be in Protobuf?",
+    "answer": "Yes"
+  },
+  {
+    "question": "Does CycloneDX support 'services' in BOM?",
+    "answer": "Yes"
+  },
+  {
+    "question": "Can components have a 'bom-ref' attribute?",
+    "answer": "Yes"
+  },
+  {
+    "question": "Is 'components' a top-level JSON field?",
+    "answer": "Yes"
+  },
+  {
+    "question": "Should vulnerabilities list 'affected'?",
+    "answer": "Yes (in 'affects' array)"
+  },
+  {
+    "question": "Can vulnerabilities include 'ratings'?",
+    "answer": "Yes"
+  },
+  {
+    "question": "Are CVSS scores supported in vulnerability ratings?",
+    "answer": "Yes"
+  },
+  {
+    "question": "Does CycloneDX allow vulnerability 'advisories'?",
+    "answer": "Yes"
+  },
+  {
+    "question": "Is 'dependencyGraph' element used?",
+    "answer": "No (uses 'dependencies' array)"
+  },
+  {
+    "question": "Should dependencies use 'ref' or 'dependsOn'?",
+    "answer": "Both: 'ref' identifies component, 'dependsOn' lists dependencies"
+  },
+  {
+    "question": "Should externalReference allow 'comment'?",
+    "answer": "Yes"
+  },
+  {
+    "question": "Is serialNumber a URN with uuid?",
+    "answer": "Yes (urn:uuid:...)"
+  },
+  {
+    "question": "Should XML BOM declare schemaLocation?",
+    "answer": "Yes (via xsi:schemaLocation)"
+  },
+  {
+    "question": "Are CWE and CVE supported in vulnerability references?",
+    "answer": "Yes"
+  },
+  {
+    "question": "Does CycloneDX support ephemeral components?",
+    "answer": "No (not defined)"
+  },
+  {
+    "question": "Does CycloneDX support SPDX license expressions?",
+    "answer": "Yes"
+  },
+  {
+    "question": "Does OWASP Dependency-Check support CycloneDX?",
+    "answer": "Yes"
+  },
+  {
+    "question": "Should metadata authors be objects or strings?",
+    "answer": "Objects"
+  },
+  {
+    "question": "Can a BOM include multiple metadata elements?",
+    "answer": "No"
+  },
+  {
+    "question": "Are CVSS 4.x vulnerability ratings supported?",
+    "answer": "Yes (since CycloneDX 1.5)"
+  },
+  {
+    "question": "Does CycloneDX allow embedding multiple SBOM formats in one document?",
+    "answer": "No"
+  }
+]

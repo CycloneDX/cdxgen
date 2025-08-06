@@ -50,8 +50,11 @@ Create a Modelfile as shown:
 ```text
 FROM hf.co/CycloneDX/cdx1-14B-Q8_0-GGUF
 
-PARAMETER num_ctx 16000
-PARAMETER temperature 0.05
+PARAMETER temperature 0.7
+PARAMETER min_p 0.0
+PARAMETER top_p 0.8
+PARAMETER top_k 20
+PARAMETER repeat_penalty 1.05
 
 SYSTEM """You are a helpful assistant to the user."""
 ```
@@ -97,7 +100,7 @@ node validator.js
   author = {OWASP CycloneDX Generator Team},
   month = Feb,
   title = {{CycloneDX and cdxgen}},
-  howpublished = {{https://huggingface.co/models/CycloneDX/cdx1}},
+  howpublished = {{https://huggingface.co/models/CycloneDX}},
   year = {2025}
 }
 ```

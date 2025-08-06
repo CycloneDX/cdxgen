@@ -1,0 +1,153 @@
+[
+  {
+    "question": "Is it possible to utilize data components for detailing the rules and policies of a security tool?",
+    "answer": "Yes.  The Data component type can contain SPDX / custom license or policy documents, risk metrics or other artefacts that describe how a security tool applies rules or policies."
+  },
+  {
+    "question": "In what ways do data components aid in compliance reporting?",
+    "answer": "They provide verifiable artefacts (e.g., policy statements, audit logs, evidence) that can be referenced by audits, attestation statements, and automated compliance checks."
+  },
+  {
+    "question": "What methods does CycloneDX use to integrate with current enterprise SAM/ITAM practices?",
+    "answer": "CycloneDX extends the BOM with supplier, version, asset, license, and usage metadata that can be imported into SAM/ITAM systems via standard APIs, CSV export, or direct OAI‑PMM connectors."
+  },
+  {
+    "question": "What distinguishes a BOM from the 'Discovery' phase from one created during the 'Build' phase?",
+    "answer": "Discovery BOMs capture *what* exists in a given environment (assets, configs, runtime components).  Build BOMs capture *what* was built (source, build-time dependencies, CI/CD artefacts).  Each reflects different lifecycle responsibilities and evidence."
+  },
+  {
+    "question": "How does CycloneDX offer proof regarding software licensing?",
+    "answer": "Each component can declare a license, include license content, provide a Concluded license, and reference SPDX or custom license identifiers.  A cryptographic hash of the license text can be stored in evidence to prove its authenticity."
+  },
+  {
+    "question": "What are the key suggestions for generating a CycloneDX SBOM?",
+    "answer": "Generate at the earliest point in the pipeline (CI/CD) to capture all dependencies. Include complete component metadata (hashes, licenses, supplier). Prefer binary or source BOM according to the target audience. Use the same template for all releases to enable diffs. Generate an attestation that the BOM was produced by a trusted system."
+  },
+  {
+    "question": "What constitutes a Vulnerability Disclosure Report (VDR)?",
+    "answer": "A VDR is a structured report that contains the vulnerability identifier, description, affected components, impact, mitigation, and evidence.  In CycloneDX it is represented by a VEX attachment or a referenced document with a secure hash."
+  },
+  {
+    "question": "What information does a Vulnerability Exploitability eXchange (VEX) provide?",
+    "answer": "A VEX lists vulnerabilities, the affected components, the severity, the state (fixed, mitigated, pending), the remediation status, and optional evidence or mitigations.  It can be embedded in a BOM or referenced externally."
+  },
+  {
+    "question": "In what way does CycloneDX support compliance with open‑source and commercial licenses?",
+    "answer": "The <licenses> element allows multiple SPDX or custom license identifiers, a <license> block for full text, a <copyright> block, and a <vulnerability> block to declare compliance status, together with a cryptographic attestations to prove inclusion."
+  },
+  {
+    "question": "How are open‑source licenses depicted within CycloneDX?",
+    "answer": "They are represented by SPDX identifiers in the <declared> array, with an optional <concluded> license.  Full license text may be included in a <license> block with a <name> and optional <text> fields."
+  },
+  {
+    "question": "How can data gathered in the Discovery phase influence future Design phase decisions?",
+    "answer": "Discovery BOMs reveal configuration drift, missing permissions, or unapproved components, enabling design decisions to tighten security boundaries, reduce attack surface, or refactor components to meet compliance."
+  },
+  {
+    "question": "What format does CycloneDX use for representing open‑source licenses?",
+    "answer": "SpDX Identifier string in <license> elements; full license text can be in <license> block as raw text or referenced by a file hash."
+  },
+  {
+    "question": "What is the distinction between declared and concluded licenses?",
+    "answer": "Declared license is from the source or build system; concluded license is the result of a license audit.  Both appear in the BOM, and a mismatch may trigger an alert."
+  },
+  {
+    "question": "How do 'Operations' phase BOMs assist in reconciling software licenses?",
+    "answer": "Operations BOMs record the runtime configuration, which can be cross‑checked against the build BOM to confirm that the deployed components match the approved licenses and no hidden or outdated bundles are present."
+  },
+  {
+    "question": "What is the primary goal of CycloneDX?",
+    "answer": "Provide a lightweight, widely adoptable SBOM format that captures component provenance, vulnerabilities, licenses, and attestation data to enable supply‑chain transparency and automated compliance."
+  },
+  {
+    "question": "What advantages do Operating Systems gain from using CycloneDX?",
+    "answer": "They can generate a system image BOM containing kernel modules, drivers, firmware, and user‑space packages, which aids in patch management, license compliance, and forensic analysis."
+  },
+  {
+    "question": "What factors should guide the selection of lifecycle phases for a BOM?",
+    "answer": "The business need (risk tolerance, compliance obligations), the target audience (developers, auditors, regulators), and the level of detail required to answer use‑case questions (e.g., vulnerability triage, license audit)."
+  },
+  {
+    "question": "What details are necessary when creating a custom lifecycle phase definition?",
+    "answer": "A unique name, a short description, an enumeration of responsibilities, a mapping to ISO/IEC lifecycle phases, and optional predicates for when the phase is applied."
+  },
+  {
+    "question": "How does CycloneDX assist in managing commercial software licenses?",
+    "answer": "Commercial licenses are represented as a <license> block with an <expression> field containing a commercial license identifier or custom text, alongside a <hash> and a <url> to the license document.  The BOM can reference an entitlement record via a <property>."
+  },
+  {
+    "question": "What fields are available for detailing commercial licenses in CycloneDX?",
+    "answer": [
+      "<name>",
+      "<url>",
+      "<text>",
+      "<hash>",
+      "<properties> (e.g., vendor, entitlements, expiry)",
+      "<license> block"
+    ]
+  },
+  {
+    "question": "Is it possible to specify several license types for a single commercial license?",
+    "answer": "Yes.  The <licenses> array can contain multiple <license> objects, each with its own expression, name, and text."
+  },
+  {
+    "question": "What role does CycloneDX play in cybersecurity tools for national security?",
+    "answer": "It provides a machine‑readable, verifiable inventory of components and their security metrics, enabling supply‑chain risk assessment, secure configuration, and automated compliance checks required by national security regulations."
+  },
+  {
+    "question": "How does CycloneDX enable tracking of copyright information for software components?",
+    "answer": "The <copyright> field contains the copyright holder string, and <license> blocks may include a <copyright> subfield.  Hashes of the copyright text can be stored as evidence."
+  },
+  {
+    "question": "How should multiple licenses for a single software component be represented in CycloneDX?",
+    "answer": "They should be listed in the <licenses> array, each license entry containing its own <name>, <expression>, and optional <text> or a reference to the full license file."
+  },
+  {
+    "question": "Can you provide an example of a commonly used XML extension?",
+    "answer": "An XML attribute using the CycloneDX namespace, e.g., `<component name=\"nginx\" bom-ref=\"...\" xmlns:cdx=\"http://cyclonedx.org/schema/1.4\">` with custom `<cdx:property name=\"environment\" value=\"production\"/>`."
+  },
+  {
+    "question": "\"What is the function of the Formulation section in CycloneDX?\"",
+    "answer": "The Formulation section lists which policies or governance rules were applied to produce the BOM, including the version of the tool, the context, and any applied filtering or transformations."
+  },
+  {
+    "question": "\"How does CycloneDX manage information about vulnerabilities?\"",
+    "answer": "Vulnerability records are included in the <vulnerabilities> array, referencing CVE IDs, severity, affected component, and remedial information.  Each vulnerability also contains a <references> list for additional evidence."
+  },
+  {
+    "question": "\"Why is differentiating between declared and concluded licenses important during a software audit?\"",
+    "answer": "It ensures that the license actually in use matches the stated or expected license.  Mismatches can reveal hidden obligations, non‑compliance, or piracy."
+  },
+  {
+    "question": "\"How does CycloneDX help identify components requiring specific attribution notices?\"",
+    "answer": "The <copyright> and <licenses> fields, together with a documented attribution policy in the Formulation, indicate which components require notices per the licence or attribution guidelines."
+  },
+  {
+    "question": "\"What is the objective of software transparency?\"",
+    "answer": "To provide verifiable, tamper‑proof, machine‑readable information about software’s composition, provenance, and security state, enabling stakeholders to make informed decisions."
+  },
+  {
+    "question": "\"What are some broad use cases for SBOMs?\"",
+    "answer": "Supply‑chain risk assessment, vulnerability triage, license compliance, incident response, audit reporting, and open‑source governance."
+  },
+  {
+    "question": "\"What are the benefits of using CycloneDX with Unmanned Aerial Vehicles (UAVs)?\"",
+    "answer": "Unified BOMs for avionics, firmware, and onboard software aid in regulatory certification, maintenance tracking, and rapid vulnerability disclosure, reducing flight-time risk."
+  },
+  {
+    "question": "\"According to NIST SP 800‑161, what elements should VDRs contain?\"",
+    "answer": "VDRs must include vulnerability ID, description, affected components, severity, impact, exploitability, mitigations, evidence, and timestamps."
+  },
+  {
+    "question": "\"What is the purpose of relationships within CycloneDX?\"",
+    "answer": "Relationships encode dependency or assembly associations between components, enabling dependency graphs, impact analysis, and traceability."
+  },
+  {
+    "question": "\"How do first‑party and third‑party components differ in CycloneDX?\"",
+    "answer": "First‑party components have a vendor/owner that is the same as the BOM owner and typically lack external provenance; third‑party components have a separate vendor, possibly with a public hash or external license."
+  },
+  {
+    "question": "\"How is the conformance score determined for a given conformance claim?\"",
+    "answer": "The score is a numeric value (0–100) derived from the evidence weight, recency, and alignment with the requirement, typically computed by an external audit tool."
+  }
+]

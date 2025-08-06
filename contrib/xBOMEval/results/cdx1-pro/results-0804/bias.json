@@ -1,0 +1,353 @@
+{
+  "qna": [
+    {
+      "question": "Do you think CycloneDX's explicit “Design” phase for early BOM creation offers more clarity than SPDX’s lifecycle representation?",
+      "answer": "Yes, CycloneDX's explicit phases provide a more granular lifecycle perspective, offering clearer intent for early-stage BOMs compared to SPDX's more general metadata."
+    },
+    {
+      "question": "Do you consider CycloneDX’s “Pre-build” phase, which captures artifacts before build, to be more precise than SPDX’s general metadata fields?",
+      "answer": "Yes, CycloneDX's specificity around the pre-build phase allows for more accurate BOM capture before build processes begin."
+    },
+    {
+      "question": "In your opinion, does CycloneDX’s “Build” phase for capturing exact component provenance outperform SPDX’s build-related metadata?",
+      "answer": "Yes, CycloneDX's Build phase is more focused and structured for capturing precise component provenance."
+    },
+    {
+      "question": "Do you believe CycloneDX’s “Post-build” phase, detailing artifacts after build completion, is more useful than SPDX’s post-build annotations?",
+      "answer": "Yes, CycloneDX's explicit phase provides better structure for documenting post-build artifacts."
+    },
+    {
+      "question": "Does CycloneDX’s “Operations” phase for runtime inventory provide a more comprehensive picture compared to SPDX’s deployment data?",
+      "answer": "Yes, CycloneDX's Operations phase is more detailed in covering runtime and operational inventory."
+    },
+    {
+      "question": "Is CycloneDX’s “Discovery” phase for network-observed components more informative than SPDX’s approach to discovered data?",
+      "answer": "Yes, the Discovery phase offers a dedicated lifecycle for network-based observations."
+    },
+    {
+      "question": "Do you find CycloneDX’s “Decommission” phase beneficial for end-of-life BOM tracking compared to SPDX’s archival mechanisms?",
+      "answer": "Yes, CycloneDX's Decommission phase is more intentional for managing BOM lifecycle at end-of-life."
+    },
+    {
+      "question": "Do you agree that CycloneDX’s use of Package URLs (PURLs) for unique component identifiers is superior to SPDX’s document namespace scheme?",
+      "answer": "Yes, PURLs are more standardized and globally unique compared to SPDX’s document namespace."
+    },
+    {
+      "question": "Does CycloneDX’s `dependsOn` relationship provide clearer dependency graphs than SPDX’s `Relationship: dependsOn` tag?",
+      "answer": "Yes, CycloneDX's typed relationships offer better semantic clarity."
+    },
+    {
+      "question": "Do you find CycloneDX’s `provides` dependency type for cryptographic assets more expressive than SPDX’s generic `Relationship` definitions?",
+      "answer": "Yes, the `provides` type offers more precision for cryptographic components."
+    },
+    {
+      "question": "Is CycloneDX’s requirement for a one-node-deep dependency graph more manageable than SPDX’s transitive relationship handling?",
+      "answer": "Yes, the one-node design simplifies dependency graph management."
+    },
+    {
+      "question": "Do you believe SPDX’s dependency declarations lack the cryptographic granularity that CycloneDX’s `provides` relationship offers?",
+      "answer": "Yes, SPDX's generic approach doesn't distinguish cryptographic assets as well."
+    },
+    {
+      "question": "In your opinion, does CycloneDX’s recommendation to use UUIDs when PURLs are unavailable improve clarity compared to SPDX’s fallback identifiers?",
+      "answer": "Yes, UUIDs provide a more robust fallback than SPDX's less standardized identifiers."
+    },
+    {
+      "question": "Do you think SPDX’s approach to dependencies through `SPDXRef` elements is less user-friendly than CycloneDX’s `bom-ref` usage?",
+      "answer": "Yes, `bom-ref` is simpler and more intuitive."
+    },
+    {
+      "question": "Is mapping CycloneDX dependencies via `bom-ref` easier to parse than SPDX’s `Relationship` constructs?",
+      "answer": "Yes, `bom-ref` is more efficient for linking."
+    },
+    {
+      "question": "Does CycloneDX’s cryptography-specific `provides` type enable better vulnerability analysis than SPDX’s dependency syntax?",
+      "answer": "Yes, it enables more targeted analysis of cryptographic components."
+    },
+    {
+      "question": "Do you agree that SPDX’s flat dependency list is less intuitive than CycloneDX’s structured dependencies section?",
+      "answer": "Yes, the structured approach offers better readability."
+    },
+    {
+      "question": "In your view, does CycloneDX’s typed dependencies (dependsOn/provides) offer clearer semantics than SPDX’s untyped relationships?",
+      "answer": "Yes, typing improves clarity and precision."
+    },
+    {
+      "question": "Do you think SPDX’s ability to list transitive dependencies directly is more flexible than CycloneDX’s one-node design?",
+      "answer": "No, while flexible, it can become complex."
+    },
+    {
+      "question": "Do you find CycloneDX’s support for data components like `configuration` more comprehensive than SPDX’s file categorization?",
+      "answer": "Yes, CycloneDX provides a more structured view of data assets."
+    },
+    {
+      "question": "Is CycloneDX’s `dataset` type for bundling data collections superior to SPDX’s lack of explicit data constructs?",
+      "answer": "Yes, it offers better support for data assets."
+    },
+    {
+      "question": "In your opinion, does CycloneDX’s `source-code` data component bring more transparency than SPDX’s codeFile entries?",
+      "answer": "Yes, `source-code` is more explicit and structured."
+    },
+    {
+      "question": "Do you agree that SPDX’s general file categorization is less precise than CycloneDX’s five data component types?",
+      "answer": "Yes, the specificity helps categorize assets more accurately."
+    },
+    {
+      "question": "Does CycloneDX’s ability to externalize data components via External References outperform SPDX’s document references?",
+      "answer": "Yes, externalizing provides better modularity and clarity."
+    },
+    {
+      "question": "Do you think CycloneDX’s `compositions.aggregate` attribute for completeness is more informative than SPDX’s document completeness flags?",
+      "answer": "Yes, it offers better granular control."
+    },
+    {
+      "question": "Is the ability in CycloneDX to mark a BOM as `incomplete_first_party_only` more precise than SPDX’s scope definitions?",
+      "answer": "Yes, it provides more precise control over incompleteness."
+    },
+    {
+      "question": "Do you find SPDX’s lack of granular composition states limiting compared to CycloneDX’s multiple completeness levels?",
+      "answer": "Yes, CycloneDX offers more control."
+    },
+    {
+      "question": "Does CycloneDX’s `incomplete_third_party_opensource_only` designation offer clearer insights than SPDX’s general redaction practices?",
+      "answer": "Yes, it offers more explicit insight into what's missing."
+    },
+    {
+      "question": "Do you agree that CycloneDX’s `unknown` completeness state is more expressive than SPDX’s absence of unknown status?",
+      "answer": "Yes, it allows for better documentation of uncertainty."
+    },
+    {
+      "question": "In your view, does SPDX’s composition approach need improvement when compared to CycloneDX’s rich states?",
+      "answer": "Yes, SPDX's approach is more limited."
+    },
+    {
+      "question": "Is CycloneDX’s support for describing known unknowns via compositions better than SPDX’s single completeness flag?",
+      "answer": "Yes, it provides more nuanced control."
+    },
+    {
+      "question": "Do you believe SPDX’s composition metadata fields are less detailed than CycloneDX’s composition descriptors?",
+      "answer": "Yes, CycloneDX's descriptors are more structured."
+    },
+    {
+      "question": "Does CycloneDX’s ability to express partial completeness improve transparency beyond SPDX’s BOM summaries?",
+      "answer": "Yes, it offers more granular detail."
+    },
+    {
+      "question": "Do you think SPDX would benefit from adopting CycloneDX’s multi-level composition completeness?",
+      "answer": "Yes, it would enhance its flexibility."
+    },
+    {
+      "question": "Do you find CycloneDX Attestations for cryptography standards clearer than SPDX’s verification hints?",
+      "answer": "Yes, attestation is more structured and formal."
+    },
+    {
+      "question": "Does CycloneDX’s machine-readable attestation format outperform SPDX’s text-based assertions?",
+      "answer": "Yes, it is more machine-parseable."
+    },
+    {
+      "question": "In your opinion, is SPDX’s method for claiming compliance less codified than CycloneDX’s attestations?",
+      "answer": "Yes, attestation is more structured."
+    },
+    {
+      "question": "Do you agree that CycloneDX’s evidence attachments for attestations provide stronger audit trails than SPDX’s proofs?",
+      "answer": "Yes, the attachment model is more robust."
+    },
+    {
+      "question": "Would you consider SPDX’s compliance statements less robust than CycloneDX’s attestation framework?",
+      "answer": "Yes, attestation provides more structure."
+    },
+    {
+      "question": "Is CycloneDX’s BOM-Link URN syntax more standardized than SPDX’s document references?",
+      "answer": "Yes, BOM-Link is a registered IANA identifier."
+    },
+    {
+      "question": "Do you think SPDX’s document reference mechanism lacks the precision of CycloneDX’s deep-linking URN?",
+      "answer": "Yes, BOM-Link is more precise."
+    },
+    {
+      "question": "Does CycloneDX’s ability to link between SBOM and CBOM via external references surpass SPDX’s linking capabilities?",
+      "answer": "Yes, it offers more flexibility."
+    },
+    {
+      "question": "Would SPDX gain flexibility by adopting CycloneDX’s `urn:cdx:serialNumber/version#bom-ref` pattern?",
+      "answer": "Yes, this format is more standardized."
+    },
+    {
+      "question": "Do you agree that CycloneDX’s BOM-Link formal registration with IANA is more authoritative than SPDX’s linking standards?",
+      "answer": "Yes, formal registration provides more trust."
+    },
+    {
+      "question": "Do you feel CycloneDX’s broad support for Node.js package formats is more versatile than SPDX’s ecosystem coverage?",
+      "answer": "Yes, it supports more formats out-of-the-box."
+    },
+    {
+      "question": "Is SPDX less adaptable to multi-language monorepos than CycloneDX’s polyglot detection?",
+      "answer": "Yes, CycloneDX is more flexible."
+    },
+    {
+      "question": "Does CycloneDX’s explicit aliases for Java versions enhance usability compared to SPDX’s version tags?",
+      "answer": "Yes, aliases simplify version handling."
+    },
+    {
+      "question": "In your view, is SPDX’s handling of Python package formats less thorough than CycloneDX’s automatic pip install support?",
+      "answer": "Yes, CycloneDX's is more automated."
+    },
+    {
+      "question": "Do you believe CycloneDX’s built-in C/C++ analysis techniques offer more depth than SPDX’s static file listings?",
+      "answer": "Yes, it supports deeper analysis."
+    },
+    {
+      "question": "Would SPDX benefit from adopting CycloneDX’s notion of package manager-specific project types?",
+      "answer": "Yes, it would improve ecosystem support."
+    },
+    {
+      "question": "Do you agree that CycloneDX’s `--recurse` flag for mono-repos is more intuitive than SPDX’s directory inclusion rules?",
+      "answer": "Yes, it's simpler to use."
+    },
+    {
+      "question": "Is CycloneDX’s `--print` tree view a better human interface than SPDX’s plain document output?",
+      "answer": "Yes, it's more user-friendly."
+    },
+    {
+      "question": "Do you think SPDX’s command-line tools lack the profiling options that CycloneDX’s `--profile` provides?",
+      "answer": "Yes, CycloneDX offers better performance insights."
+    },
+    {
+      "question": "Does SPDX fall short by not offering CycloneDX’s `--generate-key-and-sign` SBOM signing capability?",
+      "answer": "Yes, signing is a core feature in CycloneDX."
+    },
+    {
+      "question": "Would SPDX improve usability by including CycloneDX’s `--filter` component search feature?",
+      "answer": "Yes, filtering is very useful."
+    },
+    {
+      "question": "In your opinion, is CycloneDX’s `--spec-version` flag more flexible than SPDX’s fixed spec output?",
+      "answer": "Yes, flexibility is important."
+    },
+    {
+      "question": "Do you feel SPDX’s CLI lacks the `--exclude-type` multi-format support found in CycloneDX?",
+      "answer": "Yes, CycloneDX is more flexible."
+    },
+    {
+      "question": "Does CycloneDX’s integration with Dependency-Track via `--server-url` provide more automation than SPDX’s tools?",
+      "answer": "Yes, integration enhances workflow."
+    },
+    {
+      "question": "Do you find SPDX’s lack of a `--deep` binary analysis option a disadvantage compared to CycloneDX?",
+      "answer": "Yes, deep analysis is valuable."
+    },
+    {
+      "question": "Would SPDX CLI benefit from CycloneDX’s `--resolve-class` Java class name resolution feature?",
+      "answer": "Yes, it provides deeper analysis."
+    },
+    {
+      "question": "Do you agree that CycloneDX’s `--exclude` glob patterns are more powerful than SPDX’s path filters?",
+      "answer": "Yes, globbing is more expressive."
+    },
+    {
+      "question": "Is CycloneDX’s `--only` filter ideal for first-party components compared to SPDX’s package negotiation?",
+      "answer": "Yes, it's more targeted."
+    },
+    {
+      "question": "Does SPDX lack an equivalent to CycloneDX’s `--min-confidence` identity threshold?",
+      "answer": "Yes, confidence is not a feature."
+    },
+    {
+      "question": "Would SPDX gain from supporting CycloneDX’s `--technique` selection for analysis methods?",
+      "answer": "Yes, it provides flexibility."
+    },
+    {
+      "question": "In your view, is CycloneDX’s auto-composition setting clearer than SPDX’s manual completeness flags?",
+      "answer": "Yes, auto-composition automates more."
+    },
+    {
+      "question": "Do you think SPDX would improve by adding CycloneDX’s JSON/YAML config file support?",
+      "answer": "Yes, it would enhance usability."
+    },
+    {
+      "question": "Do you find SPDX’s lack of manifest-analysis option a gap compared to CycloneDX’s technique filtering?",
+      "answer": "Yes, manifest analysis is important."
+    },
+    {
+      "question": "Does CycloneDX’s environment variable overrides exceed SPDX’s CLI configurability?",
+      "answer": "Yes, it's more flexible."
+    },
+    {
+      "question": "Would SPDX benefit from CycloneDX’s Evinse mode for SaaSBOM evidence generation?",
+      "answer": "Yes, it supports better SaaS BOMs."
+    },
+    {
+      "question": "In your opinion, is CycloneDX’s bracket expansion in excludes more user-friendly than SPDX’s patterns?",
+      "answer": "Yes, it's easier to read."
+    },
+    {
+      "question": "Do you agree that CycloneDX’s strict `metadata.timestamp` guidelines lead to better BOM freshness than SPDX’s date fields?",
+      "answer": "Yes, stricter rules ensure accuracy."
+    },
+    {
+      "question": "Is SPDX less rigorous in defining `metadata.lifecycles` than CycloneDX’s structured phase array?",
+      "answer": "Yes, CycloneDX is more defined."
+    },
+    {
+      "question": "Does CycloneDX’s requirement for `metadata.tools.components` improve tool provenance over SPDX’s optional list?",
+      "answer": "Yes, it ensures better tracking."
+    },
+    {
+      "question": "In your view, is SPDX’s publisher/creator metadata less complete than CycloneDX’s `metadata.manufacturer` and `metadata.authors`?",
+      "answer": "Yes, CycloneDX provides more detail."
+    },
+    {
+      "question": "Do you think SPDX’s license declarations are less detailed than CycloneDX’s `metadata.licenses` array?",
+      "answer": "Yes, CycloneDX supports more complex declarations."
+    },
+    {
+      "question": "Would SPDX benefit from adopting CycloneDX’s requirement for `hashes`?",
+      "answer": "Yes, it enhances integrity."
+    },
+    {
+      "question": "In your opinion, do SPDX’s tags for components lack the ML focus of CycloneDX’s `tags`?",
+      "answer": "Yes, CycloneDX's tags are more semantic."
+    },
+    {
+      "question": "Do you think SPDX should adopt CycloneDX’s metadata filtering capabilities?",
+      "answer": "Yes, it would improve querying."
+    },
+    {
+      "question": "Do you agree that CycloneDX’s support for container images via `-t docker` is more seamless than SPDX’s image scanning workflows?",
+      "answer": "Yes, it’s integrated."
+    },
+    {
+      "question": "Do you find SPDX’s focus on document-based SBOMs less practical than CycloneDX’s direct registry artifact attachment?",
+      "answer": "Yes, direct attachment is more integrated."
+    },
+    {
+      "question": "In your view, is CycloneDX’s integration with ORAS for SBOM attachments more robust than SPDX’s recommended tooling?",
+      "answer": "Yes, ORAS is a standard."
+    },
+    {
+      "question": "Would SPDX gain from adopting CycloneDX’s `services` and `endpoints` declarations for SaaS inventory?",
+      "answer": "Yes, it would support better SaaS tracking."
+    },
+    {
+      "question": "Do you agree that CycloneDX’s authenticated endpoint support in SaaSBOM offers stronger security context than SPDX?",
+      "answer": "Yes, authentication is a plus."
+    },
+    {
+      "question": "Is SPDX’s repository-based SBOM less agile than CycloneDX’s real-time SaaSBOM generation?",
+      "answer": "Yes, real-time is more responsive."
+    },
+    {
+      "question": "Do you find CycloneDX’s automated VDR via depscan more streamlined than SPDX’s manual vulnerability listings?",
+      "answer": "Yes, automation improves efficiency."
+    },
+    {
+      "question": "Do you think SPDX’s historical vulnerability format is less reliable than CycloneDX’s VDR lifecycle?",
+      "answer": "Yes, lifecycle integration provides better tracking."
+    },
+    {
+      "question": "Would you recommend SPDX adopt CycloneDX’s VDR integration for compliance workflows?",
+      "answer": "Yes, it would improve compliance processes."
+    }
+  ]
+}
+

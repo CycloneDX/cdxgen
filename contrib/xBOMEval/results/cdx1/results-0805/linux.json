@@ -1,0 +1,1476 @@
+{
+  "questions": [
+    {
+      "q": "How do you list all files including hidden ones in the current directory?",
+      "a": "Use `ls -la`"
+    },
+    {
+      "q": "What command would you use to display the last 10 lines of a file named 'application.log'?",
+      "a": "`tail -n 10 application.log`"
+    },
+    {
+      "q": "How can you count the number of lines in a text file using a single command?",
+      "a": "`wc -l < filename`"
+    },
+    {
+      "q": "What is the difference between 'cp' and 'mv' commands in Linux?",
+      "a": "`cp` is for copying files, while `mv` is for moving or renaming files."
+    },
+    {
+      "q": "How do you create a new directory called 'project' and navigate into it in one command?",
+      "a": "`mkdir project && cd project`"
+    },
+    {
+      "q": "What command would you use to find all files with a '.txt' extension in the current directory and subdirectories?",
+      "a": "`find . -name '*.txt'`"
+    },
+    {
+      "q": "How can you display the current working directory path?",
+      "a": "`pwd`"
+    },
+    {
+      "q": "What does the 'chmod 755' command do to a file?",
+      "a": "It sets the permissions to be readable, writable, and executable by the owner, and readable and executable by the group and others."
+    },
+    {
+      "q": "How do you search for a specific word in a file using grep?",
+      "a": "`grep 'word' filename`"
+    },
+    {
+      "q": "What command would you use to display the disk usage of the current directory?",
+      "a": "`du -sh .`"
+    },
+    {
+      "q": "How can you redirect both stdout and stderr to the same file?",
+      "a": "`command > output.log 2>&1`"
+    },
+    {
+      "q": "What is the purpose of the 'awk' command and how would you print the second column of a space-separated file?",
+      "a": "`awk '{print $2}' filename`"
+    },
+    {
+      "q": "How do you use 'sed' to replace all occurrences of 'old' with 'new' in a file?",
+      "a": "`sed -i 's/old/new/g' filename`"
+    },
+    {
+      "q": "Explain how to use pipes to chain multiple commands together with an example.",
+      "a": "`command1 | command2 | command3`"
+    },
+    {
+      "q": "How can you find all processes running with 'nginx' in their name?",
+      "a": "`ps aux | grep nginx`"
+    },
+    {
+      "q": "What command would you use to monitor system resources in real-time?",
+      "a": "`top`"
+    },
+    {
+      "q": "How do you create a symbolic link to a file?",
+      "a": "`ln -s target linkname`"
+    },
+    {
+      "q": "What is the difference between hard links and symbolic links?",
+      "a": "Hard links share the same inode, while symbolic links point to a file by its path."
+    },
+    {
+      "q": "How can you compress a directory using tar and gzip?",
+      "a": "`tar -czvf archive.tar.gz /path/to/directory`"
+    },
+    {
+      "q": "How do you schedule a one-time job using 'at' command?",
+      "a": "`echo 'command' | at HH:MM`"
+    },
+    {
+      "q": "How can you use 'xargs' to process multiple files from a find command?",
+      "a": "`find . -name 'pattern' | xargs command`"
+    },
+    {
+      "q": "What is the purpose of 'nohup' and how do you use it to run a process in the background?",
+      "a": "`nohup command &`"
+    },
+    {
+      "q": "How do you use 'screen' or 'tmux' to maintain sessions after SSH disconnects?",
+      "a": "`screen` or `tmux start`"
+    },
+    {
+      "q": "Explain how to use 'strace' to debug a program's system calls.",
+      "a": "`strace -o output.txt ./program`"
+    },
+    {
+      "q": "How can you monitor network connections and identify which process is using a specific port?",
+      "a": "`lsof -i :PORT`"
+    },
+    {
+      "q": "What command would you use to find files modified in the last 7 days?",
+      "a": "`find /path -type f -mtime -7`"
+    },
+    {
+      "q": "How do you use 'rsync' to synchronize directories between local and remote systems?",
+      "a": "`rsync -avz /source user@host:/destination`"
+    },
+    {
+      "q": "How can you set up SSH key-based authentication for passwordless login?",
+      "a": "Generate keys with `ssh-keygen` and copy to remote server with `ssh-copy-id`."
+    },
+    {
+      "q": "What is the difference between 'crontab -e' and editing '/etc/crontab' directly?",
+      "a": "'crontab -e' edits the current user's crontab, while editing '/etc/crontab' affects the system-wide configuration."
+    },
+    {
+      "q": "How do you create a RAID array using mdadm in Linux?",
+      "a": "`mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sdb /dev/sdc`"
+    },
+    {
+      "q": "How do you write a simple bash script that prints 'Hello World'?",
+      "a": "`echo '#!/bin/bash\\necho Hello World > script.sh && chmod +x script.sh`"
+    },
+    {
+      "q": "What is the shebang line and why is it important in bash scripts?",
+      "a": "`#!/bin/bash` specifies the script should run with bash."
+    },
+    {
+      "q": "How do you declare and use variables in a bash script?",
+      "a": "`VAR=value`"
+    },
+    {
+      "q": "How can you pass command line arguments to a bash script?",
+      "a": "`$1`, `$2`, etc."
+    },
+    {
+      "q": "What is the difference between single quotes and double quotes in bash?",
+      "a": "Single quotes prevent expansion, while double quotes allow it."
+    },
+    {
+      "q": "How do you use 'if' statements to check if a file exists?",
+      "a": "`if [ -e filename ]; then ... fi`"
+    },
+    {
+      "q": "How can you create a loop to iterate through files in a directory?",
+      "a": "`for file in *; do ... done`"
+    },
+    {
+      "q": "What is the purpose of 'exit' codes in bash scripts?",
+      "a": "Indicate success or failure."
+    },
+    {
+      "q": "How do you handle errors in bash scripts using 'set -e'?",
+      "a": "`set -e` makes the script exit immediately if any command fails."
+    },
+    {
+      "q": "How do you read user input in a bash script?",
+      "a": "`read VAR`"
+    },
+    {
+      "q": "How do you use functions in bash scripts and pass parameters to them?",
+      "a": "`function_name arg1 arg2`"
+    },
+    {
+      "q": "What are arrays in bash and how do you declare and access them?",
+      "a": "`declare -a array=(1 2 3); echo ${array[0]}`"
+    },
+    {
+      "q": "How can you use 'case' statements for multiple condition checking?",
+      "a": "`case $VAR in ... esac`"
+    },
+    {
+      "q": "How do you implement error handling with 'trap' in bash scripts?",
+      "a": "`trap cleanup EXIT`"
+    },
+    {
+      "q": "How can you use 'getopts' to parse command line options in a script?",
+      "a": "Parse options with `getopts`."
+    },
+    {
+      "q": "What is the difference between 'test', '[ ]', and '[[ ]]' in bash?",
+      "a": "`[[ ]]` is preferred for its improved syntax and features."
+    },
+    {
+      "q": "How do you create and use associative arrays in bash?",
+      "a": "`declare -A assoc=([key1]=value1 [key2]=value2); echo ${assoc[key1]}`"
+    },
+    {
+      "q": "How can you debug a bash script using 'set -x'?",
+      "a": "`set -x` enables debug mode."
+    },
+    {
+      "q": "How do you use 'here documents' in bash scripts?",
+      "a": "`cat << EOF ... EOF`"
+    },
+    {
+      "q": "What is command substitution and how do you use it in scripts?",
+      "a": "`$(command)` or backticks."
+    },
+    {
+      "q": "How do you implement logging in bash scripts with timestamps?",
+      "a": "`echo $(date) 'Message' >> logfile`"
+    },
+    {
+      "q": "How do you create a daemon script that runs in the background?",
+      "a": "Use `nohup` or a process manager."
+    },
+    {
+      "q": "How do you handle signal trapping for graceful script termination?",
+      "a": "`trap cleanup SIGTERM`"
+    },
+    {
+      "q": "How can you use 'expect' scripts for automating interactive commands?",
+      "a": "`expect script.exp`"
+    },
+    {
+      "q": "How do you implement configuration file parsing in bash scripts?",
+      "a": "Use `source` or `.` to include a file."
+    },
+    {
+      "q": "How can you create a bash script that monitors log files for specific patterns?",
+      "a": "`tail -f logfile | grep 'pattern'`"
+    },
+    {
+      "q": "How do you implement locking mechanisms to prevent multiple script instances?",
+      "a": "Use lock files."
+    },
+    {
+      "q": "How can you use 'bc' for floating-point arithmetic in bash?",
+      "a": "`echo 'scale=2; 1/3' | bc`"
+    },
+    {
+      "q": "How do you create a bash script that validates JSON files?",
+      "a": "`jq -e . < file.json`"
+    },
+    {
+      "q": "How can you implement a progress bar in a bash script?",
+      "a": "Use `pv` or custom loops."
+    },
+    {
+      "q": "How do you set an environment variable for the current session only?",
+      "a": "`VAR=value`"
+    },
+    {
+      "q": "What is the difference between 'export VAR=value' and 'VAR=value'?",
+      "a": "`export` makes it available to child processes."
+    },
+    {
+      "q": "How do you permanently set environment variables for all users?",
+      "a": "Edit `/etc/environment` or `/etc/profile.d/`."
+    },
+    {
+      "q": "How can you view all currently set environment variables?",
+      "a": "`printenv` or `env`"
+    },
+    {
+      "q": "How do you append a directory to the PATH environment variable?",
+      "a": "`export PATH=$PATH:/new/dir`"
+    },
+    {
+      "q": "What file would you edit to set environment variables that persist across reboots?",
+      "a": "/etc/environment"
+    },
+    {
+      "q": "How do you unset or remove an environment variable?",
+      "a": "`unset VAR`"
+    },
+    {
+      "q": "How can you check if an environment variable is set in a bash script?",
+      "a": "`if [ -z \"$VAR\" ]; then ... fi`"
+    },
+    {
+      "q": "How do you set environment variables in a Docker container?",
+      "a": "`-e KEY=VALUE`"
+    },
+    {
+      "q": "What is the purpose of the '.bashrc' file and how does it relate to environment variables?",
+      "a": "It sets user-specific settings, including environment variables."
+    },
+    {
+      "q": "How do you check the current system hostname?",
+      "a": "`hostname`"
+    },
+    {
+      "q": "How can you change the system timezone in Linux?",
+      "a": "`timedatectl set-timezone Zone`"
+    },
+    {
+      "q": "How do you configure network interfaces using command line tools?",
+      "a": "`ip` or `ifconfig`"
+    },
+    {
+      "q": "What command shows you the current system memory usage?",
+      "a": "`free -h`"
+    },
+    {
+      "q": "How can you check which services are currently running on your system?",
+      "a": "`systemctl list-units --type=service --state=running`"
+    },
+    {
+      "q": "How do you add a new user to the system with specific permissions?",
+      "a": "`useradd -m username`"
+    },
+    {
+      "q": "How can you configure SSH to use a different port?",
+      "a": "Edit `/etc/ssh/sshd_config`."
+    },
+    {
+      "q": "How do you set up a static IP address on a Linux system?",
+      "a": "Edit `/etc/network/interfaces` or use `nmcli`."
+    },
+    {
+      "q": "What command would you use to check system uptime?",
+      "a": "`uptime`"
+    },
+    {
+      "q": "How can you configure automatic security updates on a Linux system?",
+      "a": "`unattended-upgrades`"
+    },
+    {
+      "q": "How do you check if a specific port is open and listening?",
+      "a": "`nc -zv hostname port`"
+    },
+    {
+      "q": "What command would you use to check disk space and identify which directories are consuming the most space?",
+      "a": "`du -sh /path/to/directory`"
+    },
+    {
+      "q": "How can you diagnose why a service won't start?",
+      "a": "Check logs with `journalctl`."
+    },
+    {
+      "q": "How do you check system logs to troubleshoot application issues?",
+      "a": "`journalctl` or `/var/log/messages`"
+    },
+    {
+      "q": "What steps would you take if a user reports they cannot SSH into a server?",
+      "a": "Check firewall, SELinux, logs."
+    },
+    {
+      "q": "How can you identify which process is consuming excessive CPU resources?",
+      "a": "`top` or `htop`"
+    },
+    {
+      "q": "How do you troubleshoot network connectivity issues between two servers?",
+      "a": "`ping`, `traceroute`, `netstat`"
+    },
+    {
+      "q": "What would you do if a disk is full and you need to free up space quickly?",
+      "a": "`du -sh *` and remove files."
+    },
+    {
+      "q": "How can you diagnose permission issues with files or directories?",
+      "a": "`ls -l`, `chown`, `chmod`"
+    },
+    {
+      "q": "How do you troubleshoot DNS resolution problems on a Linux system?",
+      "a": "`nslookup`, `dig`"
+    },
+    {
+      "q": "How do you monitor CPU usage in real-time?",
+      "a": "`top` or `htop`"
+    },
+    {
+      "q": "What command shows you memory usage by process?",
+      "a": "`ps aux --sort=-%mem`"
+    },
+    {
+      "q": "How can you identify I/O bottlenecks on your system?",
+      "a": "`iostat`, `iotop`"
+    },
+    {
+      "q": "How do you monitor network traffic and bandwidth usage?",
+      "a": "`iftop`, `nload`"
+    },
+    {
+      "q": "What tools can you use to profile application performance?",
+      "a": "`strace`, `perf`"
+    },
+    {
+      "q": "How do you set up basic monitoring for system resources?",
+      "a": "`top`, `htop`, `nmon`"
+    },
+    {
+      "q": "How can you create custom monitoring scripts for specific applications?",
+      "a": "Use `bash` or `python`."
+    },
+    {
+      "q": "What is the purpose of 'sar' command in system monitoring?",
+      "a": "Collects and reports system activity."
+    },
+    {
+      "q": "How do you monitor disk I/O performance?",
+      "a": "`iostat`"
+    },
+    {
+      "q": "How can you set up alerts for system resource thresholds?",
+      "a": "Use `monit` or `nagios`."
+    },
+    {
+      "q": "How do you check which users are currently logged into the system?",
+      "a": "`who`"
+    },
+    {
+      "q": "What command shows you failed login attempts?",
+      "a": "`lastb`"
+    },
+    {
+      "q": "How can you audit file permissions for security vulnerabilities?",
+      "a": "`ls -l`, `find / -perm`"
+    },
+    {
+      "q": "How do you configure SSH to disable password authentication?",
+      "a": "Edit `/etc/ssh/sshd_config`."
+    },
+    {
+      "q": "What steps would you take to secure a newly installed Linux server?",
+      "a": "Install security updates, configure firewall, use SSH keys."
+    },
+    {
+      "q": "How can you check for rootkit infections on a Linux system?",
+      "a": "`chkrootkit`, `rkhunter`"
+    },
+    {
+      "q": "How do you implement basic firewall rules using iptables?",
+      "a": "`iptables -A INPUT -p tcp --dport 22 -j ACCEPT`"
+    },
+    {
+      "q": "How can you monitor system calls for suspicious activity?",
+      "a": "`strace`"
+    },
+    {
+      "q": "What command would you use to check for unauthorized changes to system files?",
+      "a": "`tripwire`, `auditd`"
+    },
+    {
+      "q": "How do you configure automatic security updates?",
+      "a": "`unattended-upgrades`"
+    },
+    {
+      "q": "How do you install a package using apt on Ubuntu/Debian systems?",
+      "a": "`sudo apt-get install package`"
+    },
+    {
+      "q": "What command updates the package list on a yum-based system?",
+      "a": "`sudo yum update`"
+    },
+    {
+      "q": "How do you search for a specific package in the repositories?",
+      "a": "`apt-cache search package`"
+    },
+    {
+      "q": "How can you check which version of a package is installed?",
+      "a": "`dpkg -l package`"
+    },
+    {
+      "q": "How do you remove a package and its configuration files completely?",
+      "a": "`apt-get purge package`"
+    },
+    {
+      "q": "What command shows you package dependencies?",
+      "a": "`apt-cache depends package`"
+    },
+    {
+      "q": "How do you upgrade all packages on a system?",
+      "a": "`apt-get upgrade`"
+    },
+    {
+      "q": "How can you install a package from a local .deb or .rpm file?",
+      "a": "`dpkg -i package.deb`, `rpm -i package.rpm`"
+    },
+    {
+      "q": "How do you list all installed packages on the system?",
+      "a": "`dpkg -l`"
+    },
+    {
+      "q": "How can you hold a package to prevent it from being upgraded?",
+      "a": "`apt-mark hold package`"
+    },
+    {
+      "q": "How do you view all running processes on the system?",
+      "a": "`ps aux`"
+    },
+    {
+      "q": "How can you kill a process using its PID?",
+      "a": "`kill PID`"
+    },
+    {
+      "q": "What is the difference between 'kill' and 'kill -9' commands?",
+      "a": "'kill' sends SIGTERM, while 'kill -9' sends SIGKILL."
+    },
+    {
+      "q": "How do you start a process in the background?",
+      "a": "`command &`"
+    },
+    {
+      "q": "How can you bring a background process to the foreground?",
+      "a": "`fg`"
+    },
+    {
+      "q": "How do you check the resource usage of a specific process?",
+      "a": "`top -p PID`"
+    },
+    {
+      "q": "How can you schedule a process to run with lower priority?",
+      "a": "`nice -n 19 command`"
+    },
+    {
+      "q": "What command shows you parent-child process relationships?",
+      "a": "`pstree`"
+    },
+    {
+      "q": "How do you monitor a process until it completes?",
+      "a": "`wait PID`"
+    },
+    {
+      "q": "How can you restart a failed service automatically?",
+      "a": "Use `systemd` unit files."
+    },
+    {
+      "q": "How do you check the filesystem type of a mounted partition?",
+      "a": "`df -T`"
+    },
+    {
+      "q": "How can you resize a filesystem without downtime?",
+      "a": "`resize2fs`"
+    },
+    {
+      "q": "What command would you use to check filesystem errors?",
+      "a": "`fsck`"
+    },
+    {
+      "q": "How do you mount a filesystem temporarily?",
+      "a": "`mount`"
+    },
+    {
+      "q": "How can you create a swap file on a Linux system?",
+      "a": "`dd if=/dev/zero of=/swapfile bs=1G count=4`"
+    },
+    {
+      "q": "How do you check inode usage on a filesystem?",
+      "a": "`df -i`"
+    },
+    {
+      "q": "What steps would you take to extend a logical volume?",
+      "a": "`lvextend`"
+    },
+    {
+      "q": "How can you identify which files are consuming the most inodes?",
+      "a": "`find / -type f | xargs filefrag -i | sort -n -k 5 | tail -10`"
+    },
+    {
+      "q": "How do you create and manage LVM volumes?",
+      "a": "`pvcreate`, `vgcreate`, `lvcreate`"
+    },
+    {
+      "q": "How can you implement disk quotas for users?",
+      "a": "`quotacheck`, `quotaon`"
+    },
+    {
+      "q": "How do you list all files in the current directory including hidden files in PowerShell?",
+      "a": "`Get-ChildItem -Force`"
+    },
+    {
+      "q": "What is the PowerShell equivalent of the Linux 'grep' command?",
+      "a": "`Select-String`"
+    },
+    {
+      "q": "How do you display the content of a file in PowerShell?",
+      "a": "`Get-Content`"
+    },
+    {
+      "q": "How can you create a new directory and navigate into it using PowerShell?",
+      "a": "`New-Item -ItemType Directory -Name 'path' && Set-Location path`"
+    },
+    {
+      "q": "What PowerShell cmdlet would you use to copy files recursively?",
+      "a": "`Copy-Item -Recurse`"
+    },
+    {
+      "q": "How do you check the current PowerShell version?",
+      "a": "`$PSVersionTable`"
+    },
+    {
+      "q": "How can you get help for a specific PowerShell cmdlet?",
+      "a": "`Get-Help cmdlet`"
+    },
+    {
+      "q": "What is the difference between 'Get-Process' and 'Get-Service'?",
+      "a": "`Get-Process` lists running processes, `Get-Service` lists services."
+    },
+    {
+      "q": "How do you clear the PowerShell console screen?",
+      "a": "`Clear-Host`"
+    },
+    {
+      "q": "How can you measure the execution time of a PowerShell command?",
+      "a": "`Measure-Command { command }`"
+    },
+    {
+      "q": "How do you use 'Where-Object' to filter objects in PowerShell?",
+      "a": "`Get-Process | Where-Object { $_.CPU -gt 100 }`"
+    },
+    {
+      "q": "What is the purpose of 'Select-Object' and how do you use it?",
+      "a": "Selects specified properties or top objects."
+    },
+    {
+      "q": "How can you export PowerShell output to a CSV file?",
+      "a": "`Export-Csv`"
+    },
+    {
+      "q": "How do you use 'ForEach-Object' to process multiple items?",
+      "a": "`Get-Process | ForEach-Object { $_.Name }`"
+    },
+    {
+      "q": "What is the difference between 'Write-Host' and 'Write-Output'?",
+      "a": "`Write-Host` outputs to console, `Write-Output` sends to pipeline."
+    },
+    {
+      "q": "How can you import data from a CSV file in PowerShell?",
+      "a": "`Import-Csv`"
+    },
+    {
+      "q": "How do you use 'Compare-Object' to compare two sets of data?",
+      "a": "`Compare-Object`"
+    },
+    {
+      "q": "What is the purpose of 'Group-Object' in PowerShell?",
+      "a": "Groups objects by property."
+    },
+    {
+      "q": "How can you sort PowerShell output by multiple properties?",
+      "a": "`Sort-Object -Property prop1,prop2`"
+    },
+    {
+      "q": "How do you use 'Format-Table' to customize output display?",
+      "a": "`Format-Table`"
+    },
+    {
+      "q": "How do you create custom PowerShell functions with parameters?",
+      "a": "`function MyFunc { param ($param1) }`"
+    },
+    {
+      "q": "What is the purpose of 'Begin', 'Process', and 'End' blocks in advanced functions?",
+      "a": "Define stages of function execution."
+    },
+    {
+      "q": "How can you use 'Try-Catch-Finally' for error handling in PowerShell?",
+      "a": "`Try { ... } Catch { ... } Finally { ... }`"
+    },
+    {
+      "q": "How do you work with PowerShell modules and create custom modules?",
+      "a": "`Import-Module`, `New-Module`"
+    },
+    {
+      "q": "How can you use 'Invoke-WebRequest' for REST API calls?",
+      "a": "`Invoke-WebRequest`"
+    },
+    {
+      "q": "What is Desired State Configuration (DSC) in PowerShell?",
+      "a": "`Configuration` scripts."
+    },
+    {
+      "q": "How do you implement logging in PowerShell scripts?",
+      "a": "`Start-Transcript`"
+    },
+    {
+      "q": "How can you use 'Start-Job' for parallel processing?",
+      "a": "`Start-Job`"
+    },
+    {
+      "q": "How do you work with PowerShell classes and custom objects?",
+      "a": "`class`, `[PSCustomObject]`"
+    },
+    {
+      "q": "How can you secure PowerShell scripts with execution policies?",
+      "a": "`Set-ExecutionPolicy`"
+    },
+    {
+      "q": "How do you write a simple PowerShell script that displays system information?",
+      "a": "`Get-ComputerInfo`"
+    },
+    {
+      "q": "What is the proper way to declare variables in PowerShell?",
+      "a": "`$var = value`"
+    },
+    {
+      "q": "How do you implement conditional logic using 'if-else' statements in PowerShell?",
+      "a": "`if (condition) { ... } elseif (condition) { ... } else { ... }`"
+    },
+    {
+      "q": "How can you create loops in PowerShell using 'for', 'foreach', and 'while'?",
+      "a": "`for ($i=0; $i -lt 10; $i++) { ... }`, `foreach ($item in $array) { ... }`, `while (condition) { ... }`"
+    },
+    {
+      "q": "How do you handle command line parameters in PowerShell scripts?",
+      "a": "`param` block."
+    },
+    {
+      "q": "What is the purpose of 'param()' block in PowerShell functions?",
+      "a": "Define function parameters."
+    },
+    {
+      "q": "How do you validate parameters in PowerShell functions?",
+      "a": "`param([ValidateRange(1,10)] $number)`"
+    },
+    {
+      "q": "How can you create a PowerShell profile for custom settings?",
+      "a": "`$PROFILE`"
+    },
+    {
+      "q": "How do you debug PowerShell scripts using built-in debugging features?",
+      "a": "`Set-PSBreakpoint`, `Start-Transcript`"
+    },
+    {
+      "q": "How can you create reusable PowerShell modules?",
+      "a": "`New-ModuleManifest`"
+    },
+    {
+      "q": "How do you manage Windows services using PowerShell?",
+      "a": "`Get-Service`, `Start-Service`, `Stop-Service`"
+    },
+    {
+      "q": "How do you configure Windows Firewall rules with PowerShell?",
+      "a": "`New-NetFirewallRule`"
+    },
+    {
+      "q": "How do you manage local user accounts and groups?",
+      "a": "`New-LocalUser`, `Add-LocalGroupMember`"
+    },
+    {
+      "q": "How do you query and modify Windows registry entries?",
+      "a": "`Get-ItemProperty`, `Set-ItemProperty`"
+    },
+    {
+      "q": "How do you manage Windows scheduled tasks using PowerShell?",
+      "a": "`New-ScheduledTask`, `Register-ScheduledTask`"
+    },
+    {
+      "q": "How do you configure network settings with PowerShell?",
+      "a": "`New-NetIPAddress`, `Set-DnsClientServerAddress`"
+    },
+    {
+      "q": "How do you manage Windows updates through PowerShell?",
+      "a": "`Install-WindowsUpdate`"
+    },
+    {
+      "q": "How do you audit Windows security events with PowerShell?",
+      "a": "`Get-WinEvent`"
+    },
+    {
+      "q": "How do you manage disk partitions and volumes?",
+      "a": "`New-Partition`, `Resize-Partition`"
+    },
+    {
+      "q": "How do you configure Windows remote management (WinRM)?",
+      "a": "`Enable-PSRemoting`"
+    },
+    {
+      "q": "How do you check Windows system event logs using PowerShell?",
+      "a": "`Get-EventLog`"
+    },
+    {
+      "q": "How do you diagnose network connectivity issues with PowerShell?",
+      "a": "`Test-Connection`, `Resolve-DnsName`"
+    },
+    {
+      "q": "How do you troubleshoot PowerShell script execution errors?",
+      "a": "`$Error`"
+    },
+    {
+      "q": "How can you identify performance bottlenecks on Windows systems?",
+      "a": "`perfmon`"
+    },
+    {
+      "q": "How do you check disk space and file system issues?",
+      "a": "`Get-PSDrive`, `Test-Path`"
+    },
+    {
+      "q": "How do you diagnose memory leaks in Windows applications?",
+      "a": "`Process Explorer`"
+    },
+    {
+      "q": "How do you troubleshoot service startup failures?",
+      "a": "`Get-Service`, `Get-WinEvent`"
+    },
+    {
+      "q": "How do you identify and kill hung processes?",
+      "a": "`Get-Process`, `Stop-Process`"
+    },
+    {
+      "q": "How do you check for malware or suspicious processes?",
+      "a": "`Get-MalwareScan`"
+    },
+    {
+      "q": "How do you restore system configuration from backup?",
+      "a": "`Restore-Computer`"
+    },
+    {
+      "q": "How do you query Active Directory users with PowerShell?",
+      "a": "`Get-ADUser`"
+    },
+    {
+      "q": "How do you create and manage AD groups using PowerShell?",
+      "a": "`New-ADGroup`, `Add-ADGroupMember`"
+    },
+    {
+      "q": "How do you manage user account properties and attributes?",
+      "a": "`Set-ADUser`"
+    },
+    {
+      "q": "How can you bulk import users from a CSV file?",
+      "a": "`Import-Csv`"
+    },
+    {
+      "q": "How do you manage AD organizational units (OUs)?",
+      "a": "`New-ADOrganizationalUnit`"
+    },
+    {
+      "q": "How do you query and manage AD group memberships?",
+      "a": "`Get-ADGroupMember`, `Add-ADGroupMember`"
+    },
+    {
+      "q": "How do you reset user passwords using PowerShell?",
+      "a": "`Set-ADAccountPassword`"
+    },
+    {
+      "q": "How do you disable and enable AD user accounts?",
+      "a": "`Disable-ADAccount`, `Enable-ADAccount`"
+    },
+    {
+      "q": "How do you manage AD computer accounts?",
+      "a": "`Get-ADComputer`, `New-ADComputer`"
+    },
+    {
+      "q": "How do you audit AD security permissions?",
+      "a": "`Get-Acl`"
+    },
+    {
+      "q": "How do you connect to Azure using PowerShell?",
+      "a": "`Connect-AzAccount`"
+    },
+    {
+      "q": "How do you manage Azure virtual machines with PowerShell?",
+      "a": "`Get-AzVM`, `New-AzVM`"
+    },
+    {
+      "q": "How do you work with Azure storage accounts in PowerShell?",
+      "a": "`Get-AzStorageAccount`"
+    },
+    {
+      "q": "How do you manage Azure resource groups?",
+      "a": "`Get-AzResourceGroup`, `New-AzResourceGroup`"
+    },
+    {
+      "q": "How do you deploy Azure resources using PowerShell?",
+      "a": "`New-AzResource`"
+    },
+    {
+      "q": "How do you monitor Azure services and get status information?",
+      "a": "`Get-AzResourceHealth`"
+    },
+    {
+      "q": "How do you manage Azure networking components?",
+      "a": "`Get-AzNetworkInterface`"
+    },
+    {
+      "q": "How do you work with Azure Key Vault using PowerShell?",
+      "a": "`Get-AzKeyVaultSecret`"
+    },
+    {
+      "q": "How do you manage Azure subscriptions and contexts?",
+      "a": "`Get-AzSubscription`"
+    },
+    {
+      "q": "How do you automate Azure deployments with PowerShell scripts?",
+      "a": "`Start-AzAutomationRunbook`"
+    },
+    {
+      "q": "How do you check the Linux kernel version currently running?",
+      "a": "`uname -r`"
+    },
+    {
+      "q": "What command displays detailed hardware information including CPU, memory, and disk details?",
+      "a": "`lshw`"
+    },
+    {
+      "q": "How can you check the distribution name and version of your Linux system?",
+      "a": "`cat /etc/os-release`"
+    },
+    {
+      "q": "How do you view the system boot time and uptime information?",
+      "a": "`uptime`"
+    },
+    {
+      "q": "What command shows you the current system load averages?",
+      "a": "`uptime`"
+    },
+    {
+      "q": "How can you check which init system (systemd, sysvinit) is running?",
+      "a": "`ps -p 1 -o comm=`"
+    },
+    {
+      "q": "How do you display the hardware architecture of your system?",
+      "a": "`uname -m`"
+    },
+    {
+      "q": "What command provides information about the system's BIOS and hardware?",
+      "a": "`dmidecode`"
+    },
+    {
+      "q": "How can you check the amount of physical RAM installed?",
+      "a": "`free -h`"
+    },
+    {
+      "q": "How do you view detailed CPU information including cores and frequency?",
+      "a": "`lscpu`"
+    },
+    {
+      "q": "How do you check your network interface configuration and IP addresses?",
+      "a": "`ip addr`"
+    },
+    {
+      "q": "What command would you use to test network connectivity to a remote host?",
+      "a": "`ping`"
+    },
+    {
+      "q": "How can you trace the network path to a destination host?",
+      "a": "`traceroute`"
+    },
+    {
+      "q": "What command shows you which ports are currently listening on your system?",
+      "a": "`netstat -tuln`"
+    },
+    {
+      "q": "How can you check active network connections and their associated processes?",
+      "a": "`netstat -tulnpe`"
+    },
+    {
+      "q": "How do you download a file from a URL using command line tools?",
+      "a": "`wget`, `curl`"
+    },
+    {
+      "q": "How do you check DNS resolution for a specific domain?",
+      "a": "`nslookup`, `dig`"
+    },
+    {
+      "q": "What command would you use to monitor network traffic in real-time?",
+      "a": "`tcpdump`, `ngrep`"
+    },
+    {
+      "q": "How can you configure static IP addresses using command line tools?",
+      "a": "`ip addr add`"
+    },
+    {
+      "q": "How do you check network interface statistics and packet errors?",
+      "a": "`ifconfig`"
+    },
+    {
+      "q": "How do you find duplicate files in a directory structure?",
+      "a": "`fdupes`"
+    },
+    {
+      "q": "What command would you use to synchronize files between two directories?",
+      "a": "`rsync`"
+    },
+    {
+      "q": "How can you search for files containing specific text patterns?",
+      "a": "`grep`"
+    },
+    {
+      "q": "How do you split large files into smaller chunks?",
+      "a": "`split`"
+    },
+    {
+      "q": "What command would you use to merge multiple files into one?",
+      "a": "`cat`"
+    },
+    {
+      "q": "How can you compare two files and show the differences?",
+      "a": "`diff`"
+    },
+    {
+      "q": "How do you create hard links and symbolic links between files?",
+      "a": "`ln`, `ln -s`"
+    },
+    {
+      "q": "What command would you use to find the largest files in a directory?",
+      "a": "`du`"
+    },
+    {
+      "q": "How can you recover deleted files from a filesystem?",
+      "a": "`extundelete`, `testdisk`"
+    },
+    {
+      "q": "How do you securely delete files so they cannot be recovered?",
+      "a": "`shred`"
+    },
+    {
+      "q": "How do you extract specific columns from a CSV file using command line tools?",
+      "a": "`cut`, `awk`"
+    },
+    {
+      "q": "What command would you use to sort a file by multiple columns?",
+      "a": "`sort`"
+    },
+    {
+      "q": "How can you remove duplicate lines from a text file?",
+      "a": "`sort -u`"
+    },
+    {
+      "q": "How do you replace text patterns across multiple files?",
+      "a": "`sed`, `perl`"
+    },
+    {
+      "q": "What command would you use to join lines from two files based on a common field?",
+      "a": "`join`"
+    },
+    {
+      "q": "How do you format text output to align columns properly?",
+      "a": "`column`"
+    },
+    {
+      "q": "How do you extract specific lines from a large text file?",
+      "a": "`grep`"
+    },
+    {
+      "q": "What command would you use to count word frequency in a text file?",
+      "a": "`wc`"
+    },
+    {
+      "q": "How can you convert text files between different encodings?",
+      "a": "`iconv`"
+    },
+    {
+      "q": "How do you validate and format JSON data from the command line?",
+      "a": "`jq`"
+    },
+    {
+      "q": "How do you create a compressed tar archive of a directory?",
+      "a": "`tar -czvf`"
+    },
+    {
+      "q": "What command would you use to extract files from a ZIP archive?",
+      "a": "`unzip`"
+    },
+    {
+      "q": "How can you compress individual files using gzip?",
+      "a": "`gzip`"
+    },
+    {
+      "q": "How do you create self-extracting archives?",
+      "a": "`makeself`"
+    },
+    {
+      "q": "What command would you use to compare the contents of two archives?",
+      "a": "`diff`"
+    },
+    {
+      "q": "How can you list the contents of an archive without extracting it?",
+      "a": "`tar -tf`, `unzip -l`"
+    },
+    {
+      "q": "How do you create password-protected archives?",
+      "a": "`zip -e`, `tar -czvf - | gpg`"
+    },
+    {
+      "q": "What command would you use to optimize compression ratios?",
+      "a": "`gzip -9`"
+    },
+    {
+      "q": "How can you split large archives into smaller parts?",
+      "a": "`tar -czvf - | split`"
+    },
+    {
+      "q": "How do you verify the integrity of compressed archives?",
+      "a": "`tar -tvf`, `zip -T`"
+    },
+    {
+      "q": "How do you change the priority of a running process?",
+      "a": "`renice`"
+    },
+    {
+      "q": "What command would you use to suspend and resume processes?",
+      "a": "`kill -STOP`, `kill -CONT`"
+    },
+    {
+      "q": "How do you run a command with a time limit?",
+      "a": "`timeout`"
+    },
+    {
+      "q": "How do you redirect input to a process from a file?",
+      "a": "`<`"
+    },
+    {
+      "q": "What command would you use to run processes in detached mode?",
+      "a": "`nohup`"
+    },
+    {
+      "q": "How can you monitor process resource usage over time?",
+      "a": "`ps -eo pid,etime,%mem,%cpu --sort=-%cpu`"
+    },
+    {
+      "q": "How do you send custom signals to processes?",
+      "a": "`kill`"
+    },
+    {
+      "q": "What command would you use to trace system calls of a process?",
+      "a": "`strace`"
+    },
+    {
+      "q": "How can you limit resource usage for specific processes?",
+      "a": "`ulimit`"
+    },
+    {
+      "q": "How do you create process dependencies and chains?",
+      "a": "`systemd` services"
+    },
+    {
+      "q": "How do you set a temporary environment variable that only lasts for the current session?",
+      "a": "`VAR=value`"
+    },
+    {
+      "q": "What is the difference between setting 'VAR=value' and 'export VAR=value' in bash?",
+      "a": "`export` makes it available to child processes."
+    },
+    {
+      "q": "How do you permanently set environment variables for a single user?",
+      "a": "`~/.bashrc`"
+    },
+    {
+      "q": "How can you set system-wide environment variables for all users?",
+      "a": "`/etc/environment`"
+    },
+    {
+      "q": "What command would you use to list all currently set environment variables?",
+      "a": "`printenv`"
+    },
+    {
+      "q": "How do you append a new directory to the existing PATH variable?",
+      "a": "`export PATH=$PATH:/new/dir`"
+    },
+    {
+      "q": "How can you check if a specific environment variable is set?",
+      "a": "`if [ -z \"$VAR\" ]; then ... fi`"
+    },
+    {
+      "q": "What is the proper way to unset or remove an environment variable?",
+      "a": "`unset VAR`"
+    },
+    {
+      "q": "How do you make environment variable changes persistent across reboots?",
+      "a": "`/etc/environment` or `/etc/profile`"
+    },
+    {
+      "q": "How do you set environment variables in a Docker container?",
+      "a": "`-e KEY=VALUE`"
+    },
+    {
+      "q": "How do you configure environment variables for systemd services?",
+      "a": "`Environment=`"
+    },
+    {
+      "q": "How do you set different environment variables for development, staging, and production?",
+      "a": "`export` or `systemd`"
+    },
+    {
+      "q": "How do you use environment variables in configuration files with variable substitution?",
+      "a": "`${VAR}`"
+    },
+    {
+      "q": "How do you encrypt and securely store environment variables?",
+      "a": "`vault`, `sops`"
+    },
+    {
+      "q": "How do you manage environment variables across multiple servers?",
+      "a": "`ansible`, `puppet`"
+    },
+    {
+      "q": "How do you version control environment variable configurations?",
+      "a": "`git`"
+    },
+    {
+      "q": "How do you implement environment variable validation in scripts?",
+      "a": "`set -e`"
+    },
+    {
+      "q": "How do you use environment variables for feature flags?",
+      "a": "`if [ \"$FEATURE_FLAG\" = \"true\" ]; then ... fi`"
+    },
+    {
+      "q": "How do you audit and track changes to environment variables?",
+      "a": "`auditd`"
+    },
+    {
+      "q": "How do you implement environment variable inheritance in containerized applications?",
+      "a": "`ENV`"
+    },
+    {
+      "q": "How do you configure the system hostname and make it persistent across reboots?",
+      "a": "`hostnamectl set-hostname`"
+    },
+    {
+      "q": "What steps would you take to change the system timezone?",
+      "a": "`timedatectl set-timezone`"
+    },
+    {
+      "q": "How can you configure network interface settings using command line tools?",
+      "a": "`ip`, `ifconfig`"
+    },
+    {
+      "q": "How do you set up DNS resolution on a Linux system?",
+      "a": "`/etc/resolv.conf`"
+    },
+    {
+      "q": "What command would you use to configure system proxy settings?",
+      "a": "`export http_proxy`"
+    },
+    {
+      "q": "How can you configure automatic system updates?",
+      "a": "`unattended-upgrades`"
+    },
+    {
+      "q": "How do you set up SSH key-based authentication?",
+      "a": "`ssh-keygen`, `ssh-copy-id`"
+    },
+    {
+      "q": "How do you configure system logging levels and destinations?",
+      "a": "`rsyslog`"
+    },
+    {
+      "q": "How do you configure automatic system backups?",
+      "a": "`cron`, `rsync`"
+    },
+    {
+      "q": "How do you configure system resource limits for users?",
+      "a": "`ulimit`"
+    },
+    {
+      "q": "How do you configure system-wide resource limits using ulimit?",
+      "a": "`/etc/security/limits.conf`"
+    },
+    {
+      "q": "How do you set up centralized logging for multiple systems?",
+      "a": "`syslog`, `graylog`"
+    },
+    {
+      "q": "How do you configure system auditing and security policies?",
+      "a": "`auditd`, `apparmor`"
+    },
+    {
+      "q": "How do you implement system hardening and security baselines?",
+      "a": "`STIG`, `CIS`"
+    },
+    {
+      "q": "How do you configure high availability and clustering settings?",
+      "a": "`DRBD`, `corosync`"
+    },
+    {
+      "q": "How do you set up system monitoring and alerting?",
+      "a": "`prometheus`, `grafana`"
+    },
+    {
+      "q": "How do you configure system performance tuning parameters?",
+      "a": "`sysctl`, `/etc/sysctl.conf`"
+    },
+    {
+      "q": "How do you implement disaster recovery configurations?",
+      "a": "`bacula`, `vbackup`"
+    },
+    {
+      "q": "How do you configure system backup and restore policies?",
+      "a": "`rsync`, `tar`"
+    },
+    {
+      "q": "How do you set up system-wide encryption and security measures?",
+      "a": "`LUKS`, `dm-crypt`"
+    },
+    {
+      "q": "How do you diagnose why a server cannot connect to the internet?",
+      "a": "`ping`, `traceroute`"
+    },
+    {
+      "q": "What steps would you take to troubleshoot DNS resolution failures?",
+      "a": "`nslookup`, `dig`"
+    },
+    {
+      "q": "How can you identify why SSH connections are being refused?",
+      "a": "`journalctl`, `sshd_config`"
+    },
+    {
+      "q": "How do you troubleshoot high network latency between servers?",
+      "a": "`ping`, `traceroute`"
+    },
+    {
+      "q": "What command would you use to check for network packet loss?",
+      "a": "`ping`"
+    },
+    {
+      "q": "How can you diagnose why a web server is not responding on port 80?",
+      "a": "`netstat`, `lsof`"
+    },
+    {
+      "q": "How do you troubleshoot SSL/TLS certificate issues?",
+      "a": "`openssl`"
+    },
+    {
+      "q": "What steps would you take to debug firewall blocking issues?",
+      "a": "`iptables`, `firewalld`"
+    },
+    {
+      "q": "How can you identify network bandwidth bottlenecks?",
+      "a": "`iftop`, `nload`"
+    },
+    {
+      "q": "How do you troubleshoot VPN connection problems?",
+      "a": "`ping`, `traceroute`"
+    },
+    {
+      "q": "How do you diagnose high CPU usage on a Linux system?",
+      "a": "`top`, `htop`"
+    },
+    {
+      "q": "What steps would you take to troubleshoot memory leaks?",
+      "a": "`valgrind`"
+    },
+    {
+      "q": "How can you identify I/O bottlenecks affecting system performance?",
+      "a": "`iostat`, `iotop`"
+    },
+    {
+      "q": "How do you troubleshoot disk space issues when the root partition is full?",
+      "a": "`du`, `df`"
+    },
+    {
+      "q": "What command would you use to diagnose swap usage problems?",
+      "a": "`swapon`"
+    },
+    {
+      "q": "How can you identify processes causing system slowdowns?",
+      "a": "`top`"
+    },
+    {
+      "q": "How do you troubleshoot high system load averages?",
+      "a": "`uptime`, `top`"
+    },
+    {
+      "q": "What steps would you take to debug application performance issues?",
+      "a": "`strace`, `perf`"
+    },
+    {
+      "q": "How do you diagnose filesystem performance problems?",
+      "a": "`iostat`"
+    },
+    {
+      "q": "How do you troubleshoot database connection performance issues?",
+      "a": "`mysqladmin`, `pg_stat_activity`"
+    },
+    {
+      "q": "How do you troubleshoot application startup failures?",
+      "a": "`journalctl`, `systemd`"
+    },
+    {
+      "q": "What steps would you take to debug application crashes?",
+      "a": "`gdb`, `coredump`"
+    },
+    {
+      "q": "How can you diagnose permission denied errors for applications?",
+      "a": "`ls -l`, `chmod`"
+    },
+    {
+      "q": "How do you troubleshoot configuration file errors?",
+      "a": "`cat`, `grep`"
+    },
+    {
+      "q": "What command would you use to check application dependency issues?",
+      "a": "`ldd`"
+    },
+    {
+      "q": "How do you debug application logging and output issues?",
+      "a": "`grep`, `tail`"
+    },
+    {
+      "q": "How do you troubleshoot database connection failures?",
+      "a": "`mysqladmin`, `psql`"
+    },
+    {
+      "q": "What steps would you take to debug API integration problems?",
+      "a": "`curl`, `Postman`"
+    },
+    {
+      "q": "How do you diagnose application timeout issues?",
+      "a": "`strace`, `perf`"
+    },
+    {
+      "q": "How do you troubleshoot SSL certificate errors in applications?",
+      "a": "`openssl`"
+    },
+    {
+      "q": "How do you investigate unauthorized access attempts on a system?",
+      "a": "`lastb`, `auditd`"
+    },
+    {
+      "q": "What steps would you take to diagnose malware infections?",
+      "a": "`clamscan`, `chkrootkit`"
+    },
+    {
+      "q": "How can you identify suspicious network connections?",
+      "a": "`netstat`, `ss`"
+    },
+    {
+      "q": "How do you troubleshoot authentication and authorization failures?",
+      "a": "`journalctl`, `sshd_config`"
+    },
+    {
+      "q": "What command would you use to check for rootkit infections?",
+      "a": "`chkrootkit`, `rkhunter`"
+    },
+    {
+      "q": "How can you diagnose security policy violations?",
+      "a": "`auditd`, `apparmor`"
+    },
+    {
+      "q": "How do you troubleshoot firewall configuration issues?",
+      "a": "`iptables`, `firewalld`"
+    },
+    {
+      "q": "What steps would you take to debug SELinux or AppArmor denials?",
+      "a": "`audit2allow`, `aa-logprof`"
+    },
+    {
+      "q": "How can you identify compromised user accounts?",
+      "a": "`lastb`, `auditd`"
+    },
+    {
+      "q": "How do you troubleshoot certificate authority trust issues?",
+      "a": "`openssl`"
+    },
+    {
+      "q": "How do you troubleshoot services that fail to start automatically?",
+      "a": "`systemd`, `journalctl`"
+    },
+    {
+      "q": "How can you diagnose service dependency issues?",
+      "a": "`systemd`, `journalctl`"
+    },
+    {
+      "q": "How can you diagnose why a service is consuming excessive resources?",
+      "a": "`top`, `htop`"
+    },
+    {
+      "q": "How do you troubleshoot database service connection problems?",
+      "a": "`mysqladmin`, `psql`"
+    },
+    {
+      "q": "What command would you use to check service health and status?",
+      "a": "`systemctl`"
+    },
+    {
+      "q": "How can you debug service configuration file errors?",
+      "a": "`journalctl`, `systemd`"
+    },
+    {
+      "q": "How do you troubleshoot web server service issues?",
+      "a": "`nginx`, `apache2`"
+    },
+    {
+      "q": "How can you troubleshoot container service orchestration issues?",
+      "a": "`docker`, `kubernetes`"
+    }
+  ]
+}
