@@ -100,7 +100,7 @@ node validator.js
   author = {OWASP CycloneDX Generator Team},
   month = Feb,
   title = {{CycloneDX and cdxgen}},
-  howpublished = {{https://huggingface.co/models/CycloneDX/cdx1}},
+  howpublished = {{https://huggingface.co/models/CycloneDX}},
   year = {2025}
 }
 ```
