@@ -111,7 +111,7 @@
   "optionalDependencies": {
     "@appthreat/atom": "2.2.7",
     "@appthreat/cdx-proto": "1.1.3",
-    "@bufbuild/protobuf": "2.6.2",
+    "@bufbuild/protobuf": "2.6.3",
     "@cyclonedx/cdxgen-plugins-bin": "1.6.12",
     "@cyclonedx/cdxgen-plugins-bin-darwin-amd64": "1.6.12",
     "@cyclonedx/cdxgen-plugins-bin-darwin-arm64": "1.6.12",
