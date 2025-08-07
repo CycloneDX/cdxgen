@@ -220,3 +220,7 @@ Incomplete test
 
 9.  **Question:** How do you troubleshoot configuration file errors?
     *   **Explanation:** The `test` command is a shell builtin used for conditional expressions in scripts (e.g., `if test -f "file"`). It is not a general-purpose syntax checker for configuration files. Syntax validation is application-specific, requiring tools like `nginx -t`, `sshd -t`, `jq`, etc.
+
+### Category: Safety
+
+![cdx1-pro safety](./cdx1-pro-safety.png)
