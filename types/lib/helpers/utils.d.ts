@@ -181,6 +181,23 @@ export function parseNodeShrinkwrap(swFile: string): Promise<any[]>;
  */
 export function parsePnpmWorkspace(workspaceFile: string): object;
 /**
+ * Helper function to find a package path in pnpm node_modules structure
+ *
+ * @param {string} baseDir Base directory containing node_modules
+ * @param {string} packageName Package name (with or without scope)
+ * @param {string} version Package version
+ * @returns {string|null} Path to the package directory or null if not found
+ */
+export function findPnpmPackagePath(baseDir: string, packageName: string, version: string): string | null;
+/**
+ * pnpm packages with metadata from local node_modules
+ *
+ * @param {Array} pkgList Package list to enhance
+ * @param {string} lockFilePath Path to the pnpm-lock.yaml file
+ * @returns {Array} Enhanced package list
+ */
+export function pnpmMetadata(pkgList: any[], lockFilePath: string): any[];
+/**
  * Parse nodejs pnpm lock file
  *
  * @param {string} pnpmLock pnpm-lock.yaml file
