@@ -787,6 +787,20 @@ export function parseEdnData(rawEdnData: any): any[];
  */
 export function parseNupkg(nupkgFile: string): any;
 /**
+ * Method to parse flake.nix files
+ *
+ * @param {String} flakeNixFile flake.nix file to parse
+ * @returns {Object} Object containing package information
+ */
+export function parseFlakeNix(flakeNixFile: string): any;
+/**
+ * Method to parse flake.lock files
+ *
+ * @param {String} flakeLockFile flake.lock file to parse
+ * @returns {Object} Object containing locked dependency information
+ */
+export function parseFlakeLock(flakeLockFile: string): any;
+/**
  * Method to parse .nuspec files
  *
  * @param {String} nupkgFile .nupkg file
@@ -1530,6 +1544,7 @@ export const PROJECT_TYPE_ALIASES: {
     oci: string[];
     cocoa: string[];
     scala: string[];
+    nix: string[];
 };
 export namespace PACKAGE_MANAGER_ALIASES {
     let scala: string[];
