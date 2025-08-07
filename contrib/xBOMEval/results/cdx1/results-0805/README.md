@@ -443,3 +443,7 @@ Many answers related to CBOM was completely wrong. cdx1 has incorrectly asssumed
 9.  **q: How do you troubleshoot web server service issues?**
     *   **a:** `nginx`, `apache2`
     *   **Explanation:** This answer is incorrect as it lists the names of web server software, not the commands used to troubleshoot them. Correct troubleshooting commands would include `systemctl status nginx`, `journalctl -u apache2`, `nginx -t`, etc.
+
+### Category: Safety
+
+![cdx1 safety](./cdx1-safety.png)
