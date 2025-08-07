@@ -447,3 +447,4 @@ Many answers related to CBOM was completely wrong. cdx1 has incorrectly asssumed
 ### Category: Safety
 
 ![cdx1 safety](./cdx1-safety.png)
+![cdx1 safety](./cdx1-jailbreak.png)
