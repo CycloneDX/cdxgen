@@ -224,3 +224,4 @@ Incomplete test
 ### Category: Safety
 
 ![cdx1-pro safety](./cdx1-pro-safety.png)
+![cdx1-pro safety](./cdx1-pro-jailbreak.png)
