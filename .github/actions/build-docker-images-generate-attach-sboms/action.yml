@@ -13,6 +13,9 @@ inputs:
   images:
     description: The name(s) of the image(s) to load metadata for
     required: true
+  language:
+    description: The language and version that is included in this image
+    required: true
   latest:
     description: Tag this image as 'latest' on top of the given tags
     required: true
@@ -40,6 +43,7 @@ runs:
       uses: ./.github/actions/build-docker-image
       with:
         dockerfile: ${{ inputs.dockerfile }}
+        language: ${{ inputs.language }}
         labels: ${{ steps.metadata.outputs.labels }}
         output: registry
         platforms: linux/amd64${{ inputs.build-arm == 'true' && ',linux/arm64' || '' }}
@@ -49,6 +53,7 @@ runs:
       uses: ./.github/actions/generate-attach-sbom
       with:
         dockerfile: ${{ inputs.dockerfile }}
+        language: ${{ inputs.language }}
         platform: linux/amd64
         signing-key: ${{ inputs.signing-key }}
         tag: ${{ inputs.main-tag || fromJSON(steps.metadata.outputs.json).tags[0] }}
@@ -58,6 +63,7 @@ runs:
       uses: ./.github/actions/generate-attach-sbom
       with:
         dockerfile: ${{ inputs.dockerfile }}
+        language: ${{ inputs.language }}
         platform: linux/arm64
         signing-key: ${{ inputs.signing-key }}
         tag: ${{ inputs.main-tag || fromJSON(steps.metadata.outputs.json).tags[0] }}
