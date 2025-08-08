@@ -65,6 +65,7 @@ COPY . /opt/cdxgen
 
 RUN set -e; \
     cd /opt/cdxgen \
+ && cat .npmrc \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \

@@ -32,9 +32,5 @@ jobs:
       packages: write  # needed for publishing images on GH package registry
     runs-on: ${{ fromJSON(inputs.image).runner || 'ubuntu-24.04' }}
     steps:
-      - name: Context
-        run: docker context ls
-      - name: Info
-        run: docker info
-      - name: Host
-        run: echo $DOCKER_HOST
+      - name: curl
+        run: curl http://mini-dev-1:8081/repository/npm/
