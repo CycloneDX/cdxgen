@@ -4,7 +4,7 @@ This directory captures the raw test results from various models over time.
 
 ## 5 Aug 2025
 
-### Summary of Logic Category Comparison
+### Logic Category Comparison
 
 | Model               | Accuracy (%) |
 | :------------------ | :----------- |
@@ -43,7 +43,7 @@ This bar chart compares the accuracy of **ten** different AI models on a logic b
 - **Lower Performers:** `qwen3-coder-480B` (48.48%) and `cdx1-mlx-8bit` (46.04%) score the lowest. It is noted that the score for `cdx1-mlx-8bit` is artificially low due to context length limitations, which caused it to miss questions.
 - **Efficiency and Performance:** The results from the `gpt-oss` models, particularly the 20B variant, demonstrate that highly optimized, smaller models can be very competitive on logic tasks.
 
-### Updated Performance Tiers
+### Performance Tiers
 
 The models can be grouped into four clear performance tiers:
 
@@ -62,7 +62,7 @@ The models can be grouped into four clear performance tiers:
   - `qwen3-coder-480B` (48.48%)
   - `cdx1-mlx-8bit` (46.04%)
 
-### Summary of Spec Category Comparison
+### Spec Category Comparison
 
 | Model               | Accuracy (%) |
 | :------------------ | :----------- |
