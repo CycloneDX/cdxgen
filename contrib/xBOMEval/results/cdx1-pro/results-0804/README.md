@@ -163,7 +163,7 @@ Gemini incorrectly gave 0.5 score to a number of short answers. Plus, many of th
 
 ### Category: devops
 
-**Total Marks:** 270.0/281
+**Total Marks:** 270.0 / 287
 **Percentage:** 96.1%
 
 ### Questions that scored 0:
@@ -182,12 +182,14 @@ Gemini incorrectly gave 0.5 score to a number of short answers. Plus, many of th
 
 ### Category: docker
 
-**Total Marks:** 17/17
-**Percentage:** 100%
+**Total Marks:**  / 119
+**Percentage:** 
 
 Incomplete test
 
 ### Category: linux
+
+> Only 320 questions were answered out of 370. This category must be retested.
 
 **Total Marks:** 306.5/320
 **Percentage:** 95.8%

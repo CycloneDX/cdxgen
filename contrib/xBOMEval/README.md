@@ -4,6 +4,8 @@ xBOMEval is a benchmark useful for evaluating LLMs that are optimised for BOM an
 
 Use an appropriate dataset such as [cdx-docs](https://huggingface.co/datasets/CycloneDX/cdx-docs) for training and fine-tuning.
 
+> NOTE: The tests are unreviewed and non-finalised and therefore must be treated as drafts.
+
 ## Categories
 
 The tests include the following categories:
@@ -18,6 +20,8 @@ The tests include the following categories:
 ## Evaluation using Gemini 2.5 Pro
 
 System prompt to use Gemini for automated evaluation.
+
+> NOTE: Most LLMs, including Gemini, cannot count the number of entries in a JSON correctly. Plus, the presence of extra quotes and commas can often skew the automated results.
 
 For logic and spec category.
 

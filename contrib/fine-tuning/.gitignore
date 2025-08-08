@@ -1,5 +1,7 @@
 dataset/
 adapters/
+adapters-mini/
 out.txt
 unsloth/
 CycloneDX/
+Qwen/
