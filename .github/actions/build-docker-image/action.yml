@@ -33,6 +33,7 @@ runs:
         context: .
         file: ${{ inputs.dockerfile }}
         labels: ${{ inputs.labels }}
+        network: host
         outputs: type=${{ inputs.output }}
         platforms: ${{ inputs.platforms }}
         push: ${{ inputs.action == 'push' }}
