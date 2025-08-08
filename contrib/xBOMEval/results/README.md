@@ -6,6 +6,19 @@ This directory captures the raw test results from various models over time.
 
 ### Summary of Logic Category Comparison
 
+| Model               | Accuracy (%) |
+| :------------------ | :----------- |
+| `gemini-2.5-pro`    | 93.60        |
+| `deepthink-r1`      | 89.63        |
+| `gpt-5`             | 83.23        |
+| `deepseek-r1`       | 82.92        |
+| `gpt-oss-120b`      | 80.49        |
+| `gpt-oss-20b`       | 79.27        |
+| `cdx1-pro-mlx-8bit` | 73.17        |
+| `o4-mini-high`      | 67.99        |
+| `qwen3-coder-480B`  | 48.48        |
+| `cdx1-mlx-8bit`     | 46.04        |
+
 ```mermaid
 ---
 config:
@@ -15,34 +28,54 @@ config:
 %%{init: {'theme': 'default'}}%%
 xychart-beta
     title "Logic Category Comparison"
-    x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B, deepthink-r1, deepseek-r1, gpt-oss-120b, gpt-oss-20b]
+    x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B, deepthink-r1, deepseek-r1, gpt-oss-120b, gpt-oss-20b, gpt-5]
     y-axis "Accuracy (%)" 0 --> 100
-    bar [46.04, 73.17, 93.6, 67.99, 48.48, 89.63, 82.92, 80.49, 79.27]
+    bar [46.04, 73.17, 93.6, 67.99, 48.48, 89.63, 82.92, 80.49, 79.27, 83.23]
 ```
 
-This bar chart compares the accuracy of **nine** different AI models on logic tests, which are designed to assess thinking and problem-solving abilities. Non-thinking models are expected to struggle with these tasks.
+This bar chart compares the accuracy of **ten** different AI models on a logic benchmark designed to assess reasoning and problem-solving skills. The results highlight a clear hierarchy of performance, with the newly added `gpt-5` debuting as a top-tier model.
 
-**Key Observations from the Chart:**
+**Key Findings from the Chart:**
 
-- **Top Performers:** The standout model remains **`gemini-2.5-pro`**, achieving the highest accuracy at **93.6%**. It is followed by a group of strong performers, including **`deepthink-r1`** (89.63%), **`deepseek-r1`** (82.92%), and the newly added **`gpt-oss-120b`** (**80.49%**), which all demonstrate advanced logical reasoning capabilities.
+- **Dominant Leader:** `gemini-2.5-pro` is the undisputed leader, achieving the highest accuracy of **93.6%**, placing it in a class of its own.
+- **Top-Tier Competitors:** A strong group of models follows, led by `deepthink-r1` at **89.63%**. The newly introduced **`gpt-5`** makes a powerful debut, securing the third-place spot with **83.23%** accuracy. It slightly outperforms `deepseek-r1` (82.92%) and `gpt-oss-120b` (80.49%).
+- **Strong Mid-Tier:** The `gpt-oss-20b` model performs impressively well for its size at **79.27%**, outscoring several larger models and leading the middle pack, which also includes `cdx1-pro-mlx-8bit` (73.17%) and `o4-mini-high` (67.99%).
+- **Lower Performers:** `qwen3-coder-480B` (48.48%) and `cdx1-mlx-8bit` (46.04%) score the lowest. It is noted that the score for `cdx1-mlx-8bit` is artificially low due to context length limitations, which caused it to miss questions.
+- **Efficiency and Performance:** The results from the `gpt-oss` models, particularly the 20B variant, demonstrate that highly optimized, smaller models can be very competitive on logic tasks.
 
-- **Strong Debut from gpt-oss Models:** The new additions, **`gpt-oss-120b`** (80.49%) and **`gpt-oss-20b`** (79.27%), both show very strong results. `gpt-oss-120b` joins the top tier of performers, while `gpt-oss-20b` scores impressively high, outperforming several other models.
+### Updated Performance Tiers
 
-- **Strong "Non-Thinking" Model Performance:** Despite being a non-thinking model, the 30B parameter **`cdx1-pro-mlx-8bit`** shows a strong performance with an accuracy of **73.17%**. This score is competitive, though it is now surpassed by the new `gpt-oss-20b`.
+The models can be grouped into four clear performance tiers:
 
-- **Context-Limited Model:** The 14B parameter **`cdx1-mlx-8bit`** scored the lowest at **46.04%**. As noted, this score is artificially low due to the model missing many questions, likely because of context length limitations, rather than solely a lack of logical ability.
-
-- **Performance Tiers:** The models can be grouped into clear performance tiers:
-  - **Top Tier (>80%):** `gemini-2.5-pro`, `deepthink-r1`, `deepseek-r1`, `gpt-oss-120b`.
-  - **Mid Tier (65%-80%):** `gpt-oss-20b`, `cdx1-pro-mlx-8bit`, `o4-mini-high` (67.99%).
-  - **Lower Tier (<50%):** `qwen3-coder-480B` (48.48%), `cdx1-mlx-8bit` (46.04%).
-
-- **Inferred Points:**
-  - There is a significant performance gap between the top-tier models and the rest, highlighting a clear distinction in advanced problem-solving skills.
-  - The strong performance of `cdx1-pro-mlx-8bit` suggests that even non-thinking models, when scaled up (from 14B to 30B parameters in this case), can achieve respectable accuracy on logic tasks.
-  - The impressive results from both `gpt-oss` models, particularly the `20b` variant, suggest that high performance on logic tasks is achievable without necessarily being the absolute largest model in the comparison.
+- **Elite Tier (>90%):**
+  - `gemini-2.5-pro` (93.6%)
+- **High-Performing Tier (80%-90%):**
+  - `deepthink-r1` (89.63%)
+  - `gpt-5` (83.23%)
+  - `deepseek-r1` (82.92%)
+  - `gpt-oss-120b` (80.49%)
+- **Mid-Tier (65%-80%):**
+  - `gpt-oss-20b` (79.27%)
+  - `cdx1-pro-mlx-8bit` (73.17%)
+  - `o4-mini-high` (67.99%)
+- **Lower Tier (<50%):**
+  - `qwen3-coder-480B` (48.48%)
+  - `cdx1-mlx-8bit` (46.04%)
 
 ### Summary of Spec Category Comparison
+
+| Model               | Accuracy (%) |
+| :------------------ | :----------- |
+| `gemini-2.5-pro`    | 100.00       |
+| `deepseek-r1`       | 98.58        |
+| `cdx1-pro-mlx-8bit` | 98.30        |
+| `gpt-5`             | 95.17        |
+| `qwen3-coder-480B`  | 90.34        |
+| `gpt-oss-120b`      | 89.20        |
+| `cdx1-mlx-8bit`     | 83.52        |
+| `deepthink-r1`      | 12.36        |
+| `gpt-oss-20b`       | 9.09         |
+| `o4-mini-high`      | 0.00         |
 
 ```mermaid
 ---
@@ -53,37 +86,34 @@ config:
 %%{init: {'theme': 'default'}}%%
 xychart-beta
     title "Spec Category Comparison"
-    x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B, deepthink-r1, deepseek-r1, gpt-oss-120b, gpt-oss-20b]
+    x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B, deepthink-r1, deepseek-r1, gpt-oss-120b, gpt-oss-20b, gpt-5]
     y-axis "Accuracy (%)" 0 --> 100
-    bar [83.52, 98.3, 100, 0, 90.34, 12.36, 98.58, 89.2, 9.09]
+    bar [83.52, 98.3, 100, 0, 90.34, 12.36, 98.58, 89.2, 9.09, 95.17]
 ```
 
-This bar chart evaluates the performance of **nine** AI models on the "Spec Category," which consists of 352 direct questions about technical specifications like CycloneDX, PURL, and SPDX. This test primarily measures a model's ability to recollect and synthesize factual information, a task where most models are expected to perform well.
+This bar chart evaluates **ten** AI models on the "Spec Category," a test of factual recall on 352 technical specification questions. The results starkly illustrate that a model's reliability and cooperative behavior are as crucial as its underlying knowledge. Several models, including the newly added `gpt-5`, achieved high scores only after overcoming significant behavioral hurdles.
 
-**Key Observations from the Chart:**
+**Key Findings from the Chart:**
 
-- **Top-Tier Performance:** Three models achieved near-perfect or perfect scores, demonstrating exceptional factual recall:
-  - **`gemini-2.5-pro`** achieved a perfect score of **100%**. The provided context notes its answers also had superior depth.
-  - **`deepseek-r1`** was the top performer at **98.58%**.
-  - **`cdx1-pro-mlx-8bit`** also scored an impressive **98.3%**, showing strong capability for a non-thinking, quantized model.
+- **Elite Factual Recall:** A top tier of models demonstrated near-perfect knowledge retrieval. **`gemini-2.5-pro`** led with a perfect **100%** score and superior answer depth. It was closely followed by **`deepseek-r1`** (98.58%) and **`cdx1-pro-mlx-8bit`** (98.3%).
 
-- **Strong Performers:** Just below the top tier, **`qwen3-coder-480B`** (90.34%) and the newly added **`gpt-oss-120b`** (**89.2%**) also delivered very strong results, demonstrating robust factual recall.
+- **High Score with Major Caveats (`gpt-5`):** The newly added **`gpt-5`** achieved a high accuracy of **95.17%**, placing it among the top performers. However, this result required a significant compromise:
+  - The model initially refused to answer the full set of questions, only offering to respond in small batches that required six separate user confirmations. This compromise was accepted to prevent an outright failure.
+  - A related variant, `gpt-5-thinking`, refused the test entirely after a minute of processing.
 
-- **Complete Failures Due to Behavior:** **Three** models failed the test not due to a lack of knowledge, but due to their operational behavior:
-  - **`o4-mini-high`** scored **0%** because it refused to answer the questions, citing that there were too many.
-  - **`deepthink-r1`** scored a very low **12.36%** because it only answered a small fraction of the questions and failed to acknowledge this limitation in its response.
-  - **`gpt-oss-20b`** scored just **9.09%**. As noted, this low score is also a behavioral failure, as the model **only answered 32 questions**, likely due to context length limits or other usage restrictions.
+- **Complete Behavioral Failures:** Three models effectively failed the test not due to a lack of knowledge, but because they refused to cooperate:
+  - **`o4-mini-high`** scored **0%** after refusing to answer, citing too many questions.
+  - **`deepthink-r1`** (12.36%) and **`gpt-oss-20b`** (9.09%) also failed, answering only a small fraction of the questions without acknowledging the limitation.
 
-- **Performance of the `cdx1` Models:**
-  - The 30B **`cdx1-pro-mlx-8bit`** model performed exceptionally well (98.3%).
-  - The smaller 14B **`cdx1-mlx-8bit`** model achieved a respectable score of **83.52%**. However, its score was significantly impacted by a systematic error: it incorrectly assumed the "C" in "CBOM" stood for "cloud-native," leading to a cascade of wrong answers. It also answered all questions related to the "provides" field incorrectly.
-  - It is noted that both `cdx1` models received several "grace marks," indicating their raw scores might have been lower and highlighting known limitations in the evaluation dataset.
+- **Strong Mid-Tier Performers:** `qwen3-coder-480B` (90.34%) and `gpt-oss-120b` (89.2%) both demonstrated strong and reliable factual recall without the behavioral issues seen elsewhere.
 
-- **Inferred Key Points:**
-  - **Reliability Over Knowledge:** This test highlights that model reliability and compliance are as critical as factual knowledge. The failures of `o4-mini-high`, `deepthink-r1`, and now **`gpt-oss-20b`** were behavioral, not informational.
-  - **Impact of Model Scale:** The significant performance jump from `cdx1-mlx-8bit` (14B, 83.52%) to `cdx1-pro-mlx-8bit` (30B, 98.3%) suggests that larger model scale can help overcome specific factual errors and improve overall accuracy.
-  - **Accuracy vs. Depth:** While `cdx1-pro` nearly matched `gemini-2.5-pro` in accuracy, the note about Gemini's superior answer depth shows that quantitative scores alone don't capture the full picture of a model's quality.
-  - **Systematic Errors:** The performance of `cdx1-mlx-8bit` demonstrates how a single, fundamental misunderstanding can disproportionately lower a model's score in a specialized knowledge domain.
+- **Impact of Scale and Systematic Errors:** The contrast between the two `cdx1` models is revealing. The larger `cdx1-pro-mlx-8bit` (98.3%) performed exceptionally well, while the smaller `cdx1-mlx-8bit` (83.52%) was hampered by a single systematic error (misunderstanding "CBOM"), which cascaded into multiple wrong answers.
+
+### Summary of Key Themes
+
+1.  **Reliability is Paramount:** This test's most important finding is that knowledge is useless if a model is unwilling or unable to share it. The failures of `o4-mini-high`, `deepthink-r1`, `gpt-oss-20b`, and the behavioral friction from `gpt-5` highlight this critical dimension.
+2.  **Scores Don't Tell the Whole Story:** The 95.17% score for `gpt-5` obscures the significant user intervention required to obtain it. Similarly, the near-identical scores of `cdx1-pro` and `gemini-2.5-pro` don't capture Gemini's superior answer quality.
+3.  **Scale Can Overcome Flaws:** The dramatic performance leap from the 14B to the 30B `cdx1` model suggests that increased scale can help correct for specific knowledge gaps and improve overall accuracy.
 
 ### Other categories
 
