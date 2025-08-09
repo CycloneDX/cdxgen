@@ -34,4 +34,4 @@ jobs:
     steps:
       - name: test
         run: |
-          colima ssh --name=<builder-vm-name> curl -v http://mini-dev-1:8081/repository/npm/
+          colima ssh --name=aarch64 curl -v http://mini-dev-1:8081/repository/npm/
