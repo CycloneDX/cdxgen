@@ -30,6 +30,10 @@ ENV CC=gcc \
     SCALA_VERSION=$SCALA_VERSION
 ENV PATH=${PATH}:/usr/local/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${PYTHONPATH}/bin:/usr/share/dotnet
 
+RUN ip addr && ip route && \
+    cat /etc/resolv.conf && \
+    curl -v http://mini-dev-1:8081/repository/npm/
+
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     case "${ARCH_NAME##*-}" in \
