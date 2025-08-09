@@ -15,12 +15,11 @@ This category tests thinking and problem-solving.
 
 *   **Top Performers:** **Gemini-2.5-pro** leads with **93.60%** accuracy, followed by other strong "thinking" models like **Deepthink-r1** (89.63%), **GPT-5** (83.23%), and **Deepseek-r1** (82.92%).
 *   **Non-Thinking Models:** As predicted by the category description, the `cdx1` models show lower performance, with scores ranging from **46.04% to 73.17%**, confirming their struggle with tasks requiring reasoning.
-*   **Notable Underperformer:** The **Qwen3-coder-480B** model also struggled significantly in this category with a score of **48.48%**.
 *   **Strong Mid-Tier:** The `gpt-oss-20b` model performs impressively well for its size at **79.27%**, outscoring several larger models and leading the middle pack, which also includes `cdx1-pro-mlx-8bit` (73.17%) and `o4-mini-high` (67.99%).
-*   **Lower Performers:** `qwen3-coder-480B` (48.48%) and `cdx1-mlx-8bit` (46.04%) score the lowest. cdx1-mlx-8bit missed a number of questions.
+*   **Lower Performers:** `qwen3-coder-480B` (48.48%) scored the lowest.
 
 | Model              | Accuracy (%) |
-| :----------------- | :----------- |
+| :----------------- |:-------------|
 | gemini-2.5-pro     | 93.60        |
 | deepthink-r1       | 89.63        |
 | gpt-5              | 83.23        |
@@ -28,10 +27,10 @@ This category tests thinking and problem-solving.
 | gpt-oss-120b       | 80.49        |
 | gpt-oss-20b        | 79.27        |
 | cdx1-pro-mlx-8bit  | 73.17        |
+| cdx1-mlx-8bit      | 70.12        |
 | cdx1-mini-mlx-8bit | 68.29        |
 | o4-mini-high       | 67.99        |
 | qwen3-coder-480B   | 48.48        |
-| cdx1-mlx-8bit      | 46.04        |
 
 ```mermaid
 ---
@@ -44,7 +43,7 @@ xychart-beta
     title "Logic Category Comparison"
     x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, cdx1-mini-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B, deepthink-r1, deepseek-r1, gpt-oss-120b, gpt-oss-20b, gpt-5]
     y-axis "Accuracy (%)" 0 --> 100
-    bar [46.04, 73.17, 68.29, 93.6, 67.99, 48.48, 89.63, 82.92, 80.49, 79.27, 83.23]
+    bar [70.12, 73.17, 68.29, 93.6, 67.99, 48.48, 89.63, 82.92, 80.49, 79.27, 83.23]
 ```
 
 ### Spec Category Comparison
