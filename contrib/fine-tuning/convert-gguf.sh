@@ -17,12 +17,21 @@ set -e
 # cmake --build build --config Release -j $(sysctl -n hw.logicalcpu)
 
 export TOKENIZERS_PARALLELISM=false
+LLAMA_CPP_PATH=/Users/appthreat/work/llama.cpp
+cd $LLAMA_CPP_PATH
+source .venv/bin/activate
+CDXGEN_FT_PATH=/Users/appthreat/work/cdxgen/contrib/fine-tuning
 
 TUNING_TOOL=mlx
 FORMAT=GGUF
 HF_ORG=CycloneDX
 TOOL_BASE_MODEL=${1:-cdx1}
+MODEL_FILE_PATH=${CDXGEN_FT_PATH}/Modelfile
 case "$TOOL_BASE_MODEL" in
+  cdx1-mini)
+    PARAM_SIZE="4B"
+    MODEL_FILE_PATH=${CDXGEN_FT_PATH}/Modelfile-mini
+    ;;
   cdx1-pro)
     PARAM_SIZE="30B"
     ;;
@@ -33,10 +42,6 @@ case "$TOOL_BASE_MODEL" in
     PARAM_SIZE="gguf"
     ;;
 esac
-LLAMA_CPP_PATH=/Users/appthreat/work/llama.cpp
-cd $LLAMA_CPP_PATH
-source .venv/bin/activate
-CDXGEN_FT_PATH=/Users/appthreat/work/cdxgen/contrib/fine-tuning
 
 GGUF_MODEL_Q8_0_NAME=${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q8_0-${FORMAT}
 GGUF_MODEL_Q8_0_PATH=${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q8_0-${FORMAT}
@@ -45,7 +50,7 @@ FUSED_MODEL=${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${TUNING_TOOL}
 rm -rf ${GGUF_MODEL_Q8_0_PATH}
 mkdir -p ${GGUF_MODEL_Q8_0_PATH}
 python convert_hf_to_gguf.py --outtype q8_0 --outfile ${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q8_0-${FORMAT}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-q8_0.gguf --model-name ${GGUF_MODEL_Q8_0_NAME} ${FUSED_MODEL}
-cp ${CDXGEN_FT_PATH}/Modelfile ${GGUF_MODEL_Q8_0_PATH}/
+cp ${MODEL_FILE_PATH} ${GGUF_MODEL_Q8_0_PATH}/Modelfile
 cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${GGUF_MODEL_Q8_0_PATH}/
 
 GGUF_MODEL_BF16_NAME=${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-BF16-${FORMAT}
@@ -53,36 +58,47 @@ GGUF_MODEL_BF16_PATH=${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE
 rm -rf ${GGUF_MODEL_BF16_PATH}
 mkdir -p ${GGUF_MODEL_BF16_PATH}
 python convert_hf_to_gguf.py --outtype bf16 --outfile ${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-BF16-${FORMAT}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-bf16.gguf --model-name ${GGUF_MODEL_BF16_NAME} ${FUSED_MODEL}
-cp ${CDXGEN_FT_PATH}/Modelfile ${GGUF_MODEL_BF16_PATH}/
+cp ${MODEL_FILE_PATH} ${GGUF_MODEL_BF16_PATH}/Modelfile
 sed -i '' 's|./cdx1-${PARAM_SIZE}-q8_0.gguf|./cdx1-${PARAM_SIZE}-bf16.gguf|g' ${GGUF_MODEL_BF16_PATH}/Modelfile
 cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${GGUF_MODEL_BF16_PATH}/
 
-GGUF_MODEL_Q4_K_M_NAME=${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q4_K_M-${FORMAT}
-GGUF_MODEL_Q4_K_M_PATH=${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q4_K_M-${FORMAT}
-rm -rf ${GGUF_MODEL_Q4_K_M_PATH}
-mkdir -p ${GGUF_MODEL_Q4_K_M_PATH}
-llama-quantize ${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-BF16-${FORMAT}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-bf16.gguf ${GGUF_MODEL_Q4_K_M_PATH}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q4_K_M.gguf Q4_K_M
-cp ${CDXGEN_FT_PATH}/Modelfile ${GGUF_MODEL_Q4_K_M_PATH}/
-sed -i '' 's|./cdx1-${PARAM_SIZE}-q8_0.gguf|./cdx1-${PARAM_SIZE}-Q4_K_M.gguf|g' ${GGUF_MODEL_Q4_K_M_PATH}/Modelfile
-cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${GGUF_MODEL_Q4_K_M_PATH}/
+if [ "$TOOL_BASE_MODEL" == "cdx1-mini" ]; then
+  GGUF_MODEL_Q6_K_NAME=${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q6_K-${FORMAT}
+  GGUF_MODEL_Q6_K_PATH=${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q6_K-${FORMAT}
+  rm -rf ${GGUF_MODEL_Q6_K_PATH}
+  mkdir -p ${GGUF_MODEL_Q6_K_PATH}
+  llama-quantize ${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-BF16-${FORMAT}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-bf16.gguf ${GGUF_MODEL_Q6_K_PATH}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q6_K.gguf Q6_K
+  cp ${MODEL_FILE_PATH} ${GGUF_MODEL_Q6_K_PATH}/Modelfile
+  sed -i '' 's|./cdx1-${PARAM_SIZE}-q8_0.gguf|./cdx1-${PARAM_SIZE}-Q6_K.gguf|g' ${GGUF_MODEL_Q6_K_PATH}/Modelfile
+  cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${GGUF_MODEL_Q6_K_PATH}/
+else
+  GGUF_MODEL_Q4_K_M_NAME=${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q4_K_M-${FORMAT}
+  GGUF_MODEL_Q4_K_M_PATH=${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q4_K_M-${FORMAT}
+  rm -rf ${GGUF_MODEL_Q4_K_M_PATH}
+  mkdir -p ${GGUF_MODEL_Q4_K_M_PATH}
+  llama-quantize ${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-BF16-${FORMAT}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-bf16.gguf ${GGUF_MODEL_Q4_K_M_PATH}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q4_K_M.gguf Q4_K_M
+  cp ${MODEL_FILE_PATH} ${GGUF_MODEL_Q4_K_M_PATH}/Modelfile
+  sed -i '' 's|./cdx1-${PARAM_SIZE}-q8_0.gguf|./cdx1-${PARAM_SIZE}-Q4_K_M.gguf|g' ${GGUF_MODEL_Q4_K_M_PATH}/Modelfile
+  cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${GGUF_MODEL_Q4_K_M_PATH}/
 
-GGUF_MODEL_IQ4_NL_NAME=${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-IQ4_NL-${FORMAT}
-GGUF_MODEL_IQ4_NL_PATH=${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-IQ4_NL-${FORMAT}
-rm -rf ${GGUF_MODEL_IQ4_NL_PATH}
-mkdir -p ${GGUF_MODEL_IQ4_NL_PATH}
-llama-quantize ${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-BF16-${FORMAT}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-bf16.gguf ${GGUF_MODEL_IQ4_NL_PATH}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-IQ4_NL.gguf IQ4_NL
-cp ${CDXGEN_FT_PATH}/Modelfile ${GGUF_MODEL_IQ4_NL_PATH}/
-sed -i '' 's|./cdx1-${PARAM_SIZE}-q8_0.gguf|./cdx1-${PARAM_SIZE}-IQ4_NL.gguf|g' ${GGUF_MODEL_IQ4_NL_PATH}/Modelfile
-cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${GGUF_MODEL_IQ4_NL_PATH}/
+  GGUF_MODEL_IQ4_NL_NAME=${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-IQ4_NL-${FORMAT}
+  GGUF_MODEL_IQ4_NL_PATH=${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-IQ4_NL-${FORMAT}
+  rm -rf ${GGUF_MODEL_IQ4_NL_PATH}
+  mkdir -p ${GGUF_MODEL_IQ4_NL_PATH}
+  llama-quantize ${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-BF16-${FORMAT}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-bf16.gguf ${GGUF_MODEL_IQ4_NL_PATH}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-IQ4_NL.gguf IQ4_NL
+  cp ${MODEL_FILE_PATH} ${GGUF_MODEL_IQ4_NL_PATH}/Modelfile
+  sed -i '' 's|./cdx1-${PARAM_SIZE}-q8_0.gguf|./cdx1-${PARAM_SIZE}-IQ4_NL.gguf|g' ${GGUF_MODEL_IQ4_NL_PATH}/Modelfile
+  cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${GGUF_MODEL_IQ4_NL_PATH}/
 
-GGUF_MODEL_Q2_K_NAME=${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q2_K-${FORMAT}
-GGUF_MODEL_Q2_K_PATH=${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q2_K-${FORMAT}
-rm -rf ${GGUF_MODEL_Q2_K_PATH}
-mkdir -p ${GGUF_MODEL_Q2_K_PATH}
-llama-quantize ${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-BF16-${FORMAT}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-bf16.gguf ${GGUF_MODEL_Q2_K_PATH}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q2_K.gguf Q2_K
-cp ${CDXGEN_FT_PATH}/Modelfile ${GGUF_MODEL_Q2_K_PATH}/
-sed -i '' 's|./cdx1-${PARAM_SIZE}-q8_0.gguf|./cdx1-${PARAM_SIZE}-Q2_K.gguf|g' ${GGUF_MODEL_Q2_K_PATH}/Modelfile
-cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${GGUF_MODEL_Q2_K_PATH}/
+  GGUF_MODEL_Q2_K_NAME=${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q2_K-${FORMAT}
+  GGUF_MODEL_Q2_K_PATH=${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q2_K-${FORMAT}
+  rm -rf ${GGUF_MODEL_Q2_K_PATH}
+  mkdir -p ${GGUF_MODEL_Q2_K_PATH}
+  llama-quantize ${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-BF16-${FORMAT}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-bf16.gguf ${GGUF_MODEL_Q2_K_PATH}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q2_K.gguf Q2_K
+  cp ${MODEL_FILE_PATH} ${GGUF_MODEL_Q2_K_PATH}/Modelfile
+  sed -i '' 's|./cdx1-${PARAM_SIZE}-q8_0.gguf|./cdx1-${PARAM_SIZE}-Q2_K.gguf|g' ${GGUF_MODEL_Q2_K_PATH}/Modelfile
+  cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${GGUF_MODEL_Q2_K_PATH}/
+fi
 
 ### Testing with ollama
 # cd ${GGUF_MODEL_Q8_0_PATH}
@@ -93,9 +109,13 @@ cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${GGUF_MODEL_Q2_K_PATH}/
 export HF_HUB_ENABLE_HF_TRANSFER=0
 hf auth whoami
 hf upload --quiet --repo-type model ${GGUF_MODEL_Q8_0_NAME} ${GGUF_MODEL_Q8_0_PATH} .
-hf upload --quiet --repo-type model ${GGUF_MODEL_Q4_K_M_NAME} ${GGUF_MODEL_Q4_K_M_PATH} .
-hf upload --quiet --repo-type model ${GGUF_MODEL_IQ4_NL_NAME} ${GGUF_MODEL_IQ4_NL_PATH} .
-hf upload --quiet --repo-type model ${GGUF_MODEL_Q2_K_NAME} ${GGUF_MODEL_Q2_K_PATH} .
+if [ "$TOOL_BASE_MODEL" == "cdx1-mini" ]; then
+  hf upload --quiet --repo-type model ${GGUF_MODEL_Q6_K_NAME} ${GGUF_MODEL_Q6_K_PATH} .
+else
+  hf upload --quiet --repo-type model ${GGUF_MODEL_Q4_K_M_NAME} ${GGUF_MODEL_Q4_K_M_PATH} .
+  hf upload --quiet --repo-type model ${GGUF_MODEL_IQ4_NL_NAME} ${GGUF_MODEL_IQ4_NL_PATH} .
+  hf upload --quiet --repo-type model ${GGUF_MODEL_Q2_K_NAME} ${GGUF_MODEL_Q2_K_PATH} .
+fi
 hf upload --quiet --repo-type model ${GGUF_MODEL_BF16_NAME} ${GGUF_MODEL_BF16_PATH} .
 
 ollama pull hf.co/${GGUF_MODEL_Q8_0_NAME}
@@ -103,20 +123,27 @@ ollama cp hf.co/${GGUF_MODEL_Q8_0_NAME} ${GGUF_MODEL_Q8_0_NAME}
 ollama push ${GGUF_MODEL_Q8_0_NAME}
 ollama rm hf.co/${GGUF_MODEL_Q8_0_NAME}
 
-ollama pull hf.co/${GGUF_MODEL_Q4_K_M_NAME}
-ollama cp hf.co/${GGUF_MODEL_Q4_K_M_NAME} ${GGUF_MODEL_Q4_K_M_NAME}
-ollama push ${GGUF_MODEL_Q4_K_M_NAME}
-ollama rm hf.co/${GGUF_MODEL_Q4_K_M_NAME}
+if [ "$TOOL_BASE_MODEL" == "cdx1-mini" ]; then
+  ollama pull hf.co/${GGUF_MODEL_Q6_K_NAME}
+  ollama cp hf.co/${GGUF_MODEL_Q6_K_NAME} ${GGUF_MODEL_Q6_K_NAME}
+  ollama push ${GGUF_MODEL_Q6_K_NAME}
+  ollama rm hf.co/${GGUF_MODEL_Q6_K_NAME}
+else
+  ollama pull hf.co/${GGUF_MODEL_Q4_K_M_NAME}
+  ollama cp hf.co/${GGUF_MODEL_Q4_K_M_NAME} ${GGUF_MODEL_Q4_K_M_NAME}
+  ollama push ${GGUF_MODEL_Q4_K_M_NAME}
+  ollama rm hf.co/${GGUF_MODEL_Q4_K_M_NAME}
 
-ollama pull hf.co/${GGUF_MODEL_IQ4_NL_NAME}
-ollama cp hf.co/${GGUF_MODEL_IQ4_NL_NAME} ${GGUF_MODEL_IQ4_NL_NAME}
-ollama push ${GGUF_MODEL_IQ4_NL_NAME}
-ollama rm hf.co/${GGUF_MODEL_IQ4_NL_NAME}
+  ollama pull hf.co/${GGUF_MODEL_IQ4_NL_NAME}
+  ollama cp hf.co/${GGUF_MODEL_IQ4_NL_NAME} ${GGUF_MODEL_IQ4_NL_NAME}
+  ollama push ${GGUF_MODEL_IQ4_NL_NAME}
+  ollama rm hf.co/${GGUF_MODEL_IQ4_NL_NAME}
 
-ollama pull hf.co/${GGUF_MODEL_Q2_K_NAME}
-ollama cp hf.co/${GGUF_MODEL_Q2_K_NAME} ${GGUF_MODEL_Q2_K_NAME}
-ollama push ${GGUF_MODEL_Q2_K_NAME}
-ollama rm hf.co/${GGUF_MODEL_Q2_K_NAME}
+  ollama pull hf.co/${GGUF_MODEL_Q2_K_NAME}
+  ollama cp hf.co/${GGUF_MODEL_Q2_K_NAME} ${GGUF_MODEL_Q2_K_NAME}
+  ollama push ${GGUF_MODEL_Q2_K_NAME}
+  ollama rm hf.co/${GGUF_MODEL_Q2_K_NAME}
+fi
 
 ollama pull hf.co/${GGUF_MODEL_BF16_NAME}
 ollama cp hf.co/${GGUF_MODEL_BF16_NAME} ${GGUF_MODEL_BF16_NAME}

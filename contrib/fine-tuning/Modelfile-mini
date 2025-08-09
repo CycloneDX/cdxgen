@@ -1,0 +1,10 @@
+FROM ./cdx1-mini-4B-q8_0.gguf
+
+PARAMETER num_ctx 16000
+PARAMETER temperature 0.7
+
+SYSTEM """You are a helpful assistant to the user."""
+
+LICENSE """
+apache-2.0
+"""

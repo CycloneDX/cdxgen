@@ -404,6 +404,8 @@ Many answers related to CBOM was completely wrong. cdx1 has incorrectly asssumed
 
 ### Category: linux
 
+> Only 282 questions were answered out of 370. This category must be retested.
+
 **Total Marks:** 255.5 / 282
 **Percentage:** 90.60%
 
