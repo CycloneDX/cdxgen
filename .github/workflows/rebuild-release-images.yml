@@ -27,12 +27,6 @@ jobs:
         env:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
-      - name: Rebuild latest (retry)
-        if: failure()
-        run: gh workflow run build-images.yml -r refs/tags/${{ steps.read_latest.outputs.release }}
-        env:
-          GH_REPO: ${{ github.repository }}
-          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
 
   rebuild-previous:
     runs-on: ubuntu-latest
@@ -45,12 +39,6 @@ jobs:
           GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
       - name: Rebuild previous
         run: gh workflow run build-images.yml -r refs/tags/${{ steps.read_previous.outputs.release }} -f latest=false
-        env:
-          GH_REPO: ${{ github.repository }}
-          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
-      - name: Rebuild previous (retry)
-        if: failure()
-        run: gh workflow run build-images.yml -r refs/tags/${{ steps.read_previous.outputs.release }}
         env:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
