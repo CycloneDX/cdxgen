@@ -32,12 +32,11 @@ jobs:
       packages: write  # needed for publishing images on GH package registry
     runs-on: ${{ fromJSON(inputs.image).runner || 'ubuntu-24.04' }}
     steps:
-      - name: buildx test
+      - name: test
         run: |
-          docker buildx build --network=host --progress=plain --no-cache \
-            --platform linux/amd64 \
-            -<<EOF
-          FROM alpine
-          RUN apk add --no-cache curl
-          RUN curl -v http://mini-dev-1:8081/repository/npm/
-          EOF
+          whoami
+          echo $HOME
+          ls -la $HOME/.colima
+          ps aux | grep tailscale
+          docker context inspect
+          docker buildx inspect
