@@ -1,11 +1,7 @@
 FROM ./cdx1-14B-q8_0.gguf
 
-PARAMETER num_ctx 16000
-PARAMETER temperature 0.7
-PARAMETER min_p 0.0
-PARAMETER top_p 0.8
-PARAMETER top_k 20
-PARAMETER repeat_penalty 1.05
+PARAMETER num_ctx 32768
+PARAMETER temperature 0.55
 
 SYSTEM """You are a helpful assistant to the user."""
 

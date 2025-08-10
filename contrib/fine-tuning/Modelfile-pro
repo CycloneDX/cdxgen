@@ -1,7 +1,11 @@
-FROM ./cdx1-mini-4B-q8_0.gguf
+FROM ./cdx1-pro-30B-q8_0.gguf
 
 PARAMETER num_ctx 262144
 PARAMETER temperature 0.7
+PARAMETER min_p 0.0
+PARAMETER top_p 0.8
+PARAMETER top_k 20
+PARAMETER repeat_penalty 1.05
 
 SYSTEM """You are a helpful assistant to the user."""
 
