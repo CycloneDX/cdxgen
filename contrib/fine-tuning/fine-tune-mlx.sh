@@ -5,14 +5,22 @@ TUNING_TOOL=mlx
 TOOL_BASE_MODEL=${1:-cdx1}
 MAX_SEQ=262144
 MAX_TOKENS=16384
-ITERS=1500
+ITERS=2000
 NUM_LAYERS=48
 ADAPTERS_PATH=adapters
 TEMP=0.7
 case "$TOOL_BASE_MODEL" in
+  cdx1-nano)
+    TEMP=0.55
+    ADAPTERS_PATH=adapters-nano
+    NUM_LAYERS=-1
+    BASE_MODEL="unsloth/Qwen3-1.7B"
+    MAX_SEQ=40960
+    MAX_TOKENS=8096
+    ;;
   cdx1-mini)
     ADAPTERS_PATH=adapters-mini
-    NUM_LAYERS=36
+    NUM_LAYERS=-1
     BASE_MODEL="unsloth/Qwen3-4B-Instruct-2507"
     ;;
   cdx1-pro)
@@ -57,10 +65,12 @@ if [ "$TOOL_BASE_MODEL" != "cdx1-pro" ]; then
   mlx_lm.generate --model ${BASE_MODEL} --prompt "Tell me about cdxgen" --temp ${TEMP} --max-tokens ${MAX_TOKENS}
 fi
 
-# We use LoRA fine-tuning over DoRA due to better compatibility with vLLM and llama.cpp
-if [ "$TOOL_BASE_MODEL" = "cdx1-mini" ]; then
+# Small models require a full-tune.
+# Large models require LoRA with less iterations.
+# TODO: Revisit the optimizer algorithm. Interested in joining our team and do some cool research?
+if [ "$TOOL_BASE_MODEL" = "cdx1-mini" ] || [ "$TOOL_BASE_MODEL" = "cdx1-nano" ]; then
   echo "Full fine-tune with cdx-docs dataset. This might take a while ..."
-  mlx_lm.lora --model ${BASE_MODEL} --train --data ${DATASET_PATH} --adapter-path ${ADAPTERS_PATH} --mask-prompt --fine-tune-type full --batch-size 2 --num-layers ${NUM_LAYERS} --iters ${ITERS} --grad-checkpoint --max-seq-length ${MAX_SEQ} --learning-rate "1e-5" --optimizer adamw
+  mlx_lm.lora --model ${BASE_MODEL} --train --data ${DATASET_PATH} --adapter-path ${ADAPTERS_PATH} --mask-prompt --fine-tune-type full --batch-size 2 --num-layers ${NUM_LAYERS} --iters ${ITERS} --val-batches -1 --save-every 500 --grad-checkpoint --max-seq-length ${MAX_SEQ} --learning-rate "1e-5" --optimizer adamw
 elif [ "$TOOL_BASE_MODEL" = "cdx1" ]; then
   echo "Low-Rank Adaptation (LoRA) fine-tuning ${BASE_MODEL} with cdx-docs dataset. This might take a while ..."
   mlx_lm.lora --model ${BASE_MODEL} --train --data ${DATASET_PATH} --adapter-path ${ADAPTERS_PATH} --mask-prompt --fine-tune-type lora --batch-size 1 --num-layers ${NUM_LAYERS} --iters ${ITERS} --grad-checkpoint --max-seq-length ${MAX_SEQ} --learning-rate "1e-4" --optimizer adamw
@@ -100,7 +110,7 @@ echo "Test ${QUANT_MODEL_6BIT} with the prompt 'Tell me about cdxgen'. Must yiel
 mlx_lm.generate --model ./${QUANT_MODEL_6BIT} --prompt "Tell me about cdxgen" --temp ${TEMP} --max-tokens ${MAX_TOKENS}
 
 # 4-bit for a small model has very poor performance
-if [ "$TOOL_BASE_MODEL" != "cdx1-mini" ]; then
+if [ "$TOOL_BASE_MODEL" != "cdx1-mini" ] && [ "$TOOL_BASE_MODEL" != "cdx1-nano" ]; then
   rm -rf ${QUANT_MODEL_4BIT}
   mlx_lm.convert --hf-path ${FUSED_MODEL} --mlx-path ${QUANT_MODEL_4BIT} -q --q-bits 4 --dtype bfloat16
   echo "Test ${QUANT_MODEL_4BIT} with the prompt 'Tell me about cdxgen'. Must yield a better response."

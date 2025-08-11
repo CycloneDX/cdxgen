@@ -22,7 +22,7 @@ hf upload --quiet --repo-type dataset CycloneDX/cdx-docs ./semantics semantics
 echo "Uploading models. Please wait ..."
 hf upload --quiet --exclude "**/README.md" --repo-type model ${QUANT_MODEL_8BIT} ./${QUANT_MODEL_8BIT} .
 hf upload --quiet --exclude "**/README.md" --repo-type model ${QUANT_MODEL_6BIT} ./${QUANT_MODEL_6BIT} .
-if [ "$TOOL_BASE_MODEL" != "cdx1-mini" ]; then
+if [ "$TOOL_BASE_MODEL" != "cdx1-mini" ] && [ "$TOOL_BASE_MODEL" != "cdx1-nano" ]; then
   hf upload --quiet --exclude "**/README.md" --repo-type model ${QUANT_MODEL_4BIT} ./${QUANT_MODEL_4BIT} .
 fi
 #if [ "$TOOL_BASE_MODEL" != "cdx1-mini" ]; then
