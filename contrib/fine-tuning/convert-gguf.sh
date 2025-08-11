@@ -28,6 +28,10 @@ HF_ORG=CycloneDX
 TOOL_BASE_MODEL=${1:-cdx1}
 MODEL_FILE_PATH=${CDXGEN_FT_PATH}/Modelfile
 case "$TOOL_BASE_MODEL" in
+  cdx1-nano)
+    PARAM_SIZE="1.7B"
+    MODEL_FILE_PATH=${CDXGEN_FT_PATH}/Modelfile-nano
+    ;;
   cdx1-mini)
     PARAM_SIZE="4B"
     MODEL_FILE_PATH=${CDXGEN_FT_PATH}/Modelfile-mini
@@ -63,7 +67,7 @@ cp ${MODEL_FILE_PATH} ${GGUF_MODEL_BF16_PATH}/Modelfile
 sed -i '' 's|./${TOOL_BASE_MODEL}-${PARAM_SIZE}-q8_0.gguf|./${TOOL_BASE_MODEL}-${PARAM_SIZE}-bf16.gguf|g' ${GGUF_MODEL_BF16_PATH}/Modelfile
 cp ${FUSED_MODEL}/*.json ${FUSED_MODEL}/merges.txt ${GGUF_MODEL_BF16_PATH}/
 
-if [ "$TOOL_BASE_MODEL" == "cdx1-mini" ]; then
+if [ "$TOOL_BASE_MODEL" == "cdx1-mini" ] || [ "$TOOL_BASE_MODEL" == "cdx1-nano" ]; then
   GGUF_MODEL_Q6_K_NAME=${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q6_K-${FORMAT}
   GGUF_MODEL_Q6_K_PATH=${CDXGEN_FT_PATH}/${HF_ORG}/${TOOL_BASE_MODEL}-${PARAM_SIZE}-Q6_K-${FORMAT}
   rm -rf ${GGUF_MODEL_Q6_K_PATH}
@@ -110,7 +114,7 @@ fi
 export HF_HUB_ENABLE_HF_TRANSFER=0
 hf auth whoami
 hf upload --quiet --exclude "**/README.md" --repo-type model ${GGUF_MODEL_Q8_0_NAME} ${GGUF_MODEL_Q8_0_PATH} .
-if [ "$TOOL_BASE_MODEL" == "cdx1-mini" ]; then
+if [ "$TOOL_BASE_MODEL" == "cdx1-mini" ] || [ "$TOOL_BASE_MODEL" == "cdx1-nano" ]; then
   hf upload --quiet --exclude "**/README.md" --repo-type model ${GGUF_MODEL_Q6_K_NAME} ${GGUF_MODEL_Q6_K_PATH} .
 else
   hf upload --quiet --exclude "**/README.md" --repo-type model ${GGUF_MODEL_Q4_K_M_NAME} ${GGUF_MODEL_Q4_K_M_PATH} .
@@ -124,7 +128,7 @@ ollama cp hf.co/${GGUF_MODEL_Q8_0_NAME} ${GGUF_MODEL_Q8_0_NAME}
 ollama push ${GGUF_MODEL_Q8_0_NAME}
 ollama rm hf.co/${GGUF_MODEL_Q8_0_NAME}
 
-if [ "$TOOL_BASE_MODEL" == "cdx1-mini" ]; then
+if [ "$TOOL_BASE_MODEL" == "cdx1-mini" ] || [ "$TOOL_BASE_MODEL" == "cdx1-nano" ]; then
   ollama pull hf.co/${GGUF_MODEL_Q6_K_NAME}
   ollama cp hf.co/${GGUF_MODEL_Q6_K_NAME} ${GGUF_MODEL_Q6_K_NAME}
   ollama push ${GGUF_MODEL_Q6_K_NAME}

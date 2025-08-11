@@ -1,0 +1,10 @@
+FROM ./cdx1-nano-1.7B-q8_0.gguf
+
+PARAMETER num_ctx 32768
+PARAMETER temperature 0.55
+
+SYSTEM """You are a helpful assistant to the user."""
+
+LICENSE """
+apache-2.0
+"""
