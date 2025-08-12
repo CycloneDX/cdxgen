@@ -543,7 +543,11 @@ cdxgen --help
 
 ## Sponsors
 
-<img src="./docs/_media/LevoLogo-LightBg.jpg" width="200" height="auto">
+<div style="display: flex; align-items: center; gap: 20px;">
+  <img src="./docs/_media/LevoLogo-LightBg.jpg" width="200" height="auto">
+  <img src="./docs/_media/GithubLogo-LightBg.png" width="170" height="auto">
+  <img src="./docs/_media/MicrosoftLogo.png" width="180" height="auto">
+</div>
 
 <!-- LINK LABELS -->
 <!-- Badges -->
