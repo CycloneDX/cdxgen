@@ -4,7 +4,8 @@
     "*.test.js",
     "lib/evinser/evinser.js",
     "lib/**/*.test.js",
-    "types/**/*"
+    "types/**/*",
+    "contrib/**"
   ],
   "compilerOptions": {
     "allowJs": true,
