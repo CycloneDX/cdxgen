@@ -28,6 +28,8 @@ runs:
     - name: Build Docker image
       uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
       with:
+        build-args: |
+          VERSION=${{ github.ref_name }}
         context: .
         file: ${{ inputs.dockerfile }}
         labels: ${{ inputs.labels }}
