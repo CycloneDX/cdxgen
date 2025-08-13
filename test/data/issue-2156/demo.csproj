@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup>
+        <Reference Include="Auth0.AuthenticationApi, Version=7.26.1.0, Culture=neutral, PublicKeyToken=afe355c419914736, processorArchitecture=MSIL">
+            <HintPath>..\packages\Auth0.AuthenticationApi.7.26.1\lib\net462\Auth0.AuthenticationApi.dll</HintPath>
+        </Reference>
+        <Reference Include="Auth0.Core, Version=7.26.1.0, Culture=neutral, PublicKeyToken=afe355c419914736, processorArchitecture=MSIL">
+            <HintPath>..\packages\Auth0.Core.7.26.1\lib\net462\Auth0.Core.dll</HintPath>
+        </Reference>
+        <Reference Include="Auth0.ManagementApi, Version=7.26.1.0, Culture=neutral, PublicKeyToken=afe355c419914736, processorArchitecture=MSIL">
+            <HintPath>..\packages\Auth0.ManagementApi.7.26.1\lib\net462\Auth0.ManagementApi.dll</HintPath>
+        </Reference>
+        <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
+            <HintPath>..\packages\BouncyCastle.Cryptography.2.6.2\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+        </Reference>
+        <Reference Include="Castle.Core, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+            <HintPath>..\packages\Castle.Core.5.1.1\lib\net462\Castle.Core.dll</HintPath>
+        </Reference>
+        <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+            <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
+        </Reference>
+        <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+            <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
+        </Reference>
+        <Reference Include="CommonServiceLocator, Version=2.0.7.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+            <HintPath>..\packages\CommonServiceLocator.2.0.7\lib\net48\CommonServiceLocator.dll</HintPath>
+        </Reference>
+        <Reference Include="itextsharp, Version=5.5.13.4, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+            <HintPath>..\packages\iTextSharp.5.5.13.4\lib\net461\itextsharp.dll</HintPath>
+        </Reference>
+        <Reference Include="LaunchDarkly.Cache, Version=1.0.2.0, Culture=neutral, PublicKeyToken=caeed01e3c7cd028, processorArchitecture=MSIL">
+            <HintPath>..\packages\LaunchDarkly.Cache.1.0.2\lib\net45\LaunchDarkly.Cache.dll</HintPath>
+        </Reference>
+        <Reference Include="LaunchDarkly.CommonSdk, Version=7.0.0.0, Culture=neutral, PublicKeyToken=45ef1738a929a7df, processorArchitecture=MSIL">
+            <HintPath>..\packages\LaunchDarkly.CommonSdk.7.0.0\lib\net462\LaunchDarkly.CommonSdk.dll</HintPath>
+        </Reference>
+        <Reference Include="LaunchDarkly.CommonSdk.StrongName, Version=4.3.1.0, Culture=neutral, PublicKeyToken=45ef1738a929a7df, processorArchitecture=MSIL">
+            <HintPath>..\packages\LaunchDarkly.CommonSdk.StrongName.4.3.1\lib\net45\LaunchDarkly.CommonSdk.StrongName.dll</HintPath>
+        </Reference>
+        <Reference Include="LaunchDarkly.EventSource, Version=5.1.0.0, Culture=neutral, PublicKeyToken=18e8c36453e3060f, processorArchitecture=MSIL">
+            <HintPath>..\packages\LaunchDarkly.EventSource.5.1.0\lib\net462\LaunchDarkly.EventSource.dll</HintPath>
+        </Reference>
+        <Reference Include="LaunchDarkly.InternalSdk, Version=3.4.0.0, Culture=neutral, PublicKeyToken=ff53908ab73043b6, processorArchitecture=MSIL">
+            <HintPath>..\packages\LaunchDarkly.InternalSdk.3.4.0\lib\net462\LaunchDarkly.InternalSdk.dll</HintPath>
+        </Reference>
+        <Reference Include="LaunchDarkly.JsonStream, Version=1.1.2.0, Culture=neutral, PublicKeyToken=baa039a572ce18d0, processorArchitecture=MSIL">
+            <HintPath>..\packages\LaunchDarkly.JsonStream.1.1.2\lib\net461\LaunchDarkly.JsonStream.dll</HintPath>
+        </Reference>
+        <Reference Include="LaunchDarkly.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d9182e4b0afd33e7, processorArchitecture=MSIL">
+            <HintPath>..\packages\LaunchDarkly.Logging.2.0.0\lib\net462\LaunchDarkly.Logging.dll</HintPath>
+        </Reference>
+        <Reference Include="LaunchDarkly.ServerSdk, Version=8.2.0.0, Culture=neutral, PublicKeyToken=f86add69004e6885, processorArchitecture=MSIL">
+            <HintPath>..\packages\LaunchDarkly.ServerSdk.8.2.0\lib\net462\LaunchDarkly.ServerSdk.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+            <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="Microsoft.IdentityModel.Abstractions, Version=7.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <HintPath>..\packages\Microsoft.IdentityModel.Abstractions.7.5.0\lib\net472\Microsoft.IdentityModel.Abstractions.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=7.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <HintPath>..\packages\Microsoft.IdentityModel.JsonWebTokens.7.5.0\lib\net472\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.IdentityModel.Logging, Version=7.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <HintPath>..\packages\Microsoft.IdentityModel.Logging.7.5.0\lib\net472\Microsoft.IdentityModel.Logging.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.IdentityModel.Protocol.Extensions, Version=1.0.40306.1554, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <HintPath>..\packages\Microsoft.IdentityModel.Protocol.Extensions.1.0.4.403061554\lib\net45\Microsoft.IdentityModel.Protocol.Extensions.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.IdentityModel.Protocols, Version=7.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <HintPath>..\packages\Microsoft.IdentityModel.Protocols.7.5.0\lib\net472\Microsoft.IdentityModel.Protocols.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect, Version=7.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <HintPath>..\packages\Microsoft.IdentityModel.Protocols.OpenIdConnect.7.5.0\lib\net472\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.IdentityModel.Tokens, Version=7.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <HintPath>..\packages\Microsoft.IdentityModel.Tokens.7.5.0\lib\net472\Microsoft.IdentityModel.Tokens.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.Owin, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <HintPath>..\packages\Microsoft.Owin.4.2.2\lib\net45\Microsoft.Owin.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.2.2\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.Owin.Security, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <HintPath>..\packages\Microsoft.Owin.Security.4.2.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.2.2\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.Owin.Security.OpenIdConnect, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <HintPath>..\packages\Microsoft.Owin.Security.OpenIdConnect.4.2.2\lib\net45\Microsoft.Owin.Security.OpenIdConnect.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+            <HintPath>..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+        </Reference>
+        <Reference Include="Moq, Version=4.20.70.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+            <HintPath>..\packages\Moq.4.20.70\lib\net462\Moq.dll</HintPath>
+        </Reference>
+        <Reference Include="NewRelic.Api.Agent, Version=10.0.0.0, Culture=neutral, PublicKeyToken=06552fced0b33d87, processorArchitecture=MSIL">
+            <HintPath>..\packages\NewRelic.Agent.Api.10.27.0\lib\net462\NewRelic.Api.Agent.dll</HintPath>
+        </Reference>
+        <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+            <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+        </Reference>
+        <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+            <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.3\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+</Project>
