@@ -20,7 +20,14 @@
   },
   "linter": {
     "enabled": true,
-    "includes": ["**", "!contrib/**", "!data/**", "!test/**", "!types/**"],
+    "includes": [
+      "**",
+      "!contrib/**",
+      "!data/**",
+      "!test/**",
+      "!types/**",
+      "!**/*.test.js"
+    ],
     "rules": {
       "recommended": true,
       "complexity": {
@@ -68,7 +75,8 @@
   "vcs": {
     "enabled": true,
     "clientKind": "git",
-    "useIgnoreFile": true
+    "useIgnoreFile": true,
+    "defaultBranch": "master"
   },
   "formatter": {
     "enabled": true,
@@ -77,6 +85,7 @@
     "indentWidth": 2
   },
   "files": {
-    "maxSize": 5242880
+    "maxSize": 5242880,
+    "includes": ["**", "!contrib/**", "!data/**", "!test/**", "!types/**"]
   }
 }
