@@ -23,7 +23,7 @@ jobs:
     permissions:
       id-token: write  # needed for npm provenance attestation
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
       - name: Use Node.js
@@ -58,7 +58,7 @@ jobs:
     permissions:
       packages: write  # needed for uploading images to GH package registry
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
       - name: Set up QEMU
@@ -101,7 +101,7 @@ jobs:
     permissions:
       packages: write  # needed for uploading images to GH package registry
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
       - name: Set up QEMU
@@ -145,7 +145,7 @@ jobs:
     permissions:
       packages: write  # needed for uploading images to GH package registry
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -174,7 +174,7 @@ jobs:
       contents: write  # needed for creating GH releases and uploading release assets
       packages: write  # needed for uploading images to GH package registry
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
       - name: Use Node.js
@@ -256,7 +256,7 @@ jobs:
       contents: write  # needed for creating GH releases and uploading release assets
       packages: write  # needed for uploading images to GH package registry
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
       - name: Use Node.js
@@ -325,7 +325,7 @@ jobs:
       contents: write  # needed for creating GH releases and uploading release assets
       packages: write  # needed for uploading images to GH package registry
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
       - name: Use Node.js
@@ -393,7 +393,7 @@ jobs:
     permissions:
       packages: write  # needed for uploading images to GH package registry
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
       - name: Use Node.js
@@ -444,7 +444,7 @@ jobs:
       contents: write  # needed for creating GH releases and uploading release assets
       packages: write  # needed for uploading images to GH package registry
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
       - name: Use Node.js
