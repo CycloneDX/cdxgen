@@ -86,6 +86,6 @@
   },
   "files": {
     "maxSize": 5242880,
-    "includes": ["**", "!contrib/**", "!data/**", "!test/**", "!types/**"]
+    "includes": ["**", "!contrib", "!data", "!test", "!types"]
   }
 }

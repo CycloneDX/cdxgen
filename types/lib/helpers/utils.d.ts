@@ -1489,6 +1489,7 @@ export const isMac: boolean;
 export let ATOM_DB: string;
 export const commandsExecuted: Set<any>;
 export const frameworksList: any;
+export const CDXGEN_VERSION: any;
 export const DEBUG_MODE: boolean;
 export const TIMEOUT_MS: number;
 export const MAX_BUFFER: number;

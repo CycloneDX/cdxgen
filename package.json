@@ -80,8 +80,8 @@
     "*": "biome check --fix --no-errors-on-unmatched"
   },
   "dependencies": {
-    "@babel/parser": "^7.28.0",
-    "@babel/traverse": "^7.28.0",
+    "@babel/parser": "^7.28.3",
+    "@babel/traverse": "^7.28.3",
     "@iarna/toml": "2.2.5",
     "@npmcli/arborist": "^9.1.2",
     "ajv": "^8.17.1",

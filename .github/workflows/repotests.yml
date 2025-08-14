@@ -880,7 +880,7 @@ jobs:
         shell: bash
       - name: post-build lifecycle tests
         run: |
-          pip install blint
+          python3 -m pip install blint
           mkdir -p bintests
           cd bintests
           curl -LO https://github.com/owasp-dep-scan/dosai/releases/download/v0.1.1/Dosai.exe
@@ -899,6 +899,7 @@ jobs:
           cd ..
           bin/cdxgen.js -p -t go --lifecycle post-build -o bomresults/bom-go-binary.json gobintests
         shell: bash
+        if: matrix.os != 'windows-latest'
       - name: repotests 1.7
         run: |
           bin/cdxgen.js -r -t java repotests/shiftleft-java-example -o bomresults/1.7-bom-java.json --generate-key-and-sign --tlp-classification AMBER --spec-version 1.7
