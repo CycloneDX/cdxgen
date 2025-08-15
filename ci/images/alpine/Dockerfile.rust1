@@ -4,10 +4,32 @@ FROM rust:1-alpine3.20 AS base
 ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin
 
 RUN apk update && apk add --no-cache \
-    curl bash bzip2 git zip unzip make gawk \
-    build-base python3 python3-dev py3-pip pkgconfig openssl-dev \
-    nodejs npm openjdk21 \
+    bash \
+    bzip2 \
+    build-base \
+    curl \
+    gawk \
+    git \
+    make \
+    musl-dev \
+    nodejs \
+    npm \
+    openjdk21 \
+    openssl-dev \
+    pkgconfig \
+    py3-pip \
+    python3 \
+    python3-dev \
+    py3-virtualenv \
+    unzip \
+    zip \
+    libffi-dev \
+    gcc \
+    g++ \
+    && rustup target add x86_64-unknown-linux-musl \
     && npm install -g npm corepack \
+    && /usr/bin/python3 --version \
+    && /usr/bin/python3 -m pip install --no-cache-dir --upgrade atom-tools --target /opt/pypi \
     && node -v \
     && npm -v \
     && rustc --version \
@@ -38,9 +60,11 @@ ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin
 COPY . /opt/cdxgen
 
 RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-dep-builds=true --prod --no-optional --package-import-method copy --frozen-lockfile && corepack pnpm cache delete \
+    && npm uninstall -g corepack \
+    && apk del npm python3-dev py3-pip py3-virtualenv gcc g++ musl-dev make build-base openssl-dev pkgconfig libffi-dev \
     && mkdir -p ${NODE_COMPILE_CACHE} \
     && node /opt/cdxgen/bin/cdxgen.js --help \
-    && pip install --upgrade --no-cache-dir blint --target /opt/pypi --break-system-packages \
+    && atom-tools --help \
     && rm -rf /root/.cache/node \
     && chmod a-w -R /opt
 WORKDIR /app
