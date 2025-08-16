@@ -14,7 +14,6 @@ RUN apk update && apk add --no-cache \
     musl-dev \
     nodejs \
     npm \
-    openjdk21 \
     openssl-dev \
     pkgconfig \
     py3-pip \
@@ -26,17 +25,13 @@ RUN apk update && apk add --no-cache \
     libffi-dev \
     gcc \
     g++ \
-    && rustup target add x86_64-unknown-linux-musl \
     && npm install -g npm corepack \
     && /usr/bin/python3 --version \
-    && /usr/bin/python3 -m pip install --no-cache-dir --upgrade atom-tools --target /opt/pypi \
     && node -v \
     && npm -v \
     && rustc --version \
     && cargo --version \
     && rm -rf /var/cache/apk/*
-
-CMD ["/bin/bash"]
 
 # cdxgen-image
 FROM base AS cdxgen
@@ -64,7 +59,6 @@ RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --config.strict-d
     && apk del npm python3-dev py3-pip py3-virtualenv gcc g++ musl-dev make build-base openssl-dev pkgconfig libffi-dev \
     && mkdir -p ${NODE_COMPILE_CACHE} \
     && node /opt/cdxgen/bin/cdxgen.js --help \
-    && atom-tools --help \
     && rm -rf /root/.cache/node \
     && chmod a-w -R /opt
 WORKDIR /app
