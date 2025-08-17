@@ -20,14 +20,7 @@
   },
   "linter": {
     "enabled": true,
-    "includes": [
-      "**",
-      "!contrib/**",
-      "!data/**",
-      "!test/**",
-      "!types/**",
-      "!**/*.test.js"
-    ],
+    "includes": ["**", "!contrib/**", "!data/**", "!test/**", "!types/**"],
     "rules": {
       "recommended": true,
       "complexity": {
