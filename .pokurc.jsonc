@@ -1,0 +1,19 @@
+{
+  "$schema": "https://poku.io/schemas/configs.json",
+  "include": [
+    "lib/helpers/dotnetutils.poku.js",
+    "lib/helpers/protobom.poku.js",
+    "lib/helpers/utils.poku.js",
+    "lib/helpers/display.poku.js",
+    "lib/stages/postgen/postgen.poku.js",
+    "lib/evinser/swiftsem.poku.js",
+    "lib/server/server.poku.js"
+  ],
+  "sequential": false,
+  "debug": false,
+  "filter": ".poku.js",
+  "failFast": false,
+  "concurrency": 0,
+  "quiet": false,
+  "platform": "node"
+}

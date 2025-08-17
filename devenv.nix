@@ -84,7 +84,7 @@ in
 
       # Common packages
       packages = [
-        pkgs.nodejs_22
+        pkgs-unstable.nodejs_24
         pkgs.python313Full
         pkgs-unstable.pnpm_10
       ];
