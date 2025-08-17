@@ -1,11 +1,12 @@
 /**
  * Method to parse semantic slice data
  *
+ * @param {String} language Project language.
  * @param {Array} components Components from the input SBOM
  * @param {Object} semanticsSlice Semantic slice data
  * @returns {Object} Parsed metadata
  */
-export function parseSemanticSlices(components: any[], semanticsSlice: any): any;
+export function parseSemanticSlices(language: string, components: any[], semanticsSlice: any): any;
 export function prepareDB(options: any): Promise<{
     sequelize: import("sequelize").Sequelize;
     Namespaces: {
