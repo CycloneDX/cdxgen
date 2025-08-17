@@ -1,5 +1,5 @@
 # Base-image
-FROM node:24.5.0-alpine AS base
+FROM node:24.6.0-alpine AS base
 
 ENV PATH=${PATH}:/usr/local/bin
 
