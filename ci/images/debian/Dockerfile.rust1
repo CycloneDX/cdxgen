@@ -2,7 +2,7 @@
 FROM rust:1-slim-bookworm AS base
 
 # renovate: datasource=docker depName=node
-ARG NODE_VERSION=24.5.0
+ARG NODE_VERSION=24.6.0
 
 ENV CARGO_HOME=/usr/local/cargo \
     RUSTUP_HOME=/usr/local/rustup \
