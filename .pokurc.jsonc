@@ -6,8 +6,10 @@
     "lib/helpers/utils.poku.js",
     "lib/helpers/display.poku.js",
     "lib/stages/postgen/postgen.poku.js",
+    "lib/evinser/evinser.poku.js",
     "lib/evinser/swiftsem.poku.js",
-    "lib/server/server.poku.js"
+    "lib/server/server.poku.js",
+    "lib/parsers/iri.poku.js"
   ],
   "sequential": false,
   "debug": false,
