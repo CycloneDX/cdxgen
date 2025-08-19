@@ -2,6 +2,5 @@
   "$schema": "https://poku.io/schemas/configs.json",
   "include": ["lib"],
   "filter": ".poku.js",
-  "concurrency": 0,
   "reporter": "verbose"
 }
