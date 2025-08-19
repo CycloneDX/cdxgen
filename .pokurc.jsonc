@@ -17,5 +17,6 @@
   "failFast": false,
   "concurrency": 0,
   "quiet": false,
-  "platform": "node"
+  "platform": "node",
+  "reporter": "verbose"
 }
