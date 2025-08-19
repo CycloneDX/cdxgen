@@ -58,7 +58,7 @@
     "cdx-verify": "bin/verify.js"
   },
   "scripts": {
-    "test": "poku --parallel",
+    "test": "poku",
     "watch": "poku --watch",
     "lint:check": "biome check",
     "lint": "biome check --fix",
