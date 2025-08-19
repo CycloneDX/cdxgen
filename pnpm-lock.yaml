@@ -53,8 +53,6 @@ overrides:
   yallist: ^5.0.0
   yargs: ^17.7.2
 
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
-
 importers:
 
   .:
@@ -155,8 +153,8 @@ importers:
         specifier: 1.1.4
         version: 1.1.4
       '@bufbuild/protobuf':
-        specifier: 2.6.3
-        version: 2.6.3
+        specifier: 2.7.0
+        version: 2.7.0
       '@cyclonedx/cdxgen-plugins-bin':
         specifier: 1.6.12
         version: 1.6.12
@@ -291,28 +289,24 @@ packages:
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [linux]
-    libc: musl
 
   '@biomejs/cli-linux-arm64@2.1.4':
     resolution: {integrity: sha512-juhEkdkKR4nbUi5k/KRp1ocGPNWLgFRD4NrHZSveYrD6i98pyvuzmS9yFYgOZa5JhaVqo0HPnci0+YuzSwT2fw==}
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [linux]
-    libc: glibc
 
   '@biomejs/cli-linux-x64-musl@2.1.4':
     resolution: {integrity: sha512-lvwvb2SQQHctHUKvBKptR6PLFCM7JfRjpCCrDaTmvB7EeZ5/dQJPhTYBf36BE/B4CRWR2ZiBLRYhK7hhXBCZAg==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [linux]
-    libc: musl
 
   '@biomejs/cli-linux-x64@2.1.4':
     resolution: {integrity: sha512-Eoy9ycbhpJVYuR+LskV9s3uyaIkp89+qqgqhGQsWnp/I02Uqg2fXFblHJOpGZR8AxdB9ADy87oFVxn9MpFKUrw==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [linux]
-    libc: glibc
 
   '@biomejs/cli-win32-arm64@2.1.4':
     resolution: {integrity: sha512-3WRYte7orvyi6TRfIZkDN9Jzoogbv+gSvR+b9VOXUg1We1XrjBg6WljADeVEaKTvOcpVdH0a90TwyOQ6ue4fGw==}
@@ -329,6 +323,9 @@ packages:
   '@bufbuild/protobuf@2.6.3':
     resolution: {integrity: sha512-w/gJKME9mYN7ZoUAmSMAWXk4hkVpxRKvEJCb3dV5g9wwWdxTJJ0ayOJAVcNxtdqaxDyFuC0uz4RSGVacJ030PQ==}
 
+  '@bufbuild/protobuf@2.7.0':
+    resolution: {integrity: sha512-qn6tAIZEw5i/wiESBF4nQxZkl86aY4KoO0IkUa2Lh+rya64oTOdJQFlZuMwI1Qz9VBJQrQC4QlSA2DNek5gCOA==}
+
   '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.12':
     resolution: {integrity: sha512-8iVxUFj3DlCcHmA9+n3sRHcf3gq+ohbhNe9uq+ppsMJ5So48DWdVjHveZN7MWpxTnZqk8KJTAYNPFvaLKAFYBQ==}
     cpu: [x64]
@@ -343,37 +340,31 @@ packages:
     resolution: {integrity: sha512-D/vdxpvrtkfYITHpiQjlvhZBNkm2GLmm/lZHbSs5R+nghbulTgXR9I8pTALFTBhjHZQu55DTiACmn/irhhotkA==}
     cpu: [x64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.6.12':
     resolution: {integrity: sha512-xd9A25e+4SwHwm9FRglMdsfRsTAROTj3C5eiQ501FI+FOxEbnCODNkDFkplqKqDjDDSIPOgc4llmk9Wk+91c/Q==}
     cpu: [arm64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.6.12':
     resolution: {integrity: sha512-6c7IGJcbZemZ2RCj3r1BbxPfQZPxzQNvuk4er0xLdcompQITvjmWT/aaYFtPLT5ymDjIfDyVbgDin8PXQwWWIA==}
     cpu: [arm]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linux-ppc64@1.6.12':
     resolution: {integrity: sha512-JaRY6F+3VBHZMZ51DhC8NhHJkwtLOM1Lnh//iAPw5pAxpQdron+YwfcVIKWhBlFx5zxbz2NI5L7QtiEV/iO4PA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.6.12':
     resolution: {integrity: sha512-X4eHr0WUtBOiX1Yy8hr35JhpUBJYYbZ31v8KCHtuSK8/h5/0gJidg1OvTGxFWoOLKtPCcb3FvqCY+PSrUcxN0A==}
     cpu: [x64]
     os: [linux]
-    libc: musl
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64@1.6.12':
     resolution: {integrity: sha512-smaxqZ2ZmVm04elK9Dydk1IjEcyRuRt9pSBZxK/RhgJojsJGQaeY/boKR0P/46avoNNiZbVkIDAIbBjfJ5Z7RA==}
     cpu: [arm64]
     os: [linux]
-    libc: musl
 
   '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.12':
     resolution: {integrity: sha512-6reJ+EFAR8YIwSRYMZ/dfF5e+o/JGaAa7h8ByHUcDXdVb9AZDyFKEXu0WeH732FJ1rk06GuNBU2ZFonFvt5lqQ==}
@@ -1840,6 +1831,9 @@ snapshots:
     optional: true
 
   '@bufbuild/protobuf@2.6.3':
+    optional: true
+
+  '@bufbuild/protobuf@2.7.0':
     optional: true
 
   '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.12':
