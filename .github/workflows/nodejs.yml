@@ -34,6 +34,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+env:
+  NEXUS_URL: http://pkg.cdxgen.net:8081/repository/npm/
+
 # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token
 permissions: {}
 
@@ -63,6 +66,8 @@ jobs:
       - name: Trim CI agent
         run: |
           rm -rf /tmp/docker-images-* /tmp/atom-usages-* /tmp/atom-reachables-*
+      - name: Setup Nexus usage
+        run: echo "registry=$NEXUS_URL" > .npmrc
       - name: pnpm install
         run: |
           corepack pnpm install --config.strict-dep-builds=true
