@@ -18,7 +18,7 @@ on:
         type: boolean
 
 env:
-  NEXUS_URL: http://pkg.cdxgen.net:8081/repository/npm/
+  NEXUS_URL: http://100.73.146.80:8081/repository/npm/
   REPO: ghcr.io
   TAG: v11
   TEAM: cyclonedx
