@@ -18,6 +18,9 @@ inputs:
   platforms:
     description: The platforms for which to build the image
     required: true
+  pip-config:
+    description: Configuration for pip
+    default: ''
   tags:
     description: All tags for the image
     required: true
@@ -33,6 +36,7 @@ runs:
       with:
         build-args: |
           LANGUAGE=${{ inputs.language }}
+          "PIP_CONFIG=${{ inputs.pip-config }}"
           TAG=${{ inputs.tags[0] }}
           VERSION=${{ github.ref_name }}
         context: .

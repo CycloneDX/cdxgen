@@ -21,6 +21,8 @@ inputs:
     required: true
   main-tag:
     description: The tag to attach the SBOMs to, defaults to the first tag returned from the metadata extraction
+  pip-config:
+    description: Configuration for pip
   signing-key:
     description: The key to use for signing the SBOM, base64 encoded
     required: true
@@ -46,6 +48,7 @@ runs:
         language: ${{ inputs.language }}
         labels: ${{ steps.metadata.outputs.labels }}
         output: registry
+        pip-config: ${{ inputs.pip-config }}
         platforms: linux/amd64${{ inputs.build-arm == 'true' && ',linux/arm64' || '' }}
         tags: ${{ inputs.tags || steps.metadata.outputs.tags }}
         target: ${{ inputs.target }}
