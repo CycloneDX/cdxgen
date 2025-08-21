@@ -15,12 +15,12 @@ inputs:
   output:
     description: Controls what should be done with the image(s) after building
     required: true
-  platforms:
-    description: The platforms for which to build the image
-    required: true
   pip-config:
     description: Configuration for pip
     default: ''
+  platforms:
+    description: The platforms for which to build the image
+    required: true
   tags:
     description: All tags for the image
     required: true

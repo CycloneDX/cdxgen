@@ -20,8 +20,8 @@ on:
 env:
   NEXUS_PORT: 8081
   NEXUS_SERVER: 100.73.146.80
-  NEXUS_PYPI_REPO_PATH: /repository/pypi/
-  NEXUS_NPM_REPO_PATH: /repository/npm/
+  NEXUS_PYPI_REPO_PATH: /repository/pypi
+  NEXUS_NPM_REPO_PATH: /repository/npm
   REPO: ghcr.io
   TAG: v11
   TEAM: cyclonedx
@@ -63,8 +63,8 @@ jobs:
       - name: Setup Nexus usage
         if: ${{ fromJSON(inputs.image).runner }}
         run: |
-          echo "registry=$NEXUS_SERVER:$NEXUS_PORT/$NEXUS_NPM_REPO_PATH" > .npmrc
-          echo "PIP_CONFIG=[global]\nindex-url\=http://$NEXUS_SERVER:$NEXUS_PORT/$NEXUS_PYPI_REPO_PATH/simple\ntrusted-host\=$NEXUS_SERVER" >> $GITHUB_ENV
+          echo "registry=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_NPM_REPO_PATH" > .npmrc
+          echo "PIP_CONFIG=[global]\nindex-url=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_PYPI_REPO_PATH/simple\ntrusted-host=$NEXUS_SERVER" >> $GITHUB_ENV
       - name: Install project dependencies
         run: |
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
@@ -86,7 +86,7 @@ jobs:
              ${{ env.REPO }}/${{ env.TEAM }}/${{ fromJSON(inputs.image).base-image.name || fromJSON(inputs.image).distro || 'bci' }}-${{ fromJSON(inputs.image).base-image.lang || fromJSON(inputs.image).lang }}
              ${{ fromJSON(inputs.image).base-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).base-image.additional-image) || '' }}
           latest: ${{ inputs.latest }}
-          pypi-config: ${{ env.PIP_CONFIG }}
+          pip-config: ${{ env.PIP_CONFIG }}
           signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
           target: base
 
@@ -105,6 +105,7 @@ jobs:
           language: ${{ fromJSON(inputs.image).lang }}
           latest: ${{ inputs.latest }}
           main-tag: ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }}
+          pip-config: ${{ env.PIP_CONFIG }}
           signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
           tags: |
             ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }}
@@ -125,6 +126,7 @@ jobs:
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3) || '' }}
           language: ${{ fromJSON(inputs.image).lang }}
           latest: ${{ inputs.latest }}
+          pip-config: ${{ env.PIP_CONFIG }}
           signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
           target: cdxgen
 

@@ -57,6 +57,7 @@ runs:
       with:
         dockerfile: ${{ inputs.dockerfile }}
         language: ${{ inputs.language }}
+        pip-config: ${{ inputs.pip-config }}
         platform: linux/amd64
         signing-key: ${{ inputs.signing-key }}
         tag: ${{ inputs.main-tag || fromJSON(steps.metadata.outputs.json).tags[0] }}
@@ -67,6 +68,7 @@ runs:
       with:
         dockerfile: ${{ inputs.dockerfile }}
         language: ${{ inputs.language }}
+        pip-config: ${{ inputs.pip-config }}
         platform: linux/arm64
         signing-key: ${{ inputs.signing-key }}
         tag: ${{ inputs.main-tag || fromJSON(steps.metadata.outputs.json).tags[0] }}

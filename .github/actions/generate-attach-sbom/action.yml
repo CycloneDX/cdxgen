@@ -10,14 +10,16 @@ inputs:
   language:
     description: The language and version that is included in this image
     required: true
+  pip-config:
+    description: Configuration for pip
   platform:
     description: The platforms for which to build the image
     required: true
-  tag:
-    description: All tags for the image
-    required: true
   signing-key:
     description: The key to use for signing the SBOM, base64 encoded
+    required: true
+  tag:
+    description: All tags for the image
     required: true
   target:
     description: Which stage in the Dockerfile to build
@@ -32,6 +34,7 @@ runs:
         dockerfile: ${{ inputs.dockerfile }}
         language: ${{ inputs.language }}
         output: docker,dest=${{ runner.temp }}/image.tar
+        pip-config: ${{ inputs.pip-config }}
         platforms: ${{ inputs.platform }}
         tags: ${{ inputs.tag }}
         target: ${{ inputs.target }}
