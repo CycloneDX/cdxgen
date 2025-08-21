@@ -62,157 +62,158 @@ jobs:
       matrix:
         image:
 
-          - lang: dotnet6
-            distro: debian
-
-          - lang: dotnet7
-            skip-arm: true
-
-          - lang: dotnet8
-            skip-arm: true
-
-          - lang: dotnet8
-            distro: debian
-            runner: macos-hosted
-
-          - lang: dotnet9
-            skip-arm: true
-
-          - lang: dotnet9
-            distro: alpine
-
-          - lang: dotnet9
-            distro: debian
-            runner: macos-hosted
-
-          - lang: dotnet10
-            distro: debian
-            runner: macos-hosted
-
-          - lang: golang123
-            distro: alpine
-
-          - lang: golang123
-            distro: debian
-
-          - lang: golang124
-            distro: alpine
-            base-image:
-              additional-image: alpine-golang
-            cdxgen-image:
-              additional-image: cdxgen-alpine-golang
-
-          - lang: golang124
-            distro: debian
-            base-image:
-              additional-image: debian-golang
-            cdxgen-image:
-              additional-image: cdxgen-golang
-              additional-image2: cdxgen-debian-golang
-
-          - lang: java8
-            distro: temurin
-
-          - lang: java11
-            base-image:
-              additional-image: java11-slim
-            cdxgen-image:
-              additional-image: cdxgen-java
-              additional-image2: cdxgen-java11-slim
-              additional-image3: cdxgen-java-slim
-
-          - lang: java17
-
-          - lang: java17-slim
-
-          - lang: java21
-            distro: alpine
+#          - lang: dotnet6
+#            distro: debian
+#
+#          - lang: dotnet7
+#            skip-arm: true
+#
+#          - lang: dotnet8
+#            skip-arm: true
+#
+#          - lang: dotnet8
+#            distro: debian
+#            runner: macos-hosted
+#
+#          - lang: dotnet9
+#            skip-arm: true
+#
+#          - lang: dotnet9
+#            distro: alpine
+#
+#          - lang: dotnet9
+#            distro: debian
+#            runner: macos-hosted
+#
+#          - lang: dotnet10
+#            distro: debian
+#            runner: macos-hosted
+#
+#          - lang: golang123
+#            distro: alpine
+#
+#          - lang: golang123
+#            distro: debian
+#
+#          - lang: golang124
+#            distro: alpine
+#            base-image:
+#              additional-image: alpine-golang
+#            cdxgen-image:
+#              additional-image: cdxgen-alpine-golang
+#
+#          - lang: golang124
+#            distro: debian
+#            base-image:
+#              additional-image: debian-golang
+#            cdxgen-image:
+#              additional-image: cdxgen-golang
+#              additional-image2: cdxgen-debian-golang
+#
+#          - lang: java8
+#            distro: temurin
+#
+#          - lang: java11
+#            base-image:
+#              additional-image: java11-slim
+#            cdxgen-image:
+#              additional-image: cdxgen-java
+#              additional-image2: cdxgen-java11-slim
+#              additional-image3: cdxgen-java-slim
+#
+#          - lang: java17
+#
+#          - lang: java17-slim
 
           - lang: java21
-            distro: temurin
-
-          - lang: java24
             distro: alpine
-
-          - lang: java24
-            distro: temurin
-
-          - lang: node20
-            cdxgen-image:
-              additional-image: cdxgen-node
-
-          - lang: php83
-            distro: debian
             runner: macos-hosted
 
-          - lang: php84
-            distro: alpine
-
-          - lang: php84
-            distro: debian
-            runner: macos-hosted
-
-          - lang: python36
-
-          - lang: python39
-            distro: opensuse
-            runner: macos-hosted
-            cdxgen-image:
-              additional-image: cdxgen-python39
-
-          - lang: python310
-            distro: opensuse
-            runner: macos-hosted
-            cdxgen-image:
-              additional-image: cdxgen-python310
-
-          - lang: python311
-
-          - lang: python312
-            base-image:
-              lang: lang
-            cdxgen-image:
-              additional-image: cdxgen-python
-
-          - lang: python313
-
-          - lang: ruby25
-            fix-qemu: true
-            skip-arm: true
-            base-image:
-              name: sle
-
-          - lang: ruby26
-            distro: debian
-            skip-arm: true
-
-          - lang: ruby33
-            distro: debian
-            runner: macos-hosted
-
-          - lang: ruby34
-            distro: debian
-
-          - lang: ruby345
-            distro: alpine
-          - lang: node20
-            distro: alpine
-          - lang: node24
-            distro: alpine
-
-          - lang: rust1
-            distro: debian
-            base-image:
-              additional-image: debian-rust
-            cdxgen-image:
-              additional-image: cdxgen-debian-rust
-
-          - lang: swift6
-            distro: debian
-            base-image:
-              additional-image: debian-swift
-            cdxgen-image:
-              additional-image: cdxgen-debian-swift
+#          - lang: java21
+#            distro: temurin
+#
+#          - lang: java24
+#            distro: alpine
+#
+#          - lang: java24
+#            distro: temurin
+#
+#          - lang: node20
+#            cdxgen-image:
+#              additional-image: cdxgen-node
+#
+#          - lang: php83
+#            distro: debian
+#            runner: macos-hosted
+#
+#          - lang: php84
+#            distro: alpine
+#
+#          - lang: php84
+#            distro: debian
+#            runner: macos-hosted
+#
+#          - lang: python36
+#
+#          - lang: python39
+#            distro: opensuse
+#            runner: macos-hosted
+#            cdxgen-image:
+#              additional-image: cdxgen-python39
+#
+#          - lang: python310
+#            distro: opensuse
+#            runner: macos-hosted
+#            cdxgen-image:
+#              additional-image: cdxgen-python310
+#
+#          - lang: python311
+#
+#          - lang: python312
+#            base-image:
+#              lang: lang
+#            cdxgen-image:
+#              additional-image: cdxgen-python
+#
+#          - lang: python313
+#
+#          - lang: ruby25
+#            fix-qemu: true
+#            skip-arm: true
+#            base-image:
+#              name: sle
+#
+#          - lang: ruby26
+#            distro: debian
+#            skip-arm: true
+#
+#          - lang: ruby33
+#            distro: debian
+#            runner: macos-hosted
+#
+#          - lang: ruby34
+#            distro: debian
+#
+#          - lang: ruby345
+#            distro: alpine
+#          - lang: node20
+#            distro: alpine
+#          - lang: node24
+#            distro: alpine
+#
+#          - lang: rust1
+#            distro: debian
+#            base-image:
+#              additional-image: debian-rust
+#            cdxgen-image:
+#              additional-image: cdxgen-debian-rust
+#
+#          - lang: swift6
+#            distro: debian
+#            base-image:
+#              additional-image: debian-swift
+#            cdxgen-image:
+#              additional-image: cdxgen-debian-swift
 
     uses: ./.github/workflows/image-build.yml
     secrets: inherit
