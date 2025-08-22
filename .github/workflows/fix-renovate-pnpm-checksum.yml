@@ -23,7 +23,9 @@ jobs:
       - name: Fix & comment
         run: |
           read -a array <<< "$COMMIT_MESSAGE"
-          if [ "${array[2]}" = "dependency" ]; then
+          if [ "${array[2]}" = "pnpm" ]; then
+            corepack pnpm i --no-frozen-lockfile
+          elif [ "${array[2]}" = "dependency" ]; then
             corepack pnpm i --no-frozen-lockfile
             node bin/cdxgen.js --exclude test/\*\* -t js --deep
             echo "Output of \`pnpm why ${array[3]}\`:" > _tree.txt
