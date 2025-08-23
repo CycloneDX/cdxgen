@@ -1,6 +1,8 @@
 # Base-image
 FROM registry.suse.com/bci/dotnet-sdk:9.0 AS base
 
+ARG NPM_REPO
+
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
     DOTNET_NOLOGO=true \
@@ -12,7 +14,11 @@ ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     npm_config_python=/usr/bin/python3.11
 
 RUN set -e; \
-    zypper refresh \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && zypper refresh \
  && zypper \
       --non-interactive \
         update \
@@ -41,6 +47,7 @@ RUN set -e; \
  && dotnet --list-sdks \
  && npm install -g \
       corepack \
+ && rm -rf $HOME/.npmrc \
  && zypper clean -a
 
 CMD ["/bin/bash"]
@@ -57,7 +64,11 @@ ENV CDXGEN_IN_CONTAINER=true \
 COPY . /opt/cdxgen
 
 RUN set -e; \
-    cd /opt/cdxgen \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -67,7 +78,7 @@ RUN set -e; \
  && corepack pnpm cache delete \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
- && rm -rf .npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc /root/.cache/node \
  && chmod a-w -R /opt
 
 WORKDIR /app

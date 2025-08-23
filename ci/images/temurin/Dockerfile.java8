@@ -5,6 +5,7 @@ ARG GRADLE_VERSION=8.14.2
 ARG MAVEN_VERSION=3.9.10
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=24.6.0
+ARG NPM_REPO
 ARG PYTHON_VERSION=3.12
 ARG SBT_VERSION=1.10.10
 
@@ -32,7 +33,11 @@ ENV CDXGEN_IN_CONTAINER=true \
 ENV PATH=${PATH}:/usr/local/bin/:/root/.local/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${PYTHONPATH}/bin
 
 RUN set -e; \
-    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     case "${ARCH_NAME##*-}" in \
       'amd64' | 'x86_64') \
         OS_ARCH_SUFFIX=''; \
@@ -98,7 +103,7 @@ RUN set -e; \
  && npm install -g npm \
  && npm install -g node-gyp corepack \
  && npx node-gyp install \
- && rm -rf /var/cache/yum /root/.cache/node \
+ && rm -rf $HOME/.npmrc /var/cache/yum /root/.cache/node \
  && microdnf clean all
 
 CMD ["/bin/bash"]
@@ -114,7 +119,11 @@ ENV CDXGEN_IN_CONTAINER=true \
 COPY . /opt/cdxgen
 
 RUN set -e; \
-    cd /opt/cdxgen \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -124,7 +133,7 @@ RUN set -e; \
  && corepack pnpm cache delete \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
- && rm -rf .npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc /root/.cache/node \
  && chmod a-w -R /opt
 
 WORKDIR /app
