@@ -7,22 +7,22 @@ ENV PATH=${PATH}:/usr/local/bin \
 RUN set -e; \
     apk update \
  && apk add --no-cache \
-    bash \
-    bzip2 \
-    curl \
-    gcc \
-    git \
-    g++ \
-    make \
-    musl-dev \
-    nodejs \
-    npm \
-    openjdk21 \
-    python3 \
-    python3-dev \
-    py3-pip \
-    py3-virtualenv \
-    tar \
+      bash \
+      bzip2 \
+      curl \
+      gcc \
+      git \
+      g++ \
+      make \
+      musl-dev \
+      nodejs \
+      npm \
+      openjdk21 \
+      python3 \
+      python3-dev \
+      py3-pip \
+      py3-virtualenv \
+      tar \
  && npm install -g corepack \
  && /usr/bin/python --version \
  && /usr/bin/python -m pip install \

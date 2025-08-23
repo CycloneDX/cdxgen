@@ -63,7 +63,7 @@ RUN set -e; \
       --frozen-lockfile \
       --no-optional \
       --package-import-method copy \
-     --prod \
+      --prod \
  && corepack pnpm cache delete \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
