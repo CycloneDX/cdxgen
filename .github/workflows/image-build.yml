@@ -64,12 +64,13 @@ jobs:
         if: ${{ fromJSON(inputs.image).runner }}
         run: |
           NPM_CONFIG=registry=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_NPM_REPO_PATH
-          echo $NPM_REPO > .npmrc
+          echo $NPM_CONFIG > .npmrc
           cat >> "$GITHUB_OUTPUT" << EOF
           docker-args<<VALUE
           "NPM_CONFIG=$NPM_CONFIG"
           VALUE
           EOF
+          pnpm config list
       - name: Install project dependencies
         run: |
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile

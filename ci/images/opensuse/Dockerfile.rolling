@@ -143,6 +143,7 @@ RUN set -e; \
     echo $NPM_CONFIG > $HOME/.npmrc \
  && cd /opt/cdxgen \
  && corepack enable \
+ && pnpm config list \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
       --frozen-lockfile \
