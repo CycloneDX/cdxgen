@@ -1,11 +1,14 @@
 # Base-image
 FROM node:20-alpine AS base
 
+ARG NPM_CONFIG
+
 ENV PATH=${PATH}:/usr/local/bin \
     PYTHONPATH=/opt/pypi
 
 RUN set -e; \
-    apk update \
+    echo $NPM_CONFIG > $HOME/.npmrc \
+ && apk update \
  && apk add --no-cache \
       gcc \
       g++ \
@@ -28,7 +31,7 @@ RUN set -e; \
         atom-tools \
  && node -v \
  && npm -v \
- && rm -rf /var/cache/apk/*
+ && rm -rf $HOME/.npmrc /var/cache/apk/*
 
 
 
@@ -42,7 +45,8 @@ ENV CDXGEN_IN_CONTAINER=true \
 COPY . /opt/cdxgen
 
 RUN set -e; \
-    cd /opt/cdxgen \
+    echo $NPM_CONFIG > $HOME/.npmrc \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -62,7 +66,7 @@ RUN set -e; \
       py3-virtualenv \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
- && rm -rf .npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc /root/.cache/node \
  && chmod a-w -R /opt
 
 WORKDIR /app

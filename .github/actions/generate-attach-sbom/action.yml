@@ -7,6 +7,8 @@ inputs:
   dockerfile:
     description: Dockerfile that describes the image
     required: true
+  docker-args:
+    description: Arguments to pass to the docker build-process
   platform:
     description: The platforms for which to build the image
     required: true
@@ -27,6 +29,7 @@ runs:
       uses: ./.github/actions/build-docker-image
       with:
         dockerfile: ${{ inputs.dockerfile }}
+        docker-args: ${{ inputs.docker-args }}
         output: docker,dest=${{ runner.temp }}/image.tar
         platforms: ${{ inputs.platform }}
         tags: ${{ inputs.tag }}

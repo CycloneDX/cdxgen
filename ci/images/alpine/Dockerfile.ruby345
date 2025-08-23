@@ -1,11 +1,14 @@
 # Base-image
 FROM ruby:3.4.5-alpine AS base
 
+ARG NPM_CONFIG
+
 ENV PATH=${PATH}:/usr/local/bin \
     PYTHONPATH=/opt/pypi
 
 RUN set -e; \
-    apk update \
+    echo $NPM_CONFIG > $HOME/.npmrc \
+ && apk update \
  && apk add --no-cache \
       bash \
       bzip2 \
@@ -35,7 +38,7 @@ RUN set -e; \
  && java -version \
  && python3 --version \
  && gem install bundler cocoapods \
- && rm -rf /var/cache/apk/*
+ && rm -rf $HOME/.npmrc /var/cache/apk/*
 
 
 
@@ -50,7 +53,8 @@ ENV CDXGEN_GEM_HOME="/tmp/gems" \
 COPY . /opt/cdxgen
 
 RUN set -e; \
-    cd /opt/cdxgen \
+    echo $NPM_CONFIG > $HOME/.npmrc \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -76,7 +80,7 @@ RUN set -e; \
  && node /opt/cdxgen/bin/cdxgen.js --help \
  && rbastgen --help \
  && atom-tools --help \
- && rm -rf .npmrc /root/.cache/node ${CDXGEN_GEM_HOME}/* \
+ && rm -rf $HOME/.npmrc /root/.cache/node ${CDXGEN_GEM_HOME}/* \
  && chmod a-w -R /opt
 
 WORKDIR /app

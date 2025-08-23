@@ -6,6 +6,7 @@ ARG JAVA_VERSION=21.0.7-tem
 ARG MAVEN_VERSION=3.9.10
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=20.19.3
+ARG NPM_CONFIG
 
 ENV JAVA_HOME="/opt/java/${JAVA_VERSION}" \
     JAVA_VERSION=$JAVA_VERSION \
@@ -19,7 +20,8 @@ ENV JAVA_HOME="/opt/java/${JAVA_VERSION}" \
 ENV PATH=${PATH}:/usr/local/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin
 
 RUN set -e; \
-    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
+    echo $NPM_CONFIG > $HOME/.npmrc \
+ && ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     case "${ARCH_NAME##*-}" in \
       'amd64' | 'x86_64') \
         GOBIN_VERSION='amd64'; \
@@ -88,6 +90,7 @@ RUN set -e; \
  && bazel --version \
  && npm install -g \
       corepack \
+ && rm -rf $HOME/.npmrc \
  && zypper clean -a
 
 CMD ["/bin/bash"]
@@ -112,7 +115,8 @@ ENV CDXGEN_IN_CONTAINER=true \
 COPY . /opt/cdxgen
 
 RUN set -e; \
-    source ${NVM_DIR}/nvm.sh \
+    echo $NPM_CONFIG > $HOME/.npmrc \
+ && source ${NVM_DIR}/nvm.sh \
  && zypper \
       --non-interactive \
         install \
@@ -139,7 +143,7 @@ RUN set -e; \
  && corepack pnpm cache delete \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
- && rm -rf .npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc /root/.cache/node \
  && chmod a-w -R /opt \
  && zypper clean -a
 

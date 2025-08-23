@@ -2,6 +2,7 @@
 FROM registry.suse.com/bci/ruby:2.5 AS base
 
 ARG ATOM_RUBY_VERSION=3.4.5
+ARG NPM_CONFIG
 
 ENV ATOM_RUBY_HOME=/root/.rbenv/versions/$ATOM_RUBY_VERSION \
     ATOM_RUBY_VERSION=$ATOM_RUBY_VERSION \
@@ -17,7 +18,8 @@ ENV ATOM_RUBY_HOME=/root/.rbenv/versions/$ATOM_RUBY_VERSION \
 ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin:${PYTHONPATH}/bin:/root/.rbenv/bin
 
 RUN set -e; \
-    zypper refresh \
+    echo $NPM_CONFIG > $HOME/.npmrc \
+ && zypper refresh \
  && zypper \
       --non-interactive \
         update \
@@ -65,6 +67,7 @@ RUN set -e; \
  && rbenv install ${ATOM_RUBY_VERSION} -- --disable-install-doc \
  && ruby --version \
  && java --version \
+ && rm -rf $HOME/.npmrc \
  && zypper clean -a
 
 CMD ["/bin/bash"]
@@ -82,7 +85,8 @@ ENV CDXGEN_GEM_HOME="/tmp/gems" \
 COPY . /opt/cdxgen
 
 RUN set -e; \
-    cd /opt/cdxgen \
+    echo $NPM_CONFIG > $HOME/.npmrc \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -96,7 +100,7 @@ RUN set -e; \
  && rbastgen --help \
  && rm -rf ${CDXGEN_GEM_HOME} \
  && mkdir -p ${CDXGEN_GEM_HOME} \
- && rm -rf .npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc /root/.cache/node \
  && chmod a-w -R /opt
 
 WORKDIR /app

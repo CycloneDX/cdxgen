@@ -1,11 +1,14 @@
 # Base-image
 FROM php:8.4-alpine AS base
 
+ARG NPM_CONFIG
+
 ENV PATH=${PATH}:/usr/local/bin \
     PYTHONPATH=/opt/pypi
 
 RUN set -e; \
-    apk update \
+    echo $NPM_CONFIG > $HOME/.npmrc \
+ && apk update \
  && apk add --no-cache \
       autoconf \
       bash \
@@ -54,7 +57,7 @@ RUN set -e; \
  && npm -v \
  && php -v \
  && composer --version \
- && rm -rf /var/cache/apk/*
+ && rm -rf $HOME/.npmrc /var/cache/apk/*
 
 
 
@@ -68,7 +71,8 @@ ENV CDXGEN_IN_CONTAINER=true \
 COPY . /opt/cdxgen
 
 RUN set -e; \
-    cd /opt/cdxgen \
+    echo $NPM_CONFIG > $HOME/.npmrc \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -102,7 +106,7 @@ RUN set -e; \
  && node /opt/cdxgen/bin/cdxgen.js --help \
  && phpastgen --help \
  && atom-tools --help \
- && rm -rf .npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc /root/.cache/node \
  && chmod a-w -R /opt
 
 WORKDIR /app

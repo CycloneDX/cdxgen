@@ -1,5 +1,4 @@
 **
-!.npmrc
 !.pnpmfile.cjs
 !bin/*
 !ci/images/debian/install.sh
