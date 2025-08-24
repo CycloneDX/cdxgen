@@ -172,7 +172,7 @@ jobs:
         id: user_info
         if: ${{ matrix.os == 'linux' }}
         run: |
-          echo -n "user=$(id -u):$(id -g)" > $GITHUB_OUTPUT
+          echo -n "user=$(id -u):$(id -g)" >> $GITHUB_OUTPUT
       - name: Build for linux
         uses: addnab/docker-run-action@4f65fabd2431ebc8d299f8e5a018d79a769ae185 # v3
         if: ${{ matrix.os == 'linux' }}
