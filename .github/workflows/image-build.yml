@@ -63,7 +63,7 @@ jobs:
         id: nexus
         if: ${{ fromJSON(inputs.image).runner }}
         run: |
-          NPM_CONFIG=registry=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_NPM_REPO_PATH
+          NPM_CONFIG="@jsr:registry=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_NPM_REPO_PATH\nregistry=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_NPM_REPO_PATH"
           echo $NPM_CONFIG > .npmrc
           cat >> "$GITHUB_OUTPUT" << EOF
           docker-args<<VALUE
