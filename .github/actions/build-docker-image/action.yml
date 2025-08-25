@@ -9,9 +9,6 @@ inputs:
     required: true
   labels:
     description: Labels to add to the image
-  language:
-    description: The language and version that is included in this image
-    required: true
   output:
     description: Controls what should be done with the image(s) after building
     required: true
@@ -31,10 +28,6 @@ runs:
     - name: Build Docker image
       uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
       with:
-        build-args: |
-          LANGUAGE=${{ inputs.language }}
-          TAG=${{ inputs.tags[0] }}
-          VERSION=${{ github.ref_name }}
         context: .
         file: ${{ inputs.dockerfile }}
         labels: ${{ inputs.labels }}

@@ -7,9 +7,6 @@ inputs:
   dockerfile:
     description: Dockerfile that describes the image
     required: true
-  language:
-    description: The language and version that is included in this image
-    required: true
   platform:
     description: The platforms for which to build the image
     required: true
@@ -30,7 +27,6 @@ runs:
       uses: ./.github/actions/build-docker-image
       with:
         dockerfile: ${{ inputs.dockerfile }}
-        language: ${{ inputs.language }}
         output: docker,dest=${{ runner.temp }}/image.tar
         platforms: ${{ inputs.platform }}
         tags: ${{ inputs.tag }}

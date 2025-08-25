@@ -39,11 +39,18 @@ runs:
       with:
         flavor: latest=${{ inputs.latest }}
         images: ${{ inputs.images }}
+        labels: |
+          org.opencontainers.image.authors=Team AppThreat <cloud@appthreat.com>
+          org.opencontainers.image.vendor=CycloneDX
+          ${{ inputs.main-tag && format('org.opencontainers.docker.cmd=docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t {0} -r /app --server', inputs.main-tag) || '' }}
+          ${{ inputs.main-tag && inputs.language == 'rolling' && 'org.opencontainers.image.description=Rolling image with cdxgen SBOM generator based on tumbleweed'
+           || inputs.main-tag && format('org.opencontainers.image.description=Image with cdxgen SBOM generator for {0} apps', inputs.language)
+           || ''
+          }}
     - name: Build and push image
       uses: ./.github/actions/build-docker-image
       with:
         dockerfile: ${{ inputs.dockerfile }}
-        language: ${{ inputs.language }}
         labels: ${{ steps.metadata.outputs.labels }}
         output: registry
         platforms: linux/amd64${{ inputs.build-arm == 'true' && ',linux/arm64' || '' }}
@@ -53,7 +60,6 @@ runs:
       uses: ./.github/actions/generate-attach-sbom
       with:
         dockerfile: ${{ inputs.dockerfile }}
-        language: ${{ inputs.language }}
         platform: linux/amd64
         signing-key: ${{ inputs.signing-key }}
         tag: ${{ inputs.main-tag || fromJSON(steps.metadata.outputs.json).tags[0] }}
@@ -63,7 +69,6 @@ runs:
       uses: ./.github/actions/generate-attach-sbom
       with:
         dockerfile: ${{ inputs.dockerfile }}
-        language: ${{ inputs.language }}
         platform: linux/arm64
         signing-key: ${{ inputs.signing-key }}
         tag: ${{ inputs.main-tag || fromJSON(steps.metadata.outputs.json).tags[0] }}
