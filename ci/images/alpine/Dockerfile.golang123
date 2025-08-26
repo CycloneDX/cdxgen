@@ -1,17 +1,23 @@
 # Base-image
 FROM golang:1.23-alpine AS base
 
+ARG NPM_REPO
+
 ENV PATH=${PATH}:/usr/local/bin
 
 RUN set -e; \
-    apk update \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && apk update \
  && apk add --no-cache \
       nodejs \
       npm \
  && npm install -g corepack \
  && node -v \
  && npm -v \
- && rm -rf /var/cache/apk/*
+ && rm -rf $HOME/.npmrc /var/cache/apk/*
 
 
 
@@ -25,7 +31,11 @@ ENV CDXGEN_IN_CONTAINER=true \
 COPY . /opt/cdxgen
 
 RUN set -e; \
-    cd /opt/cdxgen \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -37,7 +47,7 @@ RUN set -e; \
  && apk del npm \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
- && rm -rf .npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc /root/.cache/node \
  && chmod a-w -R /opt
 
 WORKDIR /app

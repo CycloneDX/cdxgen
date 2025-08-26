@@ -1,28 +1,34 @@
 # Base-image
 FROM ruby:3.4.5-alpine AS base
 
+ARG NPM_REPO
+
 ENV PATH=${PATH}:/usr/local/bin \
     PYTHONPATH=/opt/pypi
 
 RUN set -e; \
-    apk update \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && apk update \
  && apk add --no-cache \
-    bash \
-    bzip2 \
-    curl \
-    gcc \
-    git \
-    g++ \
-    make \
-    musl-dev \
-    nodejs \
-    npm \
-    openjdk21 \
-    python3 \
-    python3-dev \
-    py3-pip \
-    py3-virtualenv \
-    tar \
+      bash \
+      bzip2 \
+      curl \
+      gcc \
+      git \
+      g++ \
+      make \
+      musl-dev \
+      nodejs \
+      npm \
+      openjdk21 \
+      python3 \
+      python3-dev \
+      py3-pip \
+      py3-virtualenv \
+      tar \
  && npm install -g corepack \
  && /usr/bin/python --version \
  && /usr/bin/python -m pip install \
@@ -35,7 +41,7 @@ RUN set -e; \
  && java -version \
  && python3 --version \
  && gem install bundler cocoapods \
- && rm -rf /var/cache/apk/*
+ && rm -rf $HOME/.npmrc /var/cache/apk/*
 
 
 
@@ -50,7 +56,11 @@ ENV CDXGEN_GEM_HOME="/tmp/gems" \
 COPY . /opt/cdxgen
 
 RUN set -e; \
-    cd /opt/cdxgen \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -76,7 +86,7 @@ RUN set -e; \
  && node /opt/cdxgen/bin/cdxgen.js --help \
  && rbastgen --help \
  && atom-tools --help \
- && rm -rf .npmrc /root/.cache/node ${CDXGEN_GEM_HOME}/* \
+ && rm -rf $HOME/.npmrc /root/.cache/node ${CDXGEN_GEM_HOME}/* \
  && chmod a-w -R /opt
 
 WORKDIR /app

@@ -5,6 +5,7 @@ ARG ATOM_RUBY_VERSION=3.4.5
 ARG JAVA_VERSION=21.0.7-tem
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=20.19.3
+ARG NPM_REPO
 
 ENV ATOM_RUBY_VERSION=$ATOM_RUBY_VERSION \
     BUNDLE_SILENCE_ROOT_WARNING=true \
@@ -19,7 +20,11 @@ ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:${NVM_DIR}/ver
 COPY ci/images/debian/install.sh /tmp/
 
 RUN set -e; \
-    apt-get update \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && apt-get update \
  && apt-get install -qq -y --no-install-recommends \
       bash \
       bzip2 \
@@ -48,7 +53,7 @@ RUN set -e; \
  && npm install -g corepack \
  && apt-get purge -y --auto-remove \
       -o APT::AutoRemove::RecommendsImportant=false \
- && rm -rf /var/lib/apt/lists/*
+ && rm -rf $HOME/.npmrc /var/lib/apt/lists/*
 
 CMD ["/bin/bash"]
 
@@ -66,7 +71,11 @@ ENV ATOM_RUBY_HOME=/root/.rbenv/versions/${ATOM_RUBY_VERSION} \
 COPY . /opt/cdxgen
 
 RUN set -e; \
-    cd /opt/cdxgen \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -80,7 +89,7 @@ RUN set -e; \
  && rbastgen --help \
  && rm -rf ${CDXGEN_GEM_HOME} \
  && mkdir -p ${CDXGEN_GEM_HOME} \
- && rm -rf .npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc /root/.cache/node \
  && chmod a-w -R /opt
 
 WORKDIR /app

@@ -1,6 +1,8 @@
 # Base-image
 FROM registry.suse.com/bci/dotnet-sdk:7.0 AS base
 
+ARG NPM_REPO
+
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
     DOTNET_NOLOGO=true \
@@ -12,7 +14,11 @@ ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     npm_config_python=/usr/bin/python3.11
 
 RUN set -e; \
-    zypper refresh \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && zypper refresh \
  && zypper \
       --non-interactive \
         update \
@@ -40,6 +46,7 @@ RUN set -e; \
         blint \
  && npm install -g \
       corepack \
+ && rm -rf $HOME/.npmrc \
  && zypper clean -a
 
 CMD ["/bin/bash"]
@@ -57,7 +64,11 @@ ENV CDXGEN_IN_CONTAINER=true \
 COPY . /opt/cdxgen
 
 RUN set -e; \
-    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     case "${ARCH_NAME##*-}" in \
       'amd64' | 'x86_64') \
         DOSAI_ARCH_SUFFIX='-full'; \
@@ -84,7 +95,7 @@ RUN set -e; \
  && dosai --help \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
- && rm -rf .npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc /root/.cache/node \
  && chmod a-w -R /opt
 
 WORKDIR /app

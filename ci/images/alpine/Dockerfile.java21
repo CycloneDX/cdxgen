@@ -1,11 +1,17 @@
 # Base-image
 FROM eclipse-temurin:21-jdk-alpine AS base
 
+ARG NPM_REPO
+
 ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin \
     PYTHONPATH=/opt/pypi
 
 RUN set -e; \
-    apk update \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && apk update \
  && apk add --no-cache \
       bash \
       curl \
@@ -37,7 +43,7 @@ RUN set -e; \
  && mvn -v \
  && gradle -v \
  && python3 --version \
- && rm -rf /var/cache/apk/*
+ && rm -rf $HOME/.npmrc /var/cache/apk/*
 
 
 
@@ -51,7 +57,11 @@ ENV CDXGEN_IN_CONTAINER=true \
 COPY . /opt/cdxgen
 
 RUN set -e; \
-    cd /opt/cdxgen \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -74,7 +84,7 @@ RUN set -e; \
       tar \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
- && rm -rf .npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc /root/.cache/node \
  && chmod a-w -R /opt
 
 WORKDIR /app

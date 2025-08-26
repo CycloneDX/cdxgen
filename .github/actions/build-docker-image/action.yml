@@ -7,6 +7,8 @@ inputs:
   dockerfile:
     description: Dockerfile that describes the image
     required: true
+  docker-args:
+    description: Arguments to pass to the docker build-process
   labels:
     description: Labels to add to the image
   output:
@@ -28,6 +30,8 @@ runs:
     - name: Build Docker image
       uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
       with:
+        build-args: |
+          ${{ inputs.docker-args }}
         context: .
         file: ${{ inputs.dockerfile }}
         labels: ${{ inputs.labels }}

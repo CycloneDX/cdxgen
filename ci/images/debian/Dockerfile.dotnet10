@@ -3,6 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0-preview-trixie-slim AS base
 
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=24.6.0
+ARG NPM_REPO
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
@@ -17,7 +18,11 @@ ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin:${NVM_DIR}/versions/node/v${NOD
 COPY ci/images/debian/install.sh /tmp/
 
 RUN set -e; \
-    apt-get update \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && apt-get update \
  && apt-get install -qq -y --no-install-recommends \
       autoconf-archive \
       autotools-dev \
@@ -53,7 +58,7 @@ RUN set -e; \
  && npm -v \
  && apt-get purge -y --auto-remove \
       -o APT::AutoRemove::RecommendsImportant=false \
- && rm -rf /var/lib/apt/lists/* \
+ && rm -rf $HOME/.npmrc /var/lib/apt/lists/* \
  && dotnet --list-sdks \
  && set -e; \
     ARCH_NAME="$(dpkg --print-architecture)"; \
@@ -90,7 +95,11 @@ ENV CDXGEN_IN_CONTAINER=true \
 COPY . /opt/cdxgen
 
 RUN set -e; \
-    cd /opt/cdxgen \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -100,7 +109,7 @@ RUN set -e; \
  && corepack pnpm cache delete \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
- && rm -rf .npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc /root/.cache/node \
  && chmod a-w -R /opt
 
 WORKDIR /app
