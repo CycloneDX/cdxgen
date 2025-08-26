@@ -261,7 +261,7 @@ jobs:
 
 
   retry:
-    needs: images
+    needs: binaries
     if: failure() && fromJSON(github.run_attempt) < 2
     runs-on: ubuntu-latest
     steps:
