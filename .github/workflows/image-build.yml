@@ -18,7 +18,9 @@ on:
         type: boolean
 
 env:
-  NEXUS_URL: http://100.73.146.80:8081/repository/npm/
+  NEXUS_PORT: 8081
+  NEXUS_SERVER: 100.73.146.80
+  NEXUS_NPM_REPO_PATH: /repository/npm
   REPO: ghcr.io
   TAG: v11
   TEAM: cyclonedx
@@ -58,8 +60,16 @@ jobs:
       - name: Setup ORAS
         uses: oras-project/setup-oras@8d34698a59f5ffe24821f0b48ab62a3de8b64b20 # v1.2.3
       - name: Setup Nexus usage
+        id: nexus
         if: ${{ fromJSON(inputs.image).runner }}
-        run: echo "registry=$NEXUS_URL" > .npmrc
+        run: |
+          NPM_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_NPM_REPO_PATH
+          echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > .npmrc
+          cat >> "$GITHUB_OUTPUT" << EOF
+          docker-args<<VALUE
+          "NPM_REPO=$NPM_REPO"
+          VALUE
+          EOF
       - name: Install project dependencies
         run: |
           corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
@@ -77,6 +87,7 @@ jobs:
         with:
           build-arm: ${{ ! fromJSON(inputs.image).skip-arm }}
           dockerfile: ci/images/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
+          docker-args: ${{ steps.nexus.outputs.docker-args }}
           images: |
              ${{ env.REPO }}/${{ env.TEAM }}/${{ fromJSON(inputs.image).base-image.name || fromJSON(inputs.image).distro || 'bci' }}-${{ fromJSON(inputs.image).base-image.lang || fromJSON(inputs.image).lang }}
              ${{ fromJSON(inputs.image).base-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).base-image.additional-image) || '' }}
@@ -91,6 +102,7 @@ jobs:
         with:
           build-arm: ${{ ! fromJSON(inputs.image).skip-arm }}
           dockerfile: ci/images/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
+          docker-args: ${{ steps.nexus.outputs.docker-args }}
           images: |
             ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image) || '' }}
@@ -112,6 +124,7 @@ jobs:
         with:
           build-arm: ${{ ! fromJSON(inputs.image).skip-arm }}
           dockerfile: ci/images/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
+          docker-args: ${{ steps.nexus.outputs.docker-args }}
           images: |
             ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image) || '' }}

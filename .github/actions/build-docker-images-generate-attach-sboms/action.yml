@@ -10,6 +10,8 @@ inputs:
   dockerfile:
     description: Dockerfile that describes the image
     required: true
+  docker-args:
+    description: Arguments to pass to the docker build-process
   images:
     description: The name(s) of the image(s) to load metadata for
     required: true
@@ -51,6 +53,7 @@ runs:
       uses: ./.github/actions/build-docker-image
       with:
         dockerfile: ${{ inputs.dockerfile }}
+        docker-args: ${{ inputs.docker-args }}
         labels: ${{ steps.metadata.outputs.labels }}
         output: registry
         platforms: linux/amd64${{ inputs.build-arm == 'true' && ',linux/arm64' || '' }}
@@ -60,6 +63,7 @@ runs:
       uses: ./.github/actions/generate-attach-sbom
       with:
         dockerfile: ${{ inputs.dockerfile }}
+        docker-args: ${{ inputs.docker-args }}
         platform: linux/amd64
         signing-key: ${{ inputs.signing-key }}
         tag: ${{ inputs.main-tag || fromJSON(steps.metadata.outputs.json).tags[0] }}
@@ -69,6 +73,7 @@ runs:
       uses: ./.github/actions/generate-attach-sbom
       with:
         dockerfile: ${{ inputs.dockerfile }}
+        docker-args: ${{ inputs.docker-args }}
         platform: linux/arm64
         signing-key: ${{ inputs.signing-key }}
         tag: ${{ inputs.main-tag || fromJSON(steps.metadata.outputs.json).tags[0] }}

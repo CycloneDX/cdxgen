@@ -3,6 +3,7 @@ FROM registry.suse.com/bci/openjdk-devel:11 AS base
 
 ARG GRADLE_VERSION=7.6.4
 ARG MAVEN_VERSION=3.6.3
+ARG NPM_REPO
 ARG SBT_VERSION=1.8.3
 
 ENV GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}" \
@@ -20,7 +21,11 @@ ENV GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}" \
 ENV PATH=${PATH}:/usr/local/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin
 
 RUN set -e; \
-    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     case "${ARCH_NAME##*-}" in \
       'amd64' | 'x86_64') \
         GOBIN_VERSION='amd64'; \
@@ -66,6 +71,7 @@ RUN set -e; \
  && bazel --version \
  && npm install -g \
       corepack \
+ && rm -rf $HOME/.npmrc \
  && zypper clean -a
 
 CMD ["/bin/bash"]
@@ -82,7 +88,11 @@ ENV CDXGEN_IN_CONTAINER=true \
 COPY . /opt/cdxgen
 
 RUN set -e; \
-    cd /opt/cdxgen \
+    if [ -n "$NPM_REPO" ]; then \
+      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
+      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -92,7 +102,7 @@ RUN set -e; \
  && corepack pnpm cache delete \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
- && rm -rf .npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc /root/.cache/node \
  && chmod a-w -R /opt
 
 WORKDIR /app
