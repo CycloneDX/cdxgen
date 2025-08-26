@@ -68,6 +68,7 @@ jobs:
           cat >> "$GITHUB_OUTPUT" << EOF
           docker-args<<VALUE
           "NPM_REPO=$NPM_REPO"
+          "PIP_CONFIG=[global]\nindex-url=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_PYPI_REPO_PATH/simple\ntrusted-host=$NEXUS_SERVER"
           VALUE
           EOF
       - name: Install project dependencies

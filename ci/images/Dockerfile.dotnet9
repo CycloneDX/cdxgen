@@ -17,8 +17,12 @@ RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi \
- && zypper refresh \
+    fi; \
+    if [ -n "$PIP_CONFIG" ]; then \
+      mkdir $HOME/.pip/; \
+      echo -e "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    zypper refresh \
  && zypper \
       --non-interactive \
         update \
@@ -67,8 +71,12 @@ RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi \
- && cd /opt/cdxgen \
+    fi; \
+    if [ -n "$PIP_CONFIG" ]; then \
+      mkdir $HOME/.pip/; \
+      echo -e "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
