@@ -98,7 +98,7 @@ jobs:
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
 
               # Generate sbom
-              node bin/cdxgen.js -t php -t js -t jar -t ruby -o sbom-postbuild.cdx.json --include-formulation
+              node bin/cdxgen.js -t php -t js -t jar -o sbom-postbuild.cdx.json --include-formulation
               
               # Produce cdxgen binary
               pnpm --package=@appthreat/caxa dlx caxa --input . --output cdxgen -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
@@ -132,7 +132,7 @@ jobs:
               npm install --omit=dev --no-package-lock --no-audit --no-fund --no-progress
 
               # Generate sbom (imprecise)
-              node bin/cdxgen.js -t php -t js -t jar -t ruby -o sbom-postbuild.cdx.json --include-formulation
+              node bin/cdxgen.js -t php -t js -t jar -o sbom-postbuild.cdx.json --include-formulation
               
               # Produce cdxgen binary
               npx --no-progress --yes @appthreat/caxa --input . --output cdxgen.exe -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
@@ -258,4 +258,14 @@ jobs:
             cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}
             cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}.sha256
             cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}
-            cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}.sha256
+
+
+  retry:
+    needs: images
+    if: failure() && fromJSON(github.run_attempt) < 2
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh workflow run rerun-workflow.yml -F run_id=${{ github.run_id }}
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
