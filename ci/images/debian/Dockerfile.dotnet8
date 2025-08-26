@@ -21,8 +21,12 @@ RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi \
- && apt-get update \
+    fi; \
+    if [ -n "$PIP_CONFIG" ]; then \
+      mkdir $HOME/.pip/; \
+      echo -e "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    apt-get update \
  && apt-get install -qq -y --no-install-recommends \
       autoconf-archive \
       autotools-dev \
@@ -109,8 +113,12 @@ RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi \
- && ARCH_NAME="$(dpkg --print-architecture)"; \
+    fi; \
+    if [ -n "$PIP_CONFIG" ]; then \
+      mkdir $HOME/.pip/; \
+      echo -e "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    ARCH_NAME="$(dpkg --print-architecture)"; \
     case "${ARCH_NAME##*-}" in \
       'amd64' | 'x86_64') \
          DOSAI_ARCH_SUFFIX='-full'; \
