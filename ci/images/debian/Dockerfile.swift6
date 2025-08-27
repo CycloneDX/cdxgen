@@ -4,6 +4,7 @@ FROM debian:12 AS base
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=22.17.0
 ARG NPM_REPO
+ARG PIP_CONFIG
 ARG SWIFT_BRANCH=swift-6.1.2-release
 ARG SWIFT_PLATFORM=debian12
 ARG SWIFT_SIGNING_KEY=52BB7E3DE28A71BE22EC05FFEF80A866B47A981F
@@ -24,9 +25,13 @@ COPY ci/images/debian/install.sh /tmp/
 RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi \
- && ARCH_NAME="$(dpkg --print-architecture)"; \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi; \
+    if [ -n "$PIP_CONFIG" ]; then \
+      mkdir $HOME/.pip/; \
+      printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    ARCH_NAME="$(dpkg --print-architecture)"; \
     case "${ARCH_NAME##*-}" in \
       'amd64' | 'x86_64') \
         OS_ARCH_SUFFIX=''; \
@@ -95,7 +100,7 @@ RUN set -e; \
  && npm -v \
  && apt-get purge -y --auto-remove \
       -o APT::AutoRemove::RecommendsImportant=false \
- && rm -rf $HOME/.npmrc /var/lib/apt/lists/*
+ && rm -rf $HOME/.npmrc $HOME/.pip /var/lib/apt/lists/*
 
 CMD ["/bin/bash"]
 
@@ -113,9 +118,13 @@ COPY . /opt/cdxgen
 RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi \
- && cd /opt/cdxgen \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi; \
+    if [ -n "$PIP_CONFIG" ]; then \
+      mkdir $HOME/.pip/; \
+      printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -125,7 +134,7 @@ RUN set -e; \
  && corepack pnpm cache delete \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
- && rm -rf $HOME/.npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \
  && chmod a-w -R /opt
 
 WORKDIR /app

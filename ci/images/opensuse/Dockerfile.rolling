@@ -5,6 +5,7 @@ ARG DOTNET_SDK_VERSION=9.0.100
 ARG GRADLE_VERSION=8.14.2
 ARG MAVEN_VERSION=4.0.0-rc-3
 ARG NPM_REPO
+ARG PIP_CONFIG
 ARG SBT_VERSION=1.11.2
 ARG SCALA_VERSION=3.7.1
 
@@ -34,9 +35,13 @@ ENV PATH=${PATH}:/usr/local/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOM
 RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi \
- && ARCH_NAME="$(rpm --eval '%{_arch}')"; \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi; \
+    if [ -n "$PIP_CONFIG" ]; then \
+      mkdir $HOME/.pip/; \
+      printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     case "${ARCH_NAME##*-}" in \
       'amd64' | 'x86_64') \
         OS_ARCH_SUFFIX='x64'; \
@@ -86,7 +91,7 @@ RUN set -e; \
  && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-14 10 \
  && update-alternatives --install /usr/bin/python python /usr/bin/python3.12 10 \
  && curl -s "https://get.sdkman.io" | bash \
- && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" \
+ && printf "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" \
       >> $HOME/.sdkman/etc/config \
  && source "$HOME/.sdkman/bin/sdkman-init.sh" \
  && sdk install maven $MAVEN_VERSION \
@@ -124,7 +129,7 @@ RUN set -e; \
       https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
  && chmod +x /usr/bin/bazel \
  && bazel --version \
- && rm -rf $HOME/.npmrc \
+ && rm -rf $HOME/.npmrc $HOME/.pip $HOME/.pip \
  && zypper clean -a
 
 CMD ["/bin/bash"]
@@ -145,9 +150,13 @@ COPY . /opt/cdxgen
 RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi \
- && cd /opt/cdxgen \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+     fi; \
+     if [ -n "$PIP_CONFIG" ]; then \
+      mkdir $HOME/.pip/; \
+      printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -157,7 +166,7 @@ RUN set -e; \
  && corepack pnpm cache delete \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
- && rm -rf $HOME/.npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc $HOME/.pip $HOME/.pip /root/.cache/node \
  && zypper clean -a \
  && chmod a-w -R /opt
 

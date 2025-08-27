@@ -4,6 +4,7 @@ FROM registry.suse.com/bci/openjdk-devel:11 AS base
 ARG GRADLE_VERSION=7.6.4
 ARG MAVEN_VERSION=3.6.3
 ARG NPM_REPO
+ARG PIP_CONFIG
 ARG SBT_VERSION=1.8.3
 
 ENV GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}" \
@@ -23,9 +24,13 @@ ENV PATH=${PATH}:/usr/local/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}
 RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi \
- && ARCH_NAME="$(rpm --eval '%{_arch}')"; \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi; \
+    if [ -n "$PIP_CONFIG" ]; then \
+      mkdir $HOME/.pip/; \
+      printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     case "${ARCH_NAME##*-}" in \
       'amd64' | 'x86_64') \
         GOBIN_VERSION='amd64'; \
@@ -58,7 +63,7 @@ RUN set -e; \
           wget \
           zip \
  && curl -s "https://get.sdkman.io" | bash \
- && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" \
+ && printf "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" \
       >> $HOME/.sdkman/etc/config \
  && source "$HOME/.sdkman/bin/sdkman-init.sh" \
  && sdk install maven $MAVEN_VERSION \
@@ -71,7 +76,7 @@ RUN set -e; \
  && bazel --version \
  && npm install -g \
       corepack \
- && rm -rf $HOME/.npmrc \
+ && rm -rf $HOME/.npmrc $HOME/.pip \
  && zypper clean -a
 
 CMD ["/bin/bash"]
@@ -90,9 +95,13 @@ COPY . /opt/cdxgen
 RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi \
- && cd /opt/cdxgen \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi; \
+    if [ -n "$PIP_CONFIG" ]; then \
+      mkdir $HOME/.pip/; \
+      printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -102,7 +111,7 @@ RUN set -e; \
  && corepack pnpm cache delete \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
- && rm -rf $HOME/.npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \
  && chmod a-w -R /opt
 
 WORKDIR /app
