@@ -3,6 +3,7 @@ FROM registry.opensuse.org/opensuse/bci/python:3.10 AS base
 
 ARG GO_VERSION=1.25.0
 ARG NPM_REPO
+ARG PIP_CONFIG
 
 ENV CC=gcc \
     GOPATH=/opt/app-root/go \

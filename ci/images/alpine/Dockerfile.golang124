@@ -2,6 +2,7 @@
 FROM golang:1.24-alpine AS base
 
 ARG NPM_REPO
+ARG PIP_CONFIG
 
 ENV PATH=${PATH}:/usr/local/bin
 

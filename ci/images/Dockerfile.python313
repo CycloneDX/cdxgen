@@ -7,6 +7,7 @@ ARG MAVEN_VERSION=3.9.10
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=24.6.0
 ARG NPM_REPO
+ARG PIP_CONFIG
 
 ENV JAVA_HOME="/opt/java/${JAVA_VERSION}" \
     JAVA_VERSION=$JAVA_VERSION \

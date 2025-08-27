@@ -4,6 +4,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0-preview-trixie-slim AS base
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=24.6.0
 ARG NPM_REPO
+ARG PIP_CONFIG
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     DOTNET_GENERATE_ASPNET_CERTIFICATE=false \

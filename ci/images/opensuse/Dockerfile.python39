@@ -2,6 +2,7 @@
 FROM registry.opensuse.org/opensuse/bci/python:3.9 AS base
 
 ARG NPM_REPO
+ARG PIP_CONFIG
 
 ENV CC=gcc \
     LANG=en_US.UTF-8 \

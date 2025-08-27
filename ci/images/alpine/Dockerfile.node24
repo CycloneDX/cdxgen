@@ -2,6 +2,7 @@
 FROM node:24.6.0-alpine AS base
 
 ARG NPM_REPO
+ARG PIP_CONFIG
 
 ENV PATH=${PATH}:/usr/local/bin \
     PYTHONPATH=/opt/pypi

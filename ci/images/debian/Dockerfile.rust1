@@ -4,6 +4,7 @@ FROM rust:1-slim-bookworm AS base
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=24.6.0
 ARG NPM_REPO
+ARG PIP_CONFIG
 
 ENV CARGO_HOME=/usr/local/cargo \
     NVM_DIR="/root/.nvm" \

@@ -2,6 +2,7 @@
 FROM eclipse-temurin:21-jdk-alpine AS base
 
 ARG NPM_REPO
+ARG PIP_CONFIG
 
 ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin \
     PYTHONPATH=/opt/pypi

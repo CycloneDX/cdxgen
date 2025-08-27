@@ -8,6 +8,7 @@ ARG MAVEN_VERSION=3.9.10
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=20.19.3
 ARG NPM_REPO
+ARG PIP_CONFIG
 
 ENV GOPATH=/opt/app-root/go \
     JAVA_HOME="/opt/java/${JAVA_VERSION}" \

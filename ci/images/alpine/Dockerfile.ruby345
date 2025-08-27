@@ -2,6 +2,7 @@
 FROM ruby:3.4.5-alpine AS base
 
 ARG NPM_REPO
+ARG PIP_CONFIG
 
 ENV PATH=${PATH}:/usr/local/bin \
     PYTHONPATH=/opt/pypi

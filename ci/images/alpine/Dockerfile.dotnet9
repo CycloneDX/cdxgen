@@ -2,6 +2,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS base
 
 ARG NPM_REPO
+ARG PIP_CONFIG
 
 ENV PATH=${PATH}:/usr/local/bin
 

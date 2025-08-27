@@ -4,6 +4,7 @@ FROM golang:1.24-bookworm AS base
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=24.6.0
 ARG NPM_REPO
+ARG PIP_CONFIG
 
 ENV SKIP_ATOM="yes" \
     NVM_DIR="/root/.nvm" \

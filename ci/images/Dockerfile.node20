@@ -3,6 +3,7 @@ FROM registry.suse.com/bci/nodejs:20 AS base
 
 ARG GCC_VERSION=14
 ARG NPM_REPO
+ARG PIP_CONFIG
 
 ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \

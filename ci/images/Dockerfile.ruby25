@@ -3,6 +3,7 @@ FROM registry.suse.com/bci/ruby:2.5 AS base
 
 ARG ATOM_RUBY_VERSION=3.4.5
 ARG NPM_REPO
+ARG PIP_CONFIG
 
 ENV ATOM_RUBY_HOME=/root/.rbenv/versions/$ATOM_RUBY_VERSION \
     ATOM_RUBY_VERSION=$ATOM_RUBY_VERSION \
