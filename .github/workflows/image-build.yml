@@ -18,9 +18,10 @@ on:
         type: boolean
 
 env:
-  NEXUS_PORT: 8081
-  NEXUS_SERVER: 100.73.146.80
   NEXUS_NPM_REPO_PATH: /repository/npm
+  NEXUS_PORT: 8081
+  NEXUS_PYPI_REPO_PATH: /repository/pypi
+  NEXUS_SERVER: 100.73.146.80
   REPO: ghcr.io
   TAG: v11
   TEAM: cyclonedx
