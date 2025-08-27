@@ -2,7 +2,6 @@
 FROM registry.suse.com/bci/dotnet-sdk:8.0 AS base
 
 ARG NPM_REPO
-ARG PIP_CONFIG
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
@@ -18,12 +17,8 @@ RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi; \
-    if [ -n "$PIP_CONFIG" ]; then \
-      mkdir $HOME/.pip/; \
-      echo -e "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
-    fi; \
-    zypper refresh \
+    fi \
+ && zypper refresh \
  && zypper \
       --non-interactive \
         update \
@@ -73,12 +68,8 @@ RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi; \
-    if [ -n "$PIP_CONFIG" ]; then \
-      mkdir $HOME/.pip/; \
-      echo -e "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
-    fi; \
-    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
+    fi \
+ && ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     case "${ARCH_NAME##*-}" in \
       'amd64' | 'x86_64') \
         DOSAI_ARCH_SUFFIX='-full'; \

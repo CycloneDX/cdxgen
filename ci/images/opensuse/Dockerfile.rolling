@@ -5,7 +5,6 @@ ARG DOTNET_SDK_VERSION=9.0.100
 ARG GRADLE_VERSION=8.14.2
 ARG MAVEN_VERSION=4.0.0-rc-3
 ARG NPM_REPO
-ARG PIP_CONFIG
 ARG SBT_VERSION=1.11.2
 ARG SCALA_VERSION=3.7.1
 
@@ -36,12 +35,8 @@ RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi; \
-    if [ -n "$PIP_CONFIG" ]; then \
-      mkdir $HOME/.pip/; \
-      echo -e "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
-    fi; \
-    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
+    fi \
+ && ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     case "${ARCH_NAME##*-}" in \
       'amd64' | 'x86_64') \
         OS_ARCH_SUFFIX='x64'; \
@@ -129,7 +124,7 @@ RUN set -e; \
       https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
  && chmod +x /usr/bin/bazel \
  && bazel --version \
- && rm -rf $HOME/.npmrc $HOME/.pip \
+ && rm -rf $HOME/.npmrc \
  && zypper clean -a
 
 CMD ["/bin/bash"]
@@ -151,12 +146,8 @@ RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-     fi; \
-     if [ -n "$PIP_CONFIG" ]; then \
-      mkdir $HOME/.pip/; \
-      echo -e "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
-    fi; \
-    cd /opt/cdxgen \
+    fi \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -166,7 +157,7 @@ RUN set -e; \
  && corepack pnpm cache delete \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
- && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \
+ && rm -rf $HOME/.npmrc /root/.cache/node \
  && zypper clean -a \
  && chmod a-w -R /opt
 

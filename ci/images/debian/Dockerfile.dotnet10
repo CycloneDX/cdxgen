@@ -4,7 +4,6 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0-preview-trixie-slim AS base
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=24.6.0
 ARG NPM_REPO
-ARG PIP_CONFIG
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
@@ -22,12 +21,8 @@ RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi; \
-    if [ -n "$PIP_CONFIG" ]; then \
-      mkdir $HOME/.pip/; \
-      echo -e "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
-    fi; \
-    apt-get update \
+    fi \
+ && apt-get update \
  && apt-get install -qq -y --no-install-recommends \
       autoconf-archive \
       autotools-dev \
@@ -103,12 +98,8 @@ RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi; \
-    if [ -n "$PIP_CONFIG" ]; then \
-      mkdir $HOME/.pip/; \
-      echo -e "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
-    fi; \
-    cd /opt/cdxgen \
+    fi \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \

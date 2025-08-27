@@ -3,7 +3,6 @@ FROM registry.opensuse.org/opensuse/bci/python:3.10 AS base
 
 ARG GO_VERSION=1.25.0
 ARG NPM_REPO
-ARG PIP_CONFIG
 
 ENV CC=gcc \
     GOPATH=/opt/app-root/go \
@@ -18,12 +17,8 @@ RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi; \
-    if [ -n "$PIP_CONFIG" ]; then \
-      mkdir $HOME/.pip/; \
-      echo -e "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
-    fi; \
-    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
+    fi \
+ && ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     case "${ARCH_NAME##*-}" in \
       'amd64' | 'x86_64') \
         GOBIN_VERSION='amd64'; \
@@ -126,12 +121,8 @@ RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi; \
-    if [ -n "$PIP_CONFIG" ]; then \
-      mkdir $HOME/.pip/; \
-      echo -e "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
-    fi; \
-    zypper \
+    fi \
+ && zypper \
       --non-interactive \
         install \
         --allow-downgrade \

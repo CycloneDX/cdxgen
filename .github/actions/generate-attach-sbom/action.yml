@@ -12,11 +12,11 @@ inputs:
   platform:
     description: The platforms for which to build the image
     required: true
-  signing-key:
-    description: The key to use for signing the SBOM, base64 encoded
-    required: true
   tag:
     description: All tags for the image
+    required: true
+  signing-key:
+    description: The key to use for signing the SBOM, base64 encoded
     required: true
   target:
     description: Which stage in the Dockerfile to build
