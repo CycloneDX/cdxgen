@@ -4,6 +4,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0-bookworm-slim AS base
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=22.17.0
 ARG NPM_REPO
+ARG PIP_CONFIG
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
@@ -20,9 +21,13 @@ COPY ci/images/debian/install.sh /tmp/
 RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi \
- && apt-get update \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi; \
+    if [ -n "$PIP_CONFIG" ]; then \
+      mkdir $HOME/.pip/; \
+      printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    apt-get update \
  && apt-get install -qq -y --no-install-recommends \
       bash \
       bzip2 \
@@ -57,7 +62,7 @@ RUN set -e; \
  && rm -rf /usr/lib/nuget \
  && apt-get purge -y --auto-remove \
       -o APT::AutoRemove::RecommendsImportant=false \
- && rm -rf $HOME/.npmrc /var/lib/apt/lists/*
+ && rm -rf $HOME/.npmrc $HOME/.pip /var/lib/apt/lists/*
 
 COPY ci/images/nuget /usr/lib/nuget
 
@@ -83,9 +88,13 @@ COPY . /opt/cdxgen
 RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi \
- && ARCH_NAME="$(dpkg --print-architecture)"; \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi; \
+    if [ -n "$PIP_CONFIG" ]; then \
+      mkdir $HOME/.pip/; \
+      printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    ARCH_NAME="$(dpkg --print-architecture)"; \
     case "${ARCH_NAME##*-}" in \
       'amd64' | 'x86_64') \
          DOSAI_ARCH_SUFFIX='-full'; \
@@ -112,7 +121,7 @@ RUN set -e; \
  && dosai --help \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
- && rm -rf $HOME/.npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \
  && chmod a-w -R /opt
 
 WORKDIR /app

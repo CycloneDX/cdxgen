@@ -28,7 +28,7 @@ fi
 curl -s "https://get.sdkman.io" | bash
 chmod +x /root/.sdkman/bin/sdkman-init.sh
 source $HOME/.sdkman/bin/sdkman-init.sh
-echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> $HOME/.sdkman/etc/config
+printf "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> $HOME/.sdkman/etc/config
 if [ x"${JAVA_VERSION}" != "x" ]; then
   sdk install java ${JAVA_VERSION}
   if [ x"${MAVEN_VERSION}" != "x" ]; then

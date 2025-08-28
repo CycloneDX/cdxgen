@@ -3,6 +3,7 @@ FROM registry.suse.com/bci/ruby:2.5 AS base
 
 ARG ATOM_RUBY_VERSION=3.4.5
 ARG NPM_REPO
+ARG PIP_CONFIG
 
 ENV ATOM_RUBY_HOME=/root/.rbenv/versions/$ATOM_RUBY_VERSION \
     ATOM_RUBY_VERSION=$ATOM_RUBY_VERSION \
@@ -20,9 +21,13 @@ ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin:${PYTHONPATH}/bin:/root/.rbenv/
 RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi \
- && zypper refresh \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi; \
+    if [ -n "$PIP_CONFIG" ]; then \
+      mkdir $HOME/.pip/; \
+      printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    zypper refresh \
  && zypper \
       --non-interactive \
         update \
@@ -70,7 +75,7 @@ RUN set -e; \
  && rbenv install ${ATOM_RUBY_VERSION} -- --disable-install-doc \
  && ruby --version \
  && java --version \
- && rm -rf $HOME/.npmrc \
+ && rm -rf $HOME/.npmrc $HOME/.pip \
  && zypper clean -a
 
 CMD ["/bin/bash"]
@@ -90,9 +95,13 @@ COPY . /opt/cdxgen
 RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-    fi \
- && cd /opt/cdxgen \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi; \
+    if [ -n "$PIP_CONFIG" ]; then \
+      mkdir $HOME/.pip/; \
+      printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
       --config.strict-dep-builds=true \
@@ -106,7 +115,7 @@ RUN set -e; \
  && rbastgen --help \
  && rm -rf ${CDXGEN_GEM_HOME} \
  && mkdir -p ${CDXGEN_GEM_HOME} \
- && rm -rf $HOME/.npmrc /root/.cache/node \
+ && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \
  && chmod a-w -R /opt
 
 WORKDIR /app
