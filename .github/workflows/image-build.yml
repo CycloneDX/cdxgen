@@ -19,6 +19,7 @@ on:
 
 env:
   NEXUS_NPM_REPO_PATH: /repository/npm
+  NEXUS_NUGET_REPO_PATH: /repository/nuget
   NEXUS_PORT: 8081
   NEXUS_PYPI_REPO_PATH: /repository/pypi
   NEXUS_SERVER: 100.73.146.80
@@ -69,6 +70,7 @@ jobs:
           cat >> "$GITHUB_OUTPUT" << EOF
           docker-args<<VALUE
           "NPM_REPO=$NPM_REPO"
+          "NUGET_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_NUGET_REPO_PATH"
           "PIP_CONFIG=[global]\nindex-url=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_PYPI_REPO_PATH/simple\ntrusted-host=$NEXUS_SERVER"
           VALUE
           EOF

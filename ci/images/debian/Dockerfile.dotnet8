@@ -4,6 +4,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=24.6.0
 ARG NPM_REPO
+ARG NUGET_REPO
 ARG PIP_CONFIG
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
@@ -17,11 +18,16 @@ ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
 ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin
 
 COPY ci/images/debian/install.sh /tmp/
+COPY ci/images/nuget /usr/lib/nuget
 
 RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi; \
+    if [ -n "$NUGET_REPO" ]; then \
+      dotnet nuget remove source "nuget.org"; \
+      dotnet nuget add source "$NUGET_REPO/index.json" --name "nexus"; \
     fi; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \
@@ -64,18 +70,12 @@ RUN set -e; \
         blint \
  && node -v \
  && npm -v \
- && rm -rf /usr/lib/nuget \
  && apt-get purge -y --auto-remove \
       -o APT::AutoRemove::RecommendsImportant=false \
- && rm -rf $HOME/.npmrc $HOME/.pip /var/lib/apt/lists/*
-
-COPY ci/images/nuget /usr/lib/nuget
-
-RUN set -e; \
-    mv /usr/lib/nuget/nuget.exe /usr/lib/nuget/NuGet.exe \
+ && rm -rf $HOME/.npmrc $HOME/.pip /var/lib/apt/lists/* \
+ && mv /usr/lib/nuget/nuget.exe /usr/lib/nuget/NuGet.exe \
  && dotnet --list-sdks \
- && set -e; \
-    ARCH_NAME="$(dpkg --print-architecture)"; \
+ && ARCH_NAME="$(dpkg --print-architecture)"; \
     case "${ARCH_NAME##*-}" in \
       'amd64' | 'x86_64') \
         dotnet workload install \
@@ -94,7 +94,11 @@ RUN set -e; \
         ;; \
     esac; \
     dotnet workload list \
- && nuget help
+ && nuget help \
+ && if [ -n "$NUGET_REPO" ]; then \
+      dotnet nuget remove source "nexus"; \
+      dotnet nuget add source "https://api.nuget.org/v3/index.json" --name "nuget.org"; \
+    fi
 
 CMD ["/bin/bash"]
 
