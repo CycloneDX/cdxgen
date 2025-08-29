@@ -8,6 +8,7 @@ ARG NODE_VERSION=24.6.0
 ARG NPM_REPO
 ARG PIP_CONFIG
 ARG PYTHON_VERSION=3.12
+ARG REDHAT_REPO
 ARG SBT_VERSION=1.10.10
 
 ENV CDXGEN_IN_CONTAINER=true \
@@ -41,6 +42,9 @@ RUN set -e; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \
       printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    if [ -n "$REDHAT_REPO" ]; then \
+      sed -i "s|https://cdn-ubi.redhat.com|$REDHAT_REPO|g" /etc/yum.repos.d/*; \
     fi; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     case "${ARCH_NAME##*-}" in \
@@ -109,7 +113,10 @@ RUN set -e; \
  && npm install -g node-gyp corepack \
  && npx node-gyp install \
  && rm -rf $HOME/.npmrc $HOME/.pip /var/cache/yum /root/.cache/node \
- && microdnf clean all
+ && microdnf clean all \
+ && if [ -n "$REDHAT_REPO" ]; then \
+      sed -i "s|$REDHAT_REPO|https://cdn-ubi.redhat.com|g" /etc/yum.repos.d/*; \
+    fi
 
 CMD ["/bin/bash"]
 
@@ -132,6 +139,9 @@ RUN set -e; \
       mkdir $HOME/.pip/; \
       printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
     fi; \
+    if [ -n "$REDHAT_REPO" ]; then \
+      sed -i "s|https://cdn-ubi.redhat.com|$REDHAT_REPO|g" /etc/yum.repos.d/*; \
+    fi; \
     cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install \
@@ -143,7 +153,10 @@ RUN set -e; \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
  && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \
- && chmod a-w -R /opt
+ && chmod a-w -R /opt \
+ && if [ -n "$REDHAT_REPO" ]; then \
+      sed -i "s|$REDHAT_REPO|https://cdn-ubi.redhat.com|g" /etc/yum.repos.d/*; \
+    fi
 
 WORKDIR /app
 
