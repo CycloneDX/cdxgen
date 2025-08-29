@@ -1,6 +1,7 @@
 # Base-image
 FROM debian:12 AS base
 
+ARG DEBIAN_REPO
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=22.17.0
 ARG NPM_REPO
@@ -23,6 +24,13 @@ ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin:${NVM_DIR}/versions/node/v${NOD
 COPY ci/images/debian/install.sh /tmp/
 
 RUN set -e; \
+    if [ -f /etc/apt/sources.list ]; then \
+      sed -i "s|http://deb.debian.org/debian|$DEBIAN_REPO/debian|g" /etc/apt/sources.list; \
+      sed -i "s|http://security.debian.org/debian-security|$DEBIAN_REPO/debian-security|g" /etc/apt/sources.list; \
+    fi; \
+    if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+      sed -i "s|http://deb.debian.org|$DEBIAN_REPO|g" /etc/apt/sources.list.d/debian.sources; \
+    fi; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
@@ -100,7 +108,14 @@ RUN set -e; \
  && npm -v \
  && apt-get purge -y --auto-remove \
       -o APT::AutoRemove::RecommendsImportant=false \
- && rm -rf $HOME/.npmrc $HOME/.pip /var/lib/apt/lists/*
+ && rm -rf $HOME/.npmrc $HOME/.pip /var/lib/apt/lists/*; \
+    if [ -f /etc/apt/sources.list ]; then \
+      sed -i "s|http://security.debian.org/debian-security|$DEBIAN_REPO/debian-security|g" /etc/apt/sources.list; \
+      sed -i "s|http://deb.debian.org/debian|$DEBIAN_REPO/debian|g" /etc/apt/sources.list; \
+    fi; \
+    if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+      sed -i "s|$DEBIAN_REPO|http://deb.debian.org|g" /etc/apt/sources.list.d/debian.sources; \
+    fi
 
 CMD ["/bin/bash"]
 
@@ -116,6 +131,13 @@ ENV CDXGEN_IN_CONTAINER=true \
 COPY . /opt/cdxgen
 
 RUN set -e; \
+    if [ -f /etc/apt/sources.list ]; then \
+      sed -i "s|http://deb.debian.org/debian|$DEBIAN_REPO/debian|g" /etc/apt/sources.list; \
+      sed -i "s|http://security.debian.org/debian-security|$DEBIAN_REPO/debian-security|g" /etc/apt/sources.list; \
+    fi; \
+    if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+      sed -i "s|http://deb.debian.org|$DEBIAN_REPO|g" /etc/apt/sources.list.d/debian.sources; \
+    fi; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
@@ -135,7 +157,14 @@ RUN set -e; \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
  && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \
- && chmod a-w -R /opt
+ && chmod a-w -R /opt \
+ && if [ -f /etc/apt/sources.list ]; then \
+      sed -i "s|http://security.debian.org/debian-security|$DEBIAN_REPO/debian-security|g" /etc/apt/sources.list; \
+      sed -i "s|http://deb.debian.org/debian|$DEBIAN_REPO/debian|g" /etc/apt/sources.list; \
+    fi; \
+    if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+      sed -i "s|$DEBIAN_REPO|http://deb.debian.org|g" /etc/apt/sources.list.d/debian.sources; \
+    fi
 
 WORKDIR /app
 

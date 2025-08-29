@@ -18,6 +18,7 @@ on:
         type: boolean
 
 env:
+  NEXUS_DEBIAN_REPO_PATH: /repository/debian
   NEXUS_NPM_REPO_PATH: /repository/npm
   NEXUS_NUGET_REPO_PATH: /repository/nuget
   NEXUS_OPENSUSE_CODECS_REPO_PATH: /repository/opensuse-codecs
@@ -72,6 +73,7 @@ jobs:
           echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > .npmrc
           cat >> "$GITHUB_OUTPUT" << EOF
           docker-args<<VALUE
+          "DEBIAN_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_DEBIAN_REPO_PATH"
           "NPM_REPO=$NPM_REPO"
           "NUGET_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_NUGET_REPO_PATH"
           "OPENSUSE_CODECS_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_OPENSUSE_CODECS_REPO_PATH"
