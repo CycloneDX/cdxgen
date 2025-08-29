@@ -27,7 +27,7 @@ RUN set -e; \
     fi; \
     if [ -n "$NUGET_REPO" ]; then \
       dotnet nuget remove source "nuget.org"; \
-      dotnet nuget add source "$NUGET_REPO/index.json" --name "nexus" --allow-insecure-connections; \
+      dotnet nuget add source "$NUGET_REPO/index.json" --name "nexus"; \
     fi; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \
