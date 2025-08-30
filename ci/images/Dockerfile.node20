@@ -4,6 +4,7 @@ FROM registry.suse.com/bci/nodejs:20 AS base
 ARG GCC_VERSION=14
 ARG NPM_REPO
 ARG PIP_CONFIG
+ARG SUSE_REPO
 
 ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
@@ -21,6 +22,10 @@ RUN set -e; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \
       printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    if [ -n "$SUSE_REPO" ]; then \
+      sed -i "s|https://public-dl.suse.com|$SUSE_REPO|g" /etc/zypp/repos.d/*; \
+      zypper --no-gpg-checks refresh; \
     fi; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     case "${ARCH_NAME##*-}" in \
@@ -82,7 +87,10 @@ RUN set -e; \
  && chmod +x /usr/bin/bazel \
  && bazel --version \
  && rm -rf $HOME/.npmrc $HOME/.pip \
- && zypper clean -a
+ && zypper clean -a \
+ && if [ -n "$SUSE_REPO" ]; then \
+      sed -i "s|$SUSE_REPO|https://public-dl.suse.com|g" /etc/zypp/repos.d/*; \
+    fi
 
 CMD ["/bin/bash"]
 
@@ -106,6 +114,10 @@ RUN set -e; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \
       printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    if [ -n "$SUSE_REPO" ]; then \
+      sed -i "s|https://public-dl.suse.com|$SUSE_REPO|g" /etc/zypp/repos.d/*; \
+      zypper --no-gpg-checks refresh; \
     fi; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     case "${ARCH_NAME##*-}" in \
@@ -136,7 +148,10 @@ RUN set -e; \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
  && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \
- && chmod a-w -R /opt
+ && chmod a-w -R /opt \
+ && if [ -n "$SUSE_REPO" ]; then \
+      sed -i "s|$SUSE_REPO|https://public-dl.suse.com|g" /etc/zypp/repos.d/*; \
+    fi
 
 WORKDIR /app
 
