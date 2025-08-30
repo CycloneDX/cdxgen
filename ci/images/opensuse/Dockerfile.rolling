@@ -5,6 +5,8 @@ ARG DOTNET_SDK_VERSION=9.0.100
 ARG GRADLE_VERSION=8.14.2
 ARG MAVEN_VERSION=4.0.0-rc-3
 ARG NPM_REPO
+ARG OPENSUSE_CODECS_REPO
+ARG OPENSUSE_REPO
 ARG PIP_CONFIG
 ARG SBT_VERSION=1.11.2
 ARG SCALA_VERSION=3.7.1
@@ -36,6 +38,11 @@ RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+    fi; \
+    if [ -n "$OPENSUSE_REPO" ]; then \
+      sed -i "s|http://codecs.opensuse.org|$OPENSUSE_CODECS_REPO|g" /etc/zypp/repos.d/*; \
+      sed -i "s|http://download.opensuse.org|$OPENSUSE_REPO|g" /etc/zypp/repos.d/*; \
+      zypper --no-gpg-checks refresh; \
     fi; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \
@@ -129,8 +136,12 @@ RUN set -e; \
       https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
  && chmod +x /usr/bin/bazel \
  && bazel --version \
- && rm -rf $HOME/.npmrc $HOME/.pip $HOME/.pip \
- && zypper clean -a
+ && rm -rf $HOME/.npmrc $HOME/.pip \
+ && zypper clean -a \
+ && if [ -n "$OPENSUSE_REPO" ]; then \
+      sed -i "s|$OPENSUSE_CODECS_REPO|http://codecs.opensuse.org|g" /etc/zypp/repos.d/*; \
+      sed -i "s|$OPENSUSE_REPO|http://download.opensuse.org|g" /etc/zypp/repos.d/*; \
+    fi
 
 CMD ["/bin/bash"]
 
@@ -151,8 +162,13 @@ RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
-     fi; \
-     if [ -n "$PIP_CONFIG" ]; then \
+    fi; \
+    if [ -n "$OPENSUSE_REPO" ]; then \
+      sed -i "s|http://codecs.opensuse.org|$OPENSUSE_CODECS_REPO|g" /etc/zypp/repos.d/*; \
+      sed -i "s|http://download.opensuse.org|$OPENSUSE_REPO|g" /etc/zypp/repos.d/*; \
+      zypper --no-gpg-checks refresh; \
+    fi; \
+    if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \
       printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
     fi; \
@@ -168,7 +184,11 @@ RUN set -e; \
  && node /opt/cdxgen/bin/cdxgen.js --help \
  && rm -rf $HOME/.npmrc $HOME/.pip $HOME/.pip /root/.cache/node \
  && zypper clean -a \
- && chmod a-w -R /opt
+ && chmod a-w -R /opt \
+ && if [ -n "$OPENSUSE_REPO" ]; then \
+      sed -i "s|$OPENSUSE_CODECS_REPO|http://codecs.opensuse.org|g" /etc/zypp/repos.d/*; \
+      sed -i "s|$OPENSUSE_REPO|http://download.opensuse.org|g" /etc/zypp/repos.d/*; \
+    fi
 
 WORKDIR /app
 
