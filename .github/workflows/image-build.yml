@@ -27,6 +27,8 @@ env:
   NEXUS_PYPI_REPO_PATH: /repository/pypi
   NEXUS_REDHAT_REPO_PATH: /repository/redhat
   NEXUS_SERVER: 100.73.146.80
+  NEXUS_SUSE_MICROSOFT_REPO_PATH: /repository/suse-microsoft
+  NEXUS_SUSE_REPO_PATH: /repository/suse
   REPO: ghcr.io
   TAG: v11
   TEAM: cyclonedx
@@ -80,6 +82,8 @@ jobs:
           "OPENSUSE_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_OPENSUSE_REPO_PATH"
           "PIP_CONFIG=[global]\nindex-url=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_PYPI_REPO_PATH/simple\ntrusted-host=$NEXUS_SERVER"
           "REDHAT_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_REDHAT_REPO_PATH"
+          "SUSE_MICROSOFT_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_SUSE_MICROSOFT_REPO_PATH"
+          "SUSE_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_SUSE_REPO_PATH"
           VALUE
           EOF
       - name: Install project dependencies

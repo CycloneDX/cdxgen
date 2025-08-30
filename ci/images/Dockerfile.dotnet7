@@ -3,6 +3,8 @@ FROM registry.suse.com/bci/dotnet-sdk:7.0 AS base
 
 ARG NPM_REPO
 ARG PIP_CONFIG
+ARG SUSE_MICROSOFT_REPO
+ARG SUSE_REPO
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
@@ -22,6 +24,11 @@ RUN set -e; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \
       printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    if [ -n "$SUSE_REPO" ]; then \
+      sed -i "s|https://updates.suse.com|$SUSE_REPO|g" /etc/zypp/repos.d/*; \
+      sed -i "s|https://packages.microsoft.com|$SUSE_MICROSOFT_REPO|g" /etc/zypp/repos.d/*; \
+      zypper --no-gpg-checks refresh; \
     fi; \
     zypper refresh \
  && zypper \
@@ -52,7 +59,11 @@ RUN set -e; \
  && npm install -g \
       corepack \
  && rm -rf $HOME/.npmrc $HOME/.pip \
- && zypper clean -a
+ && zypper clean -a \
+ && if [ -n "$SUSE_REPO" ]; then \
+      sed -i "s|$SUSE_REPO|https://updates.suse.com|g" /etc/zypp/repos.d/*; \
+      sed -i "s|$SUSE_MICROSOFT_REPO|https://packages.microsoft.com|g" /etc/zypp/repos.d/*; \
+    fi
 
 CMD ["/bin/bash"]
 
@@ -76,6 +87,11 @@ RUN set -e; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \
       printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    if [ -n "$SUSE_REPO" ]; then \
+      sed -i "s|https://updates.suse.com|$SUSE_REPO|g" /etc/zypp/repos.d/*; \
+      sed -i "s|https://packages.microsoft.com|$SUSE_MICROSOFT_REPO|g" /etc/zypp/repos.d/*; \
+      zypper --no-gpg-checks refresh; \
     fi; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     case "${ARCH_NAME##*-}" in \
@@ -105,7 +121,11 @@ RUN set -e; \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
  && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \
- && chmod a-w -R /opt
+ && chmod a-w -R /opt \
+ && if [ -n "$SUSE_REPO" ]; then \
+      sed -i "s|$SUSE_REPO|https://updates.suse.com|g" /etc/zypp/repos.d/*; \
+      sed -i "s|$SUSE_MICROSOFT_REPO|https://packages.microsoft.com|g" /etc/zypp/repos.d/*; \
+    fi
 
 WORKDIR /app
 
