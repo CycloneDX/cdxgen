@@ -3,7 +3,7 @@ FROM ruby:3.4.5-slim AS base
 
 ARG JAVA_VERSION=21.0.7-tem
 # renovate: datasource=docker depName=node
-ARG NODE_VERSION=24.6.0
+ARG NODE_VERSION=24.7.0
 ARG NPM_REPO
 ARG PIP_CONFIG
 

@@ -29,7 +29,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: '24.6.0'
+          node-version: '24.7.0'
           registry-url: https://registry.npmjs.org/
       - name: Release npm package
         if: startsWith(github.ref, 'refs/tags/')
@@ -180,7 +180,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: '24.6.0'
+          node-version: '24.7.0'
           registry-url: https://registry.npmjs.org/
       - uses: oras-project/setup-oras@8d34698a59f5ffe24821f0b48ab62a3de8b64b20 # v1.2.3
       - name: Free disk space
@@ -262,7 +262,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: '24.6.0'
+          node-version: '24.7.0'
           registry-url: https://registry.npmjs.org/
       - uses: oras-project/setup-oras@8d34698a59f5ffe24821f0b48ab62a3de8b64b20 # v1.2.3
       - name: Free disk space
@@ -331,7 +331,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: '24.6.0'
+          node-version: '24.7.0'
           registry-url: https://registry.npmjs.org/
       - uses: oras-project/setup-oras@8d34698a59f5ffe24821f0b48ab62a3de8b64b20 # v1.2.3
       - name: Free disk space
@@ -399,7 +399,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: '24.6.0'
+          node-version: '24.7.0'
           registry-url: https://registry.npmjs.org/
       - uses: oras-project/setup-oras@8d34698a59f5ffe24821f0b48ab62a3de8b64b20 # v1.2.3
       - name: Free disk space
@@ -450,7 +450,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: '24.6.0'
+          node-version: '24.7.0'
           registry-url: https://registry.npmjs.org/
       - uses: oras-project/setup-oras@8d34698a59f5ffe24821f0b48ab62a3de8b64b20 # v1.2.3
       - name: Free disk space
