@@ -4,7 +4,7 @@ FROM eclipse-temurin:24-ubi9-minimal AS base
 ARG GRADLE_VERSION=8.14.2
 ARG MAVEN_VERSION=3.9.10
 # renovate: datasource=docker depName=node
-ARG NODE_VERSION=24.6.0
+ARG NODE_VERSION=24.7.0
 ARG NPM_REPO
 ARG PIP_CONFIG
 ARG PYTHON_VERSION=3.12

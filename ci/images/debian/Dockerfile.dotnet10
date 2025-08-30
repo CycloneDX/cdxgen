@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0-preview-trixie-slim AS base
 
 ARG DEBIAN_REPO
 # renovate: datasource=docker depName=node
-ARG NODE_VERSION=24.6.0
+ARG NODE_VERSION=24.7.0
 ARG NPM_REPO
 ARG NUGET_REPO
 ARG PIP_CONFIG

@@ -48,7 +48,7 @@ jobs:
         os: [ darwin, linux, windows ]
         arch: [ amd64, arm64]
         libc: [ gnu, musl ]
-        node: [ 24.6.0 ]
+        node: [ 24.7.0 ]
         exclude:
           # musl can only be built on linux
           - os: darwin
@@ -85,7 +85,7 @@ jobs:
           - libc: musl
             image: alpine:3.16
             libc-suffix: -musl
-            node-download-url: https://raw.githubusercontent.com/appthreat/nodejs-unofficial-builds/master/dists/
+            node-download-url: https://raw.githubusercontent.com/appthreat/nodejs-unofficial-builds/main/dists/
             prepare: |
               apk add --no-cache bash curl libstdc++
           # Set the commands & file-extensions
