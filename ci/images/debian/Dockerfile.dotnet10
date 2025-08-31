@@ -21,12 +21,14 @@ ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin:${NVM_DIR}/versions/node/v${NOD
 COPY ci/images/debian/install.sh /tmp/
 
 RUN set -e; \
-    if [ -f /etc/apt/sources.list ]; then \
-      sed -i "s|http://deb.debian.org/debian|$DEBIAN_REPO/debian|g" /etc/apt/sources.list; \
-      sed -i "s|http://security.debian.org/debian-security|$DEBIAN_REPO/debian-security|g" /etc/apt/sources.list; \
-    fi; \
-    if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
-      sed -i "s|http://deb.debian.org|$DEBIAN_REPO|g" /etc/apt/sources.list.d/debian.sources; \
+    if [ -n "$DEBIAN_REPO" ]; then \
+      if [ -f /etc/apt/sources.list ]; then \
+        sed -i "s|http://deb.debian.org/debian|$DEBIAN_REPO/debian|g" /etc/apt/sources.list; \
+        sed -i "s|http://security.debian.org/debian-security|$DEBIAN_REPO/debian-security|g" /etc/apt/sources.list; \
+      fi; \
+      if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+        sed -i "s|http://deb.debian.org|$DEBIAN_REPO|g" /etc/apt/sources.list.d/debian.sources; \
+      fi \
     fi; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
@@ -101,12 +103,14 @@ RUN set -e; \
       dotnet nuget remove source "nexus"; \
       dotnet nuget add source "https://api.nuget.org/v3/index.json" --name "nuget.org"; \
     fi; \
-    if [ -f /etc/apt/sources.list ]; then \
-      sed -i "s|$DEBIAN_REPO/debian-security|http://security.debian.org/debian-security|g" /etc/apt/sources.list; \
-      sed -i "s|$DEBIAN_REPO/debian|http://deb.debian.org/debian|g" /etc/apt/sources.list; \
-    fi; \
-    if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
-      sed -i "s|$DEBIAN_REPO|http://deb.debian.org|g" /etc/apt/sources.list.d/debian.sources; \
+    if [ -n "$DEBIAN_REPO" ]; then \
+      if [ -f /etc/apt/sources.list ]; then \
+        sed -i "s|http://security.debian.org/debian-security|$DEBIAN_REPO/debian-security|g" /etc/apt/sources.list; \
+        sed -i "s|http://deb.debian.org/debian|$DEBIAN_REPO/debian|g" /etc/apt/sources.list; \
+      fi; \
+      if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+        sed -i "s|http://deb.debian.org|$DEBIAN_REPO|g" /etc/apt/sources.list.d/debian.sources; \
+      fi
     fi
 
 CMD ["/bin/bash"]
@@ -123,12 +127,14 @@ ENV CDXGEN_IN_CONTAINER=true \
 COPY . /opt/cdxgen
 
 RUN set -e; \
-    if [ -f /etc/apt/sources.list ]; then \
-      sed -i "s|http://deb.debian.org/debian|$DEBIAN_REPO/debian|g" /etc/apt/sources.list; \
-      sed -i "s|http://security.debian.org/debian-security|$DEBIAN_REPO/debian-security|g" /etc/apt/sources.list; \
-    fi; \
-    if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
-      sed -i "s|http://deb.debian.org|$DEBIAN_REPO|g" /etc/apt/sources.list.d/debian.sources; \
+    if [ -n "$DEBIAN_REPO" ]; then \
+      if [ -f /etc/apt/sources.list ]; then \
+        sed -i "s|http://deb.debian.org/debian|$DEBIAN_REPO/debian|g" /etc/apt/sources.list; \
+        sed -i "s|http://security.debian.org/debian-security|$DEBIAN_REPO/debian-security|g" /etc/apt/sources.list; \
+      fi; \
+      if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+        sed -i "s|http://deb.debian.org|$DEBIAN_REPO|g" /etc/apt/sources.list.d/debian.sources; \
+      fi \
     fi; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
@@ -150,12 +156,14 @@ RUN set -e; \
  && node /opt/cdxgen/bin/cdxgen.js --help \
  && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \
  && chmod a-w -R /opt \
- && if [ -f /etc/apt/sources.list ]; then \
-      sed -i "s|http://security.debian.org/debian-security|$DEBIAN_REPO/debian-security|g" /etc/apt/sources.list; \
-      sed -i "s|http://deb.debian.org/debian|$DEBIAN_REPO/debian|g" /etc/apt/sources.list; \
-    fi; \
-    if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
-      sed -i "s|$DEBIAN_REPO|http://deb.debian.org|g" /etc/apt/sources.list.d/debian.sources; \
+ && if [ -n "$DEBIAN_REPO" ]; then \
+      if [ -f /etc/apt/sources.list ]; then \
+        sed -i "s|http://security.debian.org/debian-security|$DEBIAN_REPO/debian-security|g" /etc/apt/sources.list; \
+        sed -i "s|http://deb.debian.org/debian|$DEBIAN_REPO/debian|g" /etc/apt/sources.list; \
+      fi; \
+      if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+        sed -i "s|http://deb.debian.org|$DEBIAN_REPO|g" /etc/apt/sources.list.d/debian.sources; \
+      fi
     fi
 
 WORKDIR /app
