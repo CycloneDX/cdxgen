@@ -76,7 +76,7 @@ RUN set -e; \
       fi; \
       if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
         sed -i "s|http://deb.debian.org|$DEBIAN_REPO|g" /etc/apt/sources.list.d/debian.sources; \
-      fi
+      fi \
     fi
 
 CMD ["/bin/bash"]
@@ -135,7 +135,7 @@ RUN set -e; \
       fi; \
       if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
         sed -i "s|http://deb.debian.org|$DEBIAN_REPO|g" /etc/apt/sources.list.d/debian.sources; \
-      fi
+      fi \
     fi
 
 WORKDIR /app
