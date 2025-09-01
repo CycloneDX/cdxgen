@@ -18,6 +18,7 @@ on:
         type: boolean
 
 env:
+  NEXUS_ALPINE_REPO_PATH: /repository/alpine
   NEXUS_DEBIAN_REPO_PATH: /repository/debian
   NEXUS_NPM_REPO_PATH: /repository/npm
   NEXUS_NUGET_REPO_PATH: /repository/nuget
@@ -75,6 +76,7 @@ jobs:
           echo -e "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > .npmrc
           cat >> "$GITHUB_OUTPUT" << EOF
           docker-args<<VALUE
+          "ALPINE_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_ALPINE_REPO_PATH"
           "DEBIAN_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_DEBIAN_REPO_PATH"
           "NPM_REPO=$NPM_REPO"
           "NUGET_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_NUGET_REPO_PATH"

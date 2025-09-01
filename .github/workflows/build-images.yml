@@ -141,6 +141,12 @@ jobs:
             cdxgen-image:
               additional-image: cdxgen-node
 
+          - lang: node20
+            distro: alpine
+
+          - lang: node24
+            distro: alpine
+
           - lang: php83
             distro: debian
             runner: macos-hosted
@@ -194,10 +200,6 @@ jobs:
             distro: debian
 
           - lang: ruby345
-            distro: alpine
-          - lang: node20
-            distro: alpine
-          - lang: node24
             distro: alpine
 
           - lang: rust1

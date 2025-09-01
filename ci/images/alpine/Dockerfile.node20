@@ -1,6 +1,7 @@
 # Base-image
 FROM node:20-alpine AS base
 
+ARG ALPINE_REPO
 ARG NPM_REPO
 ARG PIP_CONFIG
 
@@ -8,6 +9,9 @@ ENV PATH=${PATH}:/usr/local/bin \
     PYTHONPATH=/opt/pypi
 
 RUN set -e; \
+    if [ -n "$ALPINE_REPO" ]; then \
+      sed -i "s|https://dl-cdn.alpinelinux.org|$ALPINE_REPO|g" /etc/apk/repositories; \
+    fi; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
@@ -39,7 +43,10 @@ RUN set -e; \
         atom-tools \
  && node -v \
  && npm -v \
- && rm -rf $HOME/.npmrc $HOME/.pip /var/cache/apk/*
+ && rm -rf $HOME/.npmrc $HOME/.pip /var/cache/apk/* \
+ && if [ -n "$ALPINE_REPO" ]; then \
+      sed -i "s|$ALPINE_REPO|https://dl-cdn.alpinelinux.org|g" /etc/apk/repositories; \
+    fi
 
 
 
@@ -53,6 +60,9 @@ ENV CDXGEN_IN_CONTAINER=true \
 COPY . /opt/cdxgen
 
 RUN set -e; \
+    if [ -n "$ALPINE_REPO" ]; then \
+      sed -i "s|https://dl-cdn.alpinelinux.org|$ALPINE_REPO|g" /etc/apk/repositories; \
+    fi; \
     if [ -n "$NPM_REPO" ]; then \
       export COREPACK_NPM_REGISTRY=$NPM_REPO; \
       printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
@@ -82,7 +92,10 @@ RUN set -e; \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
  && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \
- && chmod a-w -R /opt
+ && chmod a-w -R /opt \
+ && if [ -n "$ALPINE_REPO" ]; then \
+      sed -i "s|$ALPINE_REPO|https://dl-cdn.alpinelinux.org|g" /etc/apk/repositories; \
+    fi
 
 WORKDIR /app
 
