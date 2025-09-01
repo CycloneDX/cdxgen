@@ -3,8 +3,8 @@ FROM registry.suse.com/bci/python:3.11 AS base
 
 ARG GCC_VERSION=14
 ARG GO_VERSION=1.25.0
-ARG JAVA_VERSION=24.0.1-tem
-ARG MAVEN_VERSION=3.9.10
+ARG JAVA_VERSION=24.0.2-tem
+ARG MAVEN_VERSION=3.9.11
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=20.19.3
 ARG NPM_REPO
