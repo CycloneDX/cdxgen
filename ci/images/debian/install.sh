@@ -18,6 +18,7 @@ if [ x"${ATOM_RUBY_VERSION}" != "x" ]; then
   git clone https://github.com/rbenv/ruby-build.git --depth=1 "$(rbenv root)/plugins/ruby-build"
   rbenv install $ATOM_RUBY_VERSION -- --disable-install-doc
 fi
+
 if [ x"${SKIP_ATOM}" != "xyes" ]; then
   ARCH_NAME="$(dpkg --print-architecture)"
   # Download atom native binary
@@ -25,11 +26,14 @@ if [ x"${SKIP_ATOM}" != "xyes" ]; then
   chmod +x /usr/local/bin/atom
   /usr/local/bin/atom --help || true
 fi
-curl -s "https://get.sdkman.io" | bash
-chmod +x /root/.sdkman/bin/sdkman-init.sh
-source $HOME/.sdkman/bin/sdkman-init.sh
-printf "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> $HOME/.sdkman/etc/config
+
 if [ x"${JAVA_VERSION}" != "x" ]; then
+  curl -s "https://get.sdkman.io" | bash
+  SDKMAN_BROKER_API="${SDKMAN_URL}/broker"
+  SDKMAN_CANDIDATES_API="${SDKMAN_URL}"
+  chmod +x /root/.sdkman/bin/sdkman-init.sh
+  source $HOME/.sdkman/bin/sdkman-init.sh
+  printf "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> $HOME/.sdkman/etc/config
   sdk install java ${JAVA_VERSION}
   if [ x"${MAVEN_VERSION}" != "x" ]; then
     sdk install maven ${MAVEN_VERSION}
@@ -38,6 +42,7 @@ if [ x"${JAVA_VERSION}" != "x" ]; then
   mv /root/.sdkman/candidates/* /opt/
   rm -rf /root/.sdkman
 fi
+
 if [ x"${SKIP_PYTHON}" != "xyes" ]; then
   python3 --version
   python3 -m pip install --no-cache-dir --upgrade pip virtualenv --break-system-packages || true

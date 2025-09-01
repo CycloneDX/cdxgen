@@ -10,6 +10,7 @@ ARG OPENSUSE_REPO
 ARG PIP_CONFIG
 ARG SBT_VERSION=1.11.5
 ARG SCALA_VERSION=3.7.2
+ARG SDKMAN_URL=https://api.sdkman.io/2
 
 ENV CC=gcc \
     DOTNET_CLI_TELEMETRY_OPTOUT=1 \
@@ -98,6 +99,8 @@ RUN set -e; \
  && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-14 10 \
  && update-alternatives --install /usr/bin/python python /usr/bin/python3.12 10 \
  && curl -s "https://get.sdkman.io" | bash \
+ && SDKMAN_BROKER_API="$SDKMAN_URL/broker" \
+ && SDKMAN_CANDIDATES_API="$SDKMAN_URL" \
  && printf "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" \
       >> $HOME/.sdkman/etc/config \
  && source "$HOME/.sdkman/bin/sdkman-init.sh" \
