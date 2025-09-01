@@ -2,8 +2,8 @@
 FROM registry.suse.com/bci/python:3.6 AS base
 
 ARG GCC_VERSION=14
-ARG JAVA_VERSION=21.0.7-tem
-ARG MAVEN_VERSION=3.9.10
+ARG JAVA_VERSION=21.0.8-tem
+ARG MAVEN_VERSION=3.9.11
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=20.19.3
 ARG NPM_REPO

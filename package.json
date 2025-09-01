@@ -42,9 +42,35 @@
   ],
   "type": "module",
   "exports": {
-    "import": "./lib/cli/index.js",
-    "types": "./types/lib/cli/index.d.ts",
-    "require": "./index.cjs"
+    ".": {
+      "import": "./lib/cli/index.js",
+      "types": "./types/lib/cli/index.d.ts",
+      "require": "./index.cjs"
+    },
+    "./evinser/*": {
+      "import": "./lib/evinser/*.js",
+      "types": "./types/lib/evinser/*.d.ts"
+    },
+    "./helpers/*": {
+      "import": "./lib/helpers/*.js",
+      "types": "./types/lib/helpers/*.d.ts"
+    },
+    "./managers/*": {
+      "import": "./lib/managers/*.js",
+      "types": "./types/lib/managers/*.d.ts"
+    },
+    "./parsers/*": {
+      "import": "./lib/parsers/*.js",
+      "types": "./types/lib/parsers/*.d.ts"
+    },
+    "./stages/postgen/*": {
+      "import": "./lib/stages/postgen/*.js",
+      "types": "./types/lib/stages/postgen/*.d.ts"
+    },
+    "./stages/pregen/*": {
+      "import": "./lib/stages/pregen/*.js",
+      "types": "./types/lib/stages/pregen/*.d.ts"
+    }
   },
   "types": "./types/lib/cli/index.d.ts",
   "bin": {
@@ -75,7 +101,7 @@
   "bugs": {
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
-  "packageManager": "pnpm@10.15.0",
+  "packageManager": "pnpm@10.15.1",
   "lint-staged": {
     "*": "biome check --fix --no-errors-on-unmatched"
   },
@@ -108,7 +134,7 @@
     "yoctocolors": "^2.1.1"
   },
   "optionalDependencies": {
-    "@appthreat/atom": "2.2.7",
+    "@appthreat/atom": "2.3.0",
     "@appthreat/cdx-proto": "1.1.4",
     "@bufbuild/protobuf": "2.6.3",
     "@cyclonedx/cdxgen-plugins-bin": "1.6.12",

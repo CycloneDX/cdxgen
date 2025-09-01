@@ -2,7 +2,7 @@
 FROM php:8.4-bookworm AS base
 
 ARG DEBIAN_REPO
-ARG JAVA_VERSION=21.0.7-tem
+ARG JAVA_VERSION=21.0.8-tem
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=24.7.0
 ARG NPM_REPO

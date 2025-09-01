@@ -91,7 +91,7 @@ importers:
         version: 3.0.0
       got:
         specifier: ^14.4.7
-        version: 14.4.7
+        version: 14.4.8
       iconv-lite:
         specifier: ^0.6.3
         version: 0.6.3
@@ -149,8 +149,8 @@ importers:
         version: 5.9.2
     optionalDependencies:
       '@appthreat/atom':
-        specifier: 2.2.7
-        version: 2.2.7
+        specifier: 2.3.0
+        version: 2.3.0
       '@appthreat/cdx-proto':
         specifier: 1.1.4
         version: 1.1.4
@@ -211,16 +211,16 @@ importers:
 
 packages:
 
-  '@appthreat/atom-common@1.0.6':
-    resolution: {integrity: sha512-R3n/GQQL3GXIfeltHLLUv91iDszZzgM7YfiSWwn/E+IK8IZ6eY3r/f7peCtvTXBJrFfXBJVWkBJjJtN4LAIsiQ==}
+  '@appthreat/atom-common@1.0.8':
+    resolution: {integrity: sha512-JSfUNFdEFRyK678WnBlMPWk+tFZwrebUoWF9Jj0AoYVQi6NCqvzPCzsmyOI/jRYvecnN8FgdEozZsujo/nPqNQ==}
 
-  '@appthreat/atom-parsetools@1.0.6':
-    resolution: {integrity: sha512-UI4wqR0PXw8nxVSBgRIjiYb3Uv613zpj7uoEWAIwp7Ad6tfdej/On0fgM+5m+UCL/bCEgJh4hsWwZvTHweMeBw==}
+  '@appthreat/atom-parsetools@1.0.8':
+    resolution: {integrity: sha512-W/OyTotfDFbgFpMmN1WT5QT6irVpU3EBcl/MH8vZT3OLJwYBFrV/PGkZ1o3WukJrPbivMKlsHcV0e/mr2zYawQ==}
     engines: {node: '>=16.0.0'}
     hasBin: true
 
-  '@appthreat/atom@2.2.7':
-    resolution: {integrity: sha512-pS2cbxWQIAuLGDV5W4vCYJYf9N2h5kM+LlRL4SrNMTOSv0BdzFL/5OcZu69hR8ew9HUvaInwOmxlf/mEgi6w5w==}
+  '@appthreat/atom@2.3.0':
+    resolution: {integrity: sha512-7oXgrKASyRnPc/ILrCxpfkBxeBRYE7Okw5DvUzXrIQP1DiJ7oJ1AI9MXgfhU1Sjv1ikb0hMi5F/QoutrBfq2aw==}
     engines: {node: '>=16.0.0'}
     hasBin: true
 
@@ -466,8 +466,8 @@ packages:
     resolution: {integrity: sha512-rCNLSB/JzNvot0SEyXqWZ7tX2B5dD2a1br2Dp0vSYVo5jh8Z0EZ7lS9TsZ1UtziddB1UfNUaMCc538/HztnJGA==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
-  '@npmcli/promise-spawn@8.0.2':
-    resolution: {integrity: sha512-/bNJhjc+o6qL+Dwz/bqfTQClkEO5nTQ1ZEcdCkAQjhkZMHIh22LPG7fNh1enJP1NKWDqYiiABnjFCY7E0zHYtQ==}
+  '@npmcli/promise-spawn@8.0.3':
+    resolution: {integrity: sha512-Yb00SWaL4F8w+K8YGhQ55+xE4RUNdMHV43WZGsiTM92gS+lC0mGsn7I4hLug7pbao035S6bj3Y3w0cUNGLfmkg==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
   '@npmcli/query@4.0.1':
@@ -585,8 +585,8 @@ packages:
   bare-events@2.6.1:
     resolution: {integrity: sha512-AuTJkq9XmE6Vk0FJVNq5QxETrSA/vKHarWVBG5l/JbdCL1prJemiyJqUS0jrlXO0MftuPq4m3YVYhoNc5+aE/g==}
 
-  bare-fs@4.2.0:
-    resolution: {integrity: sha512-oRfrw7gwwBVAWx9S5zPMo2iiOjxyiZE12DmblmMQREgcogbNO0AFaZ+QBxxkEXiPspcpvO/Qtqn8LabUx4uYXg==}
+  bare-fs@4.2.2:
+    resolution: {integrity: sha512-5vn+bdnlCYMwETIm1FqQXDP6TYPbxr2uJd88ve40kr4oPbiTZJVrTNzqA3/4sfWZeWKuQR/RkboBt7qEEDtfMA==}
     engines: {bare: '>=1.16.0'}
     peerDependencies:
       bare-buffer: '*'
@@ -594,8 +594,8 @@ packages:
       bare-buffer:
         optional: true
 
-  bare-os@3.6.1:
-    resolution: {integrity: sha512-uaIjxokhFidJP+bmmvKSgiMzj2sV5GPHaZVAIktcxcpCyBFFWO+YlikVAdhmUo2vYFvFhOXIAlldqV29L8126g==}
+  bare-os@3.6.2:
+    resolution: {integrity: sha512-T+V1+1srU2qYNBmJCXZkUY5vQ0B4FSlL3QDROnKQYOqeiQR8UbjNHlPa+TIbM4cuidiN9GaTaOZgSEgsvPbh5A==}
     engines: {bare: '>=1.14.0'}
 
   bare-path@3.0.0:
@@ -864,8 +864,8 @@ packages:
   fast-fifo@1.3.2:
     resolution: {integrity: sha512-/d9sfos4yxzpwkDkuN7k2SqFKtYNmCTzgfEpz82x34IM9/zc8KGxQoXg1liNC/izpRM/MBdt44Nmx41ZWqk+FQ==}
 
-  fast-uri@3.0.6:
-    resolution: {integrity: sha512-Atfo14OibSv5wAp4VWNsFYE1AchQRTv9cBGWET4pZWHzYshFSS9NQI6I57rdKn9croWVMbYFbLhJ+yJvmZIIHw==}
+  fast-uri@3.1.0:
+    resolution: {integrity: sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==}
 
   fdir@6.5.0:
     resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
@@ -934,8 +934,8 @@ packages:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
 
-  got@14.4.7:
-    resolution: {integrity: sha512-DI8zV1231tqiGzOiOzQWDhsBmncFW7oQDH6Zgy6pDPrqJuVZMtoSgPLLsBZQj8Jg4JFfwoOsDA8NGtLQLnIx2g==}
+  got@14.4.8:
+    resolution: {integrity: sha512-vxwU4HuR0BIl+zcT1LYrgBjM+IJjNElOjCzs0aPgHorQyr/V6H6Y73Sn3r3FOlUffvWD+Q5jtRuGWaXkU8Jbhg==}
     engines: {node: '>=20'}
 
   graceful-fs@4.2.11:
@@ -1185,8 +1185,8 @@ packages:
     resolution: {integrity: sha512-/bRZty2mXUIFY/xU5HLvveNHlswNJej+RnxBjOMkidWfwZzgTbPG1E3K5TOxRLOR+5hX7bSofy8yf1hZevMS8A==}
     engines: {node: ^18 || ^20 || >= 21}
 
-  node-gyp@11.3.0:
-    resolution: {integrity: sha512-9J0+C+2nt3WFuui/mC46z2XCZ21/cKlFDuywULmseD/LlmnOrSeEAE4c/1jw6aybXLmpZnQY3/LmOJfgyHIcng==}
+  node-gyp@11.4.2:
+    resolution: {integrity: sha512-3gD+6zsrLQH7DyYOUIutaauuXrcyxeTPyQuZQCQoNPZMHMMS5m4y0xclNpvYzoK3VNzuyxT6eF4mkIL4WSZ1eQ==}
     engines: {node: ^18.17.0 || >=20.5.0}
     hasBin: true
 
@@ -1207,8 +1207,8 @@ packages:
     resolution: {integrity: sha512-IxaQZDMsqfQ2Lz37VvyyEtKLe8FsRZuysmedy/N06TU1RyVppYKXrO4xIhR0F+7ubIBox6Q7nir6fQI3ej39iA==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
-  npm-install-checks@7.1.1:
-    resolution: {integrity: sha512-u6DCwbow5ynAX5BdiHQ9qvexme4U3qHW3MWe5NqH+NeBm0LbiH6zvGjNNew1fY+AZZUtVHbOPF3j7mJxbUzpXg==}
+  npm-install-checks@7.1.2:
+    resolution: {integrity: sha512-z9HJBCYw9Zr8BqXcllKIs5nI+QggAImbBdHphOzVYrz2CB4iQ6FzWyKmlqDZua+51nAu7FcemlbTc9VgQN5XDQ==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
   npm-normalize-package-bin@4.0.0:
@@ -1615,8 +1615,8 @@ packages:
   undici-types@7.10.0:
     resolution: {integrity: sha512-t5Fy/nfn+14LuOc2KNYg75vZqClpAiqscVvMygNnlsHBFpSXdJaYtXMcdNLpl/Qvc3P2cB3s6lOV51nqsFq4ag==}
 
-  undici@7.14.0:
-    resolution: {integrity: sha512-Vqs8HTzjpQXZeXdpsfChQTlafcMQaaIwnGwLam1wudSSjlJeQ3bw1j+TLPePgrCnCpUXx7Ba5Pdpf5OBih62NQ==}
+  undici@7.15.0:
+    resolution: {integrity: sha512-7oZJCPvvMvTd0OlqWsIxTuItTpJBpU1tcbVl24FMn3xt3+VSunwUasmfPJRE57oNO1KsZ4PgA1xTdAX4hq8NyQ==}
     engines: {node: '>=20.18.1'}
 
   unique-filename@4.0.0:
@@ -1723,21 +1723,21 @@ packages:
 
 snapshots:
 
-  '@appthreat/atom-common@1.0.6':
+  '@appthreat/atom-common@1.0.8':
     optional: true
 
-  '@appthreat/atom-parsetools@1.0.6':
+  '@appthreat/atom-parsetools@1.0.8':
     dependencies:
-      '@appthreat/atom-common': 1.0.6
+      '@appthreat/atom-common': 1.0.8
       '@babel/parser': 7.28.3
       typescript: 5.9.2
       yargs: 17.7.2
     optional: true
 
-  '@appthreat/atom@2.2.7':
+  '@appthreat/atom@2.3.0':
     dependencies:
-      '@appthreat/atom-common': 1.0.6
-      '@appthreat/atom-parsetools': 1.0.6
+      '@appthreat/atom-common': 1.0.8
+      '@appthreat/atom-parsetools': 1.0.8
     optional: true
 
   '@appthreat/cdx-proto@1.1.4':
@@ -1751,7 +1751,7 @@ snapshots:
       node-addon-api: 8.5.0
       prebuild-install: 7.1.3
     optionalDependencies:
-      node-gyp: 11.3.0
+      node-gyp: 11.4.2
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
@@ -1943,7 +1943,7 @@ snapshots:
       lru-cache: 11.1.0
       minimatch: 10.0.3
       nopt: 8.1.0
-      npm-install-checks: 7.1.1
+      npm-install-checks: 7.1.2
       npm-package-arg: 12.0.2
       npm-pick-manifest: 10.0.0
       npm-registry-fetch: 18.0.2
@@ -1967,7 +1967,7 @@ snapshots:
 
   '@npmcli/git@6.0.3':
     dependencies:
-      '@npmcli/promise-spawn': 8.0.2
+      '@npmcli/promise-spawn': 8.0.3
       ini: 5.0.0
       lru-cache: 11.1.0
       npm-pick-manifest: 10.0.0
@@ -2012,7 +2012,7 @@ snapshots:
       semver: 7.7.2
       validate-npm-package-license: 3.0.4
 
-  '@npmcli/promise-spawn@8.0.2':
+  '@npmcli/promise-spawn@8.0.3':
     dependencies:
       which: 5.0.0
 
@@ -2026,8 +2026,8 @@ snapshots:
     dependencies:
       '@npmcli/node-gyp': 4.0.0
       '@npmcli/package-json': 6.2.0
-      '@npmcli/promise-spawn': 8.0.2
-      node-gyp: 11.3.0
+      '@npmcli/promise-spawn': 8.0.3
+      node-gyp: 11.4.2
       proc-log: 5.0.0
       which: 5.0.0
     transitivePeerDependencies:
@@ -2109,7 +2109,7 @@ snapshots:
   ajv@8.17.1:
     dependencies:
       fast-deep-equal: 3.1.3
-      fast-uri: 3.0.6
+      fast-uri: 3.1.0
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
@@ -2131,19 +2131,19 @@ snapshots:
   bare-events@2.6.1:
     optional: true
 
-  bare-fs@4.2.0:
+  bare-fs@4.2.2:
     dependencies:
       bare-events: 2.6.1
       bare-path: 3.0.0
       bare-stream: 2.7.0(bare-events@2.6.1)
     optional: true
 
-  bare-os@3.6.1:
+  bare-os@3.6.2:
     optional: true
 
   bare-path@3.0.0:
     dependencies:
-      bare-os: 3.6.1
+      bare-os: 3.6.2
     optional: true
 
   bare-stream@2.7.0(bare-events@2.6.1):
@@ -2248,7 +2248,7 @@ snapshots:
       parse5: 7.3.0
       parse5-htmlparser2-tree-adapter: 7.1.0
       parse5-parser-stream: 7.1.2
-      undici: 7.14.0
+      undici: 7.15.0
       whatwg-mimetype: 4.0.0
 
   chownr@3.0.0: {}
@@ -2448,7 +2448,7 @@ snapshots:
   fast-fifo@1.3.2:
     optional: true
 
-  fast-uri@3.0.6: {}
+  fast-uri@3.1.0: {}
 
   fdir@6.5.0(picomatch@4.0.3):
     optionalDependencies:
@@ -2539,7 +2539,7 @@ snapshots:
 
   gopd@1.2.0: {}
 
-  got@14.4.7:
+  got@14.4.8:
     dependencies:
       '@sindresorhus/is': 7.0.2
       '@szmarczak/http-timer': 5.0.1
@@ -2792,7 +2792,7 @@ snapshots:
   node-addon-api@8.5.0:
     optional: true
 
-  node-gyp@11.3.0:
+  node-gyp@11.4.2:
     dependencies:
       env-paths: 2.2.1
       exponential-backoff: 3.1.2
@@ -2819,7 +2819,7 @@ snapshots:
     dependencies:
       npm-normalize-package-bin: 4.0.0
 
-  npm-install-checks@7.1.1:
+  npm-install-checks@7.1.2:
     dependencies:
       semver: 7.7.2
 
@@ -2838,7 +2838,7 @@ snapshots:
 
   npm-pick-manifest@10.0.0:
     dependencies:
-      npm-install-checks: 7.1.1
+      npm-install-checks: 7.1.2
       npm-normalize-package-bin: 4.0.0
       npm-package-arg: 12.0.2
       semver: 7.7.2
@@ -2891,7 +2891,7 @@ snapshots:
       '@npmcli/git': 6.0.3
       '@npmcli/installed-package-contents': 3.0.0
       '@npmcli/package-json': 6.2.0
-      '@npmcli/promise-spawn': 8.0.2
+      '@npmcli/promise-spawn': 8.0.3
       '@npmcli/run-script': 9.1.0
       cacache: 20.0.1
       fs-minipass: 3.0.3
@@ -3241,7 +3241,7 @@ snapshots:
       pump: 3.0.3
       tar-stream: 3.1.7
     optionalDependencies:
-      bare-fs: 4.2.0
+      bare-fs: 4.2.2
       bare-path: 3.0.0
     transitivePeerDependencies:
       - bare-buffer
@@ -3308,7 +3308,7 @@ snapshots:
   undici-types@7.10.0:
     optional: true
 
-  undici@7.14.0: {}
+  undici@7.15.0: {}
 
   unique-filename@4.0.0:
     dependencies:
