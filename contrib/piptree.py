@@ -60,22 +60,32 @@ def _get_extra_deps_from_dist(dist):
     return extra_deps
 
 
-def _get_deps_from_extras(name_version_cache, name_dist_cache, extra_deps):
+def _get_deps_from_extras(name_version_cache, name_dist_cache, extra_deps, visited=None):
     dependencies = []
     if not extra_deps:
         return dependencies
-    # Treat an extra with the name all as dependencies
+    if visited is None:
+        visited = set()
+
+    # Treat an extra with the name 'all' as dependencies
     all_deps = extra_deps.get("all", [])
     for dep in all_deps:
-        dversion = name_version_cache.get(dep["name"])
+        dep_name = dep["name"]
+        if dep_name in visited:
+            continue  # Avoid cycles
+        visited.add(dep_name)
+
+        dversion = name_version_cache.get(dep_name)
         if not dversion:
             continue
         dversionSpecifiers = dep.get("versionSpecifiers")
-        dpurl = f"""pkg:pypi/{dep["name"].lower()}@{dversion}"""
-        dextra_deps = _get_extra_deps_from_dist(name_dist_cache.get(dep["name"]))
-        ddependencies = _get_deps_from_extras(name_version_cache, name_dist_cache, dextra_deps)
+        dpurl = f"pkg:pypi/{dep_name.lower()}@{dversion}"
+        dextra_deps = _get_extra_deps_from_dist(name_dist_cache.get(dep_name))
+        ddependencies = _get_deps_from_extras(
+            name_version_cache, name_dist_cache, dextra_deps, visited.copy()
+        )
         dependencies.append({
-            "name": dep["name"],
+            "name": dep_name,
             "version": dversion,
             "versionSpecifiers": dversionSpecifiers,
             "purl": dpurl,
@@ -104,7 +114,7 @@ def get_installed_with_extras():
         # map each extra → its extra-only dependencies
         extra_deps = _get_extra_deps_from_dist(dist)
         purl = f"pkg:pypi/{name.lower()}@{version}"
-        dependencies = _get_deps_from_extras(name_version_cache, name_dist_cache, extra_deps)
+        dependencies = _get_deps_from_extras(name_version_cache, name_dist_cache, extra_deps, set())
         result[purl] = {
             'name': name,
             'version': version,
