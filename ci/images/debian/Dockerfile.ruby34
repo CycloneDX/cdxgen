@@ -7,6 +7,7 @@ ARG JAVA_VERSION=21.0.8-tem
 ARG NODE_VERSION=24.7.0
 ARG NPM_REPO
 ARG PIP_CONFIG
+ARG RUBYGEMS_REPO
 ARG SDKMAN_URL=https://api.sdkman.io/2
 
 ENV ATOM_CMD=/usr/local/bin/atom \
@@ -36,6 +37,11 @@ RUN set -e; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \
       printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    if [ -n "$RUBYGEMS_REPO" ]; then \
+      gem sources --add $RUBYGEMS_REPO/; \
+      gem sources --remove https://rubygems.org/; \
+      gem sources -c; \
     fi; \
     apt-get update \
  && apt-get install -qq -y --no-install-recommends \
@@ -80,6 +86,11 @@ RUN set -e; \
       if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
         sed -i "s|http://deb.debian.org|$DEBIAN_REPO|g" /etc/apt/sources.list.d/debian.sources; \
       fi \
+    fi; \
+    if [ -n "$RUBYGEMS_REPO" ]; then \
+      gem sources --add https://rubygems.org/; \
+      gem sources --remove $RUBYGEMS_REPO/; \
+      gem sources -c; \
     fi
 
 CMD ["/bin/bash"]
