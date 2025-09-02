@@ -498,6 +498,13 @@ export function parsePyLockData(lockData: any, lockFile: string, pyProjectFile: 
  */
 export function parseReqFile(reqFile: string, fetchDepsInfo?: boolean): any;
 /**
+ * Parse environment markers into structured format
+ *
+ * @param {String} markersStr Raw markers string
+ * @returns {Array<Object>} Structured markers array
+ */
+export function parseReqEnvMarkers(markersStr: string): Array<any>;
+/**
  * Method to find python modules by parsing the imports and then checking with PyPI to obtain the latest version
  *
  * @param {string} src directory
@@ -519,7 +526,7 @@ export function getPyModules(src: string, epkgList: any[], options: any): Promis
  *
  * @param {Object} setupPyData Contents of setup.py
  */
-export function parseSetupPyFile(setupPyData: any): Promise<any>;
+export function parseSetupPyFile(setupPyData: any): Promise<any[]>;
 /**
  * Method to parse pixi.lock data
  *
