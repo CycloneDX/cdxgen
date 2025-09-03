@@ -2,6 +2,7 @@
 FROM registry.opensuse.org/opensuse/bci/python:3.10 AS base
 
 ARG GO_VERSION=1.25.0
+ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG OPENSUSE_CODECS_REPO
 ARG OPENSUSE_REPO
@@ -17,9 +18,13 @@ ENV CC=gcc \
 ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:${GOPATH}/bin:/usr/local/go/bin
 
 RUN set -e; \
+    if [ -n "$NODEJS_DIST_URL" ]; then \
+      export "NVM_NODEJS_ORG_MIRROR=$NODEJS_DIST_URL"; \
+      printf "disturl=$NODEJS_DIST_URL\n" >> $HOME/.npmrc; \
+    fi; \
     if [ -n "$NPM_REPO" ]; then \
-      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+      export "COREPACK_NPM_REGISTRY=$NPM_REPO"; \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO\n" >> $HOME/.npmrc; \
     fi; \
     if [ -n "$OPENSUSE_REPO" ]; then \
       sed -i "s|http://codecs.opensuse.org|$OPENSUSE_CODECS_REPO|g" /etc/zypp/repos.d/*; \
@@ -134,9 +139,13 @@ ENV CDXGEN_IN_CONTAINER=true \
 COPY . /opt/cdxgen
 
 RUN set -e; \
+    if [ -n "$NODEJS_DIST_URL" ]; then \
+      export "NVM_NODEJS_ORG_MIRROR=$NODEJS_DIST_URL"; \
+      printf "disturl=$NODEJS_DIST_URL\n" >> $HOME/.npmrc; \
+    fi; \
     if [ -n "$NPM_REPO" ]; then \
-      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+      export "COREPACK_NPM_REGISTRY=$NPM_REPO"; \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO\n" >> $HOME/.npmrc; \
     fi; \
     if [ -n "$OPENSUSE_REPO" ]; then \
       sed -i "s|http://codecs.opensuse.org|$OPENSUSE_CODECS_REPO|g" /etc/zypp/repos.d/*; \
