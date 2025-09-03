@@ -42,7 +42,7 @@ Model responses were scored using a combination of automated evaluation by a hig
 
 This category tests thinking and problem-solving.
 
-- **Top Performers:** **Gemini-2.5-pro** leads with **93.60%** accuracy, followed by other strong "thinking" models like **Deepthink-r1** (89.63%), **GPT-5** (83.23%), and **Deepseek-r1** (82.92%).
+- **Top Performers:** **Gemini-2.5-pro** leads with **93.60%** accuracy, followed by frontier models like **deepseek-3.1** (93.29%), **Deepthink-r1** (89.63%), **GPT-5** (83.23%), and **Deepseek-r1** (82.92%).
 - **Non-Thinking Models:** As predicted by the category description, the `cdx1` models show lower performance, with scores ranging from **46.04% to 73.17%**, confirming their struggle with tasks requiring reasoning.
 - **Strong Mid-Tier:** The `gpt-oss-20b` model performs impressively well for its size at **79.27%**, outscoring several larger models and leading the middle pack, which also includes `cdx1-pro-mlx-8bit` (73.17%) and `o4-mini-high` (67.99%).
 - **Lower Performers:** `qwen3-coder-480B` (48.48%) scored the lowest.
@@ -50,6 +50,7 @@ This category tests thinking and problem-solving.
 | Model              | Accuracy (%) |
 | :----------------- | :----------- |
 | gemini-2.5-pro     | 93.60        |
+| deepseek-3.1       | 93.29        |
 | deepthink-r1       | 89.63        |
 | gpt-5              | 83.23        |
 | deepseek-r1        | 82.92        |
@@ -70,27 +71,28 @@ config:
 %%{init: {'theme': 'default'}}%%
 xychart-beta
     title "Logic Category Comparison"
-    x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, cdx1-mini-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B, deepthink-r1, deepseek-r1, gpt-oss-120b, gpt-oss-20b, gpt-5]
+    x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, cdx1-mini-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B, deepthink-r1, deepseek-r1, gpt-oss-120b, gpt-oss-20b, gpt-5, deepseek-3.1]
     y-axis "Accuracy (%)" 0 --> 100
-    bar [70.12, 73.17, 68.29, 93.6, 67.99, 48.48, 89.63, 82.92, 80.49, 79.27, 83.23]
+    bar [70.12, 73.17, 68.29, 93.6, 67.99, 48.48, 89.63, 82.92, 80.49, 79.27, 83.23, 93.29]
 ```
 
 ### Spec Category Comparison
 
 This category tests direct knowledge of specifications like CycloneDX and SPDX.
 
-- **Flawless and Near-Perfect Recall:** **Gemini-2.5-pro** achieves a perfect **100%** score. **Deepseek-r1** is a close second at **98.58%**.
+- **Flawless and Near-Perfect Recall:** **Gemini-2.5-pro** achieves a perfect **100%** score. **Deepseek-3.1** is a close second at **99.72%** with a single wrong answer! A variant of this wrong answer was in fact answered correctly.
 - **Specialized Models Excel:** The "non-thinking" **cdx1-pro (98.30%)** and **cdx1-mini (97.16%)** models demonstrate excellent performance, confirming their strength in specialized knowledge retrieval and even outperforming GPT-5.
 - **High Score with Major Caveats (`gpt-5`):** **`gpt-5`** achieved a high accuracy of **95.17%**, placing it among the top performers. However, this result required a significant compromise:
-  - The model initially refused to answer the full set of questions, only offering to respond in small batches that required six separate user confirmations. This compromise was accepted to prevent an outright failure.
-  - A related variant, `gpt-5-thinking`, refused the test entirely after a minute of processing.
+    - The model initially refused to answer the full set of questions, only offering to respond in small batches that required six separate user confirmations. This compromise was accepted to prevent an outright failure.
+    - A related variant, `gpt-5-thinking`, refused the test entirely after a minute of processing.
 - **Complete Behavioral Failures:** Three models effectively failed the test not due to a lack of knowledge, but because they refused to cooperate:
-  - **`o4-mini-high`** scored **0%** after refusing to answer, citing too many questions.
-  - **`deepthink-r1`** (12.36%) and **`gpt-oss-20b`** (9.09%) also failed, answering only a small fraction of the questions without acknowledging the limitation.
+    - **`o4-mini-high`** scored **0%** after refusing to answer, citing too many questions.
+    - **`deepthink-r1`** (12.36%) and **`gpt-oss-20b`** (9.09%) also failed, answering only a small fraction of the questions without acknowledging the limitation.
 
 | Model              | Accuracy (%) |
 | :----------------- | :----------- |
 | gemini-2.5-pro     | 100.00       |
+| deepseek-3.1       | 99.72        |
 | deepseek-r1        | 98.58        |
 | cdx1-pro-mlx-8bit  | 98.30        |
 | cdx1-mini-mlx-8bit | 97.16        |
@@ -111,9 +113,9 @@ config:
 %%{init: {'theme': 'default'}}%%
 xychart-beta
     title "Spec Category Comparison"
-    x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, cdx1-mini-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B, deepthink-r1, deepseek-r1, gpt-oss-120b, gpt-oss-20b, gpt-5]
+    x-axis [cdx1-mlx-8bit, cdx1-pro-mlx-8bit, cdx1-mini-mlx-8bit, gemini-2.5-pro, o4-mini-high, qwen3-coder-480B, deepthink-r1, deepseek-r1, gpt-oss-120b, gpt-oss-20b, gpt-5, deepseek-3.1]
     y-axis "Accuracy (%)" 0 --> 100
-    bar [83.52, 98.3, 97.16, 100, 0, 90.34, 12.36, 98.58, 89.2, 9.09, 95.17]
+    bar [83.52, 98.3, 97.16, 100, 0, 90.34, 12.36, 98.58, 89.2, 9.09, 95.17, 99.72]
 ```
 
 ### Other Categories

@@ -9,7 +9,7 @@ Carefully understand the questions below. Answer all of them correctly based on 
 | Parameter         | Value   |
 |-------------------|---------|
 | Context Length    | 32768   |
-| Temperature       | 0.55     |
+| Temperature       | 0.55    |
 
 ## Manual Assessment
 
