@@ -4,6 +4,7 @@ FROM registry.suse.com/bci/ruby:2.5 AS base
 ARG ATOM_RUBY_VERSION=3.4.5
 ARG NPM_REPO
 ARG PIP_CONFIG
+ARG RUBY_LANG_URL
 ARG RUBYGEMS_REPO
 ARG SUSE_REPO
 
@@ -83,8 +84,14 @@ RUN set -e; \
  && source ~/.bashrc \
  && mkdir -p "$(rbenv root)/plugins" \
  && git clone https://github.com/rbenv/ruby-build.git --depth=1 "$(rbenv root)/plugins/ruby-build" \
- && rbenv install ${ATOM_RUBY_VERSION} -- --disable-install-doc \
- && ruby --version \
+ && if [ -n "$RUBY_LANG_URL" ]; then \
+      sed -i "s|https://cache.ruby-lang.org|$RUBY_LANG_URL|g" $(rbenv root)/plugins/ruby-build/share/ruby-build/*; \
+    fi; \
+    rbenv install ${ATOM_RUBY_VERSION} -- --disable-install-doc \
+ && if [ -n "$RUBY_LANG_URL" ]; then \
+      sed -i "s|$RUBY_LANG_URL|https://cache.ruby-lang.org|g" $(rbenv root)/plugins/ruby-build/share/ruby-build/*; \
+    fi; \
+    ruby --version \
  && java --version \
  && rm -rf $HOME/.npmrc $HOME/.pip \
  && zypper clean -a \
