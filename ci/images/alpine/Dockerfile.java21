@@ -2,6 +2,7 @@
 FROM eclipse-temurin:21-jdk-alpine AS base
 
 ARG ALPINE_REPO
+ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG PIP_CONFIG
 
@@ -12,9 +13,13 @@ RUN set -e; \
     if [ -n "$ALPINE_REPO" ]; then \
       sed -i "s|https://dl-cdn.alpinelinux.org|$ALPINE_REPO|g" /etc/apk/repositories; \
     fi; \
+    if [ -n "$NODEJS_DIST_URL" ]; then \
+      export "NVM_NODEJS_ORG_MIRROR=$NODEJS_DIST_URL"; \
+      printf "disturl=$NODEJS_DIST_URL\n" >> $HOME/.npmrc; \
+    fi; \
     if [ -n "$NPM_REPO" ]; then \
-      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+      export "COREPACK_NPM_REGISTRY=$NPM_REPO"; \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO\n" >> $HOME/.npmrc; \
     fi; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \
@@ -72,9 +77,13 @@ RUN set -e; \
     if [ -n "$ALPINE_REPO" ]; then \
       sed -i "s|https://dl-cdn.alpinelinux.org|$ALPINE_REPO|g" /etc/apk/repositories; \
     fi; \
+    if [ -n "$NODEJS_DIST_URL" ]; then \
+      export "NVM_NODEJS_ORG_MIRROR=$NODEJS_DIST_URL"; \
+      printf "disturl=$NODEJS_DIST_URL\n" >> $HOME/.npmrc; \
+    fi; \
     if [ -n "$NPM_REPO" ]; then \
-      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+      export "COREPACK_NPM_REGISTRY=$NPM_REPO"; \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO\n" >> $HOME/.npmrc; \
     fi; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \

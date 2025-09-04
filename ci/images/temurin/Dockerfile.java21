@@ -5,6 +5,7 @@ ARG GRADLE_VERSION=8.14.3
 ARG MAVEN_VERSION=3.9.11
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=24.7.0
+ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG PIP_CONFIG
 ARG PYTHON_VERSION=3.12
@@ -39,9 +40,13 @@ ENV CDXGEN_IN_CONTAINER=true \
 ENV PATH=${PATH}:/usr/local/bin/:/root/.local/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${PYTHONPATH}/bin
 
 RUN set -e; \
+    if [ -n "$NODEJS_DIST_URL" ]; then \
+      export "NVM_NODEJS_ORG_MIRROR=$NODEJS_DIST_URL"; \
+      printf "disturl=$NODEJS_DIST_URL\n" >> $HOME/.npmrc; \
+    fi; \
     if [ -n "$NPM_REPO" ]; then \
-      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+      export "COREPACK_NPM_REGISTRY=$NPM_REPO"; \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO\n" >> $HOME/.npmrc; \
     fi; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \
@@ -138,9 +143,13 @@ ENV CDXGEN_IN_CONTAINER=true \
 COPY . /opt/cdxgen
 
 RUN set -e; \
+    if [ -n "$NODEJS_DIST_URL" ]; then \
+      export "NVM_NODEJS_ORG_MIRROR=$NODEJS_DIST_URL"; \
+      printf "disturl=$NODEJS_DIST_URL\n" >> $HOME/.npmrc; \
+    fi; \
     if [ -n "$NPM_REPO" ]; then \
-      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+      export "COREPACK_NPM_REGISTRY=$NPM_REPO"; \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO\n" >> $HOME/.npmrc; \
     fi; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \

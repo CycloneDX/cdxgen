@@ -4,6 +4,7 @@ FROM rust:1-slim-bookworm AS base
 ARG DEBIAN_REPO
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=24.7.0
+ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG PIP_CONFIG
 
@@ -26,9 +27,13 @@ RUN set -e; \
         sed -i "s|http://deb.debian.org|$DEBIAN_REPO|g" /etc/apt/sources.list.d/debian.sources; \
       fi \
     fi; \
+    if [ -n "$NODEJS_DIST_URL" ]; then \
+      export "NVM_NODEJS_ORG_MIRROR=$NODEJS_DIST_URL"; \
+      printf "disturl=$NODEJS_DIST_URL\n" >> $HOME/.npmrc; \
+    fi; \
     if [ -n "$NPM_REPO" ]; then \
-      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+      export "COREPACK_NPM_REGISTRY=$NPM_REPO"; \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO\n" >> $HOME/.npmrc; \
     fi; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \
@@ -100,9 +105,13 @@ RUN set -e; \
         sed -i "s|http://deb.debian.org|$DEBIAN_REPO|g" /etc/apt/sources.list.d/debian.sources; \
       fi \
     fi; \
+    if [ -n "$NODEJS_DIST_URL" ]; then \
+      export "NVM_NODEJS_ORG_MIRROR=$NODEJS_DIST_URL"; \
+      printf "disturl=$NODEJS_DIST_URL\n" >> $HOME/.npmrc; \
+    fi; \
     if [ -n "$NPM_REPO" ]; then \
-      export COREPACK_NPM_REGISTRY=$NPM_REPO; \
-      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO" > $HOME/.npmrc; \
+      export "COREPACK_NPM_REGISTRY=$NPM_REPO"; \
+      printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO\n" >> $HOME/.npmrc; \
     fi; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \
