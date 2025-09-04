@@ -16,7 +16,14 @@ if [ x"${ATOM_RUBY_VERSION}" != "x" ]; then
   source ~/.bashrc
   mkdir -p "$(rbenv root)/plugins"
   git clone https://github.com/rbenv/ruby-build.git --depth=1 "$(rbenv root)/plugins/ruby-build"
+  if [ -n "$RUBY_LANG_URL" ]; then
+    sed -i "s|https://cache.ruby-lang.org|$RUBY_LANG_URL|g" $(rbenv root)/plugins/ruby-build/share/ruby-build/*
+  fi
+  #sed -i "s|https://github.com|http://mini-dev-1:8081/repository/ruby-langi|g" $(rbenv root)/plugins/ruby-build/share/ruby-build/*
   rbenv install $ATOM_RUBY_VERSION -- --disable-install-doc
+  if [ -n "$RUBY_LANG_URL" ]; then
+    sed -i "s|$RUBY_LANG_URL|https://cache.ruby-lang.org|g" $(rbenv root)/plugins/ruby-build/share/ruby-build/*
+  fi
 fi
 
 if [ x"${SKIP_ATOM}" != "xyes" ]; then
