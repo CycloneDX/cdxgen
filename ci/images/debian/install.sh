@@ -19,17 +19,22 @@ if [ x"${ATOM_RUBY_VERSION}" != "x" ]; then
   if [ -n "$RUBY_LANG_URL" ]; then
     sed -i "s|https://cache.ruby-lang.org|$RUBY_LANG_URL|g" $(rbenv root)/plugins/ruby-build/share/ruby-build/*
   fi
-  #sed -i "s|https://github.com|http://mini-dev-1:8081/repository/ruby-langi|g" $(rbenv root)/plugins/ruby-build/share/ruby-build/*
+  if [ -n "$GITHUB_URL" ]; then
+    sed -i "s|https://github.com|$GITHUB_URL|g" $(rbenv root)/plugins/ruby-build/share/ruby-build/*
+  fi
   rbenv install $ATOM_RUBY_VERSION -- --disable-install-doc
   if [ -n "$RUBY_LANG_URL" ]; then
     sed -i "s|$RUBY_LANG_URL|https://cache.ruby-lang.org|g" $(rbenv root)/plugins/ruby-build/share/ruby-build/*
+  fi
+  if [ -n "$GITHUB_URL" ]; then
+    sed -i "s|$GITHUB_URL|https://github.com|g" $(rbenv root)/plugins/ruby-build/share/ruby-build/*
   fi
 fi
 
 if [ x"${SKIP_ATOM}" != "xyes" ]; then
   ARCH_NAME="$(dpkg --print-architecture)"
   # Download atom native binary
-  curl -L https://github.com/AppThreat/atom/releases/latest/download/atom-${ARCH_NAME} -o /usr/local/bin/atom
+  curl -L $GITHUB_URL/AppThreat/atom/releases/latest/download/atom-${ARCH_NAME} -o /usr/local/bin/atom
   chmod +x /usr/local/bin/atom
   /usr/local/bin/atom --help || true
 fi

@@ -1,6 +1,7 @@
 # Base-image
 FROM registry.suse.com/bci/dotnet-sdk:7.0 AS base
 
+ARG GITHUB_URL=https://github.com
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG PIP_CONFIG
@@ -123,7 +124,7 @@ RUN set -e; \
       --package-import-method copy \
       --prod \
  && corepack pnpm cache delete \
- && curl -L https://github.com/owasp-dep-scan/dosai/releases/latest/download/Dosai${DOSAI_ARCH_SUFFIX} \
+ && curl -L $GITHUB_URL/owasp-dep-scan/dosai/releases/latest/download/Dosai${DOSAI_ARCH_SUFFIX} \
       -o /usr/local/bin/dosai \
  && chmod +x /usr/local/bin/dosai \
  && dosai --help \

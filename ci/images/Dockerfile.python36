@@ -2,6 +2,7 @@
 FROM registry.suse.com/bci/python:3.6 AS base
 
 ARG GCC_VERSION=14
+ARG GITHUB_URL=https://github.com
 ARG JAVA_VERSION=21.0.8-tem
 ARG MAVEN_VERSION=3.9.11
 # renovate: datasource=docker depName=node
@@ -106,7 +107,7 @@ RUN set -e; \
  && npm -v \
  && gcc --version \
  && curl -L --output /usr/bin/bazel \
-      https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
+      $GITHUB_URL/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
  && chmod +x /usr/bin/bazel \
  && bazel --version \
  && npm install -g \
