@@ -2,6 +2,7 @@
 FROM php:8.4-alpine AS base
 
 ARG ALPINE_REPO
+ARG COMPOSER_URL=https//getcomposer.org
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG PIP_CONFIG
@@ -66,10 +67,12 @@ RUN set -e; \
       pdo_mysql \
       xml \
       zip \
- && curl -sS https://getcomposer.org/installer \
-      | php -- \
-            --install-dir=/usr/local/bin \
-            --filename=composer \
+ && curl -sS $COMPOSER_URL/installer \
+      | sed "s|\$uriScheme.'://getcomposer.org'|'$COMPOSER_URL'|g" \
+      | php \
+          -- \
+          --install-dir=/usr/local/bin \
+          --filename=composer \
  && node -v \
  && npm -v \
  && php -v \
