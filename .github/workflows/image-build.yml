@@ -35,6 +35,7 @@ env:
   NEXUS_SERVER: 100.73.146.80
   NEXUS_SUSE_MICROSOFT_REPO_PATH: /repository/suse-microsoft
   NEXUS_SUSE_REPO_PATH: /repository/suse
+  NEXUS_SWIFT_PATH: /repository/swift
   REPO: ghcr.io
   TAG: v11
   TEAM: cyclonedx
@@ -96,6 +97,7 @@ jobs:
           "SDKMAN_URL=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_SDKMAN_PATH/2"
           "SUSE_MICROSOFT_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_SUSE_MICROSOFT_REPO_PATH"
           "SUSE_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_SUSE_REPO_PATH"
+          "SWIFT_URL=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_SWIFT_PATH"
           VALUE
           EOF
       - name: Install project dependencies
