@@ -2,6 +2,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
 
 ARG DEBIAN_REPO
+ARG GITHUB_URL=https://github.com
 # renovate: datasource=docker depName=node
 ARG NODE_VERSION=24.7.0
 ARG NODEJS_DIST_URL
@@ -181,7 +182,7 @@ RUN set -e; \
       --package-import-method copy \
       --prod \
  && corepack pnpm cache delete \
- && curl -L https://github.com/owasp-dep-scan/dosai/releases/latest/download/Dosai${DOSAI_ARCH_SUFFIX} \
+ && curl -L ${GITHUB_URL}/owasp-dep-scan/dosai/releases/latest/download/Dosai${DOSAI_ARCH_SUFFIX} \
       -o /usr/local/bin/dosai \
  && chmod +x /usr/local/bin/dosai \
  && dosai --help \

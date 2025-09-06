@@ -1,6 +1,7 @@
 # Base-image
 FROM registry.suse.com/bci/nodejs:20 AS base
 
+ARG GITHUB_URL=https://github.com
 ARG GCC_VERSION=14
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
@@ -88,7 +89,7 @@ RUN set -e; \
  && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
  && source ${NVM_DIR}/nvm.sh \
  && curl -L --output /usr/bin/bazel \
-      https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
+      $GITHUB_URL/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
  && chmod +x /usr/bin/bazel \
  && bazel --version \
  && rm -rf $HOME/.npmrc $HOME/.pip \
@@ -149,7 +150,7 @@ RUN set -e; \
       --package-import-method copy \
       --prod \
  && corepack pnpm cache delete \
- && curl -L https://github.com/AppThreat/atom/releases/latest/download/atom-${ATOM_ARCH_SUFFIX} \
+ && curl -L $GITHUB_URL/AppThreat/atom/releases/latest/download/atom-${ATOM_ARCH_SUFFIX} \
       -o /usr/local/bin/atom \
  && chmod +x /usr/local/bin/atom \
  && /usr/local/bin/atom --help \
