@@ -1,6 +1,7 @@
 # Base-image
 FROM php:8.3-bookworm AS base
 
+ARG COMPOSER_URL=https//getcomposer.org
 ARG DEBIAN_REPO
 ARG GITHUB_URL=https://github.com
 ARG JAVA_VERSION=21.0.8-tem
@@ -71,10 +72,12 @@ RUN set -e; \
       pdo_mysql \
       xml \
       zip \
- && curl -sS https://getcomposer.org/installer \
-      | php -- \
-            --install-dir=/usr/local/bin \
-            --filename=composer \
+ && curl -sS $COMPOSER_URL/installer \
+      | sed "s|\$uriScheme.'://getcomposer.org'|'$COMPOSER_URL'|g" \
+      | php \
+          -- \
+          --install-dir=/usr/local/bin \
+          --filename=composer \
  && chmod +x /tmp/install.sh \
  && /tmp/install.sh \
  && rm /tmp/install.sh \

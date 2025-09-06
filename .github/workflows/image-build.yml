@@ -19,6 +19,7 @@ on:
 
 env:
   NEXUS_ALPINE_REPO_PATH: /repository/alpine
+  NEXUS_COMPOSER_PATH: /repository/composer
   NEXUS_DEBIAN_REPO_PATH: /repository/debian
   NEXUS_GITHUB_PATH: /repository/github
   NEXUS_NODEJS_PATH: /repository/nodejs
@@ -83,6 +84,7 @@ jobs:
           cat >> "$GITHUB_OUTPUT" << EOF
           docker-args<<VALUE
           "ALPINE_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_ALPINE_REPO_PATH"
+          "COMPOSER_URL=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_COMPOSER_PATH"
           "DEBIAN_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_DEBIAN_REPO_PATH"
           "GITHUB_URL=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_GITHUB_PATH"
           "NODEJS_DIST_URL=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_NODEJS_PATH/dist"
