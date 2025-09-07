@@ -20,17 +20,19 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.WORKFLOW_TOKEN }}
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
       - name: Fix & comment
         run: |
           read -a array <<< "$COMMIT_MESSAGE"
           if [ "${array[2]}" = "pnpm" ]; then
-            corepack pnpm i --no-frozen-lockfile
+            pnpm i --no-frozen-lockfile
           elif [ "${array[2]}" = "dependency" ]; then
-            corepack pnpm i --no-frozen-lockfile
+            pnpm i --no-frozen-lockfile
             node bin/cdxgen.js --exclude test/\*\* -t js --deep
             echo "Output of \`pnpm why ${array[3]}\`:" > _tree.txt
             echo "\`\`\`" >> _tree.txt
-            corepack pnpm why ${array[3]} >> _tree.txt
+            pnpm why ${array[3]} >> _tree.txt
             echo "\`\`\`" >> _tree.txt
             echo "Output of \`jq\` on components:" >> _tree.txt
             echo "\`\`\`" >> _tree.txt

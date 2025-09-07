@@ -35,6 +35,8 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
       - uses: coursier/cache-action@4e2615869d13561d626ed48655e1a39e5b192b3c # v6.4.7
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
@@ -44,11 +46,9 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
-      - name: npm install, build and test
+      - name: pnpm install, build and test
         run: |
-          npm install --global corepack@latest
-          corepack enable
-          corepack pnpm install --config.strict-dep-builds=true
+          pnpm install --config.strict-dep-builds=true
           mkdir -p repotests
           mkdir -p bomresults
         env:
