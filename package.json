@@ -164,7 +164,7 @@
     "index.cjs"
   ],
   "devDependencies": {
-    "@biomejs/biome": "2.2.2",
+    "@biomejs/biome": "2.2.3",
     "poku": "^3.0.2",
     "typescript": "^5.9.2"
   },
