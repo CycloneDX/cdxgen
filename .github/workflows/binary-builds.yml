@@ -90,9 +90,6 @@ jobs:
               apk add --no-cache bash curl libstdc++
           # Set the commands & file-extensions
           - cmd: |
-              # Install pnpm
-              npm install --global pnpm
-
               # Prepare workspace
               rm -rf ADVANCED.md ci contrib devenv.* pyproject.toml renovate.json semicolon_delimited_script test tools_config uv.lock
               pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
@@ -163,6 +160,9 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
+      - name: Setup pnpm
+        if: ${{ matrix.os != 'linux' }}
+        uses: pnpm/action-setup@v4.1.0
       - name: Use Node.js ${{ matrix.node }}
         if: ${{ matrix.os != 'linux' }}
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -193,8 +193,11 @@ jobs:
             sed -i 's/x64-musl/"${NVM_ARCH}-musl"/g' "$NVM_DIR/nvm.sh"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-            # Install npm
+            # Install node
             nvm install ${{ matrix.node }}
+
+            # Install pnpm
+            npm install --global pnpm
 
             # Build
             ${{ matrix.cmd }}

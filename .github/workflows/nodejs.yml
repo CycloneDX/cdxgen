@@ -66,11 +66,13 @@ jobs:
       - name: Trim CI agent
         run: |
           rm -rf /tmp/docker-images-* /tmp/atom-usages-* /tmp/atom-reachables-*
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
       - name: Setup Nexus usage
         run: echo "registry=$NEXUS_URL" > .npmrc
       - name: pnpm install
         run: |
-          corepack pnpm install --config.strict-dep-builds=true
+          pnpm install --config.strict-dep-builds=true
           python3 -m pip install --pre owasp-depscan[all] atom-tools
       - name: check sbom for vulns
         if: github.ref == 'refs/heads/master'
@@ -108,13 +110,14 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: ${{ matrix.node-version }}
       - name: pnpm install, build and test
         run: |
-          npm install -g pnpm@latest
           pnpm install --config.strict-dep-builds=true
           pnpm test
         env:
@@ -163,6 +166,8 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
@@ -172,7 +177,6 @@ jobs:
           deno-version: v${{ matrix.deno_version }}
       - name: pnpm install, build and test
         run: |
-          npm install -g pnpm@latest
           pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
       - name: deno compile
         run: |

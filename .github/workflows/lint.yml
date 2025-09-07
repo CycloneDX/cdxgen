@@ -34,14 +34,14 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .nvmrc
       - name: Check Linting
         run: |
-          npm install --global corepack@latest
-          corepack enable
-          corepack pnpm install --config.strict-dep-builds=true
-          corepack pnpm run lint:check
+          pnpm install --config.strict-dep-builds=true
+          pnpm run lint:check
         env:
           CI: true

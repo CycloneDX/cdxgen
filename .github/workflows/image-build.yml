@@ -102,9 +102,11 @@ jobs:
           "SWIFT_URL=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_SWIFT_PATH"
           VALUE
           EOF
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
       - name: Install project dependencies
         run: |
-          corepack pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
+          pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
           mkdir -p $RUNNER_TEMP/cdxgen-sboms
       - name: Login to the Container registry
         uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
