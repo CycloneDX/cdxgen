@@ -144,11 +144,7 @@ RUN set -e; \
     esac \
  && cd /opt/cdxgen \
  && corepack enable \
- && corepack pnpm install \
-      --config.strict-dep-builds=true \
-      --frozen-lockfile \
-      --package-import-method copy \
-      --prod \
+ && corepack pnpm install:prod \
  && corepack pnpm cache delete \
  && curl -L $GITHUB_URL/AppThreat/atom/releases/latest/download/atom-${ATOM_ARCH_SUFFIX} \
       -o /usr/local/bin/atom \

@@ -232,7 +232,7 @@ jobs:
         continue-on-error: true
       - name: Attach cdx sbom
         run: |
-          pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
+          pnpm install:frozen
           node bin/cdxgen.js -t docker -o cdxgen-oci-image.cdx.json ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
           node bin/verify.js -i cdxgen-oci-image.cdx.json --public-key contrib/bom-signer/public.key
           oras attach --artifact-type sbom/cyclonedx ${{ fromJSON(steps.meta.outputs.json).tags[0] }} ./cdxgen-oci-image.cdx.json:application/json
@@ -303,7 +303,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       - name: Attach cdx sbom
         run: |
-          pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
+          pnpm install:frozen
           node bin/cdxgen.js -t docker -o cdxgen-secure-oci-image.cdx.json ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
           node bin/verify.js -i cdxgen-secure-oci-image.cdx.json --public-key contrib/bom-signer/public.key
           oras attach --artifact-type sbom/cyclonedx ${{ fromJSON(steps.meta.outputs.json).tags[0] }} ./cdxgen-secure-oci-image.cdx.json:application/json
@@ -375,7 +375,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       - name: Attach cdx sbom
         run: |
-          pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
+          pnpm install:frozen
           node bin/cdxgen.js -t docker -o cdxgen-deno-oci-image.cdx.json ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
           node bin/verify.js -i cdxgen-deno-oci-image.cdx.json --public-key contrib/bom-signer/public.key
           oras attach --artifact-type sbom/cyclonedx ${{ fromJSON(steps.meta.outputs.json).tags[0] }} ./cdxgen-deno-oci-image.cdx.json:application/json
@@ -499,7 +499,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       - name: Attach cdx sbom
         run: |
-          pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
+          pnpm install:frozen
           node bin/cdxgen.js -t docker -o cdxgen-bun-oci-image.cdx.json ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
           node bin/verify.js -i cdxgen-bun-oci-image.cdx.json --public-key contrib/bom-signer/public.key
           oras attach --artifact-type sbom/cyclonedx ${{ fromJSON(steps.meta.outputs.json).tags[0] }} ./cdxgen-bun-oci-image.cdx.json:application/json
