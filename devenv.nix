@@ -96,7 +96,7 @@ in
       enterShell = ''
         if command -v node >/dev/null 2>&1; then
             rm -rf .devenv/state/deno
-            pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
+            pnpm install:frozen
         elif command -v deno >/dev/null 2>&1; then
             rm -rf node_modules
             deno install --allow-scripts=npm:@biomejs/biome@1.9.4,npm:@appthreat/sqlite3@6.0.9

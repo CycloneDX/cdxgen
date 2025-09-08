@@ -90,7 +90,7 @@
     "lint": "biome check --fix",
     "lint:errors": "biome check --diagnostic-level=error",
     "gen-types": "npx -p typescript tsc",
-    "install:frozen": "pnpm install --config.strict-dep-builds=true --frozen-lockfile",
+    "install:frozen": "pnpm install --config.strict-dep-builds=true --frozen-lockfile --package-import-method copy",
     "install:prod": "pnpm install --config.strict-dep-builds=true --frozen-lockfile --package-import-method copy --prod"
   },
   "engines": {
