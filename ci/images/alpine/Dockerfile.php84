@@ -2,7 +2,7 @@
 FROM php:8.4-alpine AS base
 
 ARG ALPINE_REPO
-ARG COMPOSER_URL=https//getcomposer.org
+ARG COMPOSER_URL=https://getcomposer.org
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG PIP_CONFIG
