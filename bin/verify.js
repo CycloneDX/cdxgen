@@ -8,12 +8,14 @@ import jws from "jws";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
-import { dirNameStr } from "../lib/helpers/utils.js";
+import { dirNameStr, retrieveCdxgenVersion } from "../lib/helpers/utils.js";
 import { getBomWithOras } from "../lib/managers/oci.js";
 
 const dirName = dirNameStr;
 
-const args = yargs(hideBin(process.argv))
+const _yargs = yargs(hideBin(process.argv));
+
+const args = _yargs
   .option("input", {
     alias: "i",
     default: "bom.json",
@@ -29,10 +31,20 @@ const args = yargs(hideBin(process.argv))
   .completion("completion", "Generate bash/zsh completion")
   .epilogue("for documentation, visit https://cyclonedx.github.io/cdxgen")
   .scriptName("cdx-verify")
-  .version()
-  .help("h")
-  .alias("h", "help")
+  .version(retrieveCdxgenVersion())
+  .help(false)
+  .option("help", {
+    alias: "h",
+    type: "boolean",
+    description: "Show help",
+  })
   .wrap(Math.min(120, yargs().terminalWidth())).argv;
+
+if (args.help) {
+  console.log(`${retrieveCdxgenVersion()}\n`);
+  _yargs.showHelp();
+  process.exit(0);
+}
 
 if (args.version) {
   const packageJsonAsString = fs.readFileSync(
