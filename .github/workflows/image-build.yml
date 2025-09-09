@@ -74,7 +74,7 @@ jobs:
         if: ${{ ! fromJSON(inputs.image).runner }}
         uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
       - name: Setup ORAS
-        uses: oras-project/setup-oras@8d34698a59f5ffe24821f0b48ab62a3de8b64b20 # v1.2.3
+        uses: oras-project/setup-oras@22ce207df3b08e061f537244349aac6ae1d214f6 # v1.2.4
       - name: Setup Nexus usage
         id: nexus
         if: ${{ fromJSON(inputs.image).runner }}
