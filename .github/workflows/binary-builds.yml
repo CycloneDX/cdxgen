@@ -129,6 +129,7 @@ jobs:
               npm install --omit=dev --no-package-lock --no-audit --no-fund --no-progress
 
               # Generate sbom (imprecise)
+              composer config --no-plugins allow-plugins.composer/installers true
               node bin/cdxgen.js -t jar -t js -o sbom-postbuild.cdx.json --include-formulation
               
               # Produce cdxgen binary
