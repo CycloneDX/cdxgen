@@ -1,0 +1,3793 @@
+{
+  "$schema": "http://cyclonedx.org/schema/cryptography-defs.schema.json",
+  "lastUpdated": "2025-03-22T00:00:00Z",
+  "algorithms": [
+    {
+      "family": "RSASSA-PKCS1",
+      "standard": [
+        {
+          "name": "RFC8017",
+          "url": "https://doi.org/10.17487/RFC8017"
+        },
+        {
+          "name": "IEEE1363",
+          "url": "https://doi.org/10.1109/IEEESTD.2000.92290"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "RSA-PKCS1-1.5[-{digestAlgorithm}][-{keyLength}]",
+          "primitive": "signature"
+        }
+      ]
+    },
+    {
+      "family": "RSASSA-PSS",
+      "standard": [
+        {
+          "name": "RFC8017",
+          "url": "https://doi.org/10.17487/RFC8017"
+        },
+        {
+          "name": "IEEE1363A",
+          "url": "https://doi.org/10.1109/IEEESTD.2004.94612"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "RSA-PSS[-{digestAlgorithm}][-{saltLength}][-{keyLength}]",
+          "primitive": "signature"
+        }
+      ]
+    },
+    {
+      "family": "RSAES-PKCS1",
+      "standard": [
+        {
+          "name": "RFC8017",
+          "url": "https://doi.org/10.17487/RFC8017"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "RSA-PKCS1-1.5[-{keyLength}]",
+          "primitive": "pke"
+        }
+      ]
+    },
+    {
+      "family": "RSAES-OAEP",
+      "standard": [
+        {
+          "name": "RFC8017",
+          "url": "https://doi.org/10.17487/RFC8017"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "RSA-OAEP[-{hashAlgorithm}][-{maskGenAlgorithm}][-{keyLength}]",
+          "primitive": "pke"
+        }
+      ]
+    },
+    {
+      "family": "EdDSA",
+      "standard": [
+        {
+          "name": "RFC8032",
+          "url": "https://doi.org/10.17487/RFC8032"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "Ed(25519|448)[-(ph|ctx)]",
+          "primitive": "signature"
+        }
+      ]
+    },
+    {
+      "family": "ECDSA",
+      "standard": [
+        {
+          "name": "FIPS186-4",
+          "url": "https://doi.org/10.6028/NIST.FIPS.186-4"
+        },
+        {
+          "name": "X9.62",
+          "url": "https://standards.globalspec.com/std/1955141/ansi-x9-62"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "ECDSA[-{ellipticCurve}][-{hash}]",
+          "primitive": "signature"
+        }
+      ]
+    },
+    {
+      "family": "ECIES",
+      "standard": [
+        {
+          "name": "SEC1",
+          "url": "https://www.secg.org/sec1-v2.pdf"
+        },
+        {
+          "name": "ISO/IEC 18033-2",
+          "url": "https://www.iso.org/standard/37971.html"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "ECIES[-{ellipticCurve}][-{kdf}][-{symmetricCipher}][-{mac}]",
+          "primitive": "pke"
+        }
+      ]
+    },
+    {
+      "family": "MQV",
+      "standard": [
+        {
+          "name": "SP800-56A",
+          "url": "https://doi.org/10.6028/NIST.SP.800-56Ar3"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "FFMQV[-{namedGroup}]",
+          "primitive": "key-agree"
+        },
+        {
+          "pattern": "ECMQV[-{ellipticCurve}]",
+          "primitive": "key-agree"
+        }
+      ]
+    },
+    {
+      "family": "ElGamal",
+      "standard": [
+        {
+          "name": "ISO/IEC 18033-2",
+          "url": "https://www.iso.org/standard/37971.html"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "ElGamal[-{keyLength}]",
+          "primitive": "pke"
+        },
+        {
+          "pattern": "EC-ElGamal[-{ellipticCurve}]",
+          "primitive": "pke"
+        }
+      ]
+    },
+    {
+      "family": "DSA",
+      "standard": [
+        {
+          "name": "FIPS186-4",
+          "url": "https://doi.org/10.6028/NIST.FIPS.186-4"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "DSA[-{length}][-{hash}]",
+          "primitive": "signature"
+        }
+      ]
+    },
+    {
+      "family": "ECDH",
+      "standard": [
+        {
+          "name": "SP800-56A",
+          "url": "https://doi.org/10.6028/NIST.SP.800-56Ar3"
+        },
+        {
+          "name": "IEEE1363",
+          "url": "https://doi.org/10.1109/IEEESTD.2000.92290"
+        },
+        {
+          "name": "X9.63",
+          "url": "https://webstore.ansi.org/standards/ASCX9/ansix9632011r2017"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "ECDH[E][-{ellipticCurve}]",
+          "primitive": "key-agree"
+        },
+        {
+          "pattern": "x25519|x448",
+          "primitive": "key-agree"
+        }
+      ]
+    },
+    {
+      "family": "FFDH",
+      "standard": [
+        {
+          "name": "RFC7919",
+          "url": "https://doi.org/10.17487/RFC7919"
+        },
+        {
+          "name": "SP800-56A",
+          "url": "https://doi.org/10.6028/NIST.SP.800-56Ar3"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "FFDH(E)[-{namedGroup}]",
+          "primitive": "key-agree"
+        }
+      ]
+    },
+    {
+      "family": "SHA-1",
+      "standard": [
+        {
+          "name": "FIPS180-4",
+          "url": "https://doi.org/10.6028/NIST.FIPS.180-4"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "SHA-1",
+          "primitive": "hash"
+        }
+      ]
+    },
+    {
+      "family": "SHA-2",
+      "standard": [
+        {
+          "name": "FIPS180-4",
+          "url": "https://doi.org/10.6028/NIST.FIPS.180-4"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "SHA-(224|256|384|512|512/224|512/256)",
+          "primitive": "hash"
+        }
+      ]
+    },
+    {
+      "family": "SHA-3",
+      "standard": [
+        {
+          "name": "FIPS202",
+          "url": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf"
+        },
+        {
+          "name": "SP800-185",
+          "url": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "SHA-3-(224|256|384|512)",
+          "primitive": "hash"
+        },
+        {
+          "pattern": "SHAKE(128|256)",
+          "primitive": "xof"
+        },
+        {
+          "pattern": "cSHAKE(128|256)",
+          "primitive": "xof"
+        },
+        {
+          "pattern": "KMAC(128|256)",
+          "primitive": "mac"
+        },
+        {
+          "pattern": "HMACXOF(128|256)",
+          "primitive": "mac"
+        },
+        {
+          "pattern": "TupleHash(128|256)",
+          "primitive": "hash"
+        },
+        {
+          "pattern": "TupleHashXOF(128|256)",
+          "primitive": "xof"
+        },
+        {
+          "pattern": "ParallelHash(128|256)",
+          "primitive": "hash"
+        },
+        {
+          "pattern": "ParallelHashXOF(128|256)",
+          "primitive": "xof"
+        }
+      ]
+    },
+    {
+      "family": "AES",
+      "standard": [
+        {
+          "name": "FIPS197",
+          "url": "https://doi.org/10.6028/NIST.FIPS.197-upd1"
+        },
+        {
+          "name": "SP800-38{A-G}",
+          "url": "https://doi.org/10.6028/NIST.SP.800-38A"
+        },
+        {
+          "name": "RFC 5116",
+          "url": "https://doi.org/10.17487/RFC5116"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "AES[-(128|192|256)][-(ECB|CBC|CFB(1|8|64|128)|OFB|CTR|XTS|CTS)][-{padding}][-{ivlen}]",
+          "primitive": "block-cipher"
+        },
+        {
+          "standard": [
+            {
+              "name": "SP800-38D",
+              "url": "https://doi.org/10.6028/NIST.SP.800-38D"
+            },
+            {
+              "name": "RFC 3610",
+              "url": "https://doi.org/10.17487/RFC5116"
+            }
+          ],
+          "pattern": "AES[-(128|192|256)][-(GCM|CCM)][-{tagLength}][-{ivLength}]",
+          "primitive": "ae"
+        },
+        {
+          "standard": [
+            {
+              "name": "RFC5649",
+              "url": "https://doi.org/10.17487/RFC5649"
+            }
+          ],
+          "pattern": "AES[-(128|192|256)]-Wrap[-(PAD|KWP|PKCS7)]",
+          "primitive": "key-wrap"
+        },
+        {
+          "pattern": "AES[-(128|192|256)][-(GMAC|CMAC)]",
+          "primitive": "mac"
+        },
+        {
+          "pattern": "AES[-(128|192|256)][-(XCBC_MAC[_96])]",
+          "primitive": "mac"
+        }
+      ]
+    },
+    {
+      "family": "HKDF",
+      "standard": [
+        {
+          "name": "RFC5869",
+          "url": "https://doi.org/10.17487/RFC5869"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "HKDF[-{hashFunction}]",
+          "primitive": "kdf"
+        }
+      ]
+    },
+    {
+      "family": "HMAC",
+      "standard": [
+        {
+          "name": "SP800-224",
+          "url": "https://doi.org/10.6028/NIST.SP.800-224.ipd"
+        },
+        {
+          "name": "RFC2104",
+          "url": "https://doi.org/10.17487/RFC2104"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "HMAC[-{hashFunction}][-{tagLength}]",
+          "primitive": "mac"
+        }
+      ]
+    },
+    {
+      "family": "CMAC",
+      "standard": [
+        {
+          "name": "SP800-38B",
+          "url": "https://doi.org/10.6028/NIST.SP.800-38B"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "CMAC[-{cipherAlgorithm}][-{length}]",
+          "primitive": "mac"
+        }
+      ]
+    },
+    {
+      "family": "KMAC",
+      "standard": [
+        {
+          "name": "SP800-108r1",
+          "url": "https://doi.org/10.6028/NIST.SP.800-108r1-upd1"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "KMAC[-(128|256)]",
+          "primitive": "mac"
+        }
+      ]
+    },
+    {
+      "family": "ChaCha",
+      "standard": [
+        {
+          "name": "RFC8439",
+          "url": "https://doi.org/10.17487/RFC8439"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "ChaCha20[-(AES|{otherBlockCipher})]",
+          "primitive": "stream-cipher"
+        }
+      ]
+    },
+    {
+      "family": "Poly1305",
+      "standard": [
+        {
+          "name": "RFC8439",
+          "url": "https://doi.org/10.17487/RFC8439"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "Poly1305",
+          "primitive": "mac"
+        }
+      ]
+    },
+    {
+      "family": "ChaCha20",
+      "standard": [
+        {
+          "name": "RFC8439",
+          "url": "https://doi.org/10.17487/RFC8439"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "ChaCha20",
+          "primitive": "stream-cipher"
+        },
+        {
+          "pattern": "ChaCha20-Poly1305",
+          "primitive": "ae"
+        }
+      ]
+    },
+    {
+      "family": "Salsa20",
+      "standard": [
+        {
+          "name": "The Salsa20 Family of Stream Ciphers",
+          "url": "https://doi.org/10.1007/978-3-540-68351-3_8"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "Salsa20",
+          "primitive": "stream-cipher"
+        },
+        {
+          "pattern": "Salsa20-Poly1305",
+          "primitive": "ae"
+        }
+      ]
+    },
+    {
+      "family": "MD5",
+      "standard": [
+        {
+          "name": "RFC1321",
+          "url": "https://doi.org/10.17487/RFC1321"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "MD5",
+          "primitive": "hash"
+        }
+      ]
+    },
+    {
+      "family": "MD4",
+      "standard": [
+        {
+          "name": "RFC1320",
+          "url": "https://doi.org/10.17487/RFC1320"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "MD4",
+          "primitive": "hash"
+        }
+      ]
+    },
+    {
+      "family": "RC4",
+      "standard": [
+        {
+          "name": "Applied Cryptography: Protocols, Algorithms, and Source Code in C",
+          "url": "https://dl.acm.org/doi/book/10.5555/572932"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "RC4[-{keyLength}]",
+          "primitive": "stream-cipher"
+        }
+      ]
+    },
+    {
+      "family": "3DES",
+      "standard": [
+        {
+          "name": "RFC1851",
+          "url": "https://doi.org/10.17487/RFC1851"
+        },
+        {
+          "name": "FIPS PUB 46-3",
+          "url": "https://csrc.nist.gov/pubs/fips/46-3/final"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "3DES[-{keyLength}][-{mode}]",
+          "primitive": "block-cipher"
+        }
+      ]
+    },
+    {
+      "family": "DES",
+      "standard": [
+        {
+          "name": "FIPS PUB 46-3",
+          "url": "https://csrc.nist.gov/pubs/fips/46-3/final"
+        },
+        {
+          "name": "ANSI INCITS 92-1981",
+          "url": "https://csrc.nist.gov/pubs/fips/46-3/final"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "DES[-{keyLength}][-{mode}]",
+          "primitive": "block-cipher"
+        }
+      ]
+    },
+    {
+      "family": "IDEA",
+      "standard": [
+        {
+          "name": "A Proposal for a New Block Encryption Standard",
+          "url": "https://doi.org/10.1007%2F3-540-46877-3_35"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "IDEA[-{mode}]",
+          "primitive": "block-cipher"
+        }
+      ]
+    },
+    {
+      "family": "RC2",
+      "standard": [
+        {
+          "name": "RFC2268",
+          "url": "https://doi.org/10.17487/RFC2268"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "RC2[-{keyLength}][-{mode}]",
+          "primitive": "block-cipher"
+        }
+      ]
+    },
+    {
+      "family": "ML-DSA",
+      "standard": [
+        {
+          "name": "FIPS 204",
+          "url": "https://doi.org/10.6028/NIST.FIPS.204"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "ML-DSA-(44|65|87)",
+          "primitive": "signature"
+        },
+        {
+          "pattern": "HashML-DSA-(44|65|87)[-{hashFunction}]",
+          "primitive": "signature"
+        }
+      ]
+    },
+    {
+      "family": "SLH-DSA",
+      "standard": [
+        {
+          "name": "FIPS 205",
+          "url": "https://doi.org/10.6028/NIST.FIPS.205"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "SLH-DSA-(SHA2|SHAKE)-(128s|128f|192s|192f|256s|256f)",
+          "primitive": "signature"
+        },
+        {
+          "pattern": "HashSLH-DSA-(SHA2|SHAKE)-(128s|128f|192s|192f|256s|256f)[-{hashFunction}]",
+          "primitive": "signature"
+        }
+      ]
+    },
+    {
+      "family": "XMSS",
+      "standard": [
+        {
+          "name": "SP800-208",
+          "url": "https://doi.org/10.6028/NIST.SP.800-208"
+        },
+        {
+          "name": "RFC8391",
+          "url": "https://doi.org/10.17487/RFC8391"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "XMSS-(SHA2|SHAKE)[_{h}][_{nbits}]",
+          "primitive": "signature"
+        },
+        {
+          "pattern": "XMSSMT-(SHA2|SHAKE)[_{h}/{d}][_{nbits}]",
+          "primitive": "signature"
+        },
+        {
+          "pattern": "WOTSP-(SHA2|SHAKE)[_{nbits}]",
+          "primitive": "signature"
+        }
+      ]
+    },
+    {
+      "family": "LMS",
+      "standard": [
+        {
+          "name": "SP800-208",
+          "url": "https://doi.org/10.6028/NIST.SP.800-208"
+        },
+        {
+          "name": "RFC8554",
+          "url": "https://doi.org/10.17487/RFC8554"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "LMS[_{hashFunction}][_M{bytesPerNode}][_H{treeHeight}]",
+          "primitive": "signature"
+        },
+        {
+          "pattern": "LMOTS[_{hashfun}][_N{bytespernode}][_H{treeheight}]",
+          "primitive": "signature"
+        }
+      ]
+    },
+    {
+      "family": "ML-KEM",
+      "standard": [
+        {
+          "name": "FIPS 203",
+          "url": "https://doi.org/10.6028/NIST.FIPS.203"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "ML-KEM-(512|768|1024)",
+          "primitive": "kem"
+        }
+      ]
+    },
+    {
+      "family": "IKE-PRF",
+      "standard": [
+        {
+          "name": "RFC2409",
+          "url": "https://doi.org/10.17487/RFC2409"
+        },
+        {
+          "name": "RFC5996",
+          "url": "https://doi.org/10.17487/RFC5996"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "IKE_PRF_DERIVE",
+          "primitive": "key-agree"
+        },
+        {
+          "pattern": "IKE1_(PRF|Extended)_DERIVE",
+          "primitive": "key-agree"
+        },
+        {
+          "pattern": "IKE2_PRF_PLUS_DERIVE",
+          "primitive": "key-agree"
+        }
+      ]
+    },
+    {
+      "family": "GOST",
+      "variant": [
+        {
+          "standard": [
+            {
+              "name": "RFC4357",
+              "url": "https://doi.org/10.17487/RFC4357"
+            }
+          ],
+          "pattern": "GOSTR3410",
+          "primitive": "signature"
+        },
+        {
+          "standard": [
+            {
+              "name": "RFC4357",
+              "url": "https://doi.org/10.17487/RFC4357"
+            }
+          ],
+          "pattern": "GOSTR3411",
+          "primitive": "hash"
+        },
+        {
+          "standard": [
+            {
+              "name": "RFC4357",
+              "url": "https://doi.org/10.17487/RFC4357"
+            }
+          ],
+          "pattern": "GOSTR3411_HMAC",
+          "primitive": "mac"
+        },
+        {
+          "standard": [
+            {
+              "name": "RFC4357",
+              "url": "https://doi.org/10.17487/RFC4357"
+            }
+          ],
+          "pattern": "GOST38147[-{mode}][-{padding}]",
+          "primitive": "block-cipher"
+        },
+        {
+          "standard": [
+            {
+              "name": "RFC4357",
+              "url": "https://doi.org/10.17487/RFC4357"
+            }
+          ],
+          "pattern": "GOST38147_MAC",
+          "primitive": "mac"
+        }
+      ]
+    },
+    {
+      "family": "SEED",
+      "standard": [
+        {
+          "name": "RFC4269",
+          "url": "https://doi.org/10.17487/RFC4269"
+        },
+        {
+          "name": "RFC5669",
+          "url": "https://doi.org/10.17487/RFC5669"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "SEED-128[-{mode}][-{padding}]",
+          "primitive": "block-cipher"
+        },
+        {
+          "pattern": "SEED-128[-{mode}][-{padding}]-HMAC[-{hashFunction}][-{tagLength}]",
+          "primitive": "ae"
+        },
+        {
+          "pattern": "SEED-128-(CCM|GCM)",
+          "primitive": "ae"
+        }
+      ]
+    },
+    {
+      "family": "ARIA",
+      "standard": [
+        {
+          "name": "RFC5794",
+          "url": "https://doi.org/10.17487/RFC5794"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "ARIA-(128|192|256)[-{mode}][-{padding}]",
+          "primitive": "block-cipher"
+        },
+        {
+          "pattern": "ARIA-(128|192|256)[-{authmode}][-{padding}]",
+          "primitive": "ae"
+        }
+      ]
+    },
+    {
+      "family": "CAMELLIA",
+      "standard": [
+        {
+          "name": "RFC3713",
+          "url": "https://doi.org/10.17487/RFC3713"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "CAMELLIA-(128|192|256)[-{mode}][-{padding}]",
+          "primitive": "block-cipher"
+        },
+        {
+          "pattern": "CAMELLIA-(128|192|256)[-{authmode}][-{padding}]",
+          "primitive": "ae"
+        }
+      ]
+    },
+    {
+      "family": "Twofish",
+      "standard": [
+        {
+          "name": "Twofish: A 128-Bit Block Cipher",
+          "url": "https://www.schneier.com/academic/twofish/"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "Twofish-(128|192|256)[-{mode}][-{padding}]",
+          "primitive": "block-cipher"
+        }
+      ]
+    },
+    {
+      "family": "Blowfish",
+      "standard": [
+        {
+          "name": "Description of a new variable-length key, 64-bit block cipher (Blowfish)",
+          "url": "https://doi.org/10.1007/3-540-58108-1_24"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "Blowfish[-{keyLength}][-{mode}][-{padding}]",
+          "primitive": "block-cipher"
+        }
+      ]
+    },
+    {
+      "family": "Skipjack",
+      "standard": [
+        {
+          "name": "Escrowed Encryption Standard (EES)",
+          "url": "https://doi.org/10.6028/NIST.FIPS.185"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "Skipjack[-{mode}][-{padding}]",
+          "primitive": "block-cipher"
+        }
+      ]
+    },
+    {
+      "family": "SP800-108",
+      "standard": [
+        {
+          "name": "SP800-108",
+          "url": "https://doi.org/10.6028/NIST.SP.800-108r1-upd1"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "SP800_108_(CounterKDF|FeedbackKDF|DoublePipelineKDF)[-{prfFunction}][-{dkmLength}]",
+          "primitive": "key-derive"
+        }
+      ]
+    },
+    {
+      "family": "BLAKE2",
+      "standard": [
+        {
+          "name": "RFC7693",
+          "url": "https://doi.org/10.17487/RFC7693"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "BLAKE2b-(160|256|384|512)",
+          "primitive": "hash"
+        },
+        {
+          "pattern": "BLAKE2b-(160|256|384|512)-HMAC",
+          "primitive": "mac"
+        },
+        {
+          "pattern": "BLAKE2s-(160|256)",
+          "primitive": "hash"
+        },
+        {
+          "pattern": "BLAKE2b-(160|256|384|512)-HMAC",
+          "primitive": "mac"
+        }
+      ]
+    },
+    {
+      "family": "BLAKE3",
+      "standard": [
+        {
+          "name": "BLAKE3 Spec",
+          "url": "https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "BLAKE3[-{outputLength}]",
+          "primitive": "hash"
+        }
+      ]
+    },
+    {
+      "family": "X3DH",
+      "standard": [
+        {
+          "name": "The X3DH Key Agreement Protocol",
+          "url": "https://signal.org/docs/specifications/x3dh/"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "X3DH[-{hashFunction}]",
+          "primitive": "key-agree"
+        }
+      ]
+    },
+    {
+      "family": "BLS",
+      "standard": [
+        {
+          "name": "Short Signatures from the Weil Pairing",
+          "url": "https://dx.doi.org/10.1007/3-540-45682-1_30"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "BLS(13-381|13-377|BN254)",
+          "primitive": "signature"
+        },
+        {
+          "pattern": "BLS[-{ellipticCurve}]",
+          "primitive": "signature"
+        }
+      ]
+    },
+    {
+      "family": "MILENAGE",
+      "standard": [
+        {
+          "name": "3GPP TS 35.206",
+          "url": "https://www.3gpp.org/ftp/Specs/archive/35_series/35.206/35206-i00.zip"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "MILENAGE[-MAC]",
+          "primitive": "mac"
+        },
+        {
+          "pattern": "MILENAGE[-KDF]",
+          "primitive": "kdf"
+        }
+      ]
+    },
+    {
+      "family": "TUAK",
+      "standard": [
+        {
+          "name": "SHA-3 based authentication algorithm (3GPP TS 35.231)",
+          "url": "https://www.3gpp.org/ftp/Specs/archive/35_series/35.231/35231-i00.zip"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "TUAC[-MAC]",
+          "primitive": "mac"
+        },
+        {
+          "pattern": "TUAC[-KDF]",
+          "primitive": "kdf"
+        }
+      ]
+    },
+    {
+      "family": "ZUC",
+      "standard": [
+        {
+          "name": "3GPP TS 35.221",
+          "url": "https://www.3gpp.org/ftp/Specs/archive/35_series/35.221/35221-i00.zip"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "128-EEA3",
+          "primitive": "stream-cipher"
+        },
+        {
+          "pattern": "128-EIA3",
+          "primitive": "mac"
+        }
+      ]
+    },
+    {
+      "family": "SNOW3G",
+      "standard": [
+        {
+          "name": "3GPP TS 35.216",
+          "url": "https://www.3gpp.org/ftp/Specs/archive/35_series/35.216/35216-i00.zip"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "128-EEA1",
+          "primitive": "stream-cipher"
+        },
+        {
+          "pattern": "128-EIA1",
+          "primitive": "mac"
+        }
+      ]
+    },
+    {
+      "family": "3GPP-XOR",
+      "standard": [
+        {
+          "name": "Legacy XOR-based AV generation algorithm (3GPP TS 35.201)",
+          "url": "https://www.3gpp.org/ftp/Specs/archive/35_series/35.201/35201-i00.zip"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "3GPP-XOR[-MAC]",
+          "primitive": "mac"
+        },
+        {
+          "pattern": "3GPP-XOR[-KDF]",
+          "primitive": "kdf"
+        }
+      ]
+    },
+    {
+      "family": "MD2",
+      "standard": [
+        {
+          "name": "RFC1319",
+          "url": "https://doi.org/10.17487/RFC1319"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "MD2",
+          "primitive": "hash"
+        }
+      ]
+    },
+    {
+      "family": "MD4",
+      "standard": [
+        {
+          "name": "RFC1320",
+          "url": "https://doi.org/10.17487/RFC1320"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "MD4",
+          "primitive": "hash"
+        }
+      ]
+    },
+    {
+      "family": "MD5",
+      "standard": [
+        {
+          "name": "RFC1321",
+          "url": "https://doi.org/10.17487/RFC1321"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "MD5",
+          "primitive": "hash"
+        }
+      ]
+    },
+    {
+      "family": "RIPEMD",
+      "standard": [
+        {
+          "name": "ISO10118-3",
+          "url": "https://www.iso.org/standard/67116.html"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "RIPEMD-(128|160|256|320)",
+          "primitive": "hash"
+        }
+      ]
+    },
+    {
+      "family": "Whirlpool",
+      "standard": [
+        {
+          "name": "ISO10118-3",
+          "url": "https://www.iso.org/standard/67116.html"
+        },
+        {
+          "name": "NESSIE",
+          "url": "https://www.cosic.esat.kuleuven.be/nessie/"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "Whirlpool",
+          "primitive": "hash"
+        }
+      ]
+    },
+    {
+      "family": "Serpent",
+      "standard": [
+        {
+          "name": "AES Finalist",
+          "url": "https://www.cl.cam.ac.uk/~rja14/serpent.html"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "Serpent-(128|192|256)[-{mode}][-{padding}]",
+          "primitive": "block-cipher"
+        }
+      ]
+    },
+    {
+      "family": "CAST5",
+      "standard": [
+        {
+          "name": "RFC2144",
+          "url": "https://doi.org/10.17487/RFC2144"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "CAST5[-{keyLength}][-{mode}]",
+          "primitive": "block-cipher"
+        }
+      ]
+    },
+    {
+      "family": "CAST6",
+      "standard": [
+        {
+          "name": "RFC2612",
+          "url": "https://doi.org/10.17487/RFC2612"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "CAST6[-{keyLength}][-{mode}]",
+          "primitive": "block-cipher"
+        }
+      ]
+    },
+    {
+      "family": "RC5",
+      "standard": [
+        {
+          "name": "RFC2040",
+          "url": "https://doi.org/10.17487/RFC2040"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "RC5[-{keyLength}][-{mode}]",
+          "primitive": "block-cipher"
+        }
+      ]
+    },
+    {
+      "family": "RC6",
+      "standard": [
+        {
+          "name": "The RC6 Block Cipher",
+          "url": "https://web.archive.org/web/20181223080309/http://people.csail.mit.edu/rivest/rc6.pdf"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "RC6[-{keyLength}][-{mode}]",
+          "primitive": "block-cipher"
+        }
+      ]
+    },
+    {
+      "family": "HC",
+      "standard": [
+        {
+          "name": "eSTREAM",
+          "url": "https://www.ecrypt.eu.org/stream/"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "HC-128",
+          "primitive": "stream-cipher"
+        },
+        {
+          "pattern": "HC-256",
+          "primitive": "stream-cipher"
+        }
+      ]
+    },
+    {
+      "family": "RABBIT",
+      "standard": [
+        {
+          "name": "RFC4503",
+          "url": "https://doi.org/10.17487/RFC4503"
+        },
+        {
+          "name": "eSTREAM",
+          "url": "https://www.ecrypt.eu.org/stream/"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "RABBIT",
+          "primitive": "stream-cipher"
+        }
+      ]
+    },
+    {
+      "family": "Ascon",
+      "standard": [
+        {
+          "name": "NIST SP 800-232",
+          "url": "https://doi.org/10.6028/NIST.SP.800-232"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "Ascon-AEAD128",
+          "primitive": "ae"
+        },
+        {
+          "pattern": "Ascon-Hash256",
+          "primitive": "hash"
+        },
+        {
+          "pattern": "Ascon-XOF128",
+          "primitive": "xof"
+        },
+        {
+          "pattern": "Ascon-CXOF128",
+          "primitive": "xof"
+        }
+      ]
+    },
+    {
+      "family": "SipHash",
+      "standard": [
+        {
+          "name": "SipHash Spec",
+          "url": "https://131002.net/siphash/"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "SipHash[-{compressionRounds}-{finalizationRounds}]",
+          "primitive": "hash"
+        }
+      ]
+    },
+    {
+      "family": "PBKDF1",
+      "standard": [
+        {
+          "name": "RFC8018",
+          "url": "https://doi.org/10.17487/RFC8018"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "PBKDF1[-{hashFunction}][-{iterations}][-{dkLen}]",
+          "primitive": "kdf"
+        }
+      ]
+    },
+    {
+      "family": "PBKDF2",
+      "standard": [
+        {
+          "name": "RFC8018",
+          "url": "https://doi.org/10.17487/RFC8018"
+        },
+        {
+          "name": "SP800-132",
+          "url": "https://doi.org/10.6028/NIST.SP.800-132"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "PBKDF2[-{hashFunction}][-{iterations}][-{dkLen}]",
+          "primitive": "kdf"
+        }
+      ]
+    },
+    {
+      "family": "PBES1",
+      "standard": [
+        {
+          "name": "RFC8018",
+          "url": "https://doi.org/10.17487/RFC8018"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "PBES1[-{encryptionAlgorithm}][-{kdf}][-{dkLen}][-{iterations}]",
+          "primitive": "other"
+        }
+      ]
+    },
+    {
+      "family": "PBES2",
+      "standard": [
+        {
+          "name": "RFC8018",
+          "url": "https://doi.org/10.17487/RFC8018"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "PBES2[-{encryptionAlgorithm}][-{kdf}][-{dkLen}][-{iterations}]",
+          "primitive": "other"
+        }
+      ]
+    },
+    {
+      "family": "PBMAC1",
+      "standard": [
+        {
+          "name": "RFC8018",
+          "url": "https://doi.org/10.17487/RFC8018"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "PBMAC1[-{macAlgorithm}][-{hashFunction}][-{iterations}][-{dkLen}]",
+          "primitive": "mac"
+        }
+      ]
+    },
+    {
+      "family": "bcrypt",
+      "standard": [
+        {
+          "name": "A Future-Adaptable Password Scheme",
+          "url": "https://www.usenix.org/legacy/events/usenix99/provos/provos.pdf"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "bcrypt[-{cost)]",
+          "primitive": "hash"
+        }
+      ]
+    },
+    {
+      "family": "A5/1",
+      "variant": [
+        {
+          "pattern": "A5/1",
+          "primitive": "stream-cipher"
+        }
+      ]
+    },
+    {
+      "family": "A5/2",
+      "standard": [
+        {
+          "name": "ETSI ETR 278",
+          "url": "https://www.etsi.org/deliver/etsi_etr/200_299/278/01_60/etr_278e01p.pdf"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "A5/2",
+          "primitive": "stream-cipher"
+        }
+      ]
+    },
+    {
+      "family": "CMEA",
+      "standard": [
+        {
+          "name": "TIA TR45.0.A",
+          "url": ""
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "CMEA",
+          "primitive": "block-cipher"
+        }
+      ]
+    },
+    {
+      "family": "Fortuna",
+      "standard": [
+        {
+          "name": "Fortuna - A secure pseudorandom number generator",
+          "url": "https://www.schneier.com/academic/fortuna"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "Fortuna[-{blockCipher}][-{hashFunction}]",
+          "primitive": "drbg"
+        }
+      ]
+    },
+    {
+      "family": "Yarrow",
+      "standard": [
+        {
+          "name": "Yarrow - A secure pseudorandom number generator",
+          "url": "https://www.schneier.com/academic/yarrow"
+        }
+      ],
+      "variant": [
+        {
+          "pattern": "Yarrow[-{blockCipher}][-{hashFunction}]",
+          "primitive": "drbg"
+        }
+      ]
+    }
+  ],
+  "ellipticCurves": [
+    {
+      "name": "anssi",
+      "description": "Agence nationale de la s\u00e9curit\u00e9 des syst\u00e8mes d'information: Publication d'un param\u00e9trage de courbe elliptique visant des applications de passeport \u00e9lectronique et de l'administration \u00e9lectronique fran\u00e7aise. 21 November 2011",
+      "curves": [
+        {
+          "name": "FRP256v1",
+          "description": null,
+          "oid": "1.2.250.1.223.101.256.1",
+          "form": "Weierstrass"
+        }
+      ]
+    },
+    {
+      "name": "bls",
+      "description": "BLS curves. A family of pairing friendly curves, with embedding degree = 12 or 24.",
+      "curves": [
+        {
+          "name": "BLS12-377",
+          "description": "Curve from Zexe paper: https://eprint.iacr.org/2018/962, params taken from: https://eips.ethereum.org/EIPS/eip-2539 where they are explicitly listed.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "BLS12-381",
+          "description": "Curve from https://electriccoin.co/blog/new-snark-curve/. As used in ZCash.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "BLS12-446",
+          "description": "Curve from https://github.com/relic-toolkit/relic.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "BLS12-455",
+          "description": "Curve from https://github.com/relic-toolkit/relic.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "BLS12-638",
+          "description": "Curve from https://github.com/relic-toolkit/relic. Also in https://eprint.iacr.org/2012/232.pdf.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "BLS24-477",
+          "description": "Curve from https://github.com/relic-toolkit/relic. Also in https://eprint.iacr.org/2012/232.pdf.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Bandersnatch",
+          "description": "Curve from https://ethresear.ch/t/introducing-bandersnatch-a-fast-elliptic-curve-built-over-the-bls12-381-scalar-field/9957",
+          "oid": null,
+          "form": "TwistedEdwards"
+        }
+      ]
+    },
+    {
+      "name": "bn",
+      "description": "BN (Barreto, Naehrig curves) from: A Family of Implementation-Friendly BN Elliptic Curves - <https://eprint.iacr.org/2010/429.pdf>.",
+      "curves": [
+        {
+          "name": "bn158",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "bn190",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "bn222",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "bn254",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "other",
+              "name": "Fp254BNb"
+            }
+          ]
+        },
+        {
+          "name": "bn286",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "bn318",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "bn350",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "bn382",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "bn414",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "bn446",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "bn478",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "bn510",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "bn542",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "bn574",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "bn606",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "bn638",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        }
+      ]
+    },
+    {
+      "name": "brainpool",
+      "description": "ECC Brainpool Standard Curves and Curve Generation v. 1.0  19.10.2005",
+      "curves": [
+        {
+          "name": "brainpoolP160r1",
+          "description": null,
+          "oid": "1.3.36.3.3.2.8.1.1.1",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "brainpoolP160t1",
+          "description": null,
+          "oid": "1.3.36.3.3.2.8.1.1.2",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "brainpoolP192r1",
+          "description": null,
+          "oid": "1.3.36.3.3.2.8.1.1.3",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "brainpoolP192t1",
+          "description": null,
+          "oid": "1.3.36.3.3.2.8.1.1.4",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "brainpoolP224r1",
+          "description": null,
+          "oid": "1.3.36.3.3.2.8.1.1.5",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "brainpoolP224t1",
+          "description": null,
+          "oid": "1.3.36.3.3.2.8.1.1.6",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "brainpoolP256r1",
+          "description": null,
+          "oid": "1.3.36.3.3.2.8.1.1.7",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "brainpoolP256t1",
+          "description": null,
+          "oid": "1.3.36.3.3.2.8.1.1.8",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "brainpoolP320r1",
+          "description": null,
+          "oid": "1.3.36.3.3.2.8.1.1.9",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "brainpoolP320t1",
+          "description": null,
+          "oid": "1.3.36.3.3.2.8.1.1.10",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "brainpoolP384r1",
+          "description": null,
+          "oid": "1.3.36.3.3.2.8.1.1.11",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "brainpoolP384t1",
+          "description": null,
+          "oid": "1.3.36.3.3.2.8.1.1.12",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "brainpoolP512r1",
+          "description": null,
+          "oid": "1.3.36.3.3.2.8.1.1.13",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "brainpoolP512t1",
+          "description": null,
+          "oid": "1.3.36.3.3.2.8.1.1.14",
+          "form": "Weierstrass"
+        }
+      ]
+    },
+    {
+      "name": "gost",
+      "description": "GOST R 34.10-2001: RFC5832, GOST R 34.10-2012: RFC7836",
+      "curves": [
+        {
+          "name": "gost256",
+          "description": "RFC5832",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "gost512",
+          "description": "RFC5832",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "id-GostR3410-2001-CryptoPro-A-ParamSet",
+          "description": "RFC4357",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "id-GostR3410-2001-CryptoPro-B-ParamSet",
+          "description": "RFC4357",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "id-GostR3410-2001-CryptoPro-C-ParamSet",
+          "description": "RFC4357",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "id-tc26-gost-3410-12-512-paramSetA",
+          "description": "RFC7836",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "id-tc26-gost-3410-12-512-paramSetB",
+          "description": "RFC7836",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "id-tc26-gost-3410-2012-256-paramSetA",
+          "description": "RFC5832",
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "id-tc26-gost-3410-2012-512-paramSetC",
+          "description": "RFC5832",
+          "oid": null,
+          "form": "TwistedEdwards"
+        }
+      ]
+    },
+    {
+      "name": "mnt",
+      "description": "MNT (Miyaji, Nakabayashi, and Takano curves) example curves from: New explicit conditions of elliptic curve traces for FR-reduction - https://dspace.jaist.ac.jp/dspace/bitstream/10119/4432/1/73-48.pdf.",
+      "curves": [
+        {
+          "name": "mnt1",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "mnt2/1",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "mnt2/2",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "mnt3/1",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "mnt3/2",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "mnt3/3",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "mnt4",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "mnt5/1",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "mnt5/2",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "mnt5/3",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        }
+      ]
+    },
+    {
+      "name": "nist",
+      "description": "RECOMMENDED ELLIPTIC CURVES FOR FEDERAL GOVERNMENT USE  July 1999",
+      "curves": [
+        {
+          "name": "B-163",
+          "description": null,
+          "oid": "1.3.132.0.15",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect163r2"
+            },
+            {
+              "category": "x963",
+              "name": "ansit163r2"
+            }
+          ]
+        },
+        {
+          "name": "B-233",
+          "description": null,
+          "oid": "1.3.132.0.27",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect233r1"
+            },
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls11"
+            },
+            {
+              "category": "x963",
+              "name": "ansit233r1"
+            }
+          ]
+        },
+        {
+          "name": "B-283",
+          "description": null,
+          "oid": "1.3.132.0.17",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect283r1"
+            },
+            {
+              "category": "x963",
+              "name": "ansit283r1"
+            }
+          ]
+        },
+        {
+          "name": "B-409",
+          "description": null,
+          "oid": "1.3.132.0.37",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect409r1"
+            },
+            {
+              "category": "x963",
+              "name": "ansit409r1"
+            }
+          ]
+        },
+        {
+          "name": "B-571",
+          "description": null,
+          "oid": "1.3.132.0.39",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect571r1"
+            },
+            {
+              "category": "x963",
+              "name": "ansit571r1"
+            }
+          ]
+        },
+        {
+          "name": "K-163",
+          "description": "Koblitz curve.",
+          "oid": "1.3.132.0.1",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect163k1"
+            },
+            {
+              "category": "x963",
+              "name": "ansit163k1"
+            },
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls3"
+            }
+          ]
+        },
+        {
+          "name": "K-233",
+          "description": "Koblitz curve.",
+          "oid": "1.3.132.0.26",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect233k1"
+            },
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls10"
+            },
+            {
+              "category": "x963",
+              "name": "ansit233k1"
+            }
+          ]
+        },
+        {
+          "name": "K-283",
+          "description": "Koblitz curve.",
+          "oid": "1.3.132.0.16",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect283k1"
+            },
+            {
+              "category": "x963",
+              "name": "ansit283k1"
+            }
+          ]
+        },
+        {
+          "name": "K-409",
+          "description": "Koblitz curve.",
+          "oid": "1.3.132.0.36",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect409k1"
+            },
+            {
+              "category": "x963",
+              "name": "ansit409k1"
+            }
+          ]
+        },
+        {
+          "name": "K-571",
+          "description": "Koblitz curve.",
+          "oid": "1.3.132.0.38",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect571k1"
+            },
+            {
+              "category": "x963",
+              "name": "ansit571k1"
+            }
+          ]
+        },
+        {
+          "name": "P-192",
+          "description": null,
+          "oid": "1.2.840.10045.3.1.1",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp192r1"
+            },
+            {
+              "category": "x962",
+              "name": "prime192v1"
+            }
+          ]
+        },
+        {
+          "name": "P-224",
+          "description": null,
+          "oid": "1.3.132.0.33",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp224r1"
+            },
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls12"
+            },
+            {
+              "category": "x963",
+              "name": "ansip224r1"
+            }
+          ]
+        },
+        {
+          "name": "P-256",
+          "description": null,
+          "oid": "1.2.840.10045.3.1.7",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp256r1"
+            },
+            {
+              "category": "x962",
+              "name": "prime256v1"
+            }
+          ]
+        },
+        {
+          "name": "P-384",
+          "description": null,
+          "oid": "1.3.132.0.34",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp384r1"
+            },
+            {
+              "category": "x963",
+              "name": "ansip384r1"
+            }
+          ]
+        },
+        {
+          "name": "P-521",
+          "description": null,
+          "oid": "1.3.132.0.35",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp521r1"
+            },
+            {
+              "category": "x963",
+              "name": "ansip521r1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "nums",
+      "description": "Microsoft Nothing Up My Sleeve (NUMS) curves from: <https://eprint.iacr.org/2014/130> and <https://tools.ietf.org/html/draft-black-numscurves-02>",
+      "curves": [
+        {
+          "name": "ed-254-mont",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "ed-255-mers",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "ed-256-mont",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "ed-382-mont",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "ed-383-mers",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "ed-384-mont",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "ed-510-mont",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "ed-511-mers",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "ed-512-mont",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "numsp256d1",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "numsp256t1",
+          "description": null,
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "numsp384d1",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "numsp384t1",
+          "description": null,
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "numsp512d1",
+          "description": null,
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "numsp512t1",
+          "description": null,
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "w-254-mont",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "w-255-mers",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "w-256-mont",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "w-382-mont",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "w-383-mers",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "w-384-mont",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "w-510-mont",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "w-511-mers",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "w-512-mont",
+          "description": "Curve from https://eprint.iacr.org/2014/130.pdf. No generator present.",
+          "oid": null,
+          "form": "Weierstrass"
+        }
+      ]
+    },
+    {
+      "name": "oakley",
+      "description": "Oakley groups from <https://tools.ietf.org/html/rfc2409> and <https://tools.ietf.org/html/rfc5114>",
+      "curves": [
+        {
+          "name": "192-bit Random ECP Group",
+          "description": "Defined in IETF in RFC5114",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "224-bit Random ECP Group",
+          "description": "Defined in IETF in RFC5114",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "256-bit Random ECP Group",
+          "description": "Defined in IETF in RFC5114",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "384-bit Random ECP Group",
+          "description": "Defined in IETF in RFC5114",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "521-bit Random ECP Group",
+          "description": "Defined in IETF in RFC5114",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Oakley Group 3",
+          "description": "Defined in IETF in RFC2409, no generator present.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Oakley Group 4",
+          "description": "Defined in IETF in RFC2409, no generator present.",
+          "oid": null,
+          "form": "Weierstrass"
+        }
+      ]
+    },
+    {
+      "name": "oscaa",
+      "description": "http://gmssl.org/english.html",
+      "curves": [
+        {
+          "name": "SM2",
+          "description": null,
+          "oid": "1.2.156.10197.1.301",
+          "form": "Weierstrass"
+        }
+      ]
+    },
+    {
+      "name": "other",
+      "description": "An assortment of some other curves.",
+      "curves": [
+        {
+          "name": "BADA55-R-256",
+          "description": "BADA55 curve from the https://bada55.cr.yp.to/bada55-20150927.pdf",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "BADA55-VPR-224",
+          "description": "BADA55 curve from the https://bada55.cr.yp.to/bada55-20150927.pdf",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "BADA55-VPR2-224",
+          "description": "BADA55 curve from the https://bada55.cr.yp.to/bada55-20150927.pdf",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "BADA55-VR-224",
+          "description": "BADA55 curve from the https://bada55.cr.yp.to/bada55-20150927.pdf",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "BADA55-VR-256",
+          "description": "BADA55 curve from the https://bada55.cr.yp.to/bada55-20150927.pdf",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "BADA55-VR-384",
+          "description": "BADA55 curve from the https://bada55.cr.yp.to/bada55-20150927.pdf",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Curve1174",
+          "description": "Curve from https://eprint.iacr.org/2013/325.pdf",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Curve22103",
+          "description": "Curve from https://github.com/relic-toolkit/relic",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Curve25519",
+          "description": "Curve from https://cr.yp.to/ecdh.html",
+          "oid": null,
+          "form": "Montgomery"
+        },
+        {
+          "name": "Curve383187",
+          "description": null,
+          "oid": null,
+          "form": "Montgomery"
+        },
+        {
+          "name": "Curve41417",
+          "description": "Curve from https://cr.yp.to/talks/2013.09.16/slides-djb-20130916-a4.pdf",
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "Curve4417",
+          "description": "Curve from https://github.com/relic-toolkit/relic",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Curve448",
+          "description": "Curve from https://datatracker.ietf.org/doc/html/rfc7748",
+          "oid": null,
+          "form": "Montgomery"
+        },
+        {
+          "name": "Curve67254",
+          "description": "Curve from https://github.com/relic-toolkit/relic",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "E-222",
+          "description": "Curve from https://eprint.iacr.org/2013/647.pdf",
+          "oid": null,
+          "form": "Edwards"
+        },
+        {
+          "name": "E-382",
+          "description": "Curve from https://eprint.iacr.org/2013/647.pdf",
+          "oid": null,
+          "form": "Edwards"
+        },
+        {
+          "name": "E-521",
+          "description": "Curve from https://eprint.iacr.org/2013/647.pdf",
+          "oid": null,
+          "form": "Edwards"
+        },
+        {
+          "name": "Ed25519",
+          "description": "Curve from https://ed25519.cr.yp.to",
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "Ed448",
+          "description": "Curve from https://datatracker.ietf.org/doc/html/draft-ietf-lwig-curve-representations-23",
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "Ed448-Goldilocks",
+          "description": "Curve from https://eprint.iacr.org/2015/625.pdf",
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "FourQ",
+          "description": "Curve used in https://eprint.iacr.org/2015/565.pdf",
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "Fp224BN",
+          "description": "Curve described in https://www.iso.org/standard/80241.html",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Fp254BNa",
+          "description": "Curve used in: https://eprint.iacr.org/2010/354.pdf",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Fp254BNb",
+          "description": "Curve used in https://www.iacr.org/archive/eurocrypt2011/66320047/66320047.pdf",
+          "oid": null,
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "bn",
+              "name": "bn254"
+            }
+          ]
+        },
+        {
+          "name": "Fp254n2BNa",
+          "description": "Curve used in: https://eprint.iacr.org/2010/354.pdf",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Fp256BN",
+          "description": "Curve described in https://www.iso.org/standard/80241.html",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Fp384BN",
+          "description": "Curve described in https://www.iso.org/standard/80241.html",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Fp512BN",
+          "description": "Curve described in https://www.iso.org/standard/80241.html",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "JubJub",
+          "description": "JubJub curve from <https://z.cash/technology/jubjub/>.",
+          "oid": null,
+          "form": "TwistedEdwards"
+        },
+        {
+          "name": "M-221",
+          "description": "Curve from https://eprint.iacr.org/2013/647.pdf",
+          "oid": null,
+          "form": "Montgomery"
+        },
+        {
+          "name": "M-383",
+          "description": "Curve from https://eprint.iacr.org/2013/647.pdf",
+          "oid": null,
+          "form": "Montgomery"
+        },
+        {
+          "name": "M-511",
+          "description": "Curve from https://eprint.iacr.org/2013/647.pdf",
+          "oid": null,
+          "form": "Montgomery"
+        },
+        {
+          "name": "MDC201601",
+          "description": "The Million Dollar Curve",
+          "oid": null,
+          "form": "Edwards"
+        },
+        {
+          "name": "Pallas",
+          "description": "Pallas curve from the [Pasta curves](https://electriccoin.co/blog/the-pasta-curves-for-halo-2-and-beyond/).",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Tom-256",
+          "description": "Tom-256 curve from https://eprint.iacr.org/2021/1183.pdf",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Tom-384",
+          "description": "Tom-384 curve from https://eprint.iacr.org/2021/1183.pdf",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Tom-521",
+          "description": "Tom-521 curve from https://eprint.iacr.org/2021/1183.pdf",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Tweedledee",
+          "description": "Tweedledee pairing friendly curve from <https://github.com/daira/tweedle>.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Tweedledum",
+          "description": "Tweedledum pairing friendly curve from <https://github.com/daira/tweedle>.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "Vesta",
+          "description": "Vesta curve from the [Pasta curves](https://electriccoin.co/blog/the-pasta-curves-for-halo-2-and-beyond/).",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "ssc-160",
+          "description": "A prime order curve from MIRACL: https://github.com/miracl/MIRACL/blob/master/docs/miracl-explained/miracl-standard-curves.md. Has no generator specified.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "ssc-192",
+          "description": "A prime order curve from MIRACL: https://github.com/miracl/MIRACL/blob/master/docs/miracl-explained/miracl-standard-curves.md. Has no generator specified.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "ssc-224",
+          "description": "A prime order curve from MIRACL: https://github.com/miracl/MIRACL/blob/master/docs/miracl-explained/miracl-standard-curves.md. Has no generator specified.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "ssc-256",
+          "description": "A prime order curve from MIRACL: https://github.com/miracl/MIRACL/blob/master/docs/miracl-explained/miracl-standard-curves.md. Has no generator specified.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "ssc-288",
+          "description": "A prime order curve from MIRACL: https://github.com/miracl/MIRACL/blob/master/docs/miracl-explained/miracl-standard-curves.md. Has no generator specified.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "ssc-320",
+          "description": "A prime order curve from MIRACL: https://github.com/miracl/MIRACL/blob/master/docs/miracl-explained/miracl-standard-curves.md. Has no generator specified.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "ssc-384",
+          "description": "A prime order curve from MIRACL: https://github.com/miracl/MIRACL/blob/master/docs/miracl-explained/miracl-standard-curves.md. Has no generator specified.",
+          "oid": null,
+          "form": "Weierstrass"
+        },
+        {
+          "name": "ssc-512",
+          "description": "A prime order curve from MIRACL: https://github.com/miracl/MIRACL/blob/master/docs/miracl-explained/miracl-standard-curves.md. Has no generator specified.",
+          "oid": null,
+          "form": "Weierstrass"
+        }
+      ]
+    },
+    {
+      "name": "secg",
+      "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010",
+      "curves": [
+        {
+          "name": "secp112r1",
+          "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'.",
+          "oid": "1.3.132.0.6",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls6"
+            }
+          ]
+        },
+        {
+          "name": "secp112r2",
+          "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'.",
+          "oid": "1.3.132.0.7",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "secp128r1",
+          "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'.",
+          "oid": "1.3.132.0.28",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "secp128r2",
+          "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'.",
+          "oid": "1.3.132.0.29",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "secp160k1",
+          "description": "A Koblitz curve.",
+          "oid": "1.3.132.0.9",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "x963",
+              "name": "ansip160k1"
+            }
+          ]
+        },
+        {
+          "name": "secp160r1",
+          "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'.",
+          "oid": "1.3.132.0.8",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls7"
+            },
+            {
+              "category": "x963",
+              "name": "ansip160r1"
+            }
+          ]
+        },
+        {
+          "name": "secp160r2",
+          "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'.",
+          "oid": "1.3.132.0.30",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "x963",
+              "name": "ansip160r2"
+            }
+          ]
+        },
+        {
+          "name": "secp192k1",
+          "description": "A Koblitz curve.",
+          "oid": "1.3.132.0.31",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "x963",
+              "name": "ansip192k1"
+            }
+          ]
+        },
+        {
+          "name": "secp192r1",
+          "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'.",
+          "oid": "1.2.840.10045.3.1.1",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "P-192"
+            },
+            {
+              "category": "x962",
+              "name": "prime192v1"
+            }
+          ]
+        },
+        {
+          "name": "secp224k1",
+          "description": "A Koblitz curve.",
+          "oid": "1.3.132.0.32",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "x963",
+              "name": "ansip224k1"
+            }
+          ]
+        },
+        {
+          "name": "secp224r1",
+          "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'.",
+          "oid": "1.3.132.0.33",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "P-224"
+            },
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls12"
+            },
+            {
+              "category": "x963",
+              "name": "ansip224r1"
+            }
+          ]
+        },
+        {
+          "name": "secp256k1",
+          "description": "A Koblitz curve.",
+          "oid": "1.3.132.0.10",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "x963",
+              "name": "ansip256k1"
+            }
+          ]
+        },
+        {
+          "name": "secp256r1",
+          "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'.",
+          "oid": "1.2.840.10045.3.1.7",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "P-256"
+            },
+            {
+              "category": "x962",
+              "name": "prime256v1"
+            }
+          ]
+        },
+        {
+          "name": "secp384r1",
+          "description": null,
+          "oid": "1.3.132.0.34",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "P-384"
+            },
+            {
+              "category": "x963",
+              "name": "ansip384r1"
+            }
+          ]
+        },
+        {
+          "name": "secp521r1",
+          "description": null,
+          "oid": "1.3.132.0.35",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "P-521"
+            },
+            {
+              "category": "x963",
+              "name": "ansip521r1"
+            }
+          ]
+        },
+        {
+          "name": "sect113r1",
+          "description": null,
+          "oid": "1.3.132.0.4",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls4"
+            }
+          ]
+        },
+        {
+          "name": "sect113r2",
+          "description": null,
+          "oid": "1.3.132.0.5",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "sect131r1",
+          "description": null,
+          "oid": "1.3.132.0.22",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "sect131r2",
+          "description": null,
+          "oid": "1.3.132.0.23",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "sect163k1",
+          "description": null,
+          "oid": "1.3.132.0.1",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "K-163"
+            },
+            {
+              "category": "x963",
+              "name": "ansit163k1"
+            },
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls3"
+            }
+          ]
+        },
+        {
+          "name": "sect163r1",
+          "description": "A randomly generated curve, using the SECG/X9.62 method. 'However for historical reasons the method used to generate E from S differs slightly from the method described in ANSI X9.62 [X9.62]. Specifically the coefficient b produced from S is the reverse of the coefficient that would have been produced by the method described in ANSI X9.62.'",
+          "oid": "1.3.132.0.2",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "x963",
+              "name": "ansit163r1"
+            }
+          ]
+        },
+        {
+          "name": "sect163r2",
+          "description": "A randomly generated curve. 'E was selected from S as specified in ANSI X9.62 [X9.62] in normal basis representation and converted into polynomial basis representation.'",
+          "oid": "1.3.132.0.15",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "B-163"
+            },
+            {
+              "category": "x963",
+              "name": "ansit163r2"
+            }
+          ]
+        },
+        {
+          "name": "sect193r1",
+          "description": null,
+          "oid": "1.3.132.0.24",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "x963",
+              "name": "ansit193r1"
+            }
+          ]
+        },
+        {
+          "name": "sect193r2",
+          "description": null,
+          "oid": "1.3.132.0.25",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "x963",
+              "name": "ansit193r2"
+            }
+          ]
+        },
+        {
+          "name": "sect233k1",
+          "description": null,
+          "oid": "1.3.132.0.26",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "K-233"
+            },
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls10"
+            },
+            {
+              "category": "x963",
+              "name": "ansit233k1"
+            }
+          ]
+        },
+        {
+          "name": "sect233r1",
+          "description": null,
+          "oid": "1.3.132.0.27",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "B-233"
+            },
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls11"
+            },
+            {
+              "category": "x963",
+              "name": "ansit233r1"
+            }
+          ]
+        },
+        {
+          "name": "sect239k1",
+          "description": null,
+          "oid": "1.3.132.0.3",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "x963",
+              "name": "ansit239k1"
+            }
+          ]
+        },
+        {
+          "name": "sect283k1",
+          "description": null,
+          "oid": "1.3.132.0.16",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "K-283"
+            },
+            {
+              "category": "x963",
+              "name": "ansit283k1"
+            }
+          ]
+        },
+        {
+          "name": "sect283r1",
+          "description": null,
+          "oid": "1.3.132.0.17",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "B-283"
+            },
+            {
+              "category": "x963",
+              "name": "ansit283r1"
+            }
+          ]
+        },
+        {
+          "name": "sect409k1",
+          "description": null,
+          "oid": "1.3.132.0.36",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "K-409"
+            },
+            {
+              "category": "x963",
+              "name": "ansit409k1"
+            }
+          ]
+        },
+        {
+          "name": "sect409r1",
+          "description": null,
+          "oid": "1.3.132.0.37",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "B-409"
+            },
+            {
+              "category": "x963",
+              "name": "ansit409r1"
+            }
+          ]
+        },
+        {
+          "name": "sect571k1",
+          "description": null,
+          "oid": "1.3.132.0.38",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "K-571"
+            },
+            {
+              "category": "x963",
+              "name": "ansit571k1"
+            }
+          ]
+        },
+        {
+          "name": "sect571r1",
+          "description": null,
+          "oid": "1.3.132.0.39",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "B-571"
+            },
+            {
+              "category": "x963",
+              "name": "ansit571r1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "wtls",
+      "description": "Wireless Application Protocol - Wireless Transport Layer Security (WAP-WTLS) curves: <https://www.wapforum.org/tech/documents/WAP-199-WTLS-20000218-a.pdf>",
+      "curves": [
+        {
+          "name": "wap-wsg-idm-ecid-wtls1",
+          "description": null,
+          "oid": "2.23.43.1.4.1",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "wap-wsg-idm-ecid-wtls10",
+          "description": null,
+          "oid": "2.23.43.1.4.10",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect233k1"
+            },
+            {
+              "category": "nist",
+              "name": "K-233"
+            },
+            {
+              "category": "x963",
+              "name": "ansit233k1"
+            }
+          ]
+        },
+        {
+          "name": "wap-wsg-idm-ecid-wtls11",
+          "description": null,
+          "oid": "2.23.43.1.4.11",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect233r1"
+            },
+            {
+              "category": "nist",
+              "name": "B-233"
+            },
+            {
+              "category": "x963",
+              "name": "ansit233r1"
+            }
+          ]
+        },
+        {
+          "name": "wap-wsg-idm-ecid-wtls12",
+          "description": null,
+          "oid": "2.23.43.1.4.12",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp224r1"
+            },
+            {
+              "category": "nist",
+              "name": "P-224"
+            },
+            {
+              "category": "x963",
+              "name": "ansip224r1"
+            }
+          ]
+        },
+        {
+          "name": "wap-wsg-idm-ecid-wtls3",
+          "description": null,
+          "oid": "2.23.43.1.4.3",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "K-163"
+            },
+            {
+              "category": "secg",
+              "name": "sect163k1"
+            },
+            {
+              "category": "x963",
+              "name": "ansit163k1"
+            }
+          ]
+        },
+        {
+          "name": "wap-wsg-idm-ecid-wtls4",
+          "description": null,
+          "oid": "2.23.43.1.4.4",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect113r1"
+            }
+          ]
+        },
+        {
+          "name": "wap-wsg-idm-ecid-wtls5",
+          "description": null,
+          "oid": "2.23.43.1.4.5",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "x962",
+              "name": "c2pnb163v1"
+            }
+          ]
+        },
+        {
+          "name": "wap-wsg-idm-ecid-wtls6",
+          "description": null,
+          "oid": "2.23.43.1.4.6",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp112r1"
+            }
+          ]
+        },
+        {
+          "name": "wap-wsg-idm-ecid-wtls7",
+          "description": null,
+          "oid": "2.23.43.1.4.7",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp160r1"
+            },
+            {
+              "category": "x963",
+              "name": "ansip160r1"
+            }
+          ]
+        },
+        {
+          "name": "wap-wsg-idm-ecid-wtls8",
+          "description": null,
+          "oid": "2.23.43.1.4.8",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "wap-wsg-idm-ecid-wtls9",
+          "description": null,
+          "oid": "2.23.43.1.4.9",
+          "form": "Weierstrass"
+        }
+      ]
+    },
+    {
+      "name": "x962",
+      "description": "ANSI x9.62 example curves.",
+      "curves": [
+        {
+          "name": "c2onb191v4",
+          "description": "A binary-field curve in optimal normal basis",
+          "oid": "1.2.840.10045.3.0.8",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2onb191v5",
+          "description": "A binary-field curve in optimal normal basis",
+          "oid": "1.2.840.10045.3.0.9",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2onb239v4",
+          "description": "A binary-field curve in optimal normal basis",
+          "oid": "1.2.840.10045.3.0.14",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2onb239v5",
+          "description": "A binary-field curve in optimal normal basis",
+          "oid": "1.2.840.10045.3.0.15",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2pnb163v1",
+          "description": null,
+          "oid": "1.2.840.10045.3.0.1",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls5"
+            }
+          ]
+        },
+        {
+          "name": "c2pnb163v2",
+          "description": null,
+          "oid": "1.2.840.10045.3.0.2",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2pnb163v3",
+          "description": null,
+          "oid": "1.2.840.10045.3.0.3",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2pnb176w1",
+          "description": null,
+          "oid": "1.2.840.10045.3.0.4",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2pnb208w1",
+          "description": null,
+          "oid": "1.2.840.10045.3.0.10",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2pnb272w1",
+          "description": null,
+          "oid": "1.2.840.10045.3.0.16",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2pnb304w1",
+          "description": null,
+          "oid": "1.2.840.10045.3.0.17",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2pnb368w1",
+          "description": null,
+          "oid": "1.2.840.10045.3.0.19",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2tnb191v1",
+          "description": null,
+          "oid": "1.2.840.10045.3.0.5",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2tnb191v2",
+          "description": null,
+          "oid": "1.2.840.10045.3.0.6",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2tnb191v3",
+          "description": null,
+          "oid": "1.2.840.10045.3.0.7",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2tnb239v1",
+          "description": null,
+          "oid": "1.2.840.10045.3.0.11",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2tnb239v2",
+          "description": null,
+          "oid": "1.2.840.10045.3.0.12",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2tnb239v3",
+          "description": null,
+          "oid": "1.2.840.10045.3.0.13",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2tnb359v1",
+          "description": null,
+          "oid": "1.2.840.10045.3.0.18",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "c2tnb431r1",
+          "description": null,
+          "oid": "1.2.840.10045.3.0.20",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "prime192v1",
+          "description": null,
+          "oid": "1.2.840.10045.3.1.1",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp192r1"
+            },
+            {
+              "category": "nist",
+              "name": "P-192"
+            }
+          ]
+        },
+        {
+          "name": "prime192v2",
+          "description": null,
+          "oid": "1.2.840.10045.3.1.2",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "prime192v3",
+          "description": null,
+          "oid": "1.2.840.10045.3.1.3",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "prime239v1",
+          "description": null,
+          "oid": "1.2.840.10045.3.1.4",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "prime239v2",
+          "description": null,
+          "oid": "1.2.840.10045.3.1.5",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "prime239v3",
+          "description": null,
+          "oid": "1.2.840.10045.3.1.6",
+          "form": "Weierstrass"
+        },
+        {
+          "name": "prime256v1",
+          "description": null,
+          "oid": "1.2.840.10045.3.1.7",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp256r1"
+            },
+            {
+              "category": "nist",
+              "name": "P-256"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "x963",
+      "description": "ANSI x9.63 example curves.",
+      "curves": [
+        {
+          "name": "ansip160k1",
+          "description": null,
+          "oid": "1.3.132.0.9",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp160k1"
+            }
+          ]
+        },
+        {
+          "name": "ansip160r1",
+          "description": null,
+          "oid": "1.3.132.0.8",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp160r1"
+            },
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls7"
+            }
+          ]
+        },
+        {
+          "name": "ansip160r2",
+          "description": null,
+          "oid": "1.3.132.0.30",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp160r2"
+            }
+          ]
+        },
+        {
+          "name": "ansip192k1",
+          "description": null,
+          "oid": "1.3.132.0.31",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp192k1"
+            }
+          ]
+        },
+        {
+          "name": "ansip224k1",
+          "description": null,
+          "oid": "1.3.132.0.32",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp224k1"
+            }
+          ]
+        },
+        {
+          "name": "ansip224r1",
+          "description": null,
+          "oid": "1.3.132.0.33",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls12"
+            },
+            {
+              "category": "nist",
+              "name": "P-224"
+            },
+            {
+              "category": "secg",
+              "name": "secp224r1"
+            }
+          ]
+        },
+        {
+          "name": "ansip256k1",
+          "description": null,
+          "oid": "1.3.132.0.10",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp256k1"
+            }
+          ]
+        },
+        {
+          "name": "ansip384r1",
+          "description": null,
+          "oid": "1.3.132.0.34",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp384r1"
+            },
+            {
+              "category": "nist",
+              "name": "P-384"
+            }
+          ]
+        },
+        {
+          "name": "ansip521r1",
+          "description": null,
+          "oid": "1.3.132.0.35",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "secp521r1"
+            },
+            {
+              "category": "nist",
+              "name": "P-521"
+            }
+          ]
+        },
+        {
+          "name": "ansit163k1",
+          "description": null,
+          "oid": "1.3.132.0.1",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect163k1"
+            },
+            {
+              "category": "nist",
+              "name": "k-163"
+            },
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls3"
+            }
+          ]
+        },
+        {
+          "name": "ansit163r1",
+          "description": null,
+          "oid": "1.3.132.0.2",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect163r1"
+            }
+          ]
+        },
+        {
+          "name": "ansit163r2",
+          "description": null,
+          "oid": "1.3.132.0.15",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect163r2"
+            },
+            {
+              "category": "nist",
+              "name": "B-163"
+            }
+          ]
+        },
+        {
+          "name": "ansit193r1",
+          "description": null,
+          "oid": "1.3.132.0.24",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect193r1"
+            }
+          ]
+        },
+        {
+          "name": "ansit193r2",
+          "description": null,
+          "oid": "1.3.132.0.25",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect193r2"
+            }
+          ]
+        },
+        {
+          "name": "ansit233k1",
+          "description": null,
+          "oid": "1.3.132.0.26",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect233k1"
+            },
+            {
+              "category": "nist",
+              "name": "K-233"
+            },
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls10"
+            }
+          ]
+        },
+        {
+          "name": "ansit233r1",
+          "description": null,
+          "oid": "1.3.132.0.27",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "wtls",
+              "name": "wap-wsg-idm-ecid-wtls11"
+            },
+            {
+              "category": "nist",
+              "name": "B-233"
+            },
+            {
+              "category": "secg",
+              "name": "sect233r1"
+            }
+          ]
+        },
+        {
+          "name": "ansit239k1",
+          "description": null,
+          "oid": "1.3.132.0.3",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "secg",
+              "name": "sect239k1"
+            }
+          ]
+        },
+        {
+          "name": "ansit283k1",
+          "description": null,
+          "oid": "1.3.132.0.16",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "K-283"
+            },
+            {
+              "category": "secg",
+              "name": "sect283k1"
+            }
+          ]
+        },
+        {
+          "name": "ansit283r1",
+          "description": null,
+          "oid": "1.3.132.0.17",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "B-283"
+            },
+            {
+              "category": "secg",
+              "name": "sect283r1"
+            }
+          ]
+        },
+        {
+          "name": "ansit409k1",
+          "description": null,
+          "oid": "1.3.132.0.36",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "K-409"
+            },
+            {
+              "category": "secg",
+              "name": "sect409k1"
+            }
+          ]
+        },
+        {
+          "name": "ansit409r1",
+          "description": null,
+          "oid": "1.3.132.0.37",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "B-409"
+            },
+            {
+              "category": "secg",
+              "name": "sect409r1"
+            }
+          ]
+        },
+        {
+          "name": "ansit571k1",
+          "description": null,
+          "oid": "1.3.132.0.38",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "K-571"
+            },
+            {
+              "category": "secg",
+              "name": "sect571k1"
+            }
+          ]
+        },
+        {
+          "name": "ansit571r1",
+          "description": null,
+          "oid": "1.3.132.0.39",
+          "form": "Weierstrass",
+          "aliases": [
+            {
+              "category": "nist",
+              "name": "B-571"
+            },
+            {
+              "category": "secg",
+              "name": "sect571r1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
