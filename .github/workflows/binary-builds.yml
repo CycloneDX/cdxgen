@@ -92,11 +92,11 @@ jobs:
           - cmd: |
               # Prepare workspace
               rm -rf ADVANCED.md ci contrib devenv.* pyproject.toml renovate.json semicolon_delimited_script test tools_config uv.lock
-              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --prod --package-import-method copy --frozen-lockfile
+              pnpm install:prod --config.node-linker=hoisted
 
               # Generate sbom
               node bin/cdxgen.js -t jar -t js -o sbom-postbuild.cdx.json --include-formulation
-              
+
               # Produce cdxgen binary
               pnpm --package=@appthreat/caxa dlx caxa --input . --output cdxgen -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen
@@ -105,7 +105,7 @@ jobs:
 
               # Prepare for slim binaries
               rm -rf node_modules sbom-postbuild.cdx.json
-              pnpm install --config.strict-dep-builds=true --virtual-store-dir node_modules/pnpm --no-optional --prod --package-import-method copy --frozen-lockfile
+              pnpm install:prod --config.node-linker=hoisted --no-optional
 
               # Generate sbom
               node bin/cdxgen.js -t js --required-only --no-recurse -o sbom-postbuild-js.cdx.json --include-formulation
@@ -126,30 +126,30 @@ jobs:
             cmd: |
               # Prepare workspace
               Remove-Item -Path ADVANCED.md,ci,contrib,devenv.*,pyproject.toml,renovate.json,test,tools_config,uv.lock -Force -Recurse
-              npm install --omit=dev --no-package-lock --no-audit --no-fund --no-progress
+              pnpm install:prod --config.node-linker=hoisted
 
-              # Generate sbom (imprecise)
+              # Generate sbom
               node bin/cdxgen.js -t jar -t js -o sbom-postbuild.cdx.json --include-formulation
-              
+
               # Produce cdxgen binary
-              npx --no-progress --yes @appthreat/caxa --input . --output cdxgen.exe -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output cdxgen.exe -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen.exe --version
               .\cdxgen.exe --help
 
               # Prepare for slim binaries
               Remove-Item node_modules,sbom-postbuild.cdx.json -Force -Recurse
-              npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund --no-progress
+              pnpm install:prod --config.node-linker=hoisted --no-optional
 
-              # Generate sbom (imprecise)
+              # Generate sbom
               node bin/cdxgen.js -t js --required-only --no-recurse -o sbom-postbuild-js.cdx.json --include-formulation
 
               # Produce slim cdxgen binary
-              npx --no-progress --yes @appthreat/caxa --input . --output cdxgen-slim.exe -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output cdxgen-slim.exe -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen-slim.exe --version
               .\cdxgen-slim.exe --help
 
               # Produce verify binary
-              npx --no-progress --yes @appthreat/caxa --input . --output cdx-verify.exe -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
+              pnpm --package=@appthreat/caxa dlx caxa --input . --output cdx-verify.exe -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
               .\cdx-verify.exe --version
               .\cdx-verify.exe --help
             ext: .exe
@@ -261,7 +261,6 @@ jobs:
             cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}
             cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}.sha256
             cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}
-
 
   retry:
     needs: binaries

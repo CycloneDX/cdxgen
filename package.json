@@ -117,6 +117,7 @@
     "ajv-formats": "3.0.1",
     "cheerio": "1.1.2",
     "edn-data": "1.1.2",
+    "encoding": "0.1.13",
     "glob": "11.0.3",
     "global-agent": "3.0.0",
     "got": "14.4.8",
