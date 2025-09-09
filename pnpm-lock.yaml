@@ -53,18 +53,16 @@ overrides:
   yallist: ^5.0.0
   yargs: ^17.7.2
 
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
-
 importers:
 
   .:
     dependencies:
       '@babel/parser':
         specifier: ^7.28.3
-        version: 7.28.3
+        version: 7.28.4
       '@babel/traverse':
         specifier: ^7.28.3
-        version: 7.28.3
+        version: 7.28.4
       '@iarna/toml':
         specifier: 2.2.5
         version: 2.2.5
@@ -252,8 +250,8 @@ packages:
     resolution: {integrity: sha512-D2hP9eA+Sqx1kBZgzxZh0y1trbuU+JoDkiEwqhQ36nodYqJwyEIhPSdMNd7lOm/4io72luTPWH20Yda0xOuUow==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/parser@7.28.3':
-    resolution: {integrity: sha512-7+Ey1mAgYqFAx2h0RuoxcQT5+MlG3GTV0TQrgr7/ZliKsm/MNDxVVutlWaziMq7wJNAz8MTqz55XLpWvva6StA==}
+  '@babel/parser@7.28.4':
+    resolution: {integrity: sha512-yZbBqeM6TkpP9du/I2pUZnJsRMGGvOuIrhjzC1AwHwW+6he4mni6Bp/m8ijn0iOuZuPI2BfkCoSRunpyjnrQKg==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -261,12 +259,12 @@ packages:
     resolution: {integrity: sha512-LPDZ85aEJyYSd18/DkjNh4/y1ntkE5KwUHWTiqgRxruuZL2F1yuHligVHLvcHY2vMHXttKFpJn6LwfI7cw7ODw==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/traverse@7.28.3':
-    resolution: {integrity: sha512-7w4kZYHneL3A6NP2nxzHvT3HCZ7puDZZjFMqDpBPECub79sTtSO5CGXDkKrTQq8ksAwfD/XI2MRFX23njdDaIQ==}
+  '@babel/traverse@7.28.4':
+    resolution: {integrity: sha512-YEzuboP2qvQavAcjgQNVgsvHIDv6ZpwXvcvjmyySP2DIMuByS/6ioU5G9pYrWHM6T2YDfc7xga9iNzYOs12CFQ==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/types@7.28.2':
-    resolution: {integrity: sha512-ruv7Ae4J5dUYULmeXw1gmb7rYRz57OWCPM57pHojnLq/3Z1CK2lNSLTCVjxVk1F/TZHwOZZrOWi0ur95BbLxNQ==}
+  '@babel/types@7.28.4':
+    resolution: {integrity: sha512-bkFqkLhh3pMBUQQkpVgWDWq/lqzc2678eUyDlTBhRqhCHFguYYGM0Efga7tYk4TogG/3x0EEl66/OQ+WGbWB/Q==}
     engines: {node: '>=6.9.0'}
 
   '@biomejs/biome@2.2.3':
@@ -291,28 +289,24 @@ packages:
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [linux]
-    libc: musl
 
   '@biomejs/cli-linux-arm64@2.2.3':
     resolution: {integrity: sha512-g/Uta2DqYpECxG+vUmTAmUKlVhnGEcY7DXWgKP8ruLRa8Si1QHsWknPY3B/wCo0KgYiFIOAZ9hjsHfNb9L85+g==}
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [linux]
-    libc: glibc
 
   '@biomejs/cli-linux-x64-musl@2.2.3':
     resolution: {integrity: sha512-y76Dn4vkP1sMRGPFlNc+OTETBhGPJ90jY3il6jAfur8XWrYBQV3swZ1Jo0R2g+JpOeeoA0cOwM7mJG6svDz79w==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [linux]
-    libc: musl
 
   '@biomejs/cli-linux-x64@2.2.3':
     resolution: {integrity: sha512-LEtyYL1fJsvw35CxrbQ0gZoxOG3oZsAjzfRdvRBRHxOpQ91Q5doRVjvWW/wepgSdgk5hlaNzfeqpyGmfSD0Eyw==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [linux]
-    libc: glibc
 
   '@biomejs/cli-win32-arm64@2.2.3':
     resolution: {integrity: sha512-Ms9zFYzjcJK7LV+AOMYnjN3pV3xL8Prxf9aWdDVL74onLn5kcvZ1ZMQswE5XHtnd/r/0bnUd928Rpbs14BzVmA==}
@@ -343,37 +337,31 @@ packages:
     resolution: {integrity: sha512-D/vdxpvrtkfYITHpiQjlvhZBNkm2GLmm/lZHbSs5R+nghbulTgXR9I8pTALFTBhjHZQu55DTiACmn/irhhotkA==}
     cpu: [x64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.6.12':
     resolution: {integrity: sha512-xd9A25e+4SwHwm9FRglMdsfRsTAROTj3C5eiQ501FI+FOxEbnCODNkDFkplqKqDjDDSIPOgc4llmk9Wk+91c/Q==}
     cpu: [arm64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.6.12':
     resolution: {integrity: sha512-6c7IGJcbZemZ2RCj3r1BbxPfQZPxzQNvuk4er0xLdcompQITvjmWT/aaYFtPLT5ymDjIfDyVbgDin8PXQwWWIA==}
     cpu: [arm]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linux-ppc64@1.6.12':
     resolution: {integrity: sha512-JaRY6F+3VBHZMZ51DhC8NhHJkwtLOM1Lnh//iAPw5pAxpQdron+YwfcVIKWhBlFx5zxbz2NI5L7QtiEV/iO4PA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.6.12':
     resolution: {integrity: sha512-X4eHr0WUtBOiX1Yy8hr35JhpUBJYYbZ31v8KCHtuSK8/h5/0gJidg1OvTGxFWoOLKtPCcb3FvqCY+PSrUcxN0A==}
     cpu: [x64]
     os: [linux]
-    libc: musl
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64@1.6.12':
     resolution: {integrity: sha512-smaxqZ2ZmVm04elK9Dydk1IjEcyRuRt9pSBZxK/RhgJojsJGQaeY/boKR0P/46avoNNiZbVkIDAIbBjfJ5Z7RA==}
     cpu: [arm64]
     os: [linux]
-    libc: musl
 
   '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.12':
     resolution: {integrity: sha512-6reJ+EFAR8YIwSRYMZ/dfF5e+o/JGaAa7h8ByHUcDXdVb9AZDyFKEXu0WeH732FJ1rk06GuNBU2ZFonFvt5lqQ==}
@@ -1729,7 +1717,7 @@ snapshots:
   '@appthreat/atom-parsetools@1.0.8':
     dependencies:
       '@appthreat/atom-common': 1.0.8
-      '@babel/parser': 7.28.3
+      '@babel/parser': 7.28.4
       typescript: 5.9.2
       yargs: 17.7.2
     optional: true
@@ -1765,8 +1753,8 @@ snapshots:
 
   '@babel/generator@7.28.3':
     dependencies:
-      '@babel/parser': 7.28.3
-      '@babel/types': 7.28.2
+      '@babel/parser': 7.28.4
+      '@babel/types': 7.28.4
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.30
       jsesc: 3.1.0
@@ -1777,29 +1765,29 @@ snapshots:
 
   '@babel/helper-validator-identifier@7.27.1': {}
 
-  '@babel/parser@7.28.3':
+  '@babel/parser@7.28.4':
     dependencies:
-      '@babel/types': 7.28.2
+      '@babel/types': 7.28.4
 
   '@babel/template@7.27.2':
     dependencies:
       '@babel/code-frame': 7.27.1
-      '@babel/parser': 7.28.3
-      '@babel/types': 7.28.2
+      '@babel/parser': 7.28.4
+      '@babel/types': 7.28.4
 
-  '@babel/traverse@7.28.3':
+  '@babel/traverse@7.28.4':
     dependencies:
       '@babel/code-frame': 7.27.1
       '@babel/generator': 7.28.3
       '@babel/helper-globals': 7.28.0
-      '@babel/parser': 7.28.3
+      '@babel/parser': 7.28.4
       '@babel/template': 7.27.2
-      '@babel/types': 7.28.2
+      '@babel/types': 7.28.4
       debug: 4.4.1
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/types@7.28.2':
+  '@babel/types@7.28.4':
     dependencies:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
