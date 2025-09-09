@@ -41,7 +41,7 @@ overrides:
   type-fest: 4.41.0
   unique-filename: 4.0.0
   unique-slug: 5.0.0
-  uuid: 13.0.0
+  uuid: 11.1.0
   which: 5.0.0
   write-file-atomic: 6.0.0
   yallist: 5.0.0
@@ -186,8 +186,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       uuid:
-        specifier: 13.0.0
-        version: 13.0.0
+        specifier: 11.1.0
+        version: 11.1.0
       walk-up-path:
         specifier: 4.0.0
         version: 4.0.0
@@ -1626,8 +1626,8 @@ packages:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
 
-  uuid@13.0.0:
-    resolution: {integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==}
+  uuid@11.1.0:
+    resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
     hasBin: true
 
   validate-npm-package-license@3.0.4:
@@ -2939,7 +2939,7 @@ snapshots:
       semver: 7.7.2
       sequelize-pool: 7.1.0
       toposort-class: 1.0.1
-      uuid: 13.0.0
+      uuid: 11.1.0
       validator: 13.15.15
       wkx: 0.5.0
     optionalDependencies:
@@ -3177,7 +3177,7 @@ snapshots:
   utils-merge@1.0.1:
     optional: true
 
-  uuid@13.0.0: {}
+  uuid@11.1.0: {}
 
   validate-npm-package-license@3.0.4:
     dependencies:
