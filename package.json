@@ -177,7 +177,7 @@
       "@biomejs/biome"
     ],
     "overrides": {
-      "babel-plugin-istanbul": "7.0.0",
+      "babel-plugin-istanbul": "7.0.1",
       "brace-expansion": "2.0.2",
       "jwa": "2.0.1",
       "glob": "11.0.3",
@@ -231,7 +231,7 @@
     ]
   },
   "overrides": {
-    "babel-plugin-istanbul": "7.0.0",
+    "babel-plugin-istanbul": "7.0.1",
     "brace-expansion": "2.0.2",
     "jwa": "2.0.1",
     "glob": "11.0.3",
