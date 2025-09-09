@@ -106,7 +106,7 @@ jobs:
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
       - name: Install project dependencies
         run: |
-          pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
+          pnpm install:frozen
           mkdir -p $RUNNER_TEMP/cdxgen-sboms
       - name: Login to the Container registry
         uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0

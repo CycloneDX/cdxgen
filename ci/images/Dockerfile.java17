@@ -138,11 +138,7 @@ RUN set -e; \
     fi; \
     cd /opt/cdxgen \
  && corepack enable \
- && corepack pnpm install \
-      --config.strict-dep-builds=true \
-      --frozen-lockfile \
-      --package-import-method copy \
-      --prod \
+ && corepack pnpm install:prod \
  && corepack pnpm cache delete \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \

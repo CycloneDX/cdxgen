@@ -177,7 +177,7 @@ jobs:
           deno-version: v${{ matrix.deno_version }}
       - name: pnpm install, build and test
         run: |
-          pnpm install --config.strict-dep-builds=true --package-import-method copy --frozen-lockfile
+          pnpm install:frozen
       - name: deno compile
         run: |
           deno info bin/cdxgen.js
