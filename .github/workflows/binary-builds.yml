@@ -76,14 +76,14 @@ jobs:
             arch: arm64
             runner: windows-11-arm
           # Set musl configurations
-          - image: debian:11
+          - image: php:8.4-bullseye
             libc-suffix: ''
             node-download-url: https://nodejs.org/dist/
             prepare: |
               apt update
               apt install -y curl
           - libc: musl
-            image: alpine:3.16
+            image: php:8.4-alpine3.21
             libc-suffix: -musl
             node-download-url: https://raw.githubusercontent.com/appthreat/nodejs-unofficial-builds/main/dists/
             prepare: |
@@ -95,7 +95,7 @@ jobs:
               pnpm install:prod --config.node-linker=hoisted
 
               # Generate sbom
-              node bin/cdxgen.js -t jar -t js -o sbom-postbuild.cdx.json --include-formulation
+              node bin/cdxgen.js -t jar -t js -t php -t ruby -o sbom-postbuild.cdx.json --include-formulation
 
               # Produce cdxgen binary
               pnpm --package=@appthreat/caxa dlx caxa --input . --output cdxgen -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
@@ -129,7 +129,7 @@ jobs:
               pnpm install:prod --config.node-linker=hoisted
 
               # Generate sbom
-              node bin/cdxgen.js -t jar -t js -o sbom-postbuild.cdx.json --include-formulation
+              node bin/cdxgen.js -t jar -t js -t php -t ruby -o sbom-postbuild.cdx.json --include-formulation
 
               # Produce cdxgen binary
               pnpm --package=@appthreat/caxa dlx caxa --input . --output cdxgen.exe -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
@@ -168,6 +168,9 @@ jobs:
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version: ${{ matrix.node }}
+      - name: Install composer
+        uses: shivammathur/setup-php@v2
+        if: ${{ matrix.os == 'darwin' }}
       - name: Get user info
         id: user_info
         if: ${{ matrix.os == 'linux' }}
@@ -198,6 +201,9 @@ jobs:
 
             # Install pnpm
             npm install --global pnpm
+
+            # Install composer
+            curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
             # Build
             ${{ matrix.cmd }}
