@@ -18,6 +18,9 @@
       }
     }
   },
+  "javascript": {
+    "globals": ["arguments"]
+  },
   "linter": {
     "enabled": true,
     "includes": ["**", "!contrib/**", "!data/**", "!test/**", "!types/**"],
@@ -28,14 +31,21 @@
         "useLiteralKeys": "off",
         "noUselessEscapeInRegex": "off",
         "noUselessTernary": "warn",
-        "noUselessContinue": "warn"
+        "noUselessContinue": "warn",
+        "noArguments": "off"
       },
       "correctness": {
         "noUndeclaredVariables": "error",
         "noConstAssign": "error",
         "noConstantCondition": "error",
         "noUnreachable": "info",
-        "noUnusedFunctionParameters": "warn"
+        "noUnusedFunctionParameters": "warn",
+        "noUnusedVariables": {
+          "options": {
+            "ignoreRestSiblings": true
+          },
+          "level": "warn"
+        }
       },
       "performance": {
         "noDelete": "off"
@@ -60,7 +70,8 @@
         "noControlCharactersInRegex": "error",
         "noDebugger": "error",
         "noEmptyBlockStatements": "warn",
-        "noDuplicateElseIf": "warn"
+        "noDuplicateElseIf": "warn",
+        "useAdjacentOverloadSignatures": "off"
       },
       "nursery": {}
     }
