@@ -146,7 +146,6 @@
       "algorithm",
       "encrypt",
       "decrypt",
-      "registry",
       "payment",
       "stripe",
       "apple-pay",
