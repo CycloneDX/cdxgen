@@ -10,7 +10,7 @@ overrides:
   jwa: 2.0.1
   glob: 11.0.3
   node-gyp: 11.4.2
-  prebuild: 13.0.0
+  prebuild: 13.0.1
   pacote: 21.0.0
   negotiator: 0.6.4
   '@npmcli/agent': 3.0.0
