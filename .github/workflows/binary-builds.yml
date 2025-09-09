@@ -169,7 +169,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: Install composer
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@ec406be512d7077f68eed36e63f4d91bc006edc4 # v2
         if: ${{ matrix.os == 'darwin' }}
       - name: Get user info
         id: user_info
