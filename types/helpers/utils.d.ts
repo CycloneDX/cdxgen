@@ -1489,6 +1489,10 @@ export function hasDangerousUnicode(str: string): boolean;
  * @returns {boolean} true if valid drive format
  */
 export function isValidDriveRoot(root: string): boolean;
+/**
+ * Get version and runtime information
+ */
+export function retrieveCdxgenVersion(): string;
 export const dirNameStr: string;
 export const isSecureMode: any;
 export const isWin: boolean;

@@ -28,20 +28,17 @@ import {
   ATOM_DB,
   commandsExecuted,
   DEBUG_MODE,
-  dirNameStr,
-  getRuntimeInformation,
   getTmpDir,
   isMac,
   isSecureMode,
   isWin,
   remoteHostsAccessed,
+  retrieveCdxgenVersion,
   safeExistsSync,
 } from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
 import { postProcess } from "../lib/stages/postgen/postgen.js";
 import { prepareEnv } from "../lib/stages/pregen/pregen.js";
-
-const dirName = dirNameStr;
 
 // Support for config files
 const configPaths = [
@@ -384,7 +381,7 @@ const args = _yargs
   .epilogue("for documentation, visit https://cyclonedx.github.io/cdxgen")
   .config(config)
   .scriptName("cdxgen")
-  .version(version())
+  .version(retrieveCdxgenVersion())
   .alias("v", "version")
   .help(false)
   .option("help", {
@@ -399,21 +396,9 @@ if (process.env?.CDXGEN_NODE_OPTIONS) {
 }
 
 if (args.help) {
-  console.log(`${version()}\n`);
+  console.log(`${retrieveCdxgenVersion()}\n`);
   _yargs.showHelp();
   process.exit(0);
-}
-
-function version() {
-  const packageJsonAsString = fs.readFileSync(
-    join(dirName, "package.json"),
-    "utf-8",
-  );
-  const packageJson = JSON.parse(packageJsonAsString);
-
-  const runtimeInfo = getRuntimeInformation();
-
-  return `\x1b[1mCycloneDX Generator ${packageJson.version}\x1b[0m\nRuntime: ${runtimeInfo.runtime}, Version: ${runtimeInfo.version}`;
 }
 
 if (process.env.GLOBAL_AGENT_HTTP_PROXY || process.env.HTTP_PROXY) {
