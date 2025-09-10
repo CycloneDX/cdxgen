@@ -3,6 +3,7 @@ FROM registry.opensuse.org/opensuse/bci/python:3.10 AS base
 
 ARG GITHUB_URL=https://github.com
 ARG GO_VERSION=1.25.0
+ARG GOOGLE_URL=https://dl.google.com
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG OPENSUSE_CODECS_REPO
@@ -98,7 +99,7 @@ RUN set -e; \
         pipenv \
         poetry \
         uv \
- && curl -LO "https://dl.google.com/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz" \
+ && curl -LO "$GOOGLE_URL/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz" \
  && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
  && rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
  && go telemetry off \

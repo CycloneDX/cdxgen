@@ -2,6 +2,7 @@
 FROM opensuse/tumbleweed:latest AS base
 
 ARG DOTNET_SDK_VERSION=9.0.100
+ARG DOTNETCLI_URL=https://dotnetcli.azureedge.net
 ARG GITHUB_URL=https://github.com
 ARG GRADLE_VERSION=8.14.3
 ARG MAVEN_VERSION=4.0.0-rc-3
@@ -118,7 +119,7 @@ RUN set -e; \
  && mv /root/.sdkman/candidates/* /opt/ \
  && rm -rf /root/.sdkman \
  && curl -L --output dotnet.tar.gz \
-      https://dotnetcli.azureedge.net/dotnet/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-${OS_ARCH_SUFFIX}.tar.gz \
+      $DOTNETCLI_URL/dotnet/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-${OS_ARCH_SUFFIX}.tar.gz \
  && mkdir -p /usr/share/dotnet \
  && tar -xf dotnet.tar.gz -C /usr/share/dotnet \
  && rm dotnet.tar.gz \
