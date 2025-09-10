@@ -4,6 +4,7 @@ FROM registry.suse.com/bci/python:3.11 AS base
 ARG GCC_VERSION=14
 ARG GITHUB_URL=https://github.com
 ARG GO_VERSION=1.25.0
+ARG GOOGLE_URL=https://dl.google.com
 ARG JAVA_VERSION=24.0.2-tem
 ARG MAVEN_VERSION=3.9.11
 # renovate: datasource=docker depName=node
@@ -90,7 +91,7 @@ RUN set -e; \
  && sdk install java $JAVA_VERSION \
  && sdk install maven $MAVEN_VERSION \
  && mv /root/.sdkman/candidates/* /opt/ \
- && curl -LO "https://dl.google.com/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz" \
+ && curl -LO "${GOOGLE_URL}/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz" \
  && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
  && rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
  && go telemetry off \
