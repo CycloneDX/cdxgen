@@ -121,7 +121,7 @@ RUN set -e; \
  && curl -L --output /usr/bin/bazel \
       $GITHUB_URL/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
  && chmod +x /usr/bin/bazel \
- && bazel --version \
+ && BAZELISK_BASE_URL=$GITHUB_URL/bazelbuild/bazel/releases/download bazel --version \
  && rm -rf $HOME/.npmrc $HOME/.pip \
  && zypper clean -a \
  && if [ -n "$SUSE_REPO" ]; then \
