@@ -40,7 +40,7 @@ if [ x"${SKIP_ATOM}" != "xyes" ]; then
 fi
 
 if [ x"${JAVA_VERSION}" != "x" ]; then
-  curl -s "https://get.sdkman.io" | bash
+  curl -L "https://get.sdkman.io" | bash
   SDKMAN_BROKER_API="${SDKMAN_URL}/broker"
   SDKMAN_CANDIDATES_API="${SDKMAN_URL}"
   chmod +x /root/.sdkman/bin/sdkman-init.sh
