@@ -96,7 +96,7 @@ RUN set -e; \
  && SWIFT_SIG_URL="$SWIFT_BIN_URL.sig" \
  && echo $SWIFT_BIN_URL \
  && export GNUPGHOME="$(mktemp -d)" \
- && curl -fsSL \
+ && curl -L \
       "$SWIFT_BIN_URL" -o swift.tar.gz \
       "$SWIFT_SIG_URL" -o swift.tar.gz.sig \
  && gpg --batch --quiet --keyserver keyserver.ubuntu.com --recv-keys "$SWIFT_SIGNING_KEY" \

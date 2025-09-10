@@ -74,7 +74,7 @@ RUN set -e; \
           unzip \
           wget \
           zip \
- && curl -s "https://get.sdkman.io" | bash \
+ && curl -L "https://get.sdkman.io" | bash \
  && SDKMAN_BROKER_API="$SDKMAN_URL/broker" \
  && SDKMAN_CANDIDATES_API="$SDKMAN_URL" \
  && printf "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" \

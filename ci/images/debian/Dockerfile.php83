@@ -72,7 +72,7 @@ RUN set -e; \
       pdo_mysql \
       xml \
       zip \
- && curl -sS $COMPOSER_URL/installer \
+ && curl -L $COMPOSER_URL/installer \
       | sed "s|\$uriScheme.'://getcomposer.org'|'$COMPOSER_URL'|g" \
       | php \
           -- \
