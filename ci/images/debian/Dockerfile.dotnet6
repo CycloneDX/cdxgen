@@ -4,7 +4,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0-bookworm-slim AS base
 ARG DEBIAN_REPO
 ARG GITHUB_URL=https://github.com
 # renovate: datasource=docker depName=node
-ARG NODE_VERSION=22.17.0
+ARG NODE_VERSION=22.19.0
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG NUGET_REPO
