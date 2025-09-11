@@ -1,18 +1,20 @@
 # Base-image
 FROM opensuse/tumbleweed:latest AS base
 
-ARG DOTNET_SDK_VERSION=9.0.100
+ARG DOTNET_SDK_VERSION=9.0.305
 ARG DOTNETCLI_URL=https://dotnetcli.azureedge.net
 ARG GITHUB_URL=https://github.com
-ARG GRADLE_VERSION=8.14.3
-ARG MAVEN_VERSION=4.0.0-rc-3
+ARG GRADLE_VERSION=9.0.0
+ARG MAVEN_VERSION=4.0.0-rc-4
+# renovate: datasource=docker depName=node
+ARG NODE_VERSION=24.7.0
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG OPENSUSE_CODECS_REPO
 ARG OPENSUSE_REPO
 ARG PIP_CONFIG
-ARG SBT_VERSION=1.11.5
-ARG SCALA_VERSION=3.7.2
+ARG SBT_VERSION=1.11.6
+ARG SCALA_VERSION=3.7.3
 ARG SDKMAN_URL=https://api.sdkman.io/2
 
 ENV CC=gcc \
@@ -31,12 +33,13 @@ ENV CC=gcc \
     MAVEN_HOME="/opt/maven/${MAVEN_VERSION}" \
     MAVEN_VERSION=$MAVEN_VERSION \
     NUGET_XMLDOC_MODE=skip \
+    NVM_DIR="/root/.nvm" \
     PYTHONPATH=/opt/pypi \
     SBT_HOME="/opt/sbt/${SBT_VERSION}" \
     SBT_VERSION=$SBT_VERSION \
     SCALA_HOME="/opt/scala/${SCALA_VERSION}" \
     SCALA_VERSION=$SCALA_VERSION
-ENV PATH=${PATH}:/usr/local/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${PYTHONPATH}/bin:/usr/share/dotnet
+ENV PATH=${PATH}:/usr/local/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin:${PYTHONPATH}/bin:/usr/share/dotnet
 
 RUN set -e; \
     if [ -n "$NODEJS_DIST_URL" ]; then \
@@ -81,30 +84,28 @@ RUN set -e; \
         -l \
         --no-recommends \
           bzip2 \
-          cargo1.86 \
+          cargo1.88 \
           findutils \
           gawk \
-          gcc14 \
-          gcc14-c++ \
-          gcc14-fortran \
+          gcc15 \
+          gcc15-c++ \
+          gcc15-fortran \
           git-core \
           java-24-openjdk-devel \
           libicu-devel \
           make \
-          nodejs22 \
-          npm22 \
-          python312 \
-          python312-devel \
-          python312-pip \
-          rust1.86 \
+          python313 \
+          python313-devel \
+          python313-pip \
+          rust1.88 \
           unzip \
           wget \
           zip \
- && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-14 10 \
- && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 10 \
- && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 10 \
- && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-14 10 \
- && update-alternatives --install /usr/bin/python python /usr/bin/python3.12 10 \
+ && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-15 10 \
+ && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-15 10 \
+ && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-15 10 \
+ && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-15 10 \
+ && update-alternatives --install /usr/bin/python python /usr/bin/python3.13 10 \
  && curl -L "https://get.sdkman.io" | bash \
  && SDKMAN_BROKER_API="$SDKMAN_URL/broker" \
  && SDKMAN_CANDIDATES_API="$SDKMAN_URL" \
@@ -135,6 +136,13 @@ RUN set -e; \
         pipenv \
         poetry \
         uv \
+ && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
+ && source ${NVM_DIR}/nvm.sh \
+ && nvm install ${NODE_VERSION} \
+ && npm install -g \
+      corepack \
+      node-gyp \
+ && npx node-gyp install \
  && node -v \
  && npm -v \
  && npm install -g corepack \
@@ -196,7 +204,7 @@ RUN set -e; \
  && corepack pnpm cache delete \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
- && rm -rf $HOME/.npmrc $HOME/.pip $HOME/.pip /root/.cache/node \
+ && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \
  && zypper clean -a \
  && chmod a-w -R /opt \
  && if [ -n "$OPENSUSE_REPO" ]; then \
