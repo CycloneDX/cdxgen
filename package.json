@@ -230,7 +230,7 @@
     "connect": "3.7.0",
     "jsonata": "2.1.0",
     "sequelize": "6.37.7",
-    "sqlite3": "npm:@appthreat/sqlite3@6.0.9"
+    "sqlite3": "npm:@appthreat/sqlite3@7.0.1"
   },
   "packageManager": "pnpm@10.15.1",
   "engines": {
