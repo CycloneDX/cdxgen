@@ -163,7 +163,7 @@ export function yarnLockToIdentMap(lockData: string): {};
  *
  * @param {string} yarnLockFile yarn.lock file
  */
-export function parseYarnLock(yarnLockFile: string): Promise<{
+export function parseYarnLock(yarnLockFile: string, parentComponent?: any, workspacePackages?: any, workspaceSrcFiles?: any, _workspaceDirectDeps?: {}, depsWorkspaceRefs?: any): Promise<{
     pkgList: any[];
     dependenciesList: any[];
 }>;
