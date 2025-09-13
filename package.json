@@ -206,7 +206,7 @@
     "yoctocolors": "2.1.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.3",
+    "@biomejs/biome": "2.2.4",
     "poku": "3.0.2",
     "typescript": "5.9.2"
   },
