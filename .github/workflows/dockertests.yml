@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/dockertests.yml'
+      - '.nvmrc'
       - '.pnpmfile.cjs'
       - 'bin/**'
       - 'data/**'
@@ -26,7 +27,6 @@ jobs:
       fail-fast: true
       matrix:
         os: ['ubuntu-24.04', 'ubuntu-24.04-arm']
-        node-version: ['24.7.0']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -34,10 +34,10 @@ jobs:
           persist-credentials: false
       - name: Setup pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: .nvmrc
       - name: pnpm install, build and test
         run: |
           pnpm install --config.strict-dep-builds=true --package-import-method copy
@@ -88,7 +88,6 @@ jobs:
       fail-fast: true
       matrix:
         os: ['ubuntu-24.04', 'ubuntu-24.04-arm']
-        node-version: ['24.7.0']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -96,10 +95,10 @@ jobs:
           persist-credentials: false
       - name: Setup pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: .nvmrc
       - name: pnpm install, build and test
         run: |
           pnpm install --config.strict-dep-builds=true --package-import-method copy
@@ -123,7 +122,6 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        node-version: ['24.7.0']
         os: [ubuntu-24.04, ubuntu-24.04-arm]
     runs-on: ${{ matrix.os }}
     steps:
@@ -132,10 +130,10 @@ jobs:
           persist-credentials: false
       - name: Setup pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: .nvmrc
       - name: pnpm install, build and test
         run: |
           pnpm install --config.strict-dep-builds=true --package-import-method copy
@@ -153,21 +151,16 @@ jobs:
 
   win-tests:
     runs-on: windows-latest
-
-    strategy:
-      fail-fast: true
-      matrix:
-        node-version: ['24.7.0']
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
       - name: Setup pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: .nvmrc
       - name: pnpm install, build
         run: |
           pnpm install --config.strict-dep-builds=true --package-import-method copy

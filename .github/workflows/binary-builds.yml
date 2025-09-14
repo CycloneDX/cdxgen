@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/binary-builds.yml'
+      - '.nvmrc'
       - '.pnpmfile.cjs'
       - 'bin/**'
       - 'data/**'
@@ -19,6 +20,7 @@ on:
       - 'v*'
     paths:
       - '.github/workflows/binary-builds.yml'
+      - '.nvmrc'
       - '.pnpmfile.cjs'
       - 'bin/**'
       - 'data/**'
@@ -48,7 +50,6 @@ jobs:
         os: [ darwin, linux, windows ]
         arch: [ amd64, arm64]
         libc: [ gnu, musl ]
-        node: [ 24.7.0 ]
         exclude:
           # musl can only be built on linux
           - os: darwin
@@ -163,11 +164,11 @@ jobs:
       - name: Setup pnpm
         if: ${{ matrix.os != 'linux' }}
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
-      - name: Use Node.js ${{ matrix.node }}
+      - name: Use Node.js
         if: ${{ matrix.os != 'linux' }}
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
-          node-version: ${{ matrix.node }}
+          node-version-file: .nvmrc
       - name: Install composer
         uses: shivammathur/setup-php@ec406be512d7077f68eed36e63f4d91bc006edc4 # 2.35.4
         if: ${{ matrix.os == 'darwin' }}
@@ -197,7 +198,7 @@ jobs:
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
             # Install node
-            nvm install ${{ matrix.node }}
+            nvm install
 
             # Install pnpm
             npm install --global pnpm
