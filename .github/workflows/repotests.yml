@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/repotests.yml'
+      - '.nvmrc'
       - '.pnpmfile.cjs'
       - 'bin/**'
       - 'data/**'
@@ -19,7 +20,6 @@ concurrency:
 
 env:
   NEXUS_URL: http://100.73.146.80:8081/repository/npm/
-  NODE_VERSION: 24.7.0
 
 # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token
 permissions: {}
@@ -47,10 +47,10 @@ jobs:
           rm -rf /tmp/docker-images-* /tmp/atom-usages-* /tmp/atom-reachables-* /tmp/cdx*
       - name: Setup pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
-      - name: Use Node.js ${{ env.NODE_VERSION }}
+      - name: Use Node.js
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: .nvmrc
       - name: Setup Nexus usage
         run: echo "registry=$NEXUS_URL" > .npmrc
       - name: pnpm install
@@ -136,7 +136,7 @@ jobs:
       - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: .nvmrc
       - name: Setup Nexus usage
         run: echo "registry=$NEXUS_URL" > .npmrc
       - name: pnpm install
@@ -178,7 +178,6 @@ jobs:
       fail-fast: true
       matrix:
         java-version: ['24']
-        node-version: ['24.7.0']
         os: ['self-hosted-ubuntu', 'ubuntu-24.04-arm', 'windows-latest', 'macos-15']
     runs-on: ${{ matrix.os }}
     steps:
@@ -195,10 +194,10 @@ jobs:
           go-version: '1.25.1'
       - name: Setup pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: .nvmrc
       - uses: denoland/setup-deno@e95548e56dfa95d4e1a28d6f422fafe75c4c26fb # v2.0.3
         with:
           deno-version: v2.x
@@ -968,7 +967,6 @@ jobs:
       fail-fast: true
       matrix:
         java-version: ['24']
-        node-version: ['24.7.0']
         os: ['ubuntu-24.04', 'ubuntu-24.04-arm', 'macos-15']
     runs-on: ${{ matrix.os }}
     env:
@@ -992,10 +990,10 @@ jobs:
           go-version: '1.25.1'
       - name: Setup pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: .nvmrc
       - name: Trim CI agent
         if: matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm'
         run: |
