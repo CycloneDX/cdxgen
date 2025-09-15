@@ -544,6 +544,12 @@ jobs:
           persist-credentials: false
           repository: 'ngudbhav/rails-api-boilerplate'
           path: 'repotests/rails-api-boilerplate'
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+          repository: 'eclipse-theia/theia-ide'
+          path: 'repotests/theia-ide'
+          ref: 'e59df875d5ab1389346510c23c2da321a14accc5'
       - uses: dtolnay/rust-toolchain@stable
       - name: setup sdkman
         run: |
@@ -706,6 +712,10 @@ jobs:
         run: |
           rm repotests/rails-api-boilerplate/.ruby-version
           bin/cdxgen.js -r -t ruby repotests/rails-api-boilerplate -o bomresults/bom-boilerplate.json --profile research --fail-on-error
+        shell: bash
+      - name: repotests theia-ide
+        run: |
+          FETCH_LICENSE=false bin/cdxgen.js -p -t yarn repotests/theia-ide -o bomresults/bom-theia-ide.json --fail-on-error
         shell: bash
       - name: repotests bazel-examples
         run: |
