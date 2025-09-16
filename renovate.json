@@ -36,7 +36,8 @@
       "fileFormat": "json",
       "managerFilePatterns": ["/package.json/"],
       "matchStrings": [
-        "devEngines.runtime.{ \"depName\": name, \"currentValue\": version, \"depType\": \"devDependencies\"}"
+        "devEngines.runtime.{ \"depName\": name, \"currentValue\": version, \"depType\": \"devDependencies\"}",
+        "devEngines.packageManager.{ \"depName\": name, \"currentValue\": version, \"depType\": \"packageManager\"}"
       ],
       "datasourceTemplate": "npm"
     }
