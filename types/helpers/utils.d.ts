@@ -162,6 +162,11 @@ export function yarnLockToIdentMap(lockData: string): {};
  * Parse nodejs yarn lock file
  *
  * @param {string} yarnLockFile yarn.lock file
+ * @param {Object} parentComponent parent component
+ * @param {Array[String]} workspacePackages Workspace packages
+ * @param {Object} workspaceSrcFiles Workspace package.json files
+ * @param {Object} workspaceDirectDeps Direct dependencies of each workspace
+ * @param {Object} depsWorkspaceRefs Workspace references for each dependency
  */
 export function parseYarnLock(yarnLockFile: string, parentComponent?: any, workspacePackages?: any, workspaceSrcFiles?: any, _workspaceDirectDeps?: {}, depsWorkspaceRefs?: any): Promise<{
     pkgList: any[];
@@ -180,6 +185,25 @@ export function parseNodeShrinkwrap(swFile: string): Promise<any[]>;
  * @returns {object} Object containing packages and catalogs
  */
 export function parsePnpmWorkspace(workspaceFile: string): object;
+/**
+ * Parse yarn workspace from package.json
+ *
+ * @param {string} packageJsonFile package.json file path
+ * @returns {object} Object containing packages
+ */
+/**
+ * Helper function to create a properly encoded workspace PURL
+ *
+ * @param {string} packageName - Package name (e.g., "@babel/core")
+ * @param {string} version - Package version
+ * @returns {string} Encoded PURL string
+ */
+export function createWorkspacePurl(packageName: string, version: string): string;
+export function parseYarnWorkspace(packageJsonFile: any): {
+    packages?: undefined;
+} | {
+    packages: any;
+};
 /**
  * Helper function to find a package path in pnpm node_modules structure
  *
@@ -779,7 +803,7 @@ export function parsePrivadoFile(f: any): any[];
 export function parseOpenapiSpecData(oaData: any): any[];
 export function parseCabalData(cabalData: any): any[];
 export function parseMixLockData(mixData: any): any[];
-export function parseGitHubWorkflowData(ghwData: any): any[];
+export function parseGitHubWorkflowData(f: any): any[];
 export function parseCloudBuildData(cbwData: any): any[];
 export function mapConanPkgRefToPurlStringAndNameAndVersion(conanPkgRef: any): any[];
 export function parseConanLockData(conanLockData: any): any[];

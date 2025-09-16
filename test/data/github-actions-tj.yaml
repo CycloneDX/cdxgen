@@ -1,0 +1,21 @@
+name: Testing
+
+on:
+  push:
+  pull_request_target:
+    types: [opened]
+env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+jobs:
+  vulnerable-actions:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Test action 1
+        uses: pixel/steamcmd@foo # v1.2.7
+
+      - name: Test action 2
+        uses: tj/branch@47dd #v8.2.0
+
+      - name: Test action 3
+        uses: tj/branch2@v0.0.18 #08ff
