@@ -13,11 +13,6 @@
   "minimumReleaseAge": "3 days",
   "packageRules": [
     {
-      "description": "Wait 14 days before updating Node.js versions",
-      "matchPackageNames": ["/(?:^|/)node$/"],
-      "minimumReleaseAge": "14 days"
-    },
-    {
       "matchDepTypes": ["engines"],
       "rangeStrategy": "auto"
     },
@@ -27,6 +22,23 @@
       "matchPackageNames": ["addnab/docker-run-action"],
       "extractVersion": "^(?<version>v?\\d+)$",
       "versioning": "regex:^v?(?<major>\\d+)(\\.(?<minor>\\d+)\\.(?<patch>\\d+))?$"
+    },
+    {
+      "description": "Wait 14 days before updating Node.js versions",
+      "matchPackageNames": ["/(?:^|/)node$/"],
+      "minimumReleaseAge": "14 days"
+    }
+  ],
+  "customManagers": [
+    {
+      "description": "Custom manager for devEngines runtime in package.json",
+      "customType": "jsonata",
+      "fileFormat": "json",
+      "managerFilePatterns": ["/package.json/"],
+      "matchStrings": [
+        "devEngines.runtime.{ \"depName\": name, \"currentValue\": version, \"depType\": \"devDependencies\"}"
+      ],
+      "datasourceTemplate": "npm"
     }
   ]
 }
