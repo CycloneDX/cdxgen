@@ -13,6 +13,11 @@
   "minimumReleaseAge": "3 days",
   "packageRules": [
     {
+      "description": "Wait 14 days before updating Node.js versions",
+      "matchPackageNames": ["/(?:^|/)node$/"],
+      "minimumReleaseAge": "14 days"
+    },
+    {
       "matchDepTypes": ["engines"],
       "rangeStrategy": "auto"
     },
