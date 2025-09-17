@@ -224,38 +224,38 @@ importers:
         specifier: 2.6.3
         version: 2.6.3
       '@cyclonedx/cdxgen-plugins-bin':
-        specifier: 1.6.12
-        version: 1.6.12
+        specifier: 1.7.0
+        version: 1.7.0
       '@cyclonedx/cdxgen-plugins-bin-darwin-amd64':
-        specifier: 1.6.12
-        version: 1.6.12
+        specifier: 1.7.0
+        version: 1.7.0
       '@cyclonedx/cdxgen-plugins-bin-darwin-arm64':
-        specifier: 1.6.12
-        version: 1.6.12
+        specifier: 1.7.0
+        version: 1.7.0
       '@cyclonedx/cdxgen-plugins-bin-linux-amd64':
-        specifier: 1.6.12
-        version: 1.6.12
+        specifier: 1.7.0
+        version: 1.7.0
       '@cyclonedx/cdxgen-plugins-bin-linux-arm':
-        specifier: 1.6.12
-        version: 1.6.12
+        specifier: 1.7.0
+        version: 1.7.0
       '@cyclonedx/cdxgen-plugins-bin-linux-arm64':
-        specifier: 1.6.12
-        version: 1.6.12
+        specifier: 1.7.0
+        version: 1.7.0
       '@cyclonedx/cdxgen-plugins-bin-linux-ppc64':
-        specifier: 1.6.12
-        version: 1.6.12
+        specifier: 1.7.0
+        version: 1.7.0
       '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64':
-        specifier: 1.6.12
-        version: 1.6.12
+        specifier: 1.7.0
+        version: 1.7.0
       '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64':
-        specifier: 1.6.12
-        version: 1.6.12
+        specifier: 1.7.0
+        version: 1.7.0
       '@cyclonedx/cdxgen-plugins-bin-windows-amd64':
-        specifier: 1.6.12
-        version: 1.6.12
+        specifier: 1.7.0
+        version: 1.7.0
       '@cyclonedx/cdxgen-plugins-bin-windows-arm64':
-        specifier: 1.6.12
-        version: 1.6.12
+        specifier: 1.7.0
+        version: 1.7.0
       body-parser:
         specifier: 2.2.0
         version: 2.2.0
@@ -395,64 +395,64 @@ packages:
   '@bufbuild/protobuf@2.6.3':
     resolution: {integrity: sha512-w/gJKME9mYN7ZoUAmSMAWXk4hkVpxRKvEJCb3dV5g9wwWdxTJJ0ayOJAVcNxtdqaxDyFuC0uz4RSGVacJ030PQ==}
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.12':
-    resolution: {integrity: sha512-8iVxUFj3DlCcHmA9+n3sRHcf3gq+ohbhNe9uq+ppsMJ5So48DWdVjHveZN7MWpxTnZqk8KJTAYNPFvaLKAFYBQ==}
+  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.7.0':
+    resolution: {integrity: sha512-evJAEetfhKU7N9tCaOl/CZcs4upoEIKvLdhV9ogzk9QIur+HtZX5F9LddGNoQuzhB1Umy2tAyFAKhl+EX63BFQ==}
     cpu: [x64]
     os: [darwin]
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.6.12':
-    resolution: {integrity: sha512-m9uObp61BQb+34YDFoITmB8xQiX7mRx8a2EoEEsgcL26I9h2454cXri4ZqfzMej3loCUlJHxspptzXmYrS8cug==}
+  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.7.0':
+    resolution: {integrity: sha512-gnQqfDNd8RXKH3n/BUtSi1aJghPLSVpAScaM0iiuGvdfOVuwqBEMAKx/SC0v5yXdCtThC45W5/Zz8Lc9eNoNAw==}
     cpu: [arm64]
     os: [darwin]
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-amd64@1.6.12':
-    resolution: {integrity: sha512-D/vdxpvrtkfYITHpiQjlvhZBNkm2GLmm/lZHbSs5R+nghbulTgXR9I8pTALFTBhjHZQu55DTiACmn/irhhotkA==}
+  '@cyclonedx/cdxgen-plugins-bin-linux-amd64@1.7.0':
+    resolution: {integrity: sha512-Nitd3y1yb8Xv2e7ODqki3M8DO6SzWe/gGsioRiA6iNXcQ/JYzg03CyHEaTjCAhJXFO4qraCn4N6OPN2H7c8bew==}
     cpu: [x64]
     os: [linux]
     libc: glibc
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.6.12':
-    resolution: {integrity: sha512-xd9A25e+4SwHwm9FRglMdsfRsTAROTj3C5eiQ501FI+FOxEbnCODNkDFkplqKqDjDDSIPOgc4llmk9Wk+91c/Q==}
+  '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.7.0':
+    resolution: {integrity: sha512-/96YdFdwASQVr+MDO1IbUMYbLoHawTDIsGlhyMV4AI47qKZ59Ein5dvdibqqmnxgmWvG4Vqp941gRaCBlCLWag==}
     cpu: [arm64]
     os: [linux]
     libc: glibc
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.6.12':
-    resolution: {integrity: sha512-6c7IGJcbZemZ2RCj3r1BbxPfQZPxzQNvuk4er0xLdcompQITvjmWT/aaYFtPLT5ymDjIfDyVbgDin8PXQwWWIA==}
+  '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.7.0':
+    resolution: {integrity: sha512-eNnS9Kd+j4YDiIotCA3EQWyiHKjx7iZqh5+gyF38zmSJQRssEWvCdv+IPvXPyZw8hh5g9/8IQWPYMFpB3fpopg==}
     cpu: [arm]
     os: [linux]
     libc: glibc
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-ppc64@1.6.12':
-    resolution: {integrity: sha512-JaRY6F+3VBHZMZ51DhC8NhHJkwtLOM1Lnh//iAPw5pAxpQdron+YwfcVIKWhBlFx5zxbz2NI5L7QtiEV/iO4PA==}
+  '@cyclonedx/cdxgen-plugins-bin-linux-ppc64@1.7.0':
+    resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
     libc: glibc
 
-  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.6.12':
-    resolution: {integrity: sha512-X4eHr0WUtBOiX1Yy8hr35JhpUBJYYbZ31v8KCHtuSK8/h5/0gJidg1OvTGxFWoOLKtPCcb3FvqCY+PSrUcxN0A==}
+  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
+    resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
     cpu: [x64]
     os: [linux]
     libc: musl
 
-  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64@1.6.12':
-    resolution: {integrity: sha512-smaxqZ2ZmVm04elK9Dydk1IjEcyRuRt9pSBZxK/RhgJojsJGQaeY/boKR0P/46avoNNiZbVkIDAIbBjfJ5Z7RA==}
+  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64@1.7.0':
+    resolution: {integrity: sha512-Rh8ChTldyY/01EWrciyhnUltC2YNLmdkwaPDZsJT/as1Bu0Q4iOnepMw2WpqwzkaGbZG5PgFtzeuV1kBKjo07Q==}
     cpu: [arm64]
     os: [linux]
     libc: musl
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.12':
-    resolution: {integrity: sha512-6reJ+EFAR8YIwSRYMZ/dfF5e+o/JGaAa7h8ByHUcDXdVb9AZDyFKEXu0WeH732FJ1rk06GuNBU2ZFonFvt5lqQ==}
+  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.7.0':
+    resolution: {integrity: sha512-sCeTnlDq3Wojit2+MqErsYhD/Mv7VickLU2PazmamQc4LVZHakZPGxoG4CFUt4oFVux9CoY1+RxkE+Ia+E+fsA==}
     cpu: [x64]
     os: [win32]
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.6.12':
-    resolution: {integrity: sha512-MnYmZXiIZNCPZl3F9KGtKdCjOBfBBI866hdKMojdbgL9u5VMfQBrGA8xTAnAoXPK4MAVRelz42NswieW4OCN+Q==}
+  '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.7.0':
+    resolution: {integrity: sha512-AzQrY0H1A7JduJTBr/Ub7ppt9RKXjc2+AXV38dvekXYvKSnwnR4715gEZ0mwRnn/BZ4az0uQwMlJCpY8qttJIg==}
     cpu: [arm64]
     os: [win32]
 
-  '@cyclonedx/cdxgen-plugins-bin@1.6.12':
-    resolution: {integrity: sha512-bw+sdaGO54LE5CX+keXXZRNqt6tkwzNctLUmUrNagSP5AWD3U1q3CgWUD55QKOMZcIIrusaFO2vhQZMsTdp0jQ==}
+  '@cyclonedx/cdxgen-plugins-bin@1.7.0':
+    resolution: {integrity: sha512-pgPMY2vHKMTcW24qtcql0uIck3t66U+QmUrO7C6E8kg06tJqBgo8PtT58FhI4B41lPrpq8rAQzo2jLCLu1JnCw==}
     cpu: [x64]
 
   '@iarna/toml@2.2.5':
@@ -551,8 +551,8 @@ packages:
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
-  '@types/node@24.5.0':
-    resolution: {integrity: sha512-y1dMvuvJspJiPSDZUQ+WMBvF7dpnEqN4x9DDC9ie5Fs/HUZJA3wFp7EhHoVaKX/iI0cRoECV8X2jL8zi0xrHCg==}
+  '@types/node@24.5.1':
+    resolution: {integrity: sha512-/SQdmUP2xa+1rdx7VwB9yPq8PaKej8TD5cQ+XfKDPWWC+VDJU4rvVVagXqKUzhKjtFoNA8rXDJAkCxQPAe00+Q==}
 
   '@types/validator@13.15.3':
     resolution: {integrity: sha512-7bcUmDyS6PN3EuD9SlGGOxM77F8WLVsrwkxyWxKnxzmXoequ6c7741QBrANq6htVRGOITJ7z72mTP6Z4XyuG+Q==}
@@ -600,8 +600,8 @@ packages:
       react-native-b4a:
         optional: true
 
-  bare-events@2.6.1:
-    resolution: {integrity: sha512-AuTJkq9XmE6Vk0FJVNq5QxETrSA/vKHarWVBG5l/JbdCL1prJemiyJqUS0jrlXO0MftuPq4m3YVYhoNc5+aE/g==}
+  bare-events@2.7.0:
+    resolution: {integrity: sha512-b3N5eTW1g7vXkw+0CXh/HazGTcO5KYuu/RCNaJbDMPI6LHDi+7qe8EmxKUVe1sUbY2KZOVZFyj62x0OEz9qyAA==}
 
   bare-fs@4.4.4:
     resolution: {integrity: sha512-Q8yxM1eLhJfuM7KXVP3zjhBvtMJCYRByoTT+wHXjpdMELv0xICFJX+1w4c7csa+WZEOsq4ItJ4RGwvzid6m/dw==}
@@ -1832,37 +1832,37 @@ snapshots:
   '@bufbuild/protobuf@2.6.3':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.12':
+  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.7.0':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.6.12':
+  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.7.0':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-amd64@1.6.12':
+  '@cyclonedx/cdxgen-plugins-bin-linux-amd64@1.7.0':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.6.12':
+  '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.7.0':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.6.12':
+  '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.7.0':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-ppc64@1.6.12':
+  '@cyclonedx/cdxgen-plugins-bin-linux-ppc64@1.7.0':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.6.12':
+  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64@1.6.12':
+  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64@1.7.0':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.12':
+  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.7.0':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.6.12':
+  '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.7.0':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin@1.6.12':
+  '@cyclonedx/cdxgen-plugins-bin@1.7.0':
     optional: true
 
   '@iarna/toml@2.2.5': {}
@@ -1979,7 +1979,7 @@ snapshots:
   '@types/ms@2.1.0':
     optional: true
 
-  '@types/node@24.5.0':
+  '@types/node@24.5.1':
     dependencies:
       undici-types: 7.12.0
     optional: true
@@ -2015,14 +2015,14 @@ snapshots:
   b4a@1.7.1:
     optional: true
 
-  bare-events@2.6.1:
+  bare-events@2.7.0:
     optional: true
 
   bare-fs@4.4.4:
     dependencies:
-      bare-events: 2.6.1
+      bare-events: 2.7.0
       bare-path: 3.0.0
-      bare-stream: 2.7.0(bare-events@2.6.1)
+      bare-stream: 2.7.0(bare-events@2.7.0)
       bare-url: 2.2.2
       fast-fifo: 1.3.2
     transitivePeerDependencies:
@@ -2037,11 +2037,11 @@ snapshots:
       bare-os: 3.6.2
     optional: true
 
-  bare-stream@2.7.0(bare-events@2.6.1):
+  bare-stream@2.7.0(bare-events@2.7.0):
     dependencies:
       streamx: 2.22.1
     optionalDependencies:
-      bare-events: 2.6.1
+      bare-events: 2.7.0
     transitivePeerDependencies:
       - react-native-b4a
     optional: true
@@ -3073,7 +3073,7 @@ snapshots:
       fast-fifo: 1.3.2
       text-decoder: 1.2.3
     optionalDependencies:
-      bare-events: 2.6.1
+      bare-events: 2.7.0
     transitivePeerDependencies:
       - react-native-b4a
     optional: true
@@ -3228,7 +3228,7 @@ snapshots:
 
   wkx@0.5.0:
     dependencies:
-      '@types/node': 24.5.0
+      '@types/node': 24.5.1
     optional: true
 
   wrap-ansi@7.0.0:
