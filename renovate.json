@@ -1,6 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "enabledManagers": ["github-actions", "jsonata", "npm", "nvm"],
+  "enabledManagers": [
+    "dockerfile",
+    "github-actions",
+    "jsonata",
+    "npm",
+    "nvm",
+    "regex"
+  ],
   "extends": [
     "config:recommended",
     ":separateMultipleMajorReleases",
@@ -15,6 +22,11 @@
     {
       "matchDepTypes": ["engines"],
       "rangeStrategy": "auto"
+    },
+    {
+      "description": "Limit dockerfile updates to non-major update types as we explicitly set major versions",
+      "matchDatasources": ["docker"],
+      "allowedUpdateTypes": ["minor", "patch", "pin", "digest"]
     },
     {
       "description": "Pin GitHub Actions digests to major version - for those actions which don't support semver",
