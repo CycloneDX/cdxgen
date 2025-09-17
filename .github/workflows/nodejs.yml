@@ -131,7 +131,6 @@ jobs:
       fail-fast: true
       matrix:
         os: [windows, macos, ubuntu]
-        deno_version: [2.x]
         include:
           - os: windows
             build: |
@@ -175,7 +174,7 @@ jobs:
           node-version-file: .nvmrc
       - uses: denoland/setup-deno@e95548e56dfa95d4e1a28d6f422fafe75c4c26fb # v2.0.3
         with:
-          deno-version: v${{ matrix.deno_version }}
+          deno-version: 2.4.0
       - name: pnpm install, build and test
         run: |
           pnpm install:frozen
