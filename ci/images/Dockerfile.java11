@@ -1,5 +1,5 @@
 # Base-image
-FROM registry.suse.com/bci/openjdk-devel:11.0.28.0 AS base
+FROM registry.suse.com/bci/openjdk-devel:11.0.25.0 AS base
 
 ARG GITHUB_URL=https://github.com
 ARG GRADLE_VERSION=7.6.4
