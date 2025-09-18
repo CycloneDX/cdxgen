@@ -199,7 +199,7 @@ jobs:
           - lang: ruby34
             distro: debian
 
-          - lang: ruby345
+          - lang: ruby34
             distro: alpine
 
           - lang: rust1
