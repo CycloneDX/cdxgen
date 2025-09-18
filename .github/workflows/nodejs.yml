@@ -54,7 +54,7 @@ jobs:
         with:
           persist-credentials: false
       - id: read-versions
-        run: VERSIONS=[`awk 'BEGIN {ORS=""}; NR>3 && NR%3==0 {print ","}; FNR==3 {print "'\''"$1"'\''"}' .versions/node_*`]; echo "versions=$VERSIONS" >> "$GITHUB_OUTPUT"
+        run: VERSIONS=[`awk 'BEGIN {ORS=""}; NR>2 && NR%2==0 {print ","}; FNR==2 {print "'\''"$1"'\''"}' .versions/node_*`]; echo "versions=$VERSIONS" >> "$GITHUB_OUTPUT"
 
   matrix-unit-test:
     needs: read-node-versions
