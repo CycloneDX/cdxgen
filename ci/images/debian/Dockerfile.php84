@@ -1,5 +1,5 @@
 # Base-image
-FROM php:8.4-bookworm AS base
+FROM php:8.4.12-bookworm AS base
 
 ARG COMPOSER_URL=https://getcomposer.org
 ARG DEBIAN_REPO

@@ -1,5 +1,5 @@
 # Base-image
-FROM eclipse-temurin:24-jdk-alpine AS base
+FROM eclipse-temurin:24.0.2_12-jdk-alpine AS base
 
 ARG ALPINE_REPO
 ARG NODEJS_DIST_URL
