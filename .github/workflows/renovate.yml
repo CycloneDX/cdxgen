@@ -3,7 +3,7 @@ name: Renovate
 on:
   push:
     branches:
-      - main
+      - mastee
     paths:
       - renovate.json
   pull_request:
