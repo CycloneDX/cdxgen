@@ -1,5 +1,5 @@
 # Base-image
-FROM registry.opensuse.org/opensuse/bci/python:3.9 AS base
+FROM registry.opensuse.org/opensuse/bci/python:3.13 AS base
 
 ARG GITHUB_URL=https://github.com
 ARG NODEJS_DIST_URL
