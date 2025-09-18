@@ -27,7 +27,8 @@
     {
       "description": "Limit dockerfile updates to non-major update types as we explicitly set major versions",
       "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["major"],
+      "matchFileNames": ["/ci/images/.*/Dockerfile\\..*\\d+$/"],
+      "matchUpdateTypes": ["major", "minor"],
       "enabled": false
     },
     {
@@ -48,7 +49,7 @@
       "description": "Custom manager for devEngines runtime in package.json",
       "customType": "jsonata",
       "fileFormat": "json",
-      "managerFilePatterns": ["/package.json/"],
+      "managerFilePatterns": ["/^package.json$/"],
       "matchStrings": [
         "devEngines.runtime.{ \"depName\": name, \"currentValue\": version, \"depType\": \"devDependencies\"}",
         "devEngines.packageManager.{ \"depName\": name, \"currentValue\": version, \"depType\": \"packageManager\"}"
