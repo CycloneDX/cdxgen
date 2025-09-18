@@ -1,5 +1,5 @@
 # Base-image
-FROM php:8.4-alpine AS base
+FROM php:8.4.12-alpine AS base
 
 ARG ALPINE_REPO
 ARG COMPOSER_URL=https://getcomposer.org

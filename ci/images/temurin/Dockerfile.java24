@@ -1,5 +1,5 @@
 # Base-image
-FROM eclipse-temurin:24-ubi9-minimal AS base
+FROM eclipse-temurin:24.0.2_12-jdk-ubi9-minimal AS base
 
 ARG GRADLE_VERSION=8.14.3
 ARG MAVEN_VERSION=3.9.11

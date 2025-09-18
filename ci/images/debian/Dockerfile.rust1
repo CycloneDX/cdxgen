@@ -1,5 +1,5 @@
 # Base-image
-FROM rust:1-slim-bookworm AS base
+FROM rust:1.89.0-slim-bookworm AS base
 
 ARG DEBIAN_REPO
 ARG GITHUB_URL=https://github.com

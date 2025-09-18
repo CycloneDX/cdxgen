@@ -1,5 +1,5 @@
 # Base-image
-FROM debian:12 AS base
+FROM debian:12.12 AS base
 
 ARG DEBIAN_REPO
 ARG GITHUB_URL=https://github.com
