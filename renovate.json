@@ -18,7 +18,7 @@
   ],
   "labels": ["dependency"],
   "minimumReleaseAge": "3 days",
-  "gitignoreUnstable": ["github-actions[bot]@users.noreply.github.com"],
+  "gitIgnoredAuthors": ["github-actions[bot]@users.noreply.github.com"],
   "packageRules": [
     {
       "matchDepTypes": ["engines"],
