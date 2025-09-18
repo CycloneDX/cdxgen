@@ -34,6 +34,13 @@
       "enabled": false
     },
     {
+      "description": "Limit .versions/* files updates to non-major update types as we explicitly set major versions",
+      "matchManagers": ["custom.regex"],
+      "matchFileNames": [".versions/*"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
       "description": "Pin GitHub Actions digests to major version - for those actions which don't support semver",
       "extends": ["helpers:pinGitHubActionDigests"],
       "matchPackageNames": ["addnab/docker-run-action"],
@@ -59,7 +66,7 @@
       "datasourceTemplate": "npm"
     },
     {
-      "description": "Custom manager to maintain ./versions/node used within GitHub workflows",
+      "description": "Custom manager to maintain ./versions/* files used within GitHub workflows",
       "customType": "regex",
       "managerFilePatterns": ["/.versions/.*/"],
       "matchStrings": [
