@@ -1,5 +1,5 @@
 # Base-image
-FROM ruby:2.6.10-slim AS base
+FROM ruby:2.7.8-slim AS base
 
 ARG ATOM_RUBY_VERSION=3.4.5
 ARG DEBIAN_REPO
