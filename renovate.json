@@ -29,7 +29,7 @@
     {
       "description": "Limit dockerfile updates to non-major update types as we explicitly set major versions",
       "matchDatasources": ["docker"],
-      "matchFileNames": ["/ci/images/.*/Dockerfile\\..*\\d+$/"],
+      "managerFilePatterns": ["/ci/images/.*/Dockerfile\\..*\\d+$/"],
       "matchUpdateTypes": ["major", "minor"],
       "enabled": false
     },
