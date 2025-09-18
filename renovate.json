@@ -57,6 +57,14 @@
         "devEngines.packageManager.{ \"depName\": name, \"currentValue\": version, \"depType\": \"packageManager\"}"
       ],
       "datasourceTemplate": "npm"
+    },
+    {
+      "description": "Custom manager to maintain ./versions/node used within GitHub workflows",
+      "customType": "regex",
+      "managerFilePatterns": ["/.versions/.*/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[a-zA-Z0-9-._]+?) depName=(?<depName>[^\\s]+?)\\s+(?<currentValue>.+?)(\\s)?$"
+      ]
     }
   ]
 }
