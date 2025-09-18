@@ -1,5 +1,5 @@
 # Base-image
-FROM golang:1.23-alpine AS base
+FROM golang:1.25-alpine AS base
 
 ARG ALPINE_REPO
 ARG NODEJS_DIST_URL
