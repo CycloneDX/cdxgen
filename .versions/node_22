@@ -1,3 +1,2 @@
-#Comment
-#Rule
+# renovate: datasource=node-version depName=node
 22.0.0
