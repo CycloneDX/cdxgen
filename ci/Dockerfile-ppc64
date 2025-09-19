@@ -14,6 +14,7 @@ LABEL maintainer="cyclonedx" \
 ARG SBT_VERSION=1.11.6
 ARG MAVEN_VERSION=3.9.11
 ARG GRADLE_VERSION=8.14.3
+# renovate: datasource=golang-version depName=golang
 ARG GO_VERSION=1.25.0
 ARG PYTHON_VERSION=3.12
 

@@ -2,6 +2,7 @@
 FROM registry.opensuse.org/opensuse/bci/python:3.10 AS base
 
 ARG GITHUB_URL=https://github.com
+# renovate: datasource=golang-version depName=golang
 ARG GO_VERSION=1.25.0
 ARG GOOGLE_URL=https://dl.google.com
 ARG NODEJS_DIST_URL
