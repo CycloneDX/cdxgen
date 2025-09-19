@@ -35,7 +35,12 @@
     },
     {
       "description": "cdxgen images: limit sdk updates to non-major updates as we explicitly set these versions",
-      "matchDatasources": ["golang-version", "maven", "node-version"],
+      "matchDatasources": [
+        "golang-version",
+        "gradle-version",
+        "maven",
+        "node-version"
+      ],
       "matchFileNames": ["ci/images/**/*"],
       "matchUpdateTypes": ["major"],
       "enabled": false
