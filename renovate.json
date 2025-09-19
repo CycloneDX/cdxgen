@@ -14,7 +14,6 @@
     ":enableVulnerabilityAlerts",
     "customManagers:biomeVersions",
     "customManagers:dockerfileVersions",
-    "docker:pinDigests",
     "helpers:pinGitHubActionDigestsToSemver"
   ],
   "labels": ["dependency"],
