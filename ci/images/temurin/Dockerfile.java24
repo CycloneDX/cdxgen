@@ -1,6 +1,7 @@
 # Base-image
 FROM eclipse-temurin:24.0.2_12-jdk-ubi9-minimal AS base
 
+# renovate: datasource=gradle-version depName=gradle
 ARG GRADLE_VERSION=8.14.3
 # renovate: datasource=maven lookupName=org.apache.maven:maven
 ARG MAVEN_VERSION=3.9.11
