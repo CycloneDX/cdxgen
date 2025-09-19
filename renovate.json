@@ -29,7 +29,7 @@
     {
       "description": "cdxgen images: limit docker image updates to exclude major or minor updates as we explicitly set these versions",
       "matchDatasources": ["docker"],
-      "matchFileNames": ["ci/images/**/*"],
+      "matchFileNames": ["ci/**/*"],
       "matchUpdateTypes": ["major", "minor"],
       "enabled": false
     },
@@ -41,7 +41,7 @@
         "maven",
         "node-version"
       ],
-      "matchFileNames": ["ci/images/**/*"],
+      "matchFileNames": ["ci/**/*"],
       "matchUpdateTypes": ["major"],
       "enabled": false
     },
