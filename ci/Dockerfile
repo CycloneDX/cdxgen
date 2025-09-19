@@ -9,6 +9,7 @@ ARG JAVA_VERSION=24.0.2-tem
 ARG SBT_VERSION=1.11.6
 ARG MAVEN_VERSION=3.9.11
 ARG GRADLE_VERSION=8.14.3
+# renovate: datasource=golang-version depName=golang
 ARG GO_VERSION=1.25.0
 # renovate: datasource=node-version depName=node
 ARG NODE_VERSION=24.7.0

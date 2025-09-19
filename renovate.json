@@ -34,8 +34,8 @@
       "enabled": false
     },
     {
-      "description": "cdxgen images: limit node updates to non-major updates as we explicitly set these versions",
-      "matchDatasources": ["node-version"],
+      "description": "cdxgen images: limit sdk updates to non-major updates as we explicitly set these versions",
+      "matchDatasources": ["golang-version", "node-version"],
       "matchFileNames": ["ci/images/**/*"],
       "matchUpdateTypes": ["major"],
       "enabled": false
