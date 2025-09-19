@@ -12,6 +12,7 @@ LABEL maintainer="cyclonedx" \
       org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ppc64 -r /app --server"
 
 ARG SBT_VERSION=1.11.6
+# renovate: datasource=maven lookupName=org.apache.maven:maven
 ARG MAVEN_VERSION=3.9.11
 ARG GRADLE_VERSION=8.14.3
 # renovate: datasource=golang-version depName=golang

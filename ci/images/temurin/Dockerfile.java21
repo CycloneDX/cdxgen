@@ -2,6 +2,7 @@
 FROM eclipse-temurin:21.0.8_9-jdk-ubi9-minimal AS base
 
 ARG GRADLE_VERSION=8.14.3
+# renovate: datasource=maven lookupName=org.apache.maven:maven
 ARG MAVEN_VERSION=3.9.11
 # renovate: datasource=node-version depName=node
 ARG NODE_VERSION=24.7.0
