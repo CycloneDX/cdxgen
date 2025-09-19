@@ -3,7 +3,7 @@ FROM eclipse-temurin:24.0.2_12-jdk-ubi9-minimal AS base
 
 ARG GRADLE_VERSION=8.14.3
 ARG MAVEN_VERSION=3.9.11
-# renovate: datasource=docker depName=node
+# renovate: datasource=node-version depName=node
 ARG NODE_VERSION=24.7.0
 ARG NODEJS_DIST_URL
 ARG NPM_REPO

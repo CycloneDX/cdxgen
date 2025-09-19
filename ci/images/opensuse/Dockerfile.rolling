@@ -6,7 +6,7 @@ ARG DOTNETCLI_URL=https://dotnetcli.azureedge.net
 ARG GITHUB_URL=https://github.com
 ARG GRADLE_VERSION=9.0.0
 ARG MAVEN_VERSION=4.0.0-rc-4
-# renovate: datasource=docker depName=node
+# renovate: datasource=node-version depName=node
 ARG NODE_VERSION=24.7.0
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
