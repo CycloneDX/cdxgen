@@ -5,7 +5,7 @@ ARG GCC_VERSION=14
 ARG GITHUB_URL=https://github.com
 ARG JAVA_VERSION=21.0.8-tem
 ARG MAVEN_VERSION=3.9.11
-# renovate: datasource=docker depName=node
+# renovate: datasource=node-version depName=node
 ARG NODE_VERSION=20.19.5
 ARG NODEJS_DIST_URL
 ARG NPM_REPO

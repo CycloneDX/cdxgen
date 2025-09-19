@@ -3,7 +3,7 @@ FROM golang:1.24.7-bookworm AS base
 
 ARG DEBIAN_REPO
 ARG GITHUB_URL=https://github.com
-# renovate: datasource=docker depName=node
+# renovate: datasource=node-version depName=node
 ARG NODE_VERSION=24.7.0
 ARG NODEJS_DIST_URL
 ARG NPM_REPO

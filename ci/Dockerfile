@@ -10,7 +10,7 @@ ARG SBT_VERSION=1.11.6
 ARG MAVEN_VERSION=3.9.11
 ARG GRADLE_VERSION=8.14.3
 ARG GO_VERSION=1.25.0
-# renovate: datasource=docker depName=node
+# renovate: datasource=node-version depName=node
 ARG NODE_VERSION=24.7.0
 ARG RUBY_VERSION=3.4.5
 ARG JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
