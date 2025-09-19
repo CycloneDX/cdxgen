@@ -7,7 +7,7 @@ ARG GO_VERSION=1.25.0
 ARG GOOGLE_URL=https://dl.google.com
 ARG JAVA_VERSION=24.0.2-tem
 ARG MAVEN_VERSION=3.9.11
-# renovate: datasource=docker depName=node
+# renovate: datasource=node-version depName=node
 ARG NODE_VERSION=20.19.5
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
