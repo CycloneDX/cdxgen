@@ -27,10 +27,17 @@
       "rangeStrategy": "auto"
     },
     {
-      "description": "Limit image updates to exclude major or minor updates as we explicitly set these versions",
-      "matchDatasources": ["docker", "node-version"],
+      "description": "cdxgen images: limit docker image updates to exclude major or minor updates as we explicitly set these versions",
+      "matchDatasources": ["docker"],
       "matchFileNames": ["ci/images/**/*"],
       "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
+      "description": "cdxgen images: limit node updates to non-major updates as we explicitly set these versions",
+      "matchDatasources": ["node-version"],
+      "matchFileNames": ["ci/images/**/*"],
+      "matchUpdateTypes": ["major"],
       "enabled": false
     },
     {
