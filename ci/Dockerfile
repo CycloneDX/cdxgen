@@ -10,7 +10,7 @@ ARG SBT_VERSION=1.11.6
 ARG MAVEN_VERSION=3.9.11
 ARG GRADLE_VERSION=8.14.3
 # renovate: datasource=golang-version depName=golang
-ARG GO_VERSION=1.25.0
+ARG GO_VERSION=1.25.1
 # renovate: datasource=node-version depName=node
 ARG NODE_VERSION=24.7.0
 ARG RUBY_VERSION=3.4.5
