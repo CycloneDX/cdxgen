@@ -27,9 +27,9 @@
       "rangeStrategy": "auto"
     },
     {
-      "description": "Limit dockerfile updates to non-major update types as we explicitly set major versions",
-      "matchDatasources": ["docker"],
-      "matchFileNames": ["ci/images/**/Dockerfile.*[0-9]*"],
+      "description": "Limit image updates to exclude major or minor updates as we explicitly set these versions",
+      "matchDatasources": ["docker", "node-version"],
+      "matchFileNames": ["ci/images/**/*"],
       "matchUpdateTypes": ["major", "minor"],
       "enabled": false
     },
