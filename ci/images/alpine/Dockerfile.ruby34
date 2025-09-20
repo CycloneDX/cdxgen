@@ -1,5 +1,5 @@
 # Base-image
-FROM ruby:3.4.5-alpine AS base
+FROM ruby:3.4.6-alpine AS base
 
 ARG ALPINE_REPO
 ARG NODEJS_DIST_URL
