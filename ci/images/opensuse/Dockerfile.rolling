@@ -8,7 +8,7 @@ ARG GRADLE_VERSION=9.0.0
 # renovate: datasource=maven lookupName=org.apache.maven:maven
 ARG MAVEN_VERSION=4.0.0-rc-4
 # renovate: datasource=node-version depName=node
-ARG NODE_VERSION=24.7.0
+ARG NODE_VERSION=24.8.0
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG OPENSUSE_CODECS_REPO

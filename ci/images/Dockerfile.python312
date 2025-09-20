@@ -7,7 +7,7 @@ ARG JAVA_VERSION=24.0.2-tem
 # renovate: datasource=maven lookupName=org.apache.maven:maven
 ARG MAVEN_VERSION=3.9.11
 # renovate: datasource=node-version depName=node
-ARG NODE_VERSION=24.7.0
+ARG NODE_VERSION=24.8.0
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG PIP_CONFIG
