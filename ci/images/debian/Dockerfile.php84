@@ -6,7 +6,7 @@ ARG DEBIAN_REPO
 ARG GITHUB_URL=https://github.com
 ARG JAVA_VERSION=21.0.8-tem
 # renovate: datasource=node-version depName=node
-ARG NODE_VERSION=24.7.0
+ARG NODE_VERSION=24.8.0
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG PIP_CONFIG
