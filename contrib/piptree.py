@@ -134,7 +134,7 @@ def find_deps(idx, path, purl, reqs, global_installed, traverse_count):
             continue
         r.project_name = d.project_name if d is not None else r.project_name
         if r.key in path:
-            print(f"Cycle detected: {' -> '.join(current_path)}")
+            print(f"Cycle detected: {' -> '.join(path)} -> {r.key}")
             continue
         current_path = path + [r.key]
         specs = sorted(r.specs, reverse=True)
