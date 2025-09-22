@@ -47,8 +47,6 @@ overrides:
   yallist: 5.0.0
   yargs: 17.7.2
 
-pnpmfileChecksum: sha256-3x73ZoWY33FrWSK74NDXQ+/nbzFV/9/j0QRmsMWoW24=
-
 importers:
 
   .:
@@ -215,8 +213,8 @@ importers:
         version: 5.9.2
     optionalDependencies:
       '@appthreat/atom':
-        specifier: 2.3.0
-        version: 2.3.0
+        specifier: 2.4.1
+        version: 2.4.1
       '@appthreat/cdx-proto':
         specifier: 1.1.4
         version: 1.1.4
@@ -285,8 +283,8 @@ packages:
     engines: {node: '>=16.0.0'}
     hasBin: true
 
-  '@appthreat/atom@2.3.0':
-    resolution: {integrity: sha512-7oXgrKASyRnPc/ILrCxpfkBxeBRYE7Okw5DvUzXrIQP1DiJ7oJ1AI9MXgfhU1Sjv1ikb0hMi5F/QoutrBfq2aw==}
+  '@appthreat/atom@2.4.1':
+    resolution: {integrity: sha512-nh9JTbbIyBOJ4rqZd0rdIYYc5ogU4isGyV3euw98ZJG2YBkkk2+1its9xTvoiO9Hb9Xo6L7uayGlseppifS7YQ==}
     engines: {node: '>=16.0.0'}
     hasBin: true
 
@@ -427,7 +425,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -588,6 +585,10 @@ packages:
     resolution: {integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==}
     engines: {node: '>=8'}
 
+  ansi-styles@6.2.3:
+    resolution: {integrity: sha512-4Dj6M28JB+oAH8kFkTLUo+a2jwOFkuqb3yucU0CANcRRUbxS0cP0nZYCGjcc3BNXwRIsUVmDGgzawme7zvJHvg==}
+    engines: {node: '>=12'}
+
   astral-regex@2.0.0:
     resolution: {integrity: sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==}
     engines: {node: '>=8'}
@@ -696,6 +697,13 @@ packages:
   cmd-shim@7.0.0:
     resolution: {integrity: sha512-rtpaCbr164TPPh+zFdkWpCyZuKkjpAzODfaZCf/SVJZzJN+4bHQb/LP3Jzq5/+84um3XXY8r548XiWKSborwVw==}
     engines: {node: ^18.17.0 || >=20.5.0}
+
+  color-convert@2.0.1:
+    resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
+    engines: {node: '>=7.0.0'}
+
+  color-name@1.1.4:
+    resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
 
   common-ancestor-path@1.0.1:
     resolution: {integrity: sha512-L3sHRo1pXXEqX8VU28kfgUY+YGsk09hPqZiZmLacNib6XNTCM8ubYeT7ryXQw8asB1sKgcU5lkB7ONug08aB8w==}
@@ -1674,6 +1682,10 @@ packages:
     resolution: {integrity: sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==}
     engines: {node: '>=10'}
 
+  wrap-ansi@8.1.0:
+    resolution: {integrity: sha512-si7QWI6zUMq56bESFvagtmzMdGOtoxfR+Sez11Mobfc7tm+VkUckk9bW2UeffTGVUbOksxmSw0AA2gs8g71NCQ==}
+    engines: {node: '>=12'}
+
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
@@ -1723,7 +1735,7 @@ snapshots:
       yargs: 17.7.2
     optional: true
 
-  '@appthreat/atom@2.3.0':
+  '@appthreat/atom@2.4.1':
     dependencies:
       '@appthreat/atom-common': 1.0.8
       '@appthreat/atom-parsetools': 1.0.8
@@ -1879,6 +1891,7 @@ snapshots:
       string-width-cjs: string-width@4.2.3
       strip-ansi: 7.1.2
       strip-ansi-cjs: strip-ansi@6.0.1
+      wrap-ansi: 8.1.0
       wrap-ansi-cjs: wrap-ansi@7.0.0
 
   '@isaacs/fs-minipass@4.0.1':
@@ -2008,7 +2021,11 @@ snapshots:
 
   ansi-regex@6.2.2: {}
 
-  ansi-styles@4.3.0: {}
+  ansi-styles@4.3.0:
+    dependencies:
+      color-convert: 2.0.1
+
+  ansi-styles@6.2.3: {}
 
   astral-regex@2.0.0: {}
 
@@ -2157,8 +2174,15 @@ snapshots:
     dependencies:
       string-width: 4.2.3
       strip-ansi: 6.0.1
+      wrap-ansi: 7.0.0
 
   cmd-shim@7.0.0: {}
+
+  color-convert@2.0.1:
+    dependencies:
+      color-name: 1.1.4
+
+  color-name@1.1.4: {}
 
   common-ancestor-path@1.0.1: {}
 
@@ -3236,6 +3260,12 @@ snapshots:
       ansi-styles: 4.3.0
       string-width: 4.2.3
       strip-ansi: 6.0.1
+
+  wrap-ansi@8.1.0:
+    dependencies:
+      ansi-styles: 6.2.3
+      string-width: 5.1.2
+      strip-ansi: 7.1.2
 
   wrappy@1.0.2:
     optional: true
