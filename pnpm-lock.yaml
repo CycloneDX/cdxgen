@@ -20,7 +20,7 @@ overrides:
   json-parse-even-better-errors: 4.0.0
   jwa: 2.0.1
   lru-cache: 11.2.1
-  make-fetch-happen: 15.0.1
+  make-fetch-happen: 15.0.2
   minimatch: 10.0.3
   minizlib: 3.0.2
   mkdirp: 3.0.1
@@ -357,28 +357,28 @@ packages:
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [linux]
-    libc: musl
+    libc: [musl]
 
   '@biomejs/cli-linux-arm64@2.2.4':
     resolution: {integrity: sha512-M/Iz48p4NAzMXOuH+tsn5BvG/Jb07KOMTdSVwJpicmhN309BeEyRyQX+n1XDF0JVSlu28+hiTQ2L4rZPvu7nMw==}
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [linux]
-    libc: glibc
+    libc: [glibc]
 
   '@biomejs/cli-linux-x64-musl@2.2.4':
     resolution: {integrity: sha512-m41nFDS0ksXK2gwXL6W6yZTYPMH0LughqbsxInSKetoH6morVj43szqKx79Iudkp8WRT5SxSh7qVb8KCUiewGg==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [linux]
-    libc: musl
+    libc: [musl]
 
   '@biomejs/cli-linux-x64@2.2.4':
     resolution: {integrity: sha512-orr3nnf2Dpb2ssl6aihQtvcKtLySLta4E2UcXdp7+RTa7mfJjBgIsbS0B9GC8gVu0hjOu021aU8b3/I1tn+pVQ==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [linux]
-    libc: glibc
+    libc: [glibc]
 
   '@biomejs/cli-win32-arm64@2.2.4':
     resolution: {integrity: sha512-NXnfTeKHDFUWfxAefa57DiGmu9VyKi0cDqFpdI+1hJWQjGJhJutHPX0b5m+eXvTKOaf+brU+P0JrQAZMb5yYaQ==}
@@ -1092,8 +1092,8 @@ packages:
     resolution: {integrity: sha512-r8LA6i4LP4EeWOhqBaZZjDWwehd1xUJPCJd9Sv300H0ZmcUER4+JPh7bqqZeqs1o5pgtgvXm+d9UGrB5zZGDiQ==}
     engines: {node: 20 || >=22}
 
-  make-fetch-happen@15.0.1:
-    resolution: {integrity: sha512-9GjpQcaUXO2xmre8JfALl8Oji8Jpo+SyY2HpqFFPHVczOld/I+JFRx9FkP/uedZzkJlI9uM5t/j6dGJv4BScQw==}
+  make-fetch-happen@15.0.2:
+    resolution: {integrity: sha512-sI1NY4lWlXBAfjmCtVWIIpBypbBdhHtcjnwnv+gtCnsaOffyFil3aidszGC8hgzJe+fT1qix05sWxmD/Bmf/oQ==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
   matcher@3.0.0:
@@ -2583,7 +2583,7 @@ snapshots:
 
   lru-cache@11.2.1: {}
 
-  make-fetch-happen@15.0.1:
+  make-fetch-happen@15.0.2:
     dependencies:
       '@npmcli/agent': 3.0.0
       cacache: 20.0.0
@@ -2703,7 +2703,7 @@ snapshots:
       env-paths: 2.2.1
       exponential-backoff: 3.1.2
       graceful-fs: 4.2.11
-      make-fetch-happen: 15.0.1
+      make-fetch-happen: 15.0.2
       nopt: 8.1.0
       proc-log: 5.0.0
       semver: 7.7.2
