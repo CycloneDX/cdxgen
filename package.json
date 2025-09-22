@@ -112,7 +112,7 @@
     "*": "biome check --fix --no-errors-on-unmatched"
   },
   "overrides": {
-    "@npmcli/agent": "3.0.0",
+    "@npmcli/agent": "4.0.0",
     "@npmcli/fs": "4.0.0",
     "abbrev": "3.0.1",
     "cacache": "20.0.0",
@@ -243,7 +243,7 @@
       "@biomejs/biome"
     ],
     "overrides": {
-      "@npmcli/agent": "3.0.0",
+      "@npmcli/agent": "4.0.0",
       "@npmcli/fs": "4.0.0",
       "abbrev": "3.0.1",
       "cacache": "20.0.0",
