@@ -141,8 +141,8 @@ importers:
         specifier: 13.0.0
         version: 13.0.0
       npm-pick-manifest:
-        specifier: 10.0.0
-        version: 10.0.0
+        specifier: 11.0.1
+        version: 11.0.1
       packageurl-js:
         specifier: 1.0.2
         version: 1.0.2
@@ -1236,6 +1236,10 @@ packages:
   npm-pick-manifest@10.0.0:
     resolution: {integrity: sha512-r4fFa4FqYY8xaM7fHecQ9Z2nE9hgNfJR+EmoKv0+chvzWkBcORX3r0FpTByP+CbOVJDladMXnPQGVN8PBLGuTQ==}
     engines: {node: ^18.17.0 || >=20.5.0}
+
+  npm-pick-manifest@11.0.1:
+    resolution: {integrity: sha512-HnU7FYSWbo7dTVHtK0G+BXbZ0aIfxz/aUCVLN0979Ec6rGUX5cJ6RbgVx5fqb5G31ufz+BVFA7y1SkRTPVNoVQ==}
+    engines: {node: ^20.17.0 || >=22.9.0}
 
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
@@ -2752,6 +2756,13 @@ snapshots:
       npm-install-checks: 7.1.2
       npm-normalize-package-bin: 4.0.0
       npm-package-arg: 12.0.2
+      semver: 7.7.2
+
+  npm-pick-manifest@11.0.1:
+    dependencies:
+      npm-install-checks: 7.1.2
+      npm-normalize-package-bin: 4.0.0
+      npm-package-arg: 13.0.0
       semver: 7.7.2
 
   nth-check@2.1.1:
