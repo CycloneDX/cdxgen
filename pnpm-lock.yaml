@@ -78,8 +78,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@npmcli/package-json':
-        specifier: 7.0.0
-        version: 7.0.0
+        specifier: 7.0.1
+        version: 7.0.1
       '@npmcli/query':
         specifier: 4.0.1
         version: 4.0.1
@@ -498,9 +498,9 @@ packages:
     resolution: {integrity: sha512-/xGlezI6xfGO9NwuJlnwz/K14qD1kCSAGtacBHnGzeAIuJGazcp45KP5NuyARXoKb7cwulAGWVsbeSxdG/cb0Q==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
-  '@npmcli/git@6.0.3':
-    resolution: {integrity: sha512-GUYESQlxZRAdhs3UhbB6pVRNUELQOHXwK9ruDkwmCv2aZ5y0SApQzUJCg02p3A7Ue2J5hxvlk1YI53c00NmRyQ==}
-    engines: {node: ^18.17.0 || >=20.5.0}
+  '@npmcli/git@7.0.0':
+    resolution: {integrity: sha512-vnz7BVGtOctJAIHouCJdvWBhsTVSICMeUgZo2c7XAi5d5Rrl80S1H7oPym7K03cRuinK5Q6s2dw36+PgXQTcMA==}
+    engines: {node: ^20.17.0 || >=22.9.0}
 
   '@npmcli/installed-package-contents@3.0.0':
     resolution: {integrity: sha512-fkxoPuFGvxyrH+OQzyTkX2LUEamrF4jZSmxjAtPPHHGO0dqsQ8tTKjnIS8SAnPHdk2I03BDtSMR5K/4loKg79Q==}
@@ -515,8 +515,8 @@ packages:
     resolution: {integrity: sha512-61cDL8LUc9y80fXn+lir+iVt8IS0xHqEKwPu/5jCjxQTVoSCmkXvw4vbMrzAMtmghz3/AkiBjhHkDKUH+kf7kA==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
-  '@npmcli/package-json@7.0.0':
-    resolution: {integrity: sha512-wy5os0g17akBCVScLyDsDFFf4qC/MmUgIGAFw2pmBGJ/yAQfFbTR9gEaofy4HGm9Jf2MQBnKZICfNds2h3WpEg==}
+  '@npmcli/package-json@7.0.1':
+    resolution: {integrity: sha512-956YUeI0YITbk2+KnirCkD19HLzES0habV+Els+dyZaVsaM6VGSiNwnRu6t3CZaqDLz4KXy2zx+0N/Zy6YjlAA==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
   '@npmcli/promise-spawn@8.0.3':
@@ -1237,6 +1237,10 @@ packages:
     resolution: {integrity: sha512-r4fFa4FqYY8xaM7fHecQ9Z2nE9hgNfJR+EmoKv0+chvzWkBcORX3r0FpTByP+CbOVJDladMXnPQGVN8PBLGuTQ==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
+  npm-pick-manifest@11.0.1:
+    resolution: {integrity: sha512-HnU7FYSWbo7dTVHtK0G+BXbZ0aIfxz/aUCVLN0979Ec6rGUX5cJ6RbgVx5fqb5G31ufz+BVFA7y1SkRTPVNoVQ==}
+    engines: {node: ^20.17.0 || >=22.9.0}
+
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
@@ -1916,12 +1920,12 @@ snapshots:
     dependencies:
       semver: 7.7.2
 
-  '@npmcli/git@6.0.3':
+  '@npmcli/git@7.0.0':
     dependencies:
       '@npmcli/promise-spawn': 8.0.3
       ini: 5.0.0
       lru-cache: 11.2.1
-      npm-pick-manifest: 10.0.0
+      npm-pick-manifest: 11.0.1
       proc-log: 5.0.0
       promise-retry: 2.0.1
       semver: 7.7.2
@@ -1935,15 +1939,15 @@ snapshots:
   '@npmcli/map-workspaces@5.0.0':
     dependencies:
       '@npmcli/name-from-folder': 3.0.0
-      '@npmcli/package-json': 7.0.0
+      '@npmcli/package-json': 7.0.1
       glob: 11.0.3
       minimatch: 10.0.3
 
   '@npmcli/name-from-folder@3.0.0': {}
 
-  '@npmcli/package-json@7.0.0':
+  '@npmcli/package-json@7.0.1':
     dependencies:
-      '@npmcli/git': 6.0.3
+      '@npmcli/git': 7.0.0
       glob: 11.0.3
       hosted-git-info: 9.0.0
       json-parse-even-better-errors: 4.0.0
@@ -2752,6 +2756,13 @@ snapshots:
       npm-install-checks: 7.1.2
       npm-normalize-package-bin: 4.0.0
       npm-package-arg: 12.0.2
+      semver: 7.7.2
+
+  npm-pick-manifest@11.0.1:
+    dependencies:
+      npm-install-checks: 7.1.2
+      npm-normalize-package-bin: 4.0.0
+      npm-package-arg: 13.0.0
       semver: 7.7.2
 
   nth-check@2.1.1:
