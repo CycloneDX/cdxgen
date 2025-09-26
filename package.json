@@ -211,7 +211,7 @@
     "typescript": "5.9.2"
   },
   "optionalDependencies": {
-    "@appthreat/atom": "2.3.0",
+    "@appthreat/atom": "2.4.2",
     "@appthreat/cdx-proto": "1.1.4",
     "@bufbuild/protobuf": "2.6.3",
     "@cyclonedx/cdxgen-plugins-bin": "1.7.0",
