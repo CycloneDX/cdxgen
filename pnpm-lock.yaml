@@ -19,7 +19,7 @@ overrides:
   isexe: 3.1.1
   json-parse-even-better-errors: 4.0.0
   jwa: 2.0.1
-  lru-cache: 11.2.1
+  lru-cache: 11.2.2
   make-fetch-happen: 15.0.2
   minimatch: 10.0.3
   minizlib: 3.1.0
@@ -1088,8 +1088,8 @@ packages:
     resolution: {integrity: sha512-ozCC6gdQ+glXOQsveKD0YsDy8DSQFjDTz4zyzEHNV5+JP5D62LmfDZ6o1cycFx9ouG940M5dE8C8CTewdj2YWQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  lru-cache@11.2.1:
-    resolution: {integrity: sha512-r8LA6i4LP4EeWOhqBaZZjDWwehd1xUJPCJd9Sv300H0ZmcUER4+JPh7bqqZeqs1o5pgtgvXm+d9UGrB5zZGDiQ==}
+  lru-cache@11.2.2:
+    resolution: {integrity: sha512-F9ODfyqML2coTIsQpSkRHnLSZMtkU8Q+mSfcaIyKwy58u+8k5nvAYeiNhsyMARvzNcXJ9QfWVrcPsC9e9rAxtg==}
     engines: {node: 20 || >=22}
 
   make-fetch-happen@15.0.2:
@@ -1906,7 +1906,7 @@ snapshots:
       agent-base: 7.1.4
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
-      lru-cache: 11.2.1
+      lru-cache: 11.2.2
       socks-proxy-agent: 8.0.5
     transitivePeerDependencies:
       - supports-color
@@ -1920,7 +1920,7 @@ snapshots:
     dependencies:
       '@npmcli/promise-spawn': 8.0.3
       ini: 5.0.0
-      lru-cache: 11.2.1
+      lru-cache: 11.2.2
       npm-pick-manifest: 10.0.0
       proc-log: 5.0.0
       promise-retry: 2.0.1
@@ -2093,7 +2093,7 @@ snapshots:
       '@npmcli/fs': 4.0.0
       fs-minipass: 3.0.3
       glob: 11.0.3
-      lru-cache: 11.2.1
+      lru-cache: 11.2.2
       minipass: 7.1.2
       minipass-collect: 2.0.1
       minipass-flush: 1.0.5
@@ -2466,11 +2466,11 @@ snapshots:
 
   hosted-git-info@8.1.0:
     dependencies:
-      lru-cache: 11.2.1
+      lru-cache: 11.2.2
 
   hosted-git-info@9.0.0:
     dependencies:
-      lru-cache: 11.2.1
+      lru-cache: 11.2.2
 
   htmlparser2@10.0.0:
     dependencies:
@@ -2581,7 +2581,7 @@ snapshots:
 
   lowercase-keys@3.0.0: {}
 
-  lru-cache@11.2.1: {}
+  lru-cache@11.2.2: {}
 
   make-fetch-happen@15.0.2:
     dependencies:
@@ -2811,7 +2811,7 @@ snapshots:
 
   path-scurry@2.0.0:
     dependencies:
-      lru-cache: 11.2.1
+      lru-cache: 11.2.2
       minipass: 7.1.2
 
   pg-connection-string@2.9.1:
