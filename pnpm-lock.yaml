@@ -36,7 +36,7 @@ overrides:
   ssri: 12.0.0
   statuses: 2.0.2
   strip-json-comments: 3.1.1
-  tar: 7.4.3
+  tar: 7.5.1
   tar-fs: 3.1.0
   type-fest: 4.41.0
   unique-filename: 4.0.0
@@ -180,8 +180,8 @@ importers:
         specifier: 6.9.0
         version: 6.9.0
       tar:
-        specifier: 7.4.3
-        version: 7.4.3
+        specifier: 7.5.1
+        version: 7.5.1
       treeverse:
         specifier: 3.0.0
         version: 3.0.0
@@ -1567,8 +1567,8 @@ packages:
   tar-stream@3.1.7:
     resolution: {integrity: sha512-qJj60CXt7IU1Ffyc3NJMjh6EkuCFej46zUqJ4J7pqYlThyd9bO0XBTmcOIhSzZJVWfsLks0+nle/j538YAW9RQ==}
 
-  tar@7.4.3:
-    resolution: {integrity: sha512-5S7Va8hKfV7W5U6g3aYxXmlPoZVAwUMy9AOKyF2fVuZa2UD3qZjg578OrLRt8PcNN1PleVaL/5/yYATNL0ICUw==}
+  tar@7.5.1:
+    resolution: {integrity: sha512-nlGpxf+hv0v7GkWBK2V9spgactGOp0qvfWRxUMjqHyzrt3SgwE48DIv/FhqPHJYLHpgW1opq3nERbz5Anq7n1g==}
     engines: {node: '>=18'}
 
   text-decoder@1.2.3:
@@ -2100,7 +2100,7 @@ snapshots:
       minipass-pipeline: 1.2.4
       p-map: 7.0.3
       ssri: 12.0.0
-      tar: 7.4.3
+      tar: 7.5.1
       unique-filename: 4.0.0
     optional: true
 
@@ -2707,7 +2707,7 @@ snapshots:
       nopt: 8.1.0
       proc-log: 5.0.0
       semver: 7.7.2
-      tar: 7.4.3
+      tar: 7.5.1
       tinyglobby: 0.2.15
       which: 5.0.0
     transitivePeerDependencies:
@@ -3130,13 +3130,12 @@ snapshots:
       - react-native-b4a
     optional: true
 
-  tar@7.4.3:
+  tar@7.5.1:
     dependencies:
       '@isaacs/fs-minipass': 4.0.1
       chownr: 3.0.0
       minipass: 7.1.2
       minizlib: 3.1.0
-      mkdirp: 3.0.1
       yallist: 5.0.0
 
   text-decoder@1.2.3:
