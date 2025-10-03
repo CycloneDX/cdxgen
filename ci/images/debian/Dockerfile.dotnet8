@@ -3,8 +3,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
 
 ARG DEBIAN_REPO
 ARG GITHUB_URL=https://github.com
-# renovate: datasource=node-version depName=node
-ARG NODE_VERSION=24.8.0
+ARG NODE_24
+ARG NODE_VERSION=${NODE_24}
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG NUGET_REPO

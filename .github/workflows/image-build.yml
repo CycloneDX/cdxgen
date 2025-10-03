@@ -77,6 +77,15 @@ jobs:
         uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
       - name: Setup ORAS
         uses: oras-project/setup-oras@22ce207df3b08e061f537244349aac6ae1d214f6 # v1.2.4
+      - name: Setup tool versions
+        id: versions
+        run: |
+          cd .versions
+          cat >> "$GITHUB_OUTPUT" << EOF
+          docker-args<<VALUE
+          $(awk 'FNR==2 {print "\""toupper(FILENAME)"="$1"\""}' node_*)
+          VALUE
+          EOF
       - name: Setup Nexus usage
         id: nexus
         if: ${{ fromJSON(inputs.image).runner }}
@@ -125,7 +134,9 @@ jobs:
         with:
           build-arm: ${{ ! fromJSON(inputs.image).skip-arm }}
           dockerfile: ci/images/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
-          docker-args: ${{ steps.nexus.outputs.docker-args }}
+          docker-args: |
+            ${{ steps.versions.outputs.docker-args }}
+            ${{ steps.nexus.outputs.docker-args }}
           images: |
              ${{ env.REPO }}/${{ env.TEAM }}/${{ fromJSON(inputs.image).base-image.name || fromJSON(inputs.image).distro || 'bci' }}-${{ fromJSON(inputs.image).base-image.lang || fromJSON(inputs.image).lang }}
              ${{ fromJSON(inputs.image).base-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).base-image.additional-image) || '' }}
@@ -140,7 +151,9 @@ jobs:
         with:
           build-arm: ${{ ! fromJSON(inputs.image).skip-arm }}
           dockerfile: ci/images/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
-          docker-args: ${{ steps.nexus.outputs.docker-args }}
+          docker-args: |
+            ${{ steps.versions.outputs.docker-args }}
+            ${{ steps.nexus.outputs.docker-args }}
           images: |
             ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image) || '' }}
@@ -162,7 +175,9 @@ jobs:
         with:
           build-arm: ${{ ! fromJSON(inputs.image).skip-arm }}
           dockerfile: ci/images/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
-          docker-args: ${{ steps.nexus.outputs.docker-args }}
+          docker-args: |
+            ${{ steps.versions.outputs.docker-args }}
+            ${{ steps.nexus.outputs.docker-args }}
           images: |
             ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image) || '' }}
