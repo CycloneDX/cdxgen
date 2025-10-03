@@ -92,7 +92,7 @@ RUN set -e; \
           gcc15-c++ \
           gcc15-fortran \
           git-core \
-          java-24-openjdk-devel \
+          java-25-openjdk-devel \
           libicu-devel \
           make \
           python313 \
