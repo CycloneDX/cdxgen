@@ -4,7 +4,8 @@ FROM opensuse/tumbleweed:latest AS base
 ARG DOTNET_SDK_VERSION=9.0.305
 ARG DOTNETCLI_URL=https://dotnetcli.azureedge.net
 ARG GITHUB_URL=https://github.com
-ARG GRADLE_VERSION=9.0.0
+ARG GRADLE_9
+ARG GRADLE_VERSION=${GRADLE_9}
 # renovate: datasource=maven lookupName=org.apache.maven:maven
 ARG MAVEN_VERSION=4.0.0-rc-4
 ARG NODE_24

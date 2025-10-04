@@ -2,8 +2,8 @@
 FROM registry.suse.com/bci/openjdk-devel:11.0.25.0 AS base
 
 ARG GITHUB_URL=https://github.com
-# renovate: datasource=gradle-version depName=gradle
-ARG GRADLE_VERSION=7.6.6
+ARG GRADLE_8
+ARG GRADLE_VERSION=${GRADLE_8}
 # renovate: datasource=maven lookupName=org.apache.maven:maven
 ARG MAVEN_VERSION=3.6.3
 ARG NODEJS_DIST_URL
