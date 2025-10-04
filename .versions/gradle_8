@@ -1,2 +1,2 @@
 # renovate: datasource=gradle-version depName=gradle
-8.0.0
+8.14.3
