@@ -1,5 +1,5 @@
 # Base-image
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS base
+FROM mcr.microsoft.com/dotnet/sdk:9.0.305 AS base
 
 ARG DEBIAN_REPO
 ARG GITHUB_URL=https://github.com
