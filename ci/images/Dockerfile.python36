@@ -6,8 +6,8 @@ ARG GITHUB_URL=https://github.com
 ARG JAVA_VERSION=21.0.8-tem
 # renovate: datasource=maven lookupName=org.apache.maven:maven
 ARG MAVEN_VERSION=3.9.11
-# renovate: datasource=node-version depName=node
-ARG NODE_VERSION=20.19.5
+ARG NODE_20
+ARG NODE_VERSION=${NODE_20}
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG PIP_CONFIG
