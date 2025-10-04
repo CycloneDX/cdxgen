@@ -1,0 +1,2 @@
+# renovate: datasource=maven lookupName=org.apache.maven:maven
+3.0.0

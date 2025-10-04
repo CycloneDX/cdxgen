@@ -4,8 +4,8 @@ FROM registry.suse.com/bci/python:3.12 AS base
 ARG GCC_VERSION=14
 ARG GITHUB_URL=https://github.com
 ARG JAVA_VERSION=24.0.2-tem
-# renovate: datasource=maven lookupName=org.apache.maven:maven
-ARG MAVEN_VERSION=3.9.11
+ARG MAVEN_3
+ARG MAVEN_VERSION=${MAVEN_3}
 ARG NODE_24
 ARG NODE_VERSION=${NODE_24}
 ARG NODEJS_DIST_URL
