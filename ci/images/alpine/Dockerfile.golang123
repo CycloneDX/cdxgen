@@ -1,5 +1,5 @@
 # Base-image
-FROM golang:1.23.12-alpine AS base
+FROM golang:1.23.12-alpine@sha256:383395b794dffa5b53012a212365d40c8e37109a626ca30d6151c8348d380b5f AS base
 
 ARG ALPINE_REPO
 ARG NODEJS_DIST_URL

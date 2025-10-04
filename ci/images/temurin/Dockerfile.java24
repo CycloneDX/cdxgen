@@ -1,5 +1,5 @@
 # Base-image
-FROM eclipse-temurin:24.0.2_12-jdk-ubi9-minimal AS base
+FROM eclipse-temurin:24.0.2_12-jdk-ubi9-minimal@sha256:3f4c80b91c40a46a93279149df397c4f3cbb2cb59a43f1a8322cc1c32c94ca73 AS base
 
 ARG GRADLE_8
 ARG GRADLE_VERSION=${GRADLE_8}
