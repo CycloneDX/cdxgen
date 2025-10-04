@@ -1,5 +1,5 @@
 # Base-image
-FROM ruby:3.3.8-slim AS base
+FROM ruby:3.3.8-slim@sha256:307aed56240959e9cd3fcc10740ae8d0e6c461e9b42efc076100d4f8126b87b9 AS base
 
 ARG ATOM_RUBY_VERSION=3.4.5
 ARG DEBIAN_REPO

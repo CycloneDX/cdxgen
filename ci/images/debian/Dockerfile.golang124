@@ -1,5 +1,5 @@
 # Base-image
-FROM golang:1.24.7-bookworm AS base
+FROM golang:1.24.7-bookworm@sha256:b8bae5bd9ba9b1f89b635c91c24cc75cea335a16fb5076310f38566fc674b1ec AS base
 
 ARG DEBIAN_REPO
 ARG GITHUB_URL=https://github.com
