@@ -67,7 +67,7 @@ RUN set -e; \
           gcc13-c++ \
           gcc13-fortran \
           git-core \
-          java-24-openjdk-devel \
+          java-25-openjdk-devel \
           libxml2-devel \
           make \
           nodejs22 \
