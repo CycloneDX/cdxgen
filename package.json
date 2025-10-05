@@ -116,7 +116,7 @@
     "@appthreat/cdx-proto": "1.1.4",
     "@babel/parser": "7.28.4",
     "@babel/traverse": "7.28.4",
-    "@biomejs/biome": "2.2.4",
+    "@biomejs/biome": "2.2.5",
     "@bufbuild/protobuf": "2.9.0",
     "@cyclonedx/cdxgen-plugins-bin": "1.7.0",
     "@cyclonedx/cdxgen-plugins-bin-darwin-amd64": "1.7.0",
@@ -269,7 +269,7 @@
     "yoctocolors": "2.1.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.4",
+    "@biomejs/biome": "2.2.5",
     "poku": "3.0.2",
     "typescript": "5.9.3"
   },
@@ -310,7 +310,7 @@
       "@appthreat/cdx-proto": "1.1.4",
       "@babel/parser": "7.28.4",
       "@babel/traverse": "7.28.4",
-      "@biomejs/biome": "2.2.4",
+      "@biomejs/biome": "2.2.5",
       "@bufbuild/protobuf": "2.9.0",
       "@cyclonedx/cdxgen-plugins-bin": "1.7.0",
       "@cyclonedx/cdxgen-plugins-bin-darwin-amd64": "1.7.0",
