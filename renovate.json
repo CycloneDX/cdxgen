@@ -61,6 +61,14 @@
       "versioning": "regex:^v?(?<major>\\d+)(\\.(?<minor>\\d+)\\.(?<patch>\\d+))?$"
     },
     {
+      "description": "Automerge digest pins for latest tags",
+      "matchDatasources": ["dockerfile"],
+      "matchUpdateTypes": ["digest"],
+      "matchCurrentValue": "latest",
+      "automerge": "true",
+      "automergeType": "branch"
+    },
+    {
       "description": "Wait 14 days before updating Node.js versions",
       "matchPackageNames": ["/(?:^|/)node$/"],
       "minimumReleaseAge": "14 days"
