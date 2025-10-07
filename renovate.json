@@ -62,7 +62,7 @@
     },
     {
       "description": "Automerge digest pins for latest tags",
-      "matchDatasources": ["dockerfile"],
+      "matchDatasources": ["docker"],
       "matchUpdateTypes": ["digest"],
       "matchCurrentValue": "latest",
       "automerge": "true",
