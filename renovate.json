@@ -72,7 +72,7 @@
       "description": "Disable digest pins for cyclonedx/cdxgen-ruby-builder",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["cyclonedx/cdxgen-ruby-builder"],
-      "matchUpdateTypes": ["digest"],
+      "matchUpdateTypes": ["pinDigest"],
       "enabled": false
     },
     {
