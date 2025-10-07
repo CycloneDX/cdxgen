@@ -69,6 +69,13 @@
       "automergeType": "branch"
     },
     {
+      "description": "Disable digest pins for cyclonedx/cdxgen-ruby-builder",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["cyclonedx/cdxgen-ruby-builder"],
+      "matchUpdateTypes": ["digest"],
+      "enabled": false
+    },
+    {
       "description": "Wait 14 days before updating Node.js versions",
       "matchPackageNames": ["/(?:^|/)node$/"],
       "minimumReleaseAge": "14 days"
