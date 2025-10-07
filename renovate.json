@@ -17,21 +17,32 @@
     "docker:pinDigests",
     "helpers:pinGitHubActionDigestsToSemver"
   ],
-  "labels": ["dependency"],
+  "labels": [
+    "dependency"
+  ],
   "minimumReleaseAge": "3 days",
   "gitIgnoredAuthors": [
     "41898282+github-actions[bot]@users.noreply.github.com"
   ],
   "packageRules": [
     {
-      "matchDepTypes": ["engines"],
+      "matchDepTypes": [
+        "engines"
+      ],
       "rangeStrategy": "auto"
     },
     {
       "description": "cdxgen images: limit docker image updates to exclude major or minor updates as we explicitly set these versions",
-      "matchDatasources": ["docker"],
-      "matchFileNames": ["ci/**/*"],
-      "matchUpdateTypes": ["major", "minor"],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchFileNames": [
+        "ci/**/*"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
+      ],
       "enabled": false
     },
     {
@@ -42,42 +53,68 @@
         "maven",
         "node-version"
       ],
-      "matchFileNames": ["ci/**/*"],
-      "matchUpdateTypes": ["major"],
+      "matchFileNames": [
+        "ci/**/*"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "enabled": false
     },
     {
       "description": "Limit .versions/* files updates to non-major update types as we explicitly set major versions",
-      "matchManagers": ["custom.regex"],
-      "matchFileNames": [".versions/*"],
-      "matchUpdateTypes": ["major"],
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchFileNames": [
+        ".versions/*"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "enabled": false
     },
     {
       "description": "Pin GitHub Actions digests to major version - for those actions which don't support semver",
-      "extends": ["helpers:pinGitHubActionDigests"],
-      "matchPackageNames": ["addnab/docker-run-action"],
+      "extends": [
+        "helpers:pinGitHubActionDigests"
+      ],
+      "matchPackageNames": [
+        "addnab/docker-run-action"
+      ],
       "extractVersion": "^(?<version>v?\\d+)$",
       "versioning": "regex:^v?(?<major>\\d+)(\\.(?<minor>\\d+)\\.(?<patch>\\d+))?$"
     },
     {
       "description": "Automerge digest pins for latest tags",
-      "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["digest"],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "digest"
+      ],
       "matchCurrentValue": "latest",
-      "automerge": "true",
+      "automerge": true,
       "automergeType": "branch"
     },
     {
       "description": "Disable digest pins for cyclonedx/cdxgen-ruby-builder",
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["cyclonedx/cdxgen-ruby-builder"],
-      "matchUpdateTypes": ["digest"],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "cyclonedx/cdxgen-ruby-builder"
+      ],
+      "matchUpdateTypes": [
+        "digest"
+      ],
       "enabled": false
     },
     {
       "description": "Wait 14 days before updating Node.js versions",
-      "matchPackageNames": ["/(?:^|/)node$/"],
+      "matchPackageNames": [
+        "/(?:^|/)node$/"
+      ],
       "minimumReleaseAge": "14 days"
     }
   ],
@@ -86,7 +123,9 @@
       "description": "Custom manager for devEngines runtime in package.json",
       "customType": "jsonata",
       "fileFormat": "json",
-      "managerFilePatterns": ["/^package.json$/"],
+      "managerFilePatterns": [
+        "/^package.json$/"
+      ],
       "matchStrings": [
         "devEngines.runtime.{ \"depName\": name, \"currentValue\": version, \"depType\": \"devDependencies\"}",
         "devEngines.packageManager.{ \"depName\": name, \"currentValue\": version, \"depType\": \"packageManager\"}"
@@ -96,7 +135,9 @@
     {
       "description": "Custom manager to maintain ./versions/* files used within GitHub workflows",
       "customType": "regex",
-      "managerFilePatterns": ["/.versions/.*/"],
+      "managerFilePatterns": [
+        "/.versions/.*/"
+      ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>[a-zA-Z0-9-._]+?) depName=(?<depName>[^\\s]+?)\\s+(?<currentValue>.+?)(\\s)?$"
       ]
