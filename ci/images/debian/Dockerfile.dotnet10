@@ -1,5 +1,5 @@
 # Base-image
-FROM mcr.microsoft.com/dotnet/sdk:10.0-100-rc.1 AS base
+FROM mcr.microsoft.com/dotnet/sdk:10.0-preview-trixie-slim@sha256:ddaea7f02c1afbf0b49a16026e20eba59d5b454b887a1382b27fdc302f2ab079 AS base
 
 ARG DEBIAN_REPO
 ARG GITHUB_URL=https://github.com
