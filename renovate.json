@@ -65,7 +65,7 @@
       "matchDatasources": ["docker"],
       "matchUpdateTypes": ["digest"],
       "matchCurrentValue": "latest",
-      "automerge": "true",
+      "automerge": true,
       "automergeType": "branch"
     },
     {
