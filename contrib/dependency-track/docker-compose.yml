@@ -5,7 +5,7 @@ volumes:
 
 services:
   cdxgen:
-    image: ghcr.io/cyclonedx/cdxgen
+    image: ghcr.io/cyclonedx/cdxgen:11.9.0
     ports:
       - "9090:9090"
     volumes:
@@ -14,7 +14,7 @@ services:
     command: cdxgen --server --server-host 0.0.0.0 --server-port 9090 --server-url http://dtrack-apiserver:8081
 
   dtrack-apiserver:
-    image: dependencytrack/apiserver
+    image: dependencytrack/apiserver:4.13.5
     # environment:
     # The Dependency-Track container can be configured using any of the
     # available configuration properties defined in:
@@ -109,7 +109,7 @@ services:
     restart: unless-stopped
 
   dtrack-frontend:
-    image: dependencytrack/frontend
+    image: dependencytrack/frontend:4.13.5
     depends_on:
       - dtrack-apiserver
     environment:
