@@ -9,15 +9,17 @@
     "docker:pinDigests",
     "helpers:pinGitHubActionDigestsToSemver"
   ],
-  "ignorePaths": [
-    "**/test/**"
-  ],
   "labels": ["dependency"],
   "minimumReleaseAge": "3 days",
   "rebaseWhen": "behind-base-branch",
   "gitIgnoredAuthors": [
     "41898282+github-actions[bot]@users.noreply.github.com"
   ],
+  "nuget": {
+    "ignorePaths": [
+      "**/test/**"
+    ]
+  },
   "packageRules": [
     {
       "matchDepTypes": ["engines"],
