@@ -9,6 +9,9 @@
     "docker:pinDigests",
     "helpers:pinGitHubActionDigestsToSemver"
   ],
+  "ignorePaths": [
+    "**/test/**"
+  ],
   "labels": ["dependency"],
   "minimumReleaseAge": "3 days",
   "rebaseWhen": "behind-base-branch",
