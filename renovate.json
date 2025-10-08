@@ -1,13 +1,5 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "enabledManagers": [
-    "dockerfile",
-    "github-actions",
-    "jsonata",
-    "npm",
-    "nvm",
-    "custom.regex"
-  ],
   "extends": [
     "config:recommended",
     ":separateMultipleMajorReleases",
