@@ -8,7 +8,7 @@
 
 # CycloneDX Generator (cdxgen)
 
-![cdxgen logo](./docs/_media/cdxgen.png)
+<img src="./docs/_media/cdxgen.png" width="200" height="auto" />
 
 cdxgen is a CLI tool, library, [REPL](./ADVANCED.md), and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Bill of Materials (BOM) containing an aggregate of all project dependencies in JSON format. CycloneDX is a full-stack BOM specification that is easily created, human and machine-readable, and simple to parse. The tool supports CycloneDX specification versions from 1.4 - 1.6.
 
@@ -25,15 +25,13 @@ Supported BOM formats:
 
 Most SBOM tools are like simple barcode scanners. For easy applications, they can parse a few package manifests and create a list of components only based on these files without any deep inspection. Further, a typical application might have several repos, components, and libraries with complex build requirements. Traditional techniques to generate an SBOM per language or package manifest either do not work in enterprise environments or don't provide the confidence required for both compliance and automated analysis. So we built cdxgen - the universal polyglot SBOM generator that is user-friendly, precise, and comprehensive!
 
-<img src="./docs/_media/why-cdxgen.jpg" alt="why cdxgen" width="256">
+**Our philosophy:**
 
-Our philosophy:
-
-- Explainability: Don't list, but explain with evidence.
-- Precision: Try using multiple techniques to improve precision, even if it takes extra time.
-- Personas: Cater to the needs of a range of personas such as security researchers, compliance auditors, developers, and SOC.
-- Lifecycle: Support BOM generation for various product lifecycles.
-- Machine Learning: Optimize the generated data for Machine Learning (ML) purposes by considering the various model properties.
+- _Explainability:_ Don't list, but explain with evidence.
+- _Precision:_ Try using multiple techniques to improve precision, even if it takes extra time.
+- _Personas:_ Cater to the needs of a range of personas such as security researchers, compliance auditors, developers, and SOC.
+- _Lifecycle:_ Support BOM generation for various product lifecycles.
+- _Machine Learning:_ Optimize the generated data for Machine Learning (ML) purposes by considering the various model properties.
 
 ## Documentation
 
