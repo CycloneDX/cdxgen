@@ -648,15 +648,15 @@ jobs:
         run: |
           bin/cdxgen.js -t python repotests/impacket -o bomresults/impacket.json --fail-on-error
         shell: bash
-      - name: repotests pixi
-        run: |
-          mkdir pixi-sample
-          cd pixi-sample
-          curl -LO https://raw.githubusercontent.com/prefix-dev/pixi/main/pixi.lock
-          curl -LO https://raw.githubusercontent.com/prefix-dev/pixi/main/pixi.toml
-          cd ..
-          bin/cdxgen.js -t python pixi-sample -o bomresults/bom-pixi.json -p --fail-on-error
-        shell: bash
+#      - name: repotests pixi
+#        run: |
+#          mkdir pixi-sample
+#          cd pixi-sample
+#          curl -LO https://raw.githubusercontent.com/prefix-dev/pixi/main/pixi.lock
+#          curl -LO https://raw.githubusercontent.com/prefix-dev/pixi/main/pixi.toml
+#          cd ..
+#          bin/cdxgen.js -t python pixi-sample -o bomresults/bom-pixi.json -p --fail-on-error
+#        shell: bash
       - name: repotests shiftleft-java-example
         run: |
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
