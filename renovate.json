@@ -16,9 +16,7 @@
     "41898282+github-actions[bot]@users.noreply.github.com"
   ],
   "nuget": {
-    "ignorePaths": [
-      "**/test/**"
-    ]
+    "ignorePaths": ["**/test/**"]
   },
   "packageRules": [
     {
