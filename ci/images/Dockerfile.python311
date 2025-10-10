@@ -4,7 +4,7 @@ FROM registry.suse.com/bci/python:3.11.13@sha256:9da61559d6ed694c1ddff59fadbb07a
 ARG GCC_VERSION=14
 ARG GITHUB_URL=https://github.com
 # renovate: datasource=golang-version depName=golang
-ARG GO_VERSION=1.25.1
+ARG GO_VERSION=1.25.2
 ARG GOOGLE_URL=https://dl.google.com
 ARG JAVA_VERSION=24.0.2-tem
 ARG MAVEN_3
