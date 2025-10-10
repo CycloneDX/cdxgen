@@ -295,7 +295,7 @@
     "sequelize": "6.37.7",
     "sqlite3": "npm:@appthreat/sqlite3@6.0.9"
   },
-  "packageManager": "pnpm@10.18.0",
+  "packageManager": "pnpm@10.18.1",
   "engines": {
     "node": ">=20",
     "pnpm": ">=10"
