@@ -4,6 +4,7 @@
     "config:recommended",
     ":separateMultipleMajorReleases",
     ":enableVulnerabilityAlerts",
+    ":rebaseStalePrs",
     "customManagers:biomeVersions",
     "customManagers:dockerfileVersions",
     "docker:pinDigests",
@@ -11,7 +12,6 @@
   ],
   "labels": ["dependency"],
   "minimumReleaseAge": "3 days",
-  "rebaseWhen": "behind-base-branch",
   "gitIgnoredAuthors": [
     "41898282+github-actions[bot]@users.noreply.github.com"
   ],
