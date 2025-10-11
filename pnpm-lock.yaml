@@ -50,7 +50,7 @@ overrides:
   glob: 11.0.3
   global-agent: 3.0.0
   got: 14.4.9
-  hosted-git-info: 9.0.0
+  hosted-git-info: 9.0.2
   iconv-lite: 0.7.0
   ini: 5.0.0
   is-stream: 4.0.1
@@ -180,8 +180,8 @@ importers:
         specifier: 14.4.9
         version: 14.4.9
       hosted-git-info:
-        specifier: 9.0.0
-        version: 9.0.0
+        specifier: 9.0.2
+        version: 9.0.2
       iconv-lite:
         specifier: 0.7.0
         version: 0.7.0
@@ -1029,8 +1029,8 @@ packages:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
 
-  hosted-git-info@9.0.0:
-    resolution: {integrity: sha512-gEf705MZLrDPkbbhi8PnoO4ZwYgKoNL+ISZ3AjZMht2r3N5tuTwncyDi6Fv2/qDnMmZxgs0yI8WDOyR8q3G+SQ==}
+  hosted-git-info@9.0.2:
+    resolution: {integrity: sha512-M422h7o/BR3rmCQ8UHi7cyyMqKltdP9Uo+J2fXK+RSAY+wTcKOIRyhTuKv4qn+DJf3g+PL890AzId5KZpX+CBg==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
   htmlparser2@10.0.0:
@@ -2000,7 +2000,7 @@ snapshots:
     dependencies:
       '@npmcli/git': 7.0.0
       glob: 11.0.3
-      hosted-git-info: 9.0.0
+      hosted-git-info: 9.0.2
       json-parse-even-better-errors: 4.0.0
       proc-log: 5.0.0
       semver: 7.7.3
@@ -2519,7 +2519,7 @@ snapshots:
       function-bind: 1.1.2
     optional: true
 
-  hosted-git-info@9.0.0:
+  hosted-git-info@9.0.2:
     dependencies:
       lru-cache: 11.2.2
 
@@ -2786,7 +2786,7 @@ snapshots:
 
   npm-package-arg@13.0.1:
     dependencies:
-      hosted-git-info: 9.0.0
+      hosted-git-info: 9.0.2
       proc-log: 5.0.0
       semver: 7.7.3
       validate-npm-package-name: 6.0.2
