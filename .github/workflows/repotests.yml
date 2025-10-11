@@ -269,7 +269,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
         with:
-          python-version: '3.13'
+          python-version: '3.14'
       - name: setup-cocoapods # Not using an action, as it is not implemented for windows!
         run: |
           gem install cocoapods -v 1.16.2 --no-document
@@ -1043,7 +1043,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
         with:
-          python-version: '3.13'
+          python-version: '3.14'
       - uses: ruby/setup-ruby@ab177d40ee5483edb974554986f56b33477e21d0 # v1.265.0
         with:
           ruby-version: '3.4.7'
