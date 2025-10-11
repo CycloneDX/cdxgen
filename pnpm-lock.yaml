@@ -71,7 +71,7 @@ overrides:
   node-stream-zip: 1.15.0
   nopt: 8.1.0
   npm-install-checks: 7.1.2
-  npm-package-arg: 13.0.0
+  npm-package-arg: 13.0.1
   npm-pick-manifest: 11.0.1
   on-finished: 2.4.1
   packageurl-js: 1.0.2
@@ -201,8 +201,8 @@ importers:
         specifier: 7.1.2
         version: 7.1.2
       npm-package-arg:
-        specifier: 13.0.0
-        version: 13.0.0
+        specifier: 13.0.1
+        version: 13.0.1
       npm-pick-manifest:
         specifier: 11.0.1
         version: 11.0.1
@@ -1284,8 +1284,8 @@ packages:
     resolution: {integrity: sha512-TZKxPvItzai9kN9H/TkmCtx/ZN/hvr3vUycjlfmH0ootY9yFBzNOpiXAdIn1Iteqsvk4lQn6B5PTrt+n6h8k/w==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
-  npm-package-arg@13.0.0:
-    resolution: {integrity: sha512-+t2etZAGcB7TbbLHfDwooV9ppB2LhhcT6A+L9cahsf9mEUAoQ6CktLEVvEnpD0N5CkX7zJqnPGaFtoQDy9EkHQ==}
+  npm-package-arg@13.0.1:
+    resolution: {integrity: sha512-6zqls5xFvJbgFjB1B2U6yITtyGBjDBORB7suI4zA4T/sZ1OmkMFlaQSNB/4K0LtXNA1t4OprAFxPisadK5O2ag==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
   npm-pick-manifest@11.0.1:
@@ -2784,7 +2784,7 @@ snapshots:
 
   npm-normalize-package-bin@4.0.0: {}
 
-  npm-package-arg@13.0.0:
+  npm-package-arg@13.0.1:
     dependencies:
       hosted-git-info: 9.0.0
       proc-log: 5.0.0
@@ -2795,7 +2795,7 @@ snapshots:
     dependencies:
       npm-install-checks: 7.1.2
       npm-normalize-package-bin: 4.0.0
-      npm-package-arg: 13.0.0
+      npm-package-arg: 13.0.1
       semver: 7.7.2
 
   nth-check@2.1.1:
