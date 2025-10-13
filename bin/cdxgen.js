@@ -136,6 +136,9 @@ const args = _yargs
     default: "",
     type: "string",
   })
+  .option("project-tag", {
+    description: "Dependency track project tag. Multiple values allowed.",
+  })
   .option("project-id", {
     description:
       "Dependency track project id. Either provide the id or the project name and version together",
@@ -826,7 +829,7 @@ const needsBomSigning = ({ generateKeyAndSign }) =>
     return;
   }
   prepareEnv(filePath, options);
-  thoughtLog("Getting ready to generate the BOM ⚡️.");
+  thoughtLog("Getting ready to generate the BOM ⚡.");
   let bomNSData = (await createBom(filePath, options)) || {};
   if (bomNSData?.bomJson) {
     thoughtLog(
