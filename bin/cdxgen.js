@@ -829,7 +829,7 @@ const needsBomSigning = ({ generateKeyAndSign }) =>
     return;
   }
   prepareEnv(filePath, options);
-  thoughtLog("Getting ready to generate the BOM ⚡.");
+  thoughtLog("Getting ready to generate the BOM ⚡️.");
   let bomNSData = (await createBom(filePath, options)) || {};
   if (bomNSData?.bomJson) {
     thoughtLog(
