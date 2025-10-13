@@ -4,7 +4,6 @@
     "config:recommended",
     ":separateMultipleMajorReleases",
     ":enableVulnerabilityAlerts",
-    ":rebaseStalePrs",
     "customManagers:biomeVersions",
     "customManagers:dockerfileVersions",
     "docker:pinDigests",
