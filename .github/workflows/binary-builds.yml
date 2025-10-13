@@ -51,6 +51,9 @@ jobs:
         arch: [ amd64, arm64]
         libc: [ gnu, musl ]
         exclude:
+          # No more intel on macos
+          - os: darwin
+            arch: amd64
           # musl can only be built on linux
           - os: darwin
             libc: musl
@@ -58,9 +61,6 @@ jobs:
             libc: musl
         include:
           # Set all the runners
-          - os: darwin
-            arch: amd64
-            runner: macos-14-large
           - os: darwin
             arch: arm64
             runner: macos-14
