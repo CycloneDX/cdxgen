@@ -114,6 +114,7 @@ jobs:
             distro: temurin
 
           - lang: java11
+            runner: macos-hosted
             base-image:
               additional-image: java11-slim
             cdxgen-image:
