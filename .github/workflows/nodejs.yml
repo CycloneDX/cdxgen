@@ -13,7 +13,6 @@ on:
       - 'lib/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
-      - '!**.poku.js'
       - 'devenv*'
   push:
     branches:
@@ -32,7 +31,6 @@ on:
       - 'lib/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
-      - '!**.poku.js'
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
