@@ -38,10 +38,9 @@ jobs:
         uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
         with:
           node-version-file: .nvmrc
-      - name: pnpm install, build and test
+      - name: pnpm install
         run: |
           pnpm install --config.strict-dep-builds=true --package-import-method copy
-          pnpm test
           mkdir -p bomresults
         env:
           CI: true
@@ -99,10 +98,9 @@ jobs:
         uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
         with:
           node-version-file: .nvmrc
-      - name: pnpm install, build and test
+      - name: pnpm install
         run: |
           pnpm install --config.strict-dep-builds=true --package-import-method copy
-          pnpm test
           mkdir -p bomresults repotests
         env:
           CI: true

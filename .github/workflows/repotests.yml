@@ -12,6 +12,7 @@ on:
       - 'lib/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
+      - '!**.poku.js'
   workflow_dispatch:
 
 concurrency:
@@ -232,10 +233,9 @@ jobs:
       - name: Setup Nexus usage
         if: matrix.os == 'self-hosted-ubuntu'
         run: echo "registry=$NEXUS_URL" > .npmrc
-      - name: pnpm install, build and test
+      - name: pnpm install
         run: |
           pnpm install --config.strict-dep-builds=true --package-import-method copy
-          pnpm test
           mkdir -p repotests
           mkdir -p bomresults
           mkdir -p denoresults
