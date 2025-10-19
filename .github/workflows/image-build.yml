@@ -39,6 +39,7 @@ env:
   NEXUS_SUSE_MICROSOFT_REPO_PATH: /repository/suse-microsoft
   NEXUS_SUSE_REPO_PATH: /repository/suse
   NEXUS_SWIFT_PATH: /repository/swift
+  NEXUS_UBUNTU_REPO_PATH: /repository/ubuntu
   REPO: ghcr.io
   TAG: v11
   TEAM: cyclonedx
@@ -113,6 +114,7 @@ jobs:
           "SUSE_MICROSOFT_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_SUSE_MICROSOFT_REPO_PATH"
           "SUSE_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_SUSE_REPO_PATH"
           "SWIFT_URL=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_SWIFT_PATH"
+          "UBUNTU_REPO=http://$NEXUS_SERVER:$NEXUS_PORT$NEXUS_UBUNTU_REPO_PATH"
           VALUE
           EOF
       - name: Setup pnpm
