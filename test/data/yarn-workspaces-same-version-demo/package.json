@@ -1,0 +1,14 @@
+{
+  "name": "yarn-workspaces-same-version-demo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "list": "yarn workspaces list --json",
+    "why:dayjs": "yarn why dayjs",
+    "build": "yarn workspaces foreach -pt run build",
+    "start:a": "yarn workspace app-a start",
+    "start:b": "yarn workspace app-b start"
+  }
+}
