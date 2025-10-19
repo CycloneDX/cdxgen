@@ -86,7 +86,7 @@ jobs:
             runner: macos-hosted
 
           - lang: dotnet10
-            distro: debian
+            distro: ubuntu
             runner: macos-hosted
 
           - lang: golang123
