@@ -177,7 +177,7 @@ overrides:
   https-proxy-agent: 7.0.6
   iconv-lite: 0.7.0
   imurmurhash: 0.1.4
-  inflection: 1.13.4
+  inflection: 3.0.2
   inherits: 2.0.4
   ini: 5.0.0
   ip-address: 10.0.1
@@ -1296,9 +1296,9 @@ packages:
     resolution: {integrity: sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==}
     engines: {node: '>=0.8.19'}
 
-  inflection@1.13.4:
-    resolution: {integrity: sha512-6I/HUDeYFfuNCVS3td055BaXBwKYuzw7K3ExVMStBowKo9oOAMJIXIHvdyR3iboTCp1b+1i5DSkIZTcwIktuDw==}
-    engines: {'0': node >= 0.4.0}
+  inflection@3.0.2:
+    resolution: {integrity: sha512-+Bg3+kg+J6JUWn8J6bzFmOWkTQ6L/NHfDRSYU+EVvuKHDxUDHAXgqixHfVlzuBQaPOTac8hn43aPhMNk6rMe3g==}
+    engines: {node: '>=18.0.0'}
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
@@ -2777,7 +2777,7 @@ snapshots:
 
   imurmurhash@0.1.4: {}
 
-  inflection@1.13.4:
+  inflection@3.0.2:
     optional: true
 
   inherits@2.0.4:
@@ -3190,7 +3190,7 @@ snapshots:
       '@types/validator': 13.15.3
       debug: 4.4.1
       dottie: 2.0.6
-      inflection: 1.13.4
+      inflection: 3.0.2
       lodash: 4.17.21
       moment: 2.30.1
       moment-timezone: 0.5.48
