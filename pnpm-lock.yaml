@@ -127,7 +127,6 @@ overrides:
   ecdsa-sig-formatter: 1.0.11
   edn-data: 1.1.2
   ee-first: 1.1.1
-  emoji-regex: 9.2.2
   encodeurl: 1.0.2
   encoding: 0.1.13
   encoding-sniffer: 0.2.1
@@ -155,6 +154,7 @@ overrides:
   fs-minipass: 3.0.3
   function-bind: 1.1.2
   get-caller-file: 2.0.5
+  get-east-asian-width: 1.4.0
   get-intrinsic: 1.3.0
   get-proto: 1.0.1
   get-stream: 9.0.1
@@ -311,6 +311,7 @@ overrides:
   statuses: 2.0.2
   streamx: 2.22.1
   string-width: 8.1.0
+  string-width-cjs: npm:string-width@8.1.0
   strip-ansi: 6.0.1
   strip-json-comments: 3.1.1
   table: 6.9.0
@@ -1108,9 +1109,6 @@ packages:
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  emoji-regex@9.2.2:
-    resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
-
   encodeurl@1.0.2:
     resolution: {integrity: sha512-TPJXq8JqFaVYm2CWmPvnP2Iyo4ZSM7/QKcSmuMLDObfpH5fi7RUGmd/rTDf+rut/saiDiQEeVTNgAmJEdAOx0w==}
     engines: {node: '>= 0.8'}
@@ -1818,10 +1816,6 @@ packages:
   streamx@2.22.1:
     resolution: {integrity: sha512-znKXEBxfatz2GBNK02kRnCXjV+AA4kjZIUxeWSr3UGirZMJfTE9uiwKHobnbgxWyL/JWro8tTq+vOqAK1/qbSA==}
 
-  string-width@4.2.3:
-    resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
-    engines: {node: '>=8'}
-
   string-width@8.1.0:
     resolution: {integrity: sha512-Kxl3KJGb/gxkaUMOjRsQ8IrXiGW75O4E3RPjFIINOVH8AMl2SQ/yWdTzWwF3FevIX9LcMAjJW+GRwAlAbTSXdg==}
     engines: {node: '>=20'}
@@ -2153,7 +2147,7 @@ snapshots:
   '@isaacs/cliui@8.0.2':
     dependencies:
       string-width: 8.1.0
-      string-width-cjs: string-width@4.2.3
+      string-width-cjs: string-width@8.1.0
       strip-ansi: 6.0.1
       strip-ansi-cjs: strip-ansi@6.0.1
       wrap-ansi-cjs: wrap-ansi@7.0.0
@@ -2557,8 +2551,6 @@ snapshots:
 
   ee-first@1.1.1:
     optional: true
-
-  emoji-regex@9.2.2: {}
 
   encodeurl@1.0.2:
     optional: true
@@ -3331,12 +3323,6 @@ snapshots:
     transitivePeerDependencies:
       - react-native-b4a
     optional: true
-
-  string-width@4.2.3:
-    dependencies:
-      emoji-regex: 9.2.2
-      is-fullwidth-code-point: 3.0.0
-      strip-ansi: 6.0.1
 
   string-width@8.1.0:
     dependencies:
