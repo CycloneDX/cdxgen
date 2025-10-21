@@ -163,7 +163,7 @@ overrides:
   global-agent: 3.0.0
   globalthis: 1.0.4
   gopd: 1.2.0
-  got: 14.5.0
+  got: 14.6.0
   graceful-fs: 4.2.11
   has-property-descriptors: 1.0.2
   has-symbols: 1.1.0
@@ -421,8 +421,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       got:
-        specifier: 14.5.0
-        version: 14.5.0
+        specifier: 14.6.0
+        version: 14.6.0
       hosted-git-info:
         specifier: 9.0.2
         version: 9.0.2
@@ -1244,8 +1244,8 @@ packages:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
 
-  got@14.5.0:
-    resolution: {integrity: sha512-rZ8+ZMYz9yeTFmFtOiwf/Trcli8gdqgqAz0kmkEOWcT7C3BFG3Z+dLQu0y8je7RogG7Wp1obnu5GerwCaccftw==}
+  got@14.6.0:
+    resolution: {integrity: sha512-K30JHMsHcwhy+JYet3IxRFw+L9rb77y5LE3OkoAD4qzMR9/g30bWYBfkHYVJL2BBPgfU4lJsRwhy4HUkLPQc3g==}
     engines: {node: '>=20'}
 
   graceful-fs@4.2.11:
@@ -2698,7 +2698,7 @@ snapshots:
 
   gopd@1.2.0: {}
 
-  got@14.5.0:
+  got@14.6.0:
     dependencies:
       '@sindresorhus/is': 7.1.0
       '@szmarczak/http-timer': 5.0.1
