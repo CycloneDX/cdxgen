@@ -344,6 +344,7 @@ overrides:
   which: 5.0.0
   wkx: 0.5.0
   wrap-ansi: 9.0.2
+  wrap-ansi-cjs: npm:wrap-ansi@9.0.2
   wrappy: 1.0.2
   write-file-atomic: 6.0.0
   xml-js: 1.6.11
@@ -1939,9 +1940,9 @@ packages:
   wkx@0.5.0:
     resolution: {integrity: sha512-Xng/d4Ichh8uN4l0FToV/258EjMGU9MGcA0HV2d9B/ZpZB3lqQm7nkOdZdm5GhKtLLhAE7PiVQwN4eN+2YJJUg==}
 
-  wrap-ansi@7.0.0:
-    resolution: {integrity: sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==}
-    engines: {node: '>=10'}
+  wrap-ansi@9.0.2:
+    resolution: {integrity: sha512-42AtmgqjV+X1VpdOfyTGOYRi0/zsoLqtXQckTmqTeybT+BDIbM/Guxo7x3pE2vtpr1ok6xRqM9OpBe+Jyoqyww==}
+    engines: {node: '>=18'}
 
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
@@ -2148,7 +2149,7 @@ snapshots:
       string-width-cjs: string-width@4.2.3
       strip-ansi: 6.0.1
       strip-ansi-cjs: strip-ansi@6.0.1
-      wrap-ansi-cjs: wrap-ansi@7.0.0
+      wrap-ansi-cjs: wrap-ansi@9.0.2
 
   '@isaacs/fs-minipass@4.0.1':
     dependencies:
@@ -3464,7 +3465,7 @@ snapshots:
       '@types/node': 24.5.1
     optional: true
 
-  wrap-ansi@7.0.0:
+  wrap-ansi@9.0.2:
     dependencies:
       ansi-styles: 4.3.0
       string-width: 4.2.3
