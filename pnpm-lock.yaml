@@ -74,7 +74,7 @@ overrides:
   ajv: 8.17.1
   ajv-formats: 3.0.1
   ansi-regex: 5.0.1
-  ansi-styles: 4.3.0
+  ansi-styles: 6.2.3
   astral-regex: 2.0.0
   b4a: 1.7.1
   bare-events: 2.7.0
@@ -353,8 +353,6 @@ overrides:
   yargs: 17.7.2
   yargs-parser: 21.1.1
   yoctocolors: 2.1.2
-
-pnpmfileChecksum: sha256-3x73ZoWY33FrWSK74NDXQ+/nbzFV/9/j0QRmsMWoW24=
 
 importers:
 
@@ -734,7 +732,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -890,9 +887,9 @@ packages:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
     engines: {node: '>=8'}
 
-  ansi-styles@4.3.0:
-    resolution: {integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==}
-    engines: {node: '>=8'}
+  ansi-styles@6.2.3:
+    resolution: {integrity: sha512-4Dj6M28JB+oAH8kFkTLUo+a2jwOFkuqb3yucU0CANcRRUbxS0cP0nZYCGjcc3BNXwRIsUVmDGgzawme7zvJHvg==}
+    engines: {node: '>=12'}
 
   astral-regex@2.0.0:
     resolution: {integrity: sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==}
@@ -2148,6 +2145,7 @@ snapshots:
       string-width-cjs: string-width@4.2.3
       strip-ansi: 6.0.1
       strip-ansi-cjs: strip-ansi@6.0.1
+      wrap-ansi: 7.0.0
       wrap-ansi-cjs: wrap-ansi@7.0.0
 
   '@isaacs/fs-minipass@4.0.1':
@@ -2277,7 +2275,7 @@ snapshots:
 
   ansi-regex@5.0.1: {}
 
-  ansi-styles@4.3.0: {}
+  ansi-styles@6.2.3: {}
 
   astral-regex@2.0.0: {}
 
@@ -2426,6 +2424,7 @@ snapshots:
     dependencies:
       string-width: 4.2.3
       strip-ansi: 6.0.1
+      wrap-ansi: 7.0.0
 
   cmd-shim@7.0.0: {}
 
@@ -3267,7 +3266,7 @@ snapshots:
 
   slice-ansi@4.0.0:
     dependencies:
-      ansi-styles: 4.3.0
+      ansi-styles: 6.2.3
       astral-regex: 2.0.0
       is-fullwidth-code-point: 3.0.0
 
@@ -3466,7 +3465,7 @@ snapshots:
 
   wrap-ansi@7.0.0:
     dependencies:
-      ansi-styles: 4.3.0
+      ansi-styles: 6.2.3
       string-width: 4.2.3
       strip-ansi: 6.0.1
 
