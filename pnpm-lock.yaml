@@ -286,7 +286,7 @@ overrides:
   semver-compare: 1.0.0
   sequelize: 6.37.7
   sequelize-pool: 7.1.0
-  serialize-error: 7.0.1
+  serialize-error: 12.0.0
   setprototypeof: 1.2.0
   shebang-command: 2.0.0
   shebang-regex: 3.0.0
@@ -1731,9 +1731,9 @@ packages:
       tedious:
         optional: true
 
-  serialize-error@7.0.1:
-    resolution: {integrity: sha512-8I8TjW5KMOKsZQTvoxjuSIa7foAwPWGOts+6o7sgjz41/qMD9VQHEDxi6PBvK2l0MXUmqZyNpUK+T2tQaaElvw==}
-    engines: {node: '>=10'}
+  serialize-error@12.0.0:
+    resolution: {integrity: sha512-ZYkZLAvKTKQXWuh5XpBw7CdbSzagarX39WyZ2H07CDLC5/KfsRGlIXV8d4+tfqX1M7916mRqR1QfNHSij+c9Pw==}
+    engines: {node: '>=18'}
 
   setprototypeof@1.2.0:
     resolution: {integrity: sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==}
@@ -2689,7 +2689,7 @@ snapshots:
       matcher: 6.0.0
       roarr: 2.15.4
       semver: 7.7.3
-      serialize-error: 7.0.1
+      serialize-error: 12.0.0
 
   globalthis@1.0.4:
     dependencies:
@@ -3208,7 +3208,7 @@ snapshots:
       - supports-color
     optional: true
 
-  serialize-error@7.0.1:
+  serialize-error@12.0.0:
     dependencies:
       type-fest: 4.41.0
 
