@@ -517,8 +517,8 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.6",
     "poku": "3.0.2",
-    "quibble": "^0.9.2",
-    "sinon": "^21.0.0",
+    "quibble": "0.9.2",
+    "sinon": "21.0.0",
     "typescript": "5.9.3"
   },
   "optionalDependencies": {
@@ -612,6 +612,9 @@
       "@npmcli/redact": "3.2.2",
       "@sec-ant/readable-stream": "0.4.1",
       "@sindresorhus/is": "7.1.0",
+      "@sinonjs/commons": "3.0.1",
+      "@sinonjs/fake-timers": "13.0.5",
+      "@sinonjs/samsam": "8.0.3",
       "@szmarczak/http-timer": "5.0.1",
       "@types/debug": "4.1.12",
       "@types/http-cache-semantics": "4.0.4",
@@ -846,6 +849,7 @@
       "signal-exit": "4.1.0",
       "simple-concat": "1.0.1",
       "simple-get": "4.0.1",
+      "sinon": "21.0.0",
       "slice-ansi": "4.0.0",
       "smart-buffer": "4.2.0",
       "socks": "2.8.7",
