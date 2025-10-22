@@ -1,7 +1,7 @@
 const blockedPackages = [
   "supports-color",
   "is-arrayish",
-//  "color-convert",
+  //  "color-convert",
   "color-name",
   "color-string",
   "supports-hyperlinks",
