@@ -355,6 +355,8 @@ overrides:
   yargs-parser: 21.1.1
   yoctocolors: 2.1.2
 
+pnpmfileChecksum: sha256-lb2v67uPv3jX2uLpC3oBPaCOkPFoaMecXVafszYGgyI=
+
 importers:
 
   .:
@@ -733,6 +735,7 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
+    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
