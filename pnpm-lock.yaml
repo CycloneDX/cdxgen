@@ -99,6 +99,7 @@ overrides:
   chownr: 3.0.0
   cliui: 8.0.1
   cmd-shim: 7.0.0
+  color-convert: 2.0.1
   common-ancestor-path: 1.0.1
   compressible: 2.0.18
   compression: 1.8.1
@@ -353,7 +354,7 @@ overrides:
   yargs-parser: 21.1.1
   yoctocolors: 2.1.2
 
-pnpmfileChecksum: sha256-7uyYsNWKf303AMIVDpLC+7h7hbD40T6Hsb7vU9dxIZA=
+pnpmfileChecksum: sha256-/JIOW0MHxyMn+9scilI56YOz/BGiZYjc3tHMCQl25Vs=
 
 importers:
 
