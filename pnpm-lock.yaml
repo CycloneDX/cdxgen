@@ -67,7 +67,7 @@ overrides:
   '@types/debug': 4.1.12
   '@types/http-cache-semantics': 4.0.4
   '@types/ms': 2.1.0
-  '@types/node': 24.5.1
+  '@types/node': 24.7.2
   '@types/validator': 13.15.3
   abbrev: 3.0.1
   agent-base: 7.1.4
@@ -354,8 +354,6 @@ overrides:
   yargs: 17.7.2
   yargs-parser: 21.1.1
   yoctocolors: 2.1.2
-
-pnpmfileChecksum: sha256-lb2v67uPv3jX2uLpC3oBPaCOkPFoaMecXVafszYGgyI=
 
 importers:
 
@@ -735,7 +733,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -862,8 +859,8 @@ packages:
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
-  '@types/node@24.5.1':
-    resolution: {integrity: sha512-/SQdmUP2xa+1rdx7VwB9yPq8PaKej8TD5cQ+XfKDPWWC+VDJU4rvVVagXqKUzhKjtFoNA8rXDJAkCxQPAe00+Q==}
+  '@types/node@24.7.2':
+    resolution: {integrity: sha512-/NbVmcGTP+lj5oa4yiYxxeBjRivKQ5Ns1eSZeB99ExsEQ6rX5XYU1Zy/gGxY/ilqtD4Etx9mKyrPxZRetiahhA==}
 
   '@types/validator@13.15.3':
     resolution: {integrity: sha512-7bcUmDyS6PN3EuD9SlGGOxM77F8WLVsrwkxyWxKnxzmXoequ6c7741QBrANq6htVRGOITJ7z72mTP6Z4XyuG+Q==}
@@ -2252,7 +2249,7 @@ snapshots:
   '@types/ms@2.1.0':
     optional: true
 
-  '@types/node@24.5.1':
+  '@types/node@24.7.2':
     dependencies:
       undici-types: 7.12.0
     optional: true
@@ -3464,7 +3461,7 @@ snapshots:
 
   wkx@0.5.0:
     dependencies:
-      '@types/node': 24.5.1
+      '@types/node': 24.7.2
     optional: true
 
   wrap-ansi@9.0.2:
