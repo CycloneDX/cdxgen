@@ -78,7 +78,7 @@ overrides:
   astral-regex: 2.0.0
   b4a: 1.7.3
   bare-events: 2.7.0
-  bare-fs: 4.4.4
+  bare-fs: 4.4.11
   bare-os: 3.6.2
   bare-path: 3.0.0
   bare-stream: 2.7.0
@@ -908,8 +908,8 @@ packages:
   bare-events@2.7.0:
     resolution: {integrity: sha512-b3N5eTW1g7vXkw+0CXh/HazGTcO5KYuu/RCNaJbDMPI6LHDi+7qe8EmxKUVe1sUbY2KZOVZFyj62x0OEz9qyAA==}
 
-  bare-fs@4.4.4:
-    resolution: {integrity: sha512-Q8yxM1eLhJfuM7KXVP3zjhBvtMJCYRByoTT+wHXjpdMELv0xICFJX+1w4c7csa+WZEOsq4ItJ4RGwvzid6m/dw==}
+  bare-fs@4.4.11:
+    resolution: {integrity: sha512-Bejmm9zRMvMTRoHS+2adgmXw1ANZnCNx+B5dgZpGwlP1E3x6Yuxea8RToddHUbWtVV0iUMWqsgZr8+jcgUI2SA==}
     engines: {bare: '>=1.16.0'}
     peerDependencies:
       bare-buffer: '*'
@@ -2279,7 +2279,7 @@ snapshots:
   bare-events@2.7.0:
     optional: true
 
-  bare-fs@4.4.4:
+  bare-fs@4.4.11:
     dependencies:
       bare-events: 2.7.0
       bare-path: 3.0.0
@@ -3332,7 +3332,7 @@ snapshots:
       pump: 3.0.3
       tar-stream: 3.1.7
     optionalDependencies:
-      bare-fs: 4.4.4
+      bare-fs: 4.4.11
       bare-path: 3.0.0
     transitivePeerDependencies:
       - bare-buffer
