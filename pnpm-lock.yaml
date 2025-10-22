@@ -353,7 +353,7 @@ overrides:
   yargs-parser: 21.1.1
   yoctocolors: 2.1.2
 
-pnpmfileChecksum: sha256-3x73ZoWY33FrWSK74NDXQ+/nbzFV/9/j0QRmsMWoW24=
+pnpmfileChecksum: sha256-7uyYsNWKf303AMIVDpLC+7h7hbD40T6Hsb7vU9dxIZA=
 
 importers:
 
@@ -998,6 +998,10 @@ packages:
   cmd-shim@7.0.0:
     resolution: {integrity: sha512-rtpaCbr164TPPh+zFdkWpCyZuKkjpAzODfaZCf/SVJZzJN+4bHQb/LP3Jzq5/+84um3XXY8r548XiWKSborwVw==}
     engines: {node: ^18.17.0 || >=20.5.0}
+
+  color-convert@2.0.1:
+    resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
+    engines: {node: '>=7.0.0'}
 
   common-ancestor-path@1.0.1:
     resolution: {integrity: sha512-L3sHRo1pXXEqX8VU28kfgUY+YGsk09hPqZiZmLacNib6XNTCM8ubYeT7ryXQw8asB1sKgcU5lkB7ONug08aB8w==}
@@ -2269,7 +2273,9 @@ snapshots:
 
   ansi-regex@5.0.1: {}
 
-  ansi-styles@4.3.0: {}
+  ansi-styles@4.3.0:
+    dependencies:
+      color-convert: 2.0.1
 
   astral-regex@2.0.0: {}
 
@@ -2415,6 +2421,8 @@ snapshots:
       strip-ansi: 6.0.1
 
   cmd-shim@7.0.0: {}
+
+  color-convert@2.0.1: {}
 
   common-ancestor-path@1.0.1: {}
 
