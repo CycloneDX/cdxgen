@@ -297,7 +297,7 @@ overrides:
   signal-exit: 4.1.0
   simple-concat: 1.0.1
   simple-get: 4.0.1
-  slice-ansi: 4.0.0
+  slice-ansi: 7.1.2
   smart-buffer: 4.2.0
   socks: 2.8.7
   socks-proxy-agent: 8.0.5
@@ -354,8 +354,6 @@ overrides:
   yargs: 17.7.2
   yargs-parser: 21.1.1
   yoctocolors: 2.1.2
-
-pnpmfileChecksum: sha256-lb2v67uPv3jX2uLpC3oBPaCOkPFoaMecXVafszYGgyI=
 
 importers:
 
@@ -735,7 +733,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -893,10 +890,6 @@ packages:
 
   ansi-styles@4.3.0:
     resolution: {integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==}
-    engines: {node: '>=8'}
-
-  astral-regex@2.0.0:
-    resolution: {integrity: sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==}
     engines: {node: '>=8'}
 
   b4a@1.7.3:
@@ -1774,9 +1767,9 @@ packages:
   simple-get@4.0.1:
     resolution: {integrity: sha512-brv7p5WgH0jmQJr1ZDDfKDOSeWWg+OVypG99A/5vYGPqJ6pxiaHLy8nxtFjBA7oMa01ebA9gfh1uMCFqOuXxvA==}
 
-  slice-ansi@4.0.0:
-    resolution: {integrity: sha512-qMCMfhY040cVHT43K9BFygqYbUPFZKHOg7K73mtTWJRb8pyP3fzf4Ixd5SzdEJQ6MRUg/WBnOLxghZtKKurENQ==}
-    engines: {node: '>=10'}
+  slice-ansi@7.1.2:
+    resolution: {integrity: sha512-iOBWFgUX7caIZiuutICxVgX1SdxwAVFFKwt1EvMYYec/NWO5meOJ6K5uQxhrYBdQJne4KxiqZc+KptFOWFSI9w==}
+    engines: {node: '>=18'}
 
   smart-buffer@4.2.0:
     resolution: {integrity: sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==}
@@ -2282,8 +2275,6 @@ snapshots:
   ansi-styles@4.3.0:
     dependencies:
       color-convert: 2.0.1
-
-  astral-regex@2.0.0: {}
 
   b4a@1.7.3:
     optional: true
@@ -3268,10 +3259,9 @@ snapshots:
       simple-concat: 1.0.1
     optional: true
 
-  slice-ansi@4.0.0:
+  slice-ansi@7.1.2:
     dependencies:
       ansi-styles: 4.3.0
-      astral-regex: 2.0.0
       is-fullwidth-code-point: 3.0.0
 
   smart-buffer@4.2.0:
@@ -3342,7 +3332,7 @@ snapshots:
     dependencies:
       ajv: 8.17.1
       lodash.truncate: 4.4.2
-      slice-ansi: 4.0.0
+      slice-ansi: 7.1.2
       string-width: 4.2.3
       strip-ansi: 6.0.1
 
