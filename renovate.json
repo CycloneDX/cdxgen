@@ -4,7 +4,6 @@
     "config:recommended",
     ":separateMultipleMajorReleases",
     ":enableVulnerabilityAlerts",
-    ":rebaseStalePrs",
     "customManagers:biomeVersions",
     "customManagers:dockerfileVersions",
     "docker:pinDigests",
@@ -72,9 +71,9 @@
       "enabled": false
     },
     {
-      "description": "Wait 14 days before updating Node.js versions",
+      "description": "Wait 7 days before updating Node.js versions",
       "matchPackageNames": ["/(?:^|/)node$/"],
-      "minimumReleaseAge": "14 days"
+      "minimumReleaseAge": "7 days"
     }
   ],
   "customManagers": [

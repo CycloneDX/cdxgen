@@ -165,10 +165,10 @@ export function yarnLockToIdentMap(lockData: string): {};
  * @param {Object} parentComponent parent component
  * @param {Array[String]} workspacePackages Workspace packages
  * @param {Object} workspaceSrcFiles Workspace package.json files
- * @param {Object} workspaceDirectDeps Direct dependencies of each workspace
+ * @param {Object} _workspaceDirectDeps Direct dependencies of each workspace
  * @param {Object} depsWorkspaceRefs Workspace references for each dependency
  */
-export function parseYarnLock(yarnLockFile: string, parentComponent?: any, workspacePackages?: any, workspaceSrcFiles?: any, _workspaceDirectDeps?: {}, depsWorkspaceRefs?: any): Promise<{
+export function parseYarnLock(yarnLockFile: string, parentComponent?: any, workspacePackages?: any, workspaceSrcFiles?: any, _workspaceDirectDeps?: any, depsWorkspaceRefs?: any): Promise<{
     pkgList: any[];
     dependenciesList: any[];
 }>;
@@ -186,19 +186,13 @@ export function parseNodeShrinkwrap(swFile: string): Promise<any[]>;
  */
 export function parsePnpmWorkspace(workspaceFile: string): object;
 /**
- * Parse yarn workspace from package.json
- *
- * @param {string} packageJsonFile package.json file path
- * @returns {object} Object containing packages
- */
-/**
  * Helper function to create a properly encoded workspace PURL
  *
  * @param {string} packageName - Package name (e.g., "@babel/core")
  * @param {string} version - Package version
  * @returns {string} Encoded PURL string
  */
-export function createWorkspacePurl(packageName: string, version: string): string;
+export function createNpmWorkspacePurl(packageName: string, version: string): string;
 export function parseYarnWorkspace(packageJsonFile: any): {
     packages?: undefined;
 } | {

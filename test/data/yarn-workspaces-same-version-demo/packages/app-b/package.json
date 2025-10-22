@@ -1,0 +1,15 @@
+{
+  "name": "app-b",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "build": "echo 'building app-b'"
+  },
+  "dependencies": {
+    "dayjs": "1.11.10",
+    "axios": "1.7.8",
+    "lodash": "4.17.21"
+  }
+}

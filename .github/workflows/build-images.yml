@@ -86,7 +86,7 @@ jobs:
             runner: macos-hosted
 
           - lang: dotnet10
-            distro: debian
+            distro: ubuntu
             runner: macos-hosted
 
           - lang: golang123
@@ -114,6 +114,7 @@ jobs:
             distro: temurin
 
           - lang: java11
+            runner: macos-hosted
             base-image:
               additional-image: java11-slim
             cdxgen-image:

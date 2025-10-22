@@ -12,9 +12,9 @@ ARG MAVEN_VERSION=3.9.11
 # renovate: datasource=gradle-version depName=gradle
 ARG GRADLE_VERSION=8.14.3
 # renovate: datasource=golang-version depName=golang
-ARG GO_VERSION=1.25.2
+ARG GO_VERSION=1.25.3
 # renovate: datasource=node-version depName=node
-ARG NODE_VERSION=24.9.0
+ARG NODE_VERSION=24.10.0
 ARG RUBY_VERSION=3.4.5
 ARG JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
 ARG SCALA_VERSION=3.7.2

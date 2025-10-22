@@ -51,6 +51,9 @@ jobs:
         arch: [ amd64, arm64]
         libc: [ gnu, musl ]
         exclude:
+          # No more intel on macos
+          - os: darwin
+            arch: amd64
           # musl can only be built on linux
           - os: darwin
             libc: musl
@@ -58,9 +61,6 @@ jobs:
             libc: musl
         include:
           # Set all the runners
-          - os: darwin
-            arch: amd64
-            runner: macos-14-large
           - os: darwin
             arch: arm64
             runner: macos-14
@@ -166,7 +166,7 @@ jobs:
         uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
       - name: Use Node.js
         if: ${{ matrix.os != 'linux' }}
-        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
         with:
           node-version-file: .nvmrc
       - name: Install composer
