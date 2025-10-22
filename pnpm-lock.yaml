@@ -9,7 +9,7 @@ overrides:
   '@appthreat/atom-common': 1.0.11
   '@appthreat/atom-parsetools': 1.0.11
   '@appthreat/cdx-proto': 1.1.4
-  '@appthreat/sqlite3': 6.0.9
+  '@appthreat/sqlite3': 7.0.1
   '@babel/code-frame': 7.27.1
   '@babel/generator': 7.28.3
   '@babel/helper-globals': 7.28.0
@@ -84,7 +84,6 @@ overrides:
   bare-stream: 2.7.0
   bare-url: 2.2.2
   bin-links: 5.0.0
-  bindings: 1.5.0
   body-parser: 2.2.0
   boolbase: 1.0.0
   boolean: 3.2.0
@@ -148,7 +147,6 @@ overrides:
   fast-fifo: 1.3.2
   fast-uri: 3.1.0
   fdir: 6.5.0
-  file-uri-to-path: 1.0.0
   finalhandler: 1.1.2
   foreground-child: 3.3.1
   form-data-encoder: 4.1.0
@@ -306,7 +304,7 @@ overrides:
   spdx-expression-parse: 3.0.1
   spdx-license-ids: 3.0.22
   sprintf-js: 1.1.3
-  sqlite3: npm:@appthreat/sqlite3@6.0.9
+  sqlite3: npm:@appthreat/sqlite3@7.0.1
   ssri: 12.0.0
   statuses: 2.0.2
   streamx: 2.22.1
@@ -578,10 +576,10 @@ importers:
         version: 2.1.0
       sequelize:
         specifier: 6.37.7
-        version: 6.37.7(@appthreat/sqlite3@6.0.9)
+        version: 6.37.7(@appthreat/sqlite3@7.0.1)
       sqlite3:
-        specifier: npm:@appthreat/sqlite3@6.0.9
-        version: '@appthreat/sqlite3@6.0.9'
+        specifier: npm:@appthreat/sqlite3@7.0.1
+        version: '@appthreat/sqlite3@7.0.1'
 
 packages:
 
@@ -602,8 +600,8 @@ packages:
     resolution: {integrity: sha512-cAC1EpAesqMOfaOl1Q37WN38PV+nbc3MQmab0p3cVGsrL3KWP3dUbNWRdzN4sVL/gVOYEouwvR/PXvDF9WCeVA==}
     engines: {node: '>=20'}
 
-  '@appthreat/sqlite3@6.0.9':
-    resolution: {integrity: sha512-Aim5tAIusHm2zZVhqedZwl1MGiSMaWhJ9Ev9ctBuv82fJv/gmE0FhHY/tv/ikoMTNGWlaClAgJayfPLJxvkQ7Q==}
+  '@appthreat/sqlite3@7.0.1':
+    resolution: {integrity: sha512-6g0unju2BJMfKkGjoIXFyxWGeW4QrGVwzK0LL3jAzqTfJ3PrYeiz5PmwBdrdlBjE2IqMehuKrKgRShwQ5nEP4g==}
     engines: {node: '>=20'}
 
   '@babel/code-frame@7.27.1':
@@ -944,9 +942,6 @@ packages:
     resolution: {integrity: sha512-sdleLVfCjBtgO5cNjA2HVRvWBJAHs4zwenaCPMNJAJU0yNxpzj80IpjOIimkpkr+mhlA+how5poQtt53PygbHA==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
-  bindings@1.5.0:
-    resolution: {integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==}
-
   body-parser@2.2.0:
     resolution: {integrity: sha512-02qvAaxv8tp7fBa/mw1ga98OGm+eCbqzJOKoRt70sLmfEEi+jyBYVTDGfCL/k06/4EMk/z01gCe7HoCH/f2LTg==}
     engines: {node: '>=18'}
@@ -1186,9 +1181,6 @@ packages:
     peerDependenciesMeta:
       picomatch:
         optional: true
-
-  file-uri-to-path@1.0.0:
-    resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
 
   finalhandler@1.1.2:
     resolution: {integrity: sha512-aAWcW57uxVNrQZqFXjITpW3sIUQmHGG3qSb9mUah9MgMC4NeWhNOlNjXEYq3HjRAvL6arUviZGGJsBg6z0zsWA==}
@@ -2004,9 +1996,8 @@ snapshots:
       '@bufbuild/protobuf': 2.9.0
     optional: true
 
-  '@appthreat/sqlite3@6.0.9':
+  '@appthreat/sqlite3@7.0.1':
     dependencies:
-      bindings: 1.5.0
       node-addon-api: 8.5.0
       prebuild-install: 7.1.3
     optionalDependencies:
@@ -2329,11 +2320,6 @@ snapshots:
       read-cmd-shim: 5.0.0
       write-file-atomic: 6.0.0
 
-  bindings@1.5.0:
-    dependencies:
-      file-uri-to-path: 1.0.0
-    optional: true
-
   body-parser@2.2.0:
     dependencies:
       bytes: 3.1.2
@@ -2611,9 +2597,6 @@ snapshots:
   fdir@6.5.0(picomatch@4.0.3):
     optionalDependencies:
       picomatch: 4.0.3
-    optional: true
-
-  file-uri-to-path@1.0.0:
     optional: true
 
   finalhandler@1.1.2:
@@ -3185,7 +3168,7 @@ snapshots:
   sequelize-pool@7.1.0:
     optional: true
 
-  sequelize@6.37.7(@appthreat/sqlite3@6.0.9):
+  sequelize@6.37.7(@appthreat/sqlite3@7.0.1):
     dependencies:
       '@types/debug': 4.1.12
       '@types/validator': 13.15.3
@@ -3204,7 +3187,7 @@ snapshots:
       validator: 13.15.15
       wkx: 0.5.0
     optionalDependencies:
-      sqlite3: '@appthreat/sqlite3@6.0.9'
+      sqlite3: '@appthreat/sqlite3@7.0.1'
     transitivePeerDependencies:
       - supports-color
     optional: true
