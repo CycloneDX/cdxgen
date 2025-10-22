@@ -1,13 +1,13 @@
-const blockedPackages = [
-  "supports-color",
-  "is-arrayish",
-  //  "color-convert",
-  "color-name",
-  "color-string",
-  "supports-hyperlinks",
-  "chalk",
-  "wrap-ansi",
-];
+//const blockedPackages = [
+//  "supports-color",
+//  "is-arrayish",
+//  "color-convert",
+//  "color-name",
+//  "color-string",
+//  "supports-hyperlinks",
+//  "chalk",
+//  "wrap-ansi",
+//];
 
 function readPackage(pkg) {
   // pnpm fetched metadata doesn't include libc. So we patch it based on the name to reduce duplicate binaries
@@ -36,17 +36,17 @@ function readPackage(pkg) {
     }
   }
   // Remove blocked packages from dependencies
-  blockedPackages.forEach((blocked) => {
-    if (pkg.dependencies?.[blocked]) {
-      delete pkg.dependencies[blocked];
-    }
-    if (pkg.devDependencies?.[blocked]) {
-      delete pkg.devDependencies[blocked];
-    }
-    if (pkg.optionalDependencies?.[blocked]) {
-      delete pkg.optionalDependencies[blocked];
-    }
-  });
+  //  blockedPackages.forEach((blocked) => {
+  //    if (pkg.dependencies?.[blocked]) {
+  //      delete pkg.dependencies[blocked];
+  //    }
+  //    if (pkg.devDependencies?.[blocked]) {
+  //      delete pkg.devDependencies[blocked];
+  //    }
+  //    if (pkg.optionalDependencies?.[blocked]) {
+  //      delete pkg.optionalDependencies[blocked];
+  //    }
+  //  });
   return pkg;
 }
 
