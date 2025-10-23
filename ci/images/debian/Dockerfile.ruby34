@@ -1,5 +1,5 @@
 # Base-image
-FROM ruby:3.4.7-slim@sha256:0ec567ddfd1da76fd6eb37606625da8ae66e18ff4c0bb0a4156bbca7639c710d AS base
+FROM ruby:3.4.7-slim@sha256:70670212b86f1ce42e689b8859e84c5b373622544ac444ce94b8973cfc2310cf AS base
 
 ARG DEBIAN_REPO
 ARG GITHUB_URL=https://github.com
