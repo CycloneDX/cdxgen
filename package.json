@@ -194,7 +194,7 @@
     "promise-all-reject-late": "1.0.1",
     "promise-call-limit": "3.0.2",
     "properties-reader": "2.3.0",
-	"quibble": "0.9.2",
+    "quibble": "0.9.2",
     "read-package-json-fast": "4.0.0",
     "responselike": "4.0.2",
     "semver": "7.7.3",
