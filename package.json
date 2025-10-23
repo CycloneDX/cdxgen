@@ -423,7 +423,7 @@
     "runtime": [
       {
         "name": "node",
-        "version": "24.10.0",
+        "version": "25.0.0",
         "onFail": "ignore"
       },
       {
