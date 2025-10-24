@@ -1,0 +1,31 @@
+name: Build image(s) on PR
+
+on:
+  pull_request:
+    paths:
+      - ci/images/Dockerfile.*
+
+permissions: {}
+
+jobs:
+  image:
+    if: github.repository == 'CycloneDX/cdxgen'
+    strategy:
+      fail-fast: false
+      matrix:
+        imagefile: ${{ github.event.head_commit.modified }}
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+        include:
+          - runner: ubuntu-24.04
+            platform: linux/amd64
+          - runner: ubuntu-24.04-arm
+            platform: linux/arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Build image
+        if: ${{ contains(matrix.imagefile, 'Dockerfile') }}
+        uses: ./.github/actions/build-docker-image
+        with:
+          dockerfile: ${{ matrix.imagefile }}
+          platforms: ${{ matrix.platform }}
+          target: cdxgen

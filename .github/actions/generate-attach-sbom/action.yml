@@ -30,7 +30,7 @@ runs:
       with:
         dockerfile: ${{ inputs.dockerfile }}
         docker-args: ${{ inputs.docker-args }}
-        output: docker,dest=${{ runner.temp }}/image.tar
+        output: type=docker,dest=${{ runner.temp }}/image.tar
         platforms: ${{ inputs.platform }}
         tags: ${{ inputs.tag }}
         target: ${{ inputs.target }}
