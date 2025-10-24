@@ -55,7 +55,7 @@ runs:
         dockerfile: ${{ inputs.dockerfile }}
         docker-args: ${{ inputs.docker-args }}
         labels: ${{ steps.metadata.outputs.labels }}
-        output: registry
+        output: type=registry
         platforms: linux/amd64${{ inputs.build-arm == 'true' && ',linux/arm64' || '' }}
         tags: ${{ inputs.tags || steps.metadata.outputs.tags }}
         target: ${{ inputs.target }}

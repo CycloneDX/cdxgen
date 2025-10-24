@@ -13,13 +13,11 @@ inputs:
     description: Labels to add to the image
   output:
     description: Controls what should be done with the image(s) after building
-    required: true
   platforms:
     description: The platforms for which to build the image
     required: true
   tags:
     description: All tags for the image
-    required: true
   target:
     description: Which stage in the Dockerfile to build
     required: true
@@ -35,8 +33,7 @@ runs:
         context: .
         file: ${{ inputs.dockerfile }}
         labels: ${{ inputs.labels }}
-        outputs: type=${{ inputs.output }}
+        outputs: ${{ inputs.output }}
         platforms: ${{ inputs.platforms }}
-        push: ${{ inputs.action == 'push' }}
         tags: ${{ inputs.tags }}
         target: ${{ inputs.target }}
