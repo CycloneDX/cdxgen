@@ -58,9 +58,20 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
+      - name: Setup tool versions
+        id: versions
+        run: |
+          cd .versions
+          cat >> "$GITHUB_OUTPUT" << EOF
+          docker-args<<VALUE
+          $(awk 'FNR==2 {print "\""toupper(FILENAME)"="$1"\""}' node_*)
+          VALUE
+          EOF
       - name: Build image
         uses: ./.github/actions/build-docker-image
         with:
           dockerfile: ${{ matrix.imagefile }}
+          docker-args: |
+            ${{ steps.versions.outputs.docker-args }}
           platforms: ${{ matrix.platform }}
           target: cdxgen
