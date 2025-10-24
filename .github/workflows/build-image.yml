@@ -1,10 +1,7 @@
-name: Build image(s) on PR/push
+name: Build image(s) on PR
 
 on:
   pull_request:
-    paths:
-      - ci/images/**/Dockerfile.*
-  push:
     paths:
       - ci/images/**/Dockerfile.*
 
