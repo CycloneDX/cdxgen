@@ -1,29 +1,60 @@
 name: Build image(s) on PR
 
 on:
-  pull_request:
+  push:
     paths:
-      - ci/images/Dockerfile.*
+      - ci/images/**/Dockerfile.*
 
 permissions: {}
 
 jobs:
+  filter:
+    if: github.repository == 'CycloneDX/cdxgen'
+    runs-on: ubuntu-24.04
+    outputs:
+      imagefiles: ${{ steps.changed.outputs.files }}
+    steps:
+      - name: Get changed files
+        id: changed
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const response = await github.rest.repos.compareCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              base: context.payload.before,
+              head: context.payload.after
+            });
+            const files = response.data.files
+              .map(f => f.filename)
+              .filter(f => f.includes("Dockerfile"));
+            core.setOutput("files", JSON.stringify(files));
   image:
     if: github.repository == 'CycloneDX/cdxgen'
+    needs: filter
     strategy:
       fail-fast: false
       matrix:
-        imagefile: ${{ github.event.head_commit.modified }}
-        runner: [ubuntu-24.04, ubuntu-24.04-arm]
-        include:
-          - runner: ubuntu-24.04
-            platform: linux/amd64
-          - runner: ubuntu-24.04-arm
-            platform: linux/arm64
-    runs-on: ${{ matrix.runner }}
+        imagefile: ${{ fromJson(needs.filter.outputs.imagefiles) }}
+        platform: [ amd64, arm64 ]
+        # Some images don't work on linux/arm64
+        exclude:
+          - imagefile: ci/images/Dockerfile.dotnet7
+            platform: arm64
+          - imagefile: ci/images/Dockerfile.dotnet8
+            platform: arm64
+          - imagefile: ci/images/Dockerfile.dotnet9
+            platform: arm64
+          - imagefile: ci/images/Dockerfile.ruby25
+            platform: arm64
+          - imagefile: ci/images/debian/Dockerfile.ruby26
+            platform: arm64
+    runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
     steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
       - name: Build image
-        if: ${{ contains(matrix.imagefile, 'Dockerfile') }}
         uses: ./.github/actions/build-docker-image
         with:
           dockerfile: ${{ matrix.imagefile }}
