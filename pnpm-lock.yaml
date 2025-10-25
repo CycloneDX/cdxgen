@@ -53,7 +53,7 @@ overrides:
   got: 14.6.0
   hosted-git-info: 9.0.2
   iconv-lite: 0.7.0
-  ini: 5.0.0
+  ini: 6.0.0
   is-stream: 4.0.1
   isexe: 3.1.1
   json-parse-even-better-errors: 4.0.0
@@ -1075,9 +1075,9 @@ packages:
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
 
-  ini@5.0.0:
-    resolution: {integrity: sha512-+N0ngpO3e7cRUWOJAS7qw0IZIVc6XPrW4MlFBdD066F2L4k1L6ker3hLqSq7iXxU5tgS4WGkIUElWn5vogAEnw==}
-    engines: {node: ^18.17.0 || >=20.5.0}
+  ini@6.0.0:
+    resolution: {integrity: sha512-IBTdIkzZNOpqm7q3dRqJvMaldXjDHWkEDfrwGEQTs5eaQMWV+djAhR+wahyNNMAa+qpbDUhBMVt4ZKNwpPm7xQ==}
+    engines: {node: ^20.17.0 || >=22.9.0}
 
   ip-address@10.0.1:
     resolution: {integrity: sha512-NWv9YLW4PoW2B7xtzaS3NCot75m6nK7Icdv0o3lfMceJVRfSoQwqD4wEH5rLwoKJwUiZ/rfpiVBhnaF0FK4HoA==}
@@ -1978,7 +1978,7 @@ snapshots:
   '@npmcli/git@7.0.0':
     dependencies:
       '@npmcli/promise-spawn': 8.0.3
-      ini: 5.0.0
+      ini: 6.0.0
       lru-cache: 11.2.2
       npm-pick-manifest: 11.0.1
       proc-log: 5.0.0
@@ -2579,7 +2579,7 @@ snapshots:
   inherits@2.0.4:
     optional: true
 
-  ini@5.0.0: {}
+  ini@6.0.0: {}
 
   ip-address@10.0.1:
     optional: true
@@ -2938,7 +2938,7 @@ snapshots:
   rc@1.2.8:
     dependencies:
       deep-extend: 0.6.0
-      ini: 5.0.0
+      ini: 6.0.0
       minimist: 1.2.8
       strip-json-comments: 3.1.1
     optional: true
