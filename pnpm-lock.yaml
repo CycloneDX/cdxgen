@@ -28,7 +28,7 @@ overrides:
   '@npmcli/fs': 4.0.0
   '@npmcli/installed-package-contents': 3.0.0
   '@npmcli/map-workspaces': 5.0.0
-  '@npmcli/name-from-folder': 3.0.0
+  '@npmcli/name-from-folder': 4.0.0
   '@npmcli/package-json': 7.0.1
   '@npmcli/query': 4.0.1
   '@npmcli/redact': 3.2.2
@@ -140,8 +140,8 @@ importers:
         specifier: 5.0.0
         version: 5.0.0
       '@npmcli/name-from-folder':
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 4.0.0
+        version: 4.0.0
       '@npmcli/package-json':
         specifier: 7.0.1
         version: 7.0.1
@@ -579,9 +579,9 @@ packages:
     resolution: {integrity: sha512-+YJN6+BIQEC5QL4EqffJ2I1S9ySspwn7GP7uQINtZhf3uy7P0KnnIg+Ab5WeSUTZYpg+jn3GSfMme2FutB7qEQ==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  '@npmcli/name-from-folder@3.0.0':
-    resolution: {integrity: sha512-61cDL8LUc9y80fXn+lir+iVt8IS0xHqEKwPu/5jCjxQTVoSCmkXvw4vbMrzAMtmghz3/AkiBjhHkDKUH+kf7kA==}
-    engines: {node: ^18.17.0 || >=20.5.0}
+  '@npmcli/name-from-folder@4.0.0':
+    resolution: {integrity: sha512-qfrhVlOSqmKM8i6rkNdZzABj8MKEITGFAY+4teqBziksCQAOLutiAxM1wY2BKEd8KjUSpWmWCYxvXr0y4VTlPg==}
+    engines: {node: ^20.17.0 || >=22.9.0}
 
   '@npmcli/package-json@7.0.1':
     resolution: {integrity: sha512-956YUeI0YITbk2+KnirCkD19HLzES0habV+Els+dyZaVsaM6VGSiNwnRu6t3CZaqDLz4KXy2zx+0N/Zy6YjlAA==}
@@ -1993,12 +1993,12 @@ snapshots:
 
   '@npmcli/map-workspaces@5.0.0':
     dependencies:
-      '@npmcli/name-from-folder': 3.0.0
+      '@npmcli/name-from-folder': 4.0.0
       '@npmcli/package-json': 7.0.1
       glob: 11.0.3
       minimatch: 10.0.3
 
-  '@npmcli/name-from-folder@3.0.0': {}
+  '@npmcli/name-from-folder@4.0.0': {}
 
   '@npmcli/package-json@7.0.1':
     dependencies:
