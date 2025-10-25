@@ -105,7 +105,7 @@ overrides:
   uuid: 11.1.0
   walk-up-path: 4.0.0
   which: 5.0.0
-  write-file-atomic: 6.0.0
+  write-file-atomic: 7.0.0
   xml-js: 1.6.11
   yallist: 5.0.0
   yaml: 2.8.1
@@ -1734,9 +1734,9 @@ packages:
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
-  write-file-atomic@6.0.0:
-    resolution: {integrity: sha512-GmqrO8WJ1NuzJ2DrziEI2o57jKAVIQNf8a18W3nCYU3H7PNWqCCVTeH6/NQE93CIllIgQS98rrmVkYgTX9fFJQ==}
-    engines: {node: ^18.17.0 || >=20.5.0}
+  write-file-atomic@7.0.0:
+    resolution: {integrity: sha512-YnlPC6JqnZl6aO4uRc+dx5PHguiR9S6WeoLtpxNT9wIG+BDya7ZNE1q7KOjVgaA73hKhKLpVPgJ5QA9THQ5BRg==}
+    engines: {node: ^20.17.0 || >=22.9.0}
 
   xml-js@1.6.11:
     resolution: {integrity: sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==}
@@ -2116,7 +2116,7 @@ snapshots:
       npm-normalize-package-bin: 4.0.0
       proc-log: 5.0.0
       read-cmd-shim: 5.0.0
-      write-file-atomic: 6.0.0
+      write-file-atomic: 7.0.0
 
   bindings@1.5.0:
     dependencies:
@@ -3286,7 +3286,7 @@ snapshots:
   wrappy@1.0.2:
     optional: true
 
-  write-file-atomic@6.0.0:
+  write-file-atomic@7.0.0:
     dependencies:
       imurmurhash: 0.1.4
       signal-exit: 4.1.0
