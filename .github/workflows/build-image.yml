@@ -1,7 +1,9 @@
 name: Build image(s) on PR
 
 on:
-  pull_request:
+  push:
+    branches-ignore:
+      - master
     paths:
       - ci/images/**/Dockerfile.*
 
