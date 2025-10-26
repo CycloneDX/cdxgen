@@ -7,8 +7,15 @@ settings:
 overrides:
   '@appthreat/atom': 2.4.2
   '@appthreat/cdx-proto': 1.1.4
+  '@babel/code-frame': 7.27.1
+  '@babel/generator': 7.28.5
+  '@babel/helper-globals': 7.28.0
+  '@babel/helper-string-parser': 7.27.1
+  '@babel/helper-validator-identifier': 7.28.5
   '@babel/parser': 7.28.5
+  '@babel/template': 7.27.2
   '@babel/traverse': 7.28.5
+  '@babel/types': 7.28.5
   '@biomejs/biome': 2.2.7
   '@bufbuild/protobuf': 2.10.0
   '@cyclonedx/cdxgen-plugins-bin': 1.7.0
@@ -377,10 +384,6 @@ packages:
 
   '@babel/helper-string-parser@7.27.1':
     resolution: {integrity: sha512-qMlSxKbpRlAridDExk92nSobyDdpPijUq2DW6oDnUqd0iOGxmQjyqhMIihI9+zv4LPyZdRje2cavWPbCbWm3eA==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/helper-validator-identifier@7.27.1':
-    resolution: {integrity: sha512-D2hP9eA+Sqx1kBZgzxZh0y1trbuU+JoDkiEwqhQ36nodYqJwyEIhPSdMNd7lOm/4io72luTPWH20Yda0xOuUow==}
     engines: {node: '>=6.9.0'}
 
   '@babel/helper-validator-identifier@7.28.5':
@@ -1810,7 +1813,7 @@ snapshots:
 
   '@babel/code-frame@7.27.1':
     dependencies:
-      '@babel/helper-validator-identifier': 7.27.1
+      '@babel/helper-validator-identifier': 7.28.5
       js-tokens: 4.0.0
       picocolors: 1.1.1
 
@@ -1825,8 +1828,6 @@ snapshots:
   '@babel/helper-globals@7.28.0': {}
 
   '@babel/helper-string-parser@7.27.1': {}
-
-  '@babel/helper-validator-identifier@7.27.1': {}
 
   '@babel/helper-validator-identifier@7.28.5': {}
 
