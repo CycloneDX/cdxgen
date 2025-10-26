@@ -31,7 +31,7 @@ overrides:
   '@npmcli/name-from-folder': 4.0.0
   '@npmcli/package-json': 7.0.1
   '@npmcli/query': 5.0.0
-  '@npmcli/redact': 3.2.2
+  '@npmcli/redact': 4.0.0
   abbrev: 4.0.0
   ajv: 8.17.1
   ajv-formats: 3.0.1
@@ -149,8 +149,8 @@ importers:
         specifier: 5.0.0
         version: 5.0.0
       '@npmcli/redact':
-        specifier: 3.2.2
-        version: 3.2.2
+        specifier: 4.0.0
+        version: 4.0.0
       ajv:
         specifier: 8.17.1
         version: 8.17.1
@@ -595,9 +595,9 @@ packages:
     resolution: {integrity: sha512-8TZWfTQOsODpLqo9SVhVjHovmKXNpevHU0gO9e+y4V4fRIOneiXy0u0sMP9LmS71XivrEWfZWg50ReH4WRT4aQ==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  '@npmcli/redact@3.2.2':
-    resolution: {integrity: sha512-7VmYAmk4csGv08QzrDKScdzn11jHPFGyqJW39FyPgPuAp3zIaUmuCo1yxw9aGs+NEJuTGQ9Gwqpt93vtJubucg==}
-    engines: {node: ^18.17.0 || >=20.5.0}
+  '@npmcli/redact@4.0.0':
+    resolution: {integrity: sha512-gOBg5YHMfZy+TfHArfVogwgfBeQnKbbGo3pSUyK/gSI0AVu+pEiDVcKlQb0D8Mg1LNRZILZ6XG8I5dJ4KuAd9Q==}
+    engines: {node: ^20.17.0 || >=22.9.0}
 
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
@@ -2018,7 +2018,7 @@ snapshots:
     dependencies:
       postcss-selector-parser: 7.1.0
 
-  '@npmcli/redact@3.2.2': {}
+  '@npmcli/redact@4.0.0': {}
 
   '@sec-ant/readable-stream@0.4.1': {}
 
