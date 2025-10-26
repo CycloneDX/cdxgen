@@ -32,7 +32,7 @@ overrides:
   '@iarna/toml': 2.2.5
   '@isaacs/string-locale-compare': 1.1.0
   '@npmcli/agent': 4.0.0
-  '@npmcli/fs': 4.0.0
+  '@npmcli/fs': 5.0.0
   '@npmcli/installed-package-contents': 3.0.0
   '@npmcli/map-workspaces': 5.0.0
   '@npmcli/name-from-folder': 4.0.0
@@ -139,8 +139,8 @@ importers:
         specifier: 1.1.0
         version: 1.1.0
       '@npmcli/fs':
-        specifier: 4.0.0
-        version: 4.0.0
+        specifier: 5.0.0
+        version: 5.0.0
       '@npmcli/installed-package-contents':
         specifier: 3.0.0
         version: 3.0.0
@@ -570,9 +570,9 @@ packages:
     resolution: {integrity: sha512-kAQTcEN9E8ERLVg5AsGwLNoFb+oEG6engbqAU2P43gD4JEIkNGMHdVQ096FsOAAYpZPB0RSt0zgInKIAS1l5QA==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  '@npmcli/fs@4.0.0':
-    resolution: {integrity: sha512-/xGlezI6xfGO9NwuJlnwz/K14qD1kCSAGtacBHnGzeAIuJGazcp45KP5NuyARXoKb7cwulAGWVsbeSxdG/cb0Q==}
-    engines: {node: ^18.17.0 || >=20.5.0}
+  '@npmcli/fs@5.0.0':
+    resolution: {integrity: sha512-7OsC1gNORBEawOa5+j2pXN9vsicaIOH5cPXxoR6fJOmH6/EXpJB2CajXOu1fPRFun2m1lktEFX11+P89hqO/og==}
+    engines: {node: ^20.17.0 || >=22.9.0}
 
   '@npmcli/git@7.0.0':
     resolution: {integrity: sha512-vnz7BVGtOctJAIHouCJdvWBhsTVSICMeUgZo2c7XAi5d5Rrl80S1H7oPym7K03cRuinK5Q6s2dw36+PgXQTcMA==}
@@ -1979,7 +1979,7 @@ snapshots:
       - supports-color
     optional: true
 
-  '@npmcli/fs@4.0.0':
+  '@npmcli/fs@5.0.0':
     dependencies:
       semver: 7.7.3
 
@@ -2157,7 +2157,7 @@ snapshots:
 
   cacache@20.0.0:
     dependencies:
-      '@npmcli/fs': 4.0.0
+      '@npmcli/fs': 5.0.0
       fs-minipass: 3.0.3
       glob: 11.0.3
       lru-cache: 11.2.2
