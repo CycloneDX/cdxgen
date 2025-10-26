@@ -32,6 +32,7 @@ on:
       - 'package.json'
       - 'pnpm-lock.yaml'
   workflow_dispatch:
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -52,7 +53,9 @@ jobs:
         with:
           persist-credentials: false
       - id: read-versions
-        run: VERSIONS=[`awk 'BEGIN {ORS=""}; NR>2 && NR%2==0 {print ","}; FNR==2 {print "'\''"$1"'\''"}' .versions/node_*`]; echo "versions=$VERSIONS" >> "$GITHUB_OUTPUT"
+        run: |
+          VERSIONS=[`awk 'BEGIN {ORS=""}; NR>2 && NR%2==0 {print ","}; FNR==2 {print "'\''"$1"'\''"}' .versions/node_*`]
+          echo "versions=$VERSIONS" >> "$GITHUB_OUTPUT"
 
   matrix-unit-test:
     needs: read-node-versions
