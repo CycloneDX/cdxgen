@@ -41,7 +41,7 @@ env:
   NEXUS_SWIFT_PATH: /repository/swift
   NEXUS_UBUNTU_REPO_PATH: /repository/ubuntu
   REPO: ghcr.io
-  TAG: v11
+  TAG: v12
   TEAM: cyclonedx
 
 

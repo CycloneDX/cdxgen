@@ -43,11 +43,11 @@ The resulting BOM file would include components with the occurrence and call sta
 
 ### bionomia - Ruby
 
-In case of the Ruby application, usage of the container image `ghcr.io/cyclonedx/cdxgen-debian-ruby33:v11` is recommended.
+In case of the Ruby application, usage of the container image `ghcr.io/cyclonedx/cdxgen-debian-ruby33:v12` is recommended.
 
 ```shell
 git clone https://github.com/bionomia/bionomia
-docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby33:v11 -r /app -o /app/bom.json -t ruby --profile research
+docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-debian-ruby33:v12 -r /app -o /app/bom.json -t ruby --profile research
 ```
 
 cdxgen would automatically detect the version of Ruby required for this project, install, and generate an SBOM with the occurrence and call stack evidence.
