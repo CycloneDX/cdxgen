@@ -79,8 +79,9 @@ overrides:
   node-stream-zip: 1.15.0
   nopt: 9.0.0
   npm-install-checks: 8.0.0
+  npm-normalize-package-bin: 5.0.0
   npm-package-arg: 13.0.1
-  npm-pick-manifest: 11.0.1
+  npm-pick-manifest: 11.0.2
   on-finished: 2.4.1
   packageurl-js: 1.0.2
   parse-conflict-json: 5.0.0
@@ -213,8 +214,8 @@ importers:
         specifier: 13.0.1
         version: 13.0.1
       npm-pick-manifest:
-        specifier: 11.0.1
-        version: 11.0.1
+        specifier: 11.0.2
+        version: 11.0.2
       packageurl-js:
         specifier: 1.0.2
         version: 1.0.2
@@ -1289,16 +1290,16 @@ packages:
     resolution: {integrity: sha512-ScAUdMpyzkbpxoNekQ3tNRdFI8SJ86wgKZSQZdUxT+bj0wVFpsEMWnkXP0twVe1gJyNF5apBWDJhhIbgrIViRA==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  npm-normalize-package-bin@4.0.0:
-    resolution: {integrity: sha512-TZKxPvItzai9kN9H/TkmCtx/ZN/hvr3vUycjlfmH0ootY9yFBzNOpiXAdIn1Iteqsvk4lQn6B5PTrt+n6h8k/w==}
-    engines: {node: ^18.17.0 || >=20.5.0}
+  npm-normalize-package-bin@5.0.0:
+    resolution: {integrity: sha512-CJi3OS4JLsNMmr2u07OJlhcrPxCeOeP/4xq67aWNai6TNWWbTrlNDgl8NcFKVlcBKp18GPj+EzbNIgrBfZhsag==}
+    engines: {node: ^20.17.0 || >=22.9.0}
 
   npm-package-arg@13.0.1:
     resolution: {integrity: sha512-6zqls5xFvJbgFjB1B2U6yITtyGBjDBORB7suI4zA4T/sZ1OmkMFlaQSNB/4K0LtXNA1t4OprAFxPisadK5O2ag==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  npm-pick-manifest@11.0.1:
-    resolution: {integrity: sha512-HnU7FYSWbo7dTVHtK0G+BXbZ0aIfxz/aUCVLN0979Ec6rGUX5cJ6RbgVx5fqb5G31ufz+BVFA7y1SkRTPVNoVQ==}
+  npm-pick-manifest@11.0.2:
+    resolution: {integrity: sha512-tzbcEh9zp8FZN8+UDfsKSCHLpVYpLoqTcpAR83lbAVDE4Q24AGmTvWh4lIMAYL7niDzEnRvN96xUCxXW+6Z2jQ==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
   nth-check@2.1.1:
@@ -1987,7 +1988,7 @@ snapshots:
       '@npmcli/promise-spawn': 8.0.3
       ini: 6.0.0
       lru-cache: 11.2.2
-      npm-pick-manifest: 11.0.1
+      npm-pick-manifest: 11.0.2
       proc-log: 6.0.0
       promise-retry: 2.0.1
       semver: 7.7.3
@@ -1996,7 +1997,7 @@ snapshots:
   '@npmcli/installed-package-contents@3.0.0':
     dependencies:
       npm-bundled: 4.0.0
-      npm-normalize-package-bin: 4.0.0
+      npm-normalize-package-bin: 5.0.0
 
   '@npmcli/map-workspaces@5.0.0':
     dependencies:
@@ -2120,7 +2121,7 @@ snapshots:
   bin-links@5.0.0:
     dependencies:
       cmd-shim: 7.0.0
-      npm-normalize-package-bin: 4.0.0
+      npm-normalize-package-bin: 5.0.0
       proc-log: 6.0.0
       read-cmd-shim: 5.0.0
       write-file-atomic: 7.0.0
@@ -2786,13 +2787,13 @@ snapshots:
 
   npm-bundled@4.0.0:
     dependencies:
-      npm-normalize-package-bin: 4.0.0
+      npm-normalize-package-bin: 5.0.0
 
   npm-install-checks@8.0.0:
     dependencies:
       semver: 7.7.3
 
-  npm-normalize-package-bin@4.0.0: {}
+  npm-normalize-package-bin@5.0.0: {}
 
   npm-package-arg@13.0.1:
     dependencies:
@@ -2801,10 +2802,10 @@ snapshots:
       semver: 7.7.3
       validate-npm-package-name: 6.0.2
 
-  npm-pick-manifest@11.0.1:
+  npm-pick-manifest@11.0.2:
     dependencies:
       npm-install-checks: 8.0.0
-      npm-normalize-package-bin: 4.0.0
+      npm-normalize-package-bin: 5.0.0
       npm-package-arg: 13.0.1
       semver: 7.7.3
 
@@ -2955,7 +2956,7 @@ snapshots:
   read-package-json-fast@4.0.0:
     dependencies:
       json-parse-even-better-errors: 5.0.0
-      npm-normalize-package-bin: 4.0.0
+      npm-normalize-package-bin: 5.0.0
 
   require-directory@2.1.1: {}
 
