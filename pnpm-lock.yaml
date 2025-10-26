@@ -76,7 +76,7 @@ overrides:
   npm-pick-manifest: 11.0.1
   on-finished: 2.4.1
   packageurl-js: 1.0.2
-  parse-conflict-json: 4.0.0
+  parse-conflict-json: 5.0.0
   poku: 3.0.2
   prettify-xml: 1.2.0
   proc-log: 5.0.0
@@ -212,8 +212,8 @@ importers:
         specifier: 1.0.2
         version: 1.0.2
       parse-conflict-json:
-        specifier: 4.0.0
-        version: 4.0.0
+        specifier: 5.0.0
+        version: 5.0.0
       prettify-xml:
         specifier: 1.2.0
         version: 1.2.0
@@ -1330,9 +1330,9 @@ packages:
   packageurl-js@1.0.2:
     resolution: {integrity: sha512-fWC4ZPxo80qlh3xN5FxfIoQD3phVY4+EyzTIqyksjhKNDmaicdpxSvkWwIrYTtv9C1/RcUN6pxaTwGmj2NzS6A==}
 
-  parse-conflict-json@4.0.0:
-    resolution: {integrity: sha512-37CN2VtcuvKgHUs8+0b1uJeEsbGn61GRHz469C94P5xiOoqpDYJYwjg4RY9Vmz39WyZAVkR5++nbJwLMIgOCnQ==}
-    engines: {node: ^18.17.0 || >=20.5.0}
+  parse-conflict-json@5.0.0:
+    resolution: {integrity: sha512-4r0T1nUP1P5ndRMTbo1uQFkgGfKY5G0tyKp0ndYgmcahY8AEBPuX56N8PgxzeZv0fv0VG+D76+JJrMgvjDBlyA==}
+    engines: {node: ^20.17.0 || >=22.9.0}
 
   parse5-htmlparser2-tree-adapter@7.1.0:
     resolution: {integrity: sha512-ruw5xyKs6lrpo9x9rCZqZZnIUntICjQAd0Wsmp396Ul9lN/h+ifgVV1x1gZHi8euej6wTfpqX8j+BFQxF0NS/g==}
@@ -2832,7 +2832,7 @@ snapshots:
 
   packageurl-js@1.0.2: {}
 
-  parse-conflict-json@4.0.0:
+  parse-conflict-json@5.0.0:
     dependencies:
       json-parse-even-better-errors: 5.0.0
       just-diff: 6.0.2
