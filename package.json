@@ -114,8 +114,8 @@
   "overrides": {
     "@appthreat/atom": "2.4.2",
     "@appthreat/cdx-proto": "1.1.4",
-    "@babel/parser": "7.28.4",
-    "@babel/traverse": "7.28.4",
+    "@babel/parser": "7.28.5",
+    "@babel/traverse": "7.28.5",
     "@biomejs/biome": "2.2.7",
     "@bufbuild/protobuf": "2.10.0",
     "@cyclonedx/cdxgen-plugins-bin": "1.7.0",
@@ -219,8 +219,8 @@
     "yoctocolors": "2.1.2"
   },
   "dependencies": {
-    "@babel/parser": "7.28.4",
-    "@babel/traverse": "7.28.4",
+    "@babel/parser": "7.28.5",
+    "@babel/traverse": "7.28.5",
     "@iarna/toml": "2.2.5",
     "@isaacs/string-locale-compare": "1.1.0",
     "@npmcli/fs": "4.0.0",
@@ -310,8 +310,8 @@
     "overrides": {
       "@appthreat/atom": "2.4.2",
       "@appthreat/cdx-proto": "1.1.4",
-      "@babel/parser": "7.28.4",
-      "@babel/traverse": "7.28.4",
+      "@babel/parser": "7.28.5",
+      "@babel/traverse": "7.28.5",
       "@biomejs/biome": "2.2.7",
       "@bufbuild/protobuf": "2.10.0",
       "@cyclonedx/cdxgen-plugins-bin": "1.7.0",
