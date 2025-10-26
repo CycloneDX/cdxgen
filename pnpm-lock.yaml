@@ -72,6 +72,7 @@ overrides:
   node-stream-zip: 1.15.0
   nopt: 9.0.0
   npm-install-checks: 8.0.0
+  npm-normalize-package-bin: 5.0.0
   npm-package-arg: 13.0.1
   npm-pick-manifest: 11.0.2
   on-finished: 2.4.1
@@ -1282,10 +1283,6 @@ packages:
     resolution: {integrity: sha512-ScAUdMpyzkbpxoNekQ3tNRdFI8SJ86wgKZSQZdUxT+bj0wVFpsEMWnkXP0twVe1gJyNF5apBWDJhhIbgrIViRA==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  npm-normalize-package-bin@4.0.0:
-    resolution: {integrity: sha512-TZKxPvItzai9kN9H/TkmCtx/ZN/hvr3vUycjlfmH0ootY9yFBzNOpiXAdIn1Iteqsvk4lQn6B5PTrt+n6h8k/w==}
-    engines: {node: ^18.17.0 || >=20.5.0}
-
   npm-normalize-package-bin@5.0.0:
     resolution: {integrity: sha512-CJi3OS4JLsNMmr2u07OJlhcrPxCeOeP/4xq67aWNai6TNWWbTrlNDgl8NcFKVlcBKp18GPj+EzbNIgrBfZhsag==}
     engines: {node: ^20.17.0 || >=22.9.0}
@@ -1993,7 +1990,7 @@ snapshots:
   '@npmcli/installed-package-contents@3.0.0':
     dependencies:
       npm-bundled: 4.0.0
-      npm-normalize-package-bin: 4.0.0
+      npm-normalize-package-bin: 5.0.0
 
   '@npmcli/map-workspaces@5.0.0':
     dependencies:
@@ -2117,7 +2114,7 @@ snapshots:
   bin-links@5.0.0:
     dependencies:
       cmd-shim: 7.0.0
-      npm-normalize-package-bin: 4.0.0
+      npm-normalize-package-bin: 5.0.0
       proc-log: 6.0.0
       read-cmd-shim: 5.0.0
       write-file-atomic: 7.0.0
@@ -2783,13 +2780,11 @@ snapshots:
 
   npm-bundled@4.0.0:
     dependencies:
-      npm-normalize-package-bin: 4.0.0
+      npm-normalize-package-bin: 5.0.0
 
   npm-install-checks@8.0.0:
     dependencies:
       semver: 7.7.3
-
-  npm-normalize-package-bin@4.0.0: {}
 
   npm-normalize-package-bin@5.0.0: {}
 
@@ -2954,7 +2949,7 @@ snapshots:
   read-package-json-fast@4.0.0:
     dependencies:
       json-parse-even-better-errors: 5.0.0
-      npm-normalize-package-bin: 4.0.0
+      npm-normalize-package-bin: 5.0.0
 
   require-directory@2.1.1: {}
 
