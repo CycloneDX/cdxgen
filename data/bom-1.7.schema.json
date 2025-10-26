@@ -517,6 +517,7 @@
         },
         "patents": {
           "type": "array",
+          "title": "Patents",
           "description": "The list of either individual patents or patent families.",
           "items": {
             "anyOf": [
@@ -550,12 +551,14 @@
   },
   "definitions": {
     "refType": {
+      "title": "BOM Reference",
       "description": "Identifier for referable and therefore interlinkable elements.\nValue SHOULD not start with the BOM-Link intro 'urn:cdx:' to avoid conflicts with BOM-Links.",
       "type": "string",
       "minLength": 1,
       "$comment": "TODO (breaking change): add a format constraint that prevents the value from staring with 'urn:cdx:'"
     },
     "refLinkType": {
+      "title": "BOM Reference",
       "description": "Descriptor for an element identified by the attribute 'bom-ref' in the same BOM document.\nIn contrast to `bomLinkElementType`.",
       "$ref": "#/definitions/refType"
     },
@@ -688,6 +691,7 @@
               "type": "array",
               "title": "Tools (legacy)",
               "description": "[Deprecated]\nThe tool(s) used in the creation, enrichment, and validation of the BOM.",
+              "deprecated": true,
               "items": {"$ref": "#/definitions/tool"}
             }
           ]
@@ -769,6 +773,7 @@
       "title": "Tool",
       "description": "[Deprecated] This will be removed in a future version. Use component or service instead.\nInformation about the automated or manual tool used",
       "additionalProperties": false,
+      "deprecated": true,
       "properties": {
         "vendor": {
           "type": "string",
@@ -801,7 +806,6 @@
     },
     "organizationalEntity": {
       "type": "object",
-      "title": "Organizational Entity",
       "additionalProperties": false,
       "properties": {
         "bom-ref": {
@@ -842,8 +846,8 @@
     },
     "organizationalContact": {
       "type": "object",
-      "title": "Organizational Contact",
       "additionalProperties": false,
+      "title": "Organizational Person",
       "properties": {
         "bom-ref": {
           "$ref": "#/definitions/refType",
@@ -977,7 +981,7 @@
         "versionRange": {
           "$ref": "#/definitions/versionRange",
           "title": "Component Version Range",
-          "description": "For an external component, this specifies the accepted version range.\nThe value must adhere to the Package URL Version Range syntax (vers), as defined at <https://github.com/package-url/purl-spec/blob/master/VERSION-RANGE-SPEC.rst>.\nMay only be used if `.isExternal` is set to `true`.\nMust be used exclusively, either 'version' or 'versionRange', but not both."
+          "description": "For an external component, this specifies the accepted version range.\nThe value must adhere to the Package URL Version Range syntax (vers), as defined at <https://github.com/package-url/vers-spec\nMay only be used if `.isExternal` is set to `true`.\nMust be used exclusively, either 'version' or 'versionRange', but not both."
         },
         "isExternal": {
           "type": "boolean",
@@ -1063,7 +1067,8 @@
         "modified": {
           "type": "boolean",
           "title": "Component Modified From Original",
-          "description": "[Deprecated] This will be removed in a future version. Use the pedigree element instead to supply information on exactly how the component was modified.\nA boolean value indicating if the component has been modified from the original. A value of true indicates the component is a derivative of the original. A value of false indicates the component has not been modified from the original."
+          "description": "[Deprecated] This will be removed in a future version. Use the pedigree element instead to supply information on exactly how the component was modified.\nA boolean value indicating if the component has been modified from the original. A value of true indicates the component is a derivative of the original. A value of false indicates the component has not been modified from the original.",
+          "deprecated": true
         },
         "pedigree": {
           "type": "object",
@@ -2472,6 +2477,7 @@
       "required": [
         "name"
       ],
+      "additionalProperties": false,
       "properties": {
         "name": {
           "type": "string",
@@ -2483,8 +2489,7 @@
           "title": "Value",
           "description": "The value of the property."
         }
-      },
-      "additionalProperties": false
+      }
     },
     "localeType": {
       "type": "string",
@@ -2979,6 +2984,7 @@
               "type": "array",
               "title": "Tools (legacy)",
               "description": "[Deprecated]\nThe tool(s) used to identify, confirm, or score the vulnerability.",
+              "deprecated": true,
               "items": {"$ref": "#/definitions/tool"}
             }
           ]
@@ -3083,7 +3089,7 @@
                     },
                     "range": {
                       "title": "Version Range",
-                      "description": "A version range specified in Package URL Version Range syntax (vers) which is defined at https://github.com/package-url/purl-spec/blob/master/VERSION-RANGE-SPEC.rst",
+                      "description": "A version range specified in Package URL Version Range syntax (vers) which is defined at https://github.com/package-url/vers-spec",
                       "$ref": "#/definitions/versionRange"
                     },
                     "status": {
@@ -3138,7 +3144,7 @@
       ]
     },
     "versionRange": {
-      "description": "A version range specified in Package URL Version Range syntax (vers) which is defined at https://github.com/package-url/purl-spec/blob/master/VERSION-RANGE-SPEC.rst",
+      "description": "A version range specified in Package URL Version Range syntax (vers) which is defined at https://github.com/package-url/vers-spec",
       "type": "string",
       "minLength": 1,
       "maxLength": 4096,
@@ -4725,7 +4731,9 @@
                 "$ref": "#/definitions/property"
               },
               {
-                "type": "string"
+                "type": "string",
+                "title": "String-Based Environment Variables",
+                "description": "In addition to the more common key–value pair format, some environment variables may consist of a single string without an explicit value assignment. These string-based environment variables typically act as flags or signals to software, indicating that a feature should be enabled, a mode should be activated, or a specific condition is present. Their presence alone conveys meaning."
               }
             ]
           }
@@ -4815,7 +4823,9 @@
                 "$ref": "#/definitions/property"
               },
               {
-                "type": "string"
+                "type": "string",
+                "title": "String-Based Environment Variables",
+                "description": "In addition to the more common key–value pair format, some environment variables may consist of a single string without an explicit value assignment. These string-based environment variables typically act as flags or signals to software, indicating that a feature should be enabled, a mode should be activated, or a specific condition is present. Their presence alone conveys meaning."
               }
             ]
           },
@@ -5970,6 +5980,7 @@
                   "anyOf": [
                     {
                       "type": "array",
+                      "title": "Encryption Algorithms (ENCR)",
                       "items": {
                         "$ref": "#/definitions/ikeV2Enc",
                         "title": "Encryption Algorithm (ENCR)"
@@ -5978,6 +5989,7 @@
                     {
                       "deprecated": true,
                       "$ref": "#/definitions/cryptoRefArray",
+                      "title": "Encryption Algorithm (ENCR) References",
                       "description": "[DEPRECATED] This will be removed in a future version.\nTransform Type 1: encryption algorithms"
                     }
                   ]
@@ -5988,6 +6000,7 @@
                   "anyOf": [
                     {
                       "type": "array",
+                      "title": "Pseudorandom Functions (PRF)",
                       "items": {
                         "$ref": "#/definitions/ikeV2Prf",
                         "title": "Pseudorandom Function (PRF)"
@@ -6006,6 +6019,7 @@
                   "anyOf": [
                     {
                       "type": "array",
+                      "title": "Integrity Algorithms (INTEG)",
                       "items": {
                         "$ref": "#/definitions/ikeV2Integ",
                         "title": "Integrity Algorithm (INTEG)"
@@ -6024,6 +6038,7 @@
                   "anyOf": [
                     {
                       "type": "array",
+                      "title": "Key Exchange Methods (KE)",
                       "items": {
                         "$ref": "#/definitions/ikeV2Ke",
                         "title": "Key Exchange Method (KE)"
@@ -6047,6 +6062,7 @@
                   "anyOf": [
                     {
                       "type": "array",
+                      "title": "IKEv2 Authentication Methods",
                       "items": {
                         "$ref": "#/definitions/ikeV2Auth",
                         "title": "IKEv2 Authentication Method"
@@ -6256,6 +6272,7 @@
     },
     "cryptoRefArray" : {
       "deprecated": true,
+      "title": "Encryption Algorithm (ENCR) Reference Array",
       "description": "Deprecated definition.",
       "type": "array",
       "items": {
@@ -6478,9 +6495,11 @@
           "items": {
             "oneOf": [
               {
+                "title": "Person",
                 "$ref": "#/definitions/organizationalContact"
               },
               {
+                "title": "Organizational Entity",
                 "$ref": "#/definitions/organizationalEntity"
               }
             ]
@@ -6548,10 +6567,12 @@
           "asserter": {
             "oneOf": [
               {
-                "$ref": "#/definitions/organizationalEntity"
+                "$ref": "#/definitions/organizationalEntity",
+                "title": "Organizational Entity"
               },
               {
-                "$ref": "#/definitions/organizationalContact"
+                "$ref": "#/definitions/organizationalContact",
+                "title": "Person"
               },
               {
                 "$ref": "#/definitions/refLinkType",
@@ -6621,7 +6642,7 @@
           "items": {
             "type": "string",
             "title": "Field Reference",
-            "description": "A [JSON Pointer](https://datatracker.ietf.org/doc/html/rfc6901) identifying the BOM field to which the attribution applies.\nUsers of other serialisation formats (e.g. XML) shall use the JSON Pointer format to ensure consistent field referencing across representations."
+            "description": "A [JSON Pointer](https://datatracker.ietf.org/doc/html/rfc6901) identifying the BOM field to which the attribution applies.\nUsers of other serialization formats (e.g. XML) shall use the JSON Pointer format to ensure consistent field referencing across representations."
           },
           "minItems": 1,
           "title": "Field References",
@@ -6632,7 +6653,7 @@
           "items": {
             "type": "string",
             "title": "Path Expression",
-            "description": "Specifies a path expression used to locate a value within a BOM. The expression syntax shall conform to the format of the BOM's serialisation.\nUse [JSONPath](https://datatracker.ietf.org/doc/html/rfc9535) for JSON, [XPath](https://www.w3.org/TR/xpath/) for XML, and default to JSONPath for Protocol Buffers unless otherwise specified.\nImplementers shall ensure the expression is valid within the context of the applicable serialisation format."
+            "description": "Specifies a path expression used to locate a value within a BOM. The expression syntax shall conform to the format of the BOM's serialization.\nUse [JSONPath](https://datatracker.ietf.org/doc/html/rfc9535) for JSON, [XPath](https://www.w3.org/TR/xpath/) for XML, and default to JSONPath for Protocol Buffers unless otherwise specified.\nImplementers shall ensure the expression is valid within the context of the applicable serialization format."
           },
           "minItems": 1,
           "title": "Path Expressions",
