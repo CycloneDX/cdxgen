@@ -31,7 +31,7 @@ overrides:
   '@npmcli/name-from-folder': 4.0.0
   '@npmcli/package-json': 7.0.1
   '@npmcli/query': 5.0.0
-  '@npmcli/redact': 3.2.2
+  '@npmcli/redact': 4.0.0
   abbrev: 4.0.0
   ajv: 8.17.1
   ajv-formats: 3.0.1
@@ -76,10 +76,10 @@ overrides:
   npm-pick-manifest: 11.0.1
   on-finished: 2.4.1
   packageurl-js: 1.0.2
-  parse-conflict-json: 4.0.0
+  parse-conflict-json: 5.0.0
   poku: 3.0.2
   prettify-xml: 1.2.0
-  proc-log: 5.0.0
+  proc-log: 6.0.0
   proggy: 4.0.0
   promise-all-reject-late: 1.0.1
   promise-call-limit: 3.0.2
@@ -149,8 +149,8 @@ importers:
         specifier: 5.0.0
         version: 5.0.0
       '@npmcli/redact':
-        specifier: 3.2.2
-        version: 3.2.2
+        specifier: 4.0.0
+        version: 4.0.0
       ajv:
         specifier: 8.17.1
         version: 8.17.1
@@ -212,14 +212,14 @@ importers:
         specifier: 1.0.2
         version: 1.0.2
       parse-conflict-json:
-        specifier: 4.0.0
-        version: 4.0.0
+        specifier: 5.0.0
+        version: 5.0.0
       prettify-xml:
         specifier: 1.2.0
         version: 1.2.0
       proc-log:
-        specifier: 5.0.0
-        version: 5.0.0
+        specifier: 6.0.0
+        version: 6.0.0
       proggy:
         specifier: 4.0.0
         version: 4.0.0
@@ -595,9 +595,9 @@ packages:
     resolution: {integrity: sha512-8TZWfTQOsODpLqo9SVhVjHovmKXNpevHU0gO9e+y4V4fRIOneiXy0u0sMP9LmS71XivrEWfZWg50ReH4WRT4aQ==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  '@npmcli/redact@3.2.2':
-    resolution: {integrity: sha512-7VmYAmk4csGv08QzrDKScdzn11jHPFGyqJW39FyPgPuAp3zIaUmuCo1yxw9aGs+NEJuTGQ9Gwqpt93vtJubucg==}
-    engines: {node: ^18.17.0 || >=20.5.0}
+  '@npmcli/redact@4.0.0':
+    resolution: {integrity: sha512-gOBg5YHMfZy+TfHArfVogwgfBeQnKbbGo3pSUyK/gSI0AVu+pEiDVcKlQb0D8Mg1LNRZILZ6XG8I5dJ4KuAd9Q==}
+    engines: {node: ^20.17.0 || >=22.9.0}
 
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
@@ -1330,9 +1330,9 @@ packages:
   packageurl-js@1.0.2:
     resolution: {integrity: sha512-fWC4ZPxo80qlh3xN5FxfIoQD3phVY4+EyzTIqyksjhKNDmaicdpxSvkWwIrYTtv9C1/RcUN6pxaTwGmj2NzS6A==}
 
-  parse-conflict-json@4.0.0:
-    resolution: {integrity: sha512-37CN2VtcuvKgHUs8+0b1uJeEsbGn61GRHz469C94P5xiOoqpDYJYwjg4RY9Vmz39WyZAVkR5++nbJwLMIgOCnQ==}
-    engines: {node: ^18.17.0 || >=20.5.0}
+  parse-conflict-json@5.0.0:
+    resolution: {integrity: sha512-4r0T1nUP1P5ndRMTbo1uQFkgGfKY5G0tyKp0ndYgmcahY8AEBPuX56N8PgxzeZv0fv0VG+D76+JJrMgvjDBlyA==}
+    engines: {node: ^20.17.0 || >=22.9.0}
 
   parse5-htmlparser2-tree-adapter@7.1.0:
     resolution: {integrity: sha512-ruw5xyKs6lrpo9x9rCZqZZnIUntICjQAd0Wsmp396Ul9lN/h+ifgVV1x1gZHi8euej6wTfpqX8j+BFQxF0NS/g==}
@@ -1382,9 +1382,9 @@ packages:
   prettify-xml@1.2.0:
     resolution: {integrity: sha512-kuoTbmC+QQUfx45PrdkVzJqrNEp2lhK++WGyiqBx6JrCvZUQDgeYjdV3h53n7p+37s1Iwx6GjAQ7fcIgD8kkLQ==}
 
-  proc-log@5.0.0:
-    resolution: {integrity: sha512-Azwzvl90HaF0aCz1JrDdXQykFakSSNPaPoiZ9fm5qJIMHioDZEi7OAdRwSm6rSoPtY3Qutnm3L7ogmg3dc+wbQ==}
-    engines: {node: ^18.17.0 || >=20.5.0}
+  proc-log@6.0.0:
+    resolution: {integrity: sha512-KG/XsTDN901PNfPfAMmj6N/Ywg9tM+bHK8pAz+27fS4N4Pcr+4zoYBOcGSBu6ceXYNPxkLpa4ohtfxV1XcLAfA==}
+    engines: {node: ^20.17.0 || >=22.9.0}
 
   proggy@4.0.0:
     resolution: {integrity: sha512-MbA4R+WQT76ZBm/5JUpV9yqcJt92175+Y0Bodg3HgiXzrmKu7Ggq+bpn6y6wHH+gN9NcyKn3yg1+d47VaKwNAQ==}
@@ -1981,7 +1981,7 @@ snapshots:
       ini: 6.0.0
       lru-cache: 11.2.2
       npm-pick-manifest: 11.0.1
-      proc-log: 5.0.0
+      proc-log: 6.0.0
       promise-retry: 2.0.1
       semver: 7.7.3
       which: 5.0.0
@@ -2006,7 +2006,7 @@ snapshots:
       glob: 11.0.3
       hosted-git-info: 9.0.2
       json-parse-even-better-errors: 5.0.0
-      proc-log: 5.0.0
+      proc-log: 6.0.0
       semver: 7.7.3
       validate-npm-package-license: 3.0.4
 
@@ -2018,7 +2018,7 @@ snapshots:
     dependencies:
       postcss-selector-parser: 7.1.0
 
-  '@npmcli/redact@3.2.2': {}
+  '@npmcli/redact@4.0.0': {}
 
   '@sec-ant/readable-stream@0.4.1': {}
 
@@ -2114,7 +2114,7 @@ snapshots:
     dependencies:
       cmd-shim: 7.0.0
       npm-normalize-package-bin: 4.0.0
-      proc-log: 5.0.0
+      proc-log: 6.0.0
       read-cmd-shim: 5.0.0
       write-file-atomic: 7.0.0
 
@@ -2647,7 +2647,7 @@ snapshots:
       minipass-flush: 1.0.5
       minipass-pipeline: 1.2.4
       negotiator: 0.6.4
-      proc-log: 5.0.0
+      proc-log: 6.0.0
       promise-retry: 2.0.1
       ssri: 12.0.0
     transitivePeerDependencies:
@@ -2759,7 +2759,7 @@ snapshots:
       graceful-fs: 4.2.11
       make-fetch-happen: 15.0.2
       nopt: 9.0.0
-      proc-log: 5.0.0
+      proc-log: 6.0.0
       semver: 7.7.3
       tar: 7.5.1
       tinyglobby: 0.2.15
@@ -2790,7 +2790,7 @@ snapshots:
   npm-package-arg@13.0.1:
     dependencies:
       hosted-git-info: 9.0.2
-      proc-log: 5.0.0
+      proc-log: 6.0.0
       semver: 7.7.3
       validate-npm-package-name: 6.0.2
 
@@ -2832,7 +2832,7 @@ snapshots:
 
   packageurl-js@1.0.2: {}
 
-  parse-conflict-json@4.0.0:
+  parse-conflict-json@5.0.0:
     dependencies:
       json-parse-even-better-errors: 5.0.0
       just-diff: 6.0.2
@@ -2897,7 +2897,7 @@ snapshots:
 
   prettify-xml@1.2.0: {}
 
-  proc-log@5.0.0: {}
+  proc-log@6.0.0: {}
 
   proggy@4.0.0: {}
 
