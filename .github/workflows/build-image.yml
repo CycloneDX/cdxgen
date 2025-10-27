@@ -39,8 +39,8 @@ jobs:
               files = [...new Set(commitFiles)];
             } else {
               const { data } = await github.rest.repos.compareCommits({
-                owner = context.repo.owner,
-                repo = context.repo.repo,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
                 base,
                 head: context.payload.after
               });
