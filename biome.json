@@ -19,7 +19,7 @@
     }
   },
   "javascript": {
-    "globals": ["arguments"]
+    "globals": ["arguments", "mermaid"]
   },
   "linter": {
     "enabled": true,
