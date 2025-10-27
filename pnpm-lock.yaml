@@ -92,7 +92,7 @@ overrides:
   promise-all-reject-late: 1.0.1
   promise-call-limit: 3.0.2
   properties-reader: 2.3.0
-  read-package-json-fast: 4.0.0
+  read-package-json-fast: 5.0.0
   responselike: 4.0.2
   semver: 7.7.3
   sequelize: 6.37.7
@@ -210,6 +210,9 @@ importers:
       npm-install-checks:
         specifier: 8.0.0
         version: 8.0.0
+      npm-normalize-package-bin:
+        specifier: 5.0.0
+        version: 5.0.0
       npm-package-arg:
         specifier: 13.0.1
         version: 13.0.1
@@ -241,8 +244,8 @@ importers:
         specifier: 2.3.0
         version: 2.3.0
       read-package-json-fast:
-        specifier: 4.0.0
-        version: 4.0.0
+        specifier: 5.0.0
+        version: 5.0.0
       semver:
         specifier: 7.7.3
         version: 7.7.3
@@ -1435,9 +1438,9 @@ packages:
     resolution: {integrity: sha512-SEbJV7tohp3DAAILbEMPXavBjAnMN0tVnh4+9G8ihV4Pq3HYF9h8QNez9zkJ1ILkv9G2BjdzwctznGZXgu/HGw==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
-  read-package-json-fast@4.0.0:
-    resolution: {integrity: sha512-qpt8EwugBWDw2cgE2W+/3oxC+KTez2uSVR8JU9Q36TXPAGCaozfQUs59v4j4GFpWTaw0i6hAZSvOmu1J0uOEUg==}
-    engines: {node: ^18.17.0 || >=20.5.0}
+  read-package-json-fast@5.0.0:
+    resolution: {integrity: sha512-S16VePJnQcfmk6HIZAiP8TXW/VDlDtZfzVndRDE8lhZNA4YvAiwAjgvhoyf6+soofEH/vrZnOUctSt+jYE2tkg==}
+    engines: {node: ^20.17.0 || >=22.9.0}
 
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
@@ -2953,7 +2956,7 @@ snapshots:
 
   read-cmd-shim@5.0.0: {}
 
-  read-package-json-fast@4.0.0:
+  read-package-json-fast@5.0.0:
     dependencies:
       json-parse-even-better-errors: 5.0.0
       npm-normalize-package-bin: 5.0.0
