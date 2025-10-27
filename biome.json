@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.2.7/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.0/schema.json",
   "assist": {
     "actions": {
       "source": {
@@ -19,7 +19,7 @@
     }
   },
   "javascript": {
-    "globals": ["arguments"]
+    "globals": ["arguments", "mermaid"]
   },
   "linter": {
     "enabled": true,
