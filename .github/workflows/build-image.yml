@@ -27,7 +27,7 @@ jobs:
           script: |
             const base = context.payload.before;
             let files = [];
-
+            console.log(base)
             // Special case: first push on a branch
             if (!base || base === "0000000000000000000000000000000000000000000000") {
               const commitFiles = [];
