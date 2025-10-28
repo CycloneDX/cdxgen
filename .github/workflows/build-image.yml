@@ -1,4 +1,4 @@
-name: Build image(s) on push
+name: Build image(s) on PR
 
 on:
   pull_request:
