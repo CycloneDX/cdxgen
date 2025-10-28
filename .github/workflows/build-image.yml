@@ -1,9 +1,7 @@
 name: Build image(s) on push
 
 on:
-  push:
-    branches-ignore:
-      - master
+  pull_request:
     paths:
       - ci/images/**/Dockerfile.*
 
@@ -25,29 +23,14 @@ jobs:
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         with:
           script: |
-            const base = context.payload.before;
-            let files = [];
-            console.log(base)
-            // Special case: first push on a branch
-            if (!base || base === "0000000000000000000000000000000000000000000000") {
-              const commitFiles = [];
-              for (const commit of context.payload.commits || []) {
-                commitFiles.push(...(commit.added || []));
-                commitFiles.push(...(commit.modified || []));
-                commitFiles.push(...(commit.removed || []));
-              }
-              files = [...new Set(commitFiles)];
-            } else {
-              const { data } = await github.rest.repos.compareCommits({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                base,
-                head: context.payload.after
-              });
-              files = data.files.map(f => f.filename);
+            const commitFiles = [];
+            for (const commit of context.payload.commits || []) {
+              commitFiles.push(...(commit.added || []));
+              commitFiles.push(...(commit.modified || []));
+              commitFiles.push(...(commit.removed || []));
             }
-
-            files = files.filter(f => f.includes("Dockerfile"));
+            const files = [...new Set(commitFiles)]
+              .filter(f => f.includes("Dockerfile"));
             core.setOutput("files", JSON.stringify(files));
   image:
     if: github.repository == 'CycloneDX/cdxgen'
