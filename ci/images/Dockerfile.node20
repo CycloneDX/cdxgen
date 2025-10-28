@@ -1,5 +1,5 @@
 # Base-image
-FROM registry.suse.com/bci/nodejs:20.19.2@sha256:8d8c2c4f378d66782e7e6e9721c93dd3e58f45eae905e723dd3361bcacc5e59c AS base
+FROM registry.suse.com/bci/nodejs:20.19.2@sha256:5bc5514ef81b741cdef12704bd808713bcc052a30840edd0990a164caf835bd9 AS base
 
 ARG GITHUB_URL=https://github.com
 ARG GCC_VERSION=14
