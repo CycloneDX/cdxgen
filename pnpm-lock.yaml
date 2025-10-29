@@ -101,7 +101,7 @@ overrides:
   sqlite3: npm:@appthreat/sqlite3@6.0.9
   ssri: 13.0.0
   statuses: 2.0.2
-  strip-json-comments: 3.1.1
+  strip-json-comments: 5.0.3
   table: 6.9.0
   tar: 7.5.1
   tar-fs: 3.1.1
@@ -1621,9 +1621,9 @@ packages:
     resolution: {integrity: sha512-gmBGslpoQJtgnMAvOVqGZpEz9dyoKTCzy2nfz/n8aIFhN/jCE/rCmcxabB6jOOHV+0WNnylOxaxBQPSvcWklhA==}
     engines: {node: '>=12'}
 
-  strip-json-comments@3.1.1:
-    resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
-    engines: {node: '>=8'}
+  strip-json-comments@5.0.3:
+    resolution: {integrity: sha512-1tB5mhVo7U+ETBKNf92xT4hrQa3pm0MZ0PQvuDnWgAAGHDsfp4lPSpiS6psrSiet87wyGPh9ft6wmhOMQ0hDiw==}
+    engines: {node: '>=14.16'}
 
   table@6.9.0:
     resolution: {integrity: sha512-9kY+CygyYM6j02t5YFHbNz2FN5QmYGv9zAjVp4lCDjlCw7amdckXlEt/bjMhUIfj4ThGRE4gCUH5+yGnNuPo5A==}
@@ -2951,7 +2951,7 @@ snapshots:
       deep-extend: 0.6.0
       ini: 6.0.0
       minimist: 1.2.8
-      strip-json-comments: 3.1.1
+      strip-json-comments: 5.0.3
     optional: true
 
   read-cmd-shim@6.0.0: {}
@@ -3156,7 +3156,7 @@ snapshots:
     dependencies:
       ansi-regex: 6.2.2
 
-  strip-json-comments@3.1.1:
+  strip-json-comments@5.0.3:
     optional: true
 
   table@6.9.0:
