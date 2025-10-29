@@ -42,6 +42,7 @@ overrides:
   abbrev: 4.0.0
   ajv: 8.17.1
   ajv-formats: 3.0.1
+  ansi-styles: 6.2.3
   bin-links: 6.0.0
   body-parser: 2.2.0
   cacache: 20.0.0
@@ -53,6 +54,7 @@ overrides:
   debug: 4.4.1
   decompress-response: 7.0.0
   edn-data: 1.1.2
+  emoji-regex: 10.6.0
   encoding: 0.1.13
   escape-string-regexp: 4.0.0
   glob: 11.0.3
@@ -101,6 +103,10 @@ overrides:
   sqlite3: npm:@appthreat/sqlite3@6.0.9
   ssri: 13.0.0
   statuses: 2.0.2
+  string-width: 7.2.0
+  string-width-cjs: npm:string-width@7.2.0
+  strip-ansi: 7.1.2
+  strip-ansi-cjs: npm:strip-ansi@7.1.2
   strip-json-comments: 3.1.1
   table: 6.9.0
   tar: 7.5.1
@@ -113,6 +119,8 @@ overrides:
   uuid: 11.1.0
   walk-up-path: 4.0.0
   which: 5.0.0
+  wrap-ansi: 9.0.2
+  wrap-ansi-cjs: npm:wrap-ansi@9.0.2
   write-file-atomic: 7.0.0
   xml-js: 1.6.11
   yallist: 5.0.0
@@ -120,7 +128,7 @@ overrides:
   yargs: 18.0.0
   yoctocolors: 2.1.2
 
-pnpmfileChecksum: sha256-3x73ZoWY33FrWSK74NDXQ+/nbzFV/9/j0QRmsMWoW24=
+pnpmfileChecksum: sha256-Tuzm8/HMR3dQ2M7q2+0v/+V5ysb+K3JQwTw9y3DPRg4=
 
 importers:
 
@@ -655,17 +663,13 @@ packages:
   ajv@8.17.1:
     resolution: {integrity: sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==}
 
-  ansi-regex@5.0.1:
-    resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
-    engines: {node: '>=8'}
-
   ansi-regex@6.2.2:
     resolution: {integrity: sha512-Bq3SmSpyFHaWjPk8If9yc6svM8c56dB5BAtW4Qbw5jHTwwXXcTLoRMkpDJp6VL0XzlWaCHTXrkFURMYmD0sLqg==}
     engines: {node: '>=12'}
 
-  ansi-styles@4.3.0:
-    resolution: {integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==}
-    engines: {node: '>=8'}
+  ansi-styles@6.2.3:
+    resolution: {integrity: sha512-4Dj6M28JB+oAH8kFkTLUo+a2jwOFkuqb3yucU0CANcRRUbxS0cP0nZYCGjcc3BNXwRIsUVmDGgzawme7zvJHvg==}
+    engines: {node: '>=12'}
 
   astral-regex@2.0.0:
     resolution: {integrity: sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==}
@@ -871,9 +875,6 @@ packages:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
 
-  eastasianwidth@0.2.0:
-    resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
-
   ecdsa-sig-formatter@1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
 
@@ -886,12 +887,6 @@ packages:
 
   emoji-regex@10.6.0:
     resolution: {integrity: sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A==}
-
-  emoji-regex@8.0.0:
-    resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
-
-  emoji-regex@9.2.2:
-    resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
 
   encodeurl@1.0.2:
     resolution: {integrity: sha512-TPJXq8JqFaVYm2CWmPvnP2Iyo4ZSM7/QKcSmuMLDObfpH5fi7RUGmd/rTDf+rut/saiDiQEeVTNgAmJEdAOx0w==}
@@ -1608,21 +1603,9 @@ packages:
   streamx@2.22.1:
     resolution: {integrity: sha512-znKXEBxfatz2GBNK02kRnCXjV+AA4kjZIUxeWSr3UGirZMJfTE9uiwKHobnbgxWyL/JWro8tTq+vOqAK1/qbSA==}
 
-  string-width@4.2.3:
-    resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
-    engines: {node: '>=8'}
-
-  string-width@5.1.2:
-    resolution: {integrity: sha512-HnLOCR3vjcY8beoNLtcjZ5/nxn2afmME6lhrDrebokqMap+XbeW8n9TXpPDOqdGK5qcI3oT0GKTW6wC7EMiVqA==}
-    engines: {node: '>=12'}
-
   string-width@7.2.0:
     resolution: {integrity: sha512-tsaTIkKW9b4N+AEj+SVA+WhJzV7/zMhcSu78mLKWSk7cXMOSHsBKFWUs0fWwq8QyK3MgJBQRX6Gbi4kYbdvGkQ==}
     engines: {node: '>=18'}
-
-  strip-ansi@6.0.1:
-    resolution: {integrity: sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==}
-    engines: {node: '>=8'}
 
   strip-ansi@7.1.2:
     resolution: {integrity: sha512-gmBGslpoQJtgnMAvOVqGZpEz9dyoKTCzy2nfz/n8aIFhN/jCE/rCmcxabB6jOOHV+0WNnylOxaxBQPSvcWklhA==}
@@ -1745,9 +1728,9 @@ packages:
   wkx@0.5.0:
     resolution: {integrity: sha512-Xng/d4Ichh8uN4l0FToV/258EjMGU9MGcA0HV2d9B/ZpZB3lqQm7nkOdZdm5GhKtLLhAE7PiVQwN4eN+2YJJUg==}
 
-  wrap-ansi@7.0.0:
-    resolution: {integrity: sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==}
-    engines: {node: '>=10'}
+  wrap-ansi@9.0.2:
+    resolution: {integrity: sha512-42AtmgqjV+X1VpdOfyTGOYRi0/zsoLqtXQckTmqTeybT+BDIbM/Guxo7x3pE2vtpr1ok6xRqM9OpBe+Jyoqyww==}
+    engines: {node: '>=18'}
 
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
@@ -1950,11 +1933,12 @@ snapshots:
 
   '@isaacs/cliui@8.0.2':
     dependencies:
-      string-width: 5.1.2
-      string-width-cjs: string-width@4.2.3
+      string-width: 7.2.0
+      string-width-cjs: string-width@7.2.0
       strip-ansi: 7.1.2
-      strip-ansi-cjs: strip-ansi@6.0.1
-      wrap-ansi-cjs: wrap-ansi@7.0.0
+      strip-ansi-cjs: strip-ansi@7.1.2
+      wrap-ansi: 9.0.2
+      wrap-ansi-cjs: wrap-ansi@9.0.2
 
   '@isaacs/fs-minipass@4.0.1':
     dependencies:
@@ -2081,11 +2065,9 @@ snapshots:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
-  ansi-regex@5.0.1: {}
-
   ansi-regex@6.2.2: {}
 
-  ansi-styles@4.3.0: {}
+  ansi-styles@6.2.3: {}
 
   astral-regex@2.0.0: {}
 
@@ -2234,6 +2216,7 @@ snapshots:
     dependencies:
       string-width: 7.2.0
       strip-ansi: 7.1.2
+      wrap-ansi: 9.0.2
 
   cmd-shim@8.0.0: {}
 
@@ -2349,8 +2332,6 @@ snapshots:
       gopd: 1.2.0
     optional: true
 
-  eastasianwidth@0.2.0: {}
-
   ecdsa-sig-formatter@1.0.11:
     dependencies:
       safe-buffer: 5.2.1
@@ -2361,10 +2342,6 @@ snapshots:
     optional: true
 
   emoji-regex@10.6.0: {}
-
-  emoji-regex@8.0.0: {}
-
-  emoji-regex@9.2.2: {}
 
   encodeurl@1.0.2:
     optional: true
@@ -3090,7 +3067,7 @@ snapshots:
 
   slice-ansi@4.0.0:
     dependencies:
-      ansi-styles: 4.3.0
+      ansi-styles: 6.2.3
       astral-regex: 2.0.0
       is-fullwidth-code-point: 3.0.0
 
@@ -3145,27 +3122,11 @@ snapshots:
       - react-native-b4a
     optional: true
 
-  string-width@4.2.3:
-    dependencies:
-      emoji-regex: 8.0.0
-      is-fullwidth-code-point: 3.0.0
-      strip-ansi: 6.0.1
-
-  string-width@5.1.2:
-    dependencies:
-      eastasianwidth: 0.2.0
-      emoji-regex: 9.2.2
-      strip-ansi: 7.1.2
-
   string-width@7.2.0:
     dependencies:
       emoji-regex: 10.6.0
       get-east-asian-width: 1.4.0
       strip-ansi: 7.1.2
-
-  strip-ansi@6.0.1:
-    dependencies:
-      ansi-regex: 5.0.1
 
   strip-ansi@7.1.2:
     dependencies:
@@ -3179,8 +3140,8 @@ snapshots:
       ajv: 8.17.1
       lodash.truncate: 4.4.2
       slice-ansi: 4.0.0
-      string-width: 4.2.3
-      strip-ansi: 6.0.1
+      string-width: 7.2.0
+      strip-ansi: 7.1.2
 
   tar-fs@3.1.1:
     dependencies:
@@ -3303,11 +3264,11 @@ snapshots:
       '@types/node': 24.5.1
     optional: true
 
-  wrap-ansi@7.0.0:
+  wrap-ansi@9.0.2:
     dependencies:
-      ansi-styles: 4.3.0
-      string-width: 4.2.3
-      strip-ansi: 6.0.1
+      ansi-styles: 6.2.3
+      string-width: 7.2.0
+      strip-ansi: 7.1.2
 
   wrappy@1.0.2:
     optional: true

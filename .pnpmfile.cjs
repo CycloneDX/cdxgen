@@ -6,7 +6,6 @@ const blockedPackages = [
   "color-string",
   "supports-hyperlinks",
   "chalk",
-  "wrap-ansi",
 ];
 
 function readPackage(pkg) {
