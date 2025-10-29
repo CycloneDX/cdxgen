@@ -44,7 +44,7 @@ overrides:
   ajv-formats: 3.0.1
   bin-links: 6.0.0
   body-parser: 2.2.0
-  cacache: 20.0.0
+  cacache: 20.0.1
   cheerio: 1.1.2
   chownr: 3.0.0
   common-ancestor-path: 1.0.1
@@ -734,8 +734,8 @@ packages:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
     engines: {node: '>= 0.8'}
 
-  cacache@20.0.0:
-    resolution: {integrity: sha512-2Js2sNgHK36Fdu3ItpQqJjwUXAURb0uyo9i83Tr2wUQINU4tPl4AtQYh6mCqwVFV5W8+Vgcna+bSTQeyPLG/sQ==}
+  cacache@20.0.1:
+    resolution: {integrity: sha512-+7LYcYGBYoNqTp1Rv7Ny1YjUo5E0/ftkQtraH3vkfAGgVHc+ouWdC8okAwQgQR7EVIdW6JTzTmhKFwzb+4okAQ==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
   cacheable-lookup@7.0.0:
@@ -2142,7 +2142,7 @@ snapshots:
   bytes@3.1.2:
     optional: true
 
-  cacache@20.0.0:
+  cacache@20.0.1:
     dependencies:
       '@npmcli/fs': 5.0.0
       fs-minipass: 3.0.3
@@ -2154,7 +2154,6 @@ snapshots:
       minipass-pipeline: 1.2.4
       p-map: 7.0.3
       ssri: 13.0.0
-      tar: 7.5.1
       unique-filename: 5.0.0
     optional: true
 
@@ -2632,7 +2631,7 @@ snapshots:
   make-fetch-happen@15.0.2:
     dependencies:
       '@npmcli/agent': 4.0.0
-      cacache: 20.0.0
+      cacache: 20.0.1
       http-cache-semantics: 4.2.0
       minipass: 7.1.2
       minipass-fetch: 4.0.1
