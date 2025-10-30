@@ -57,7 +57,7 @@ overrides:
   escape-string-regexp: 5.0.0
   glob: 11.0.3
   global-agent: 3.0.0
-  got: 14.6.0
+  got: 14.6.1
   hosted-git-info: 9.0.2
   iconv-lite: 0.7.0
   ini: 6.0.0
@@ -187,8 +187,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       got:
-        specifier: 14.6.0
-        version: 14.6.0
+        specifier: 14.6.1
+        version: 14.6.1
       hosted-git-info:
         specifier: 9.0.2
         version: 9.0.2
@@ -1021,8 +1021,8 @@ packages:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
 
-  got@14.6.0:
-    resolution: {integrity: sha512-K30JHMsHcwhy+JYet3IxRFw+L9rb77y5LE3OkoAD4qzMR9/g30bWYBfkHYVJL2BBPgfU4lJsRwhy4HUkLPQc3g==}
+  got@14.6.1:
+    resolution: {integrity: sha512-56lZOw904LHKr6KdKN0Zbgz9Lw6cpEAAqZcS+0iY4D27caHoLiFT0EGCbrX9ZKYvt+I2lGl3a8eeDNSbmhyjkQ==}
     engines: {node: '>=20'}
 
   graceful-fs@4.2.11:
@@ -2489,7 +2489,7 @@ snapshots:
 
   gopd@1.2.0: {}
 
-  got@14.6.0:
+  got@14.6.1:
     dependencies:
       '@sindresorhus/is': 7.1.0
       '@szmarczak/http-timer': 5.0.1
