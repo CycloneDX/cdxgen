@@ -1,5 +1,5 @@
 # Base-image
-FROM registry.suse.com/bci/openjdk-devel:17.0.16.0@sha256:b2bae2f7454159a05f50db3213532b39923748bb5857dd26a9ee0c17d59b56e4 AS base
+FROM registry.suse.com/bci/openjdk-devel:17.0.16.0@sha256:89e89219b7ccaabb51dbf0c1e3514e9fc32b6d8946929de60e9a604cf2163685 AS base
 
 ARG GITHUB_URL=https://github.com
 ARG GRADLE_8
