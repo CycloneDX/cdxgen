@@ -54,7 +54,7 @@ overrides:
   decompress-response: 10.0.0
   edn-data: 1.1.2
   encoding: 0.1.13
-  escape-string-regexp: 4.0.0
+  escape-string-regexp: 5.0.0
   glob: 11.0.3
   global-agent: 3.0.0
   got: 14.6.0
@@ -937,9 +937,9 @@ packages:
   escape-html@1.0.3:
     resolution: {integrity: sha512-NiSupZ4OeuGwr68lGIeym/ksIZMJodUGOSCZ/FSnTxcrekbvqrgdUxlJOMpijaKZVjAJrWrGs/6Jy8OMuyj9ow==}
 
-  escape-string-regexp@4.0.0:
-    resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
-    engines: {node: '>=10'}
+  escape-string-regexp@5.0.0:
+    resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
+    engines: {node: '>=12'}
 
   expand-template@2.0.3:
     resolution: {integrity: sha512-XYfuKMvj4O35f/pOXLObndIRvyQ+/+6AhODh+OKWj9S9498pHHn/IMszH+gt0fBCRWMNfk1ZSp5x3AifmnI2vg==}
@@ -2386,7 +2386,7 @@ snapshots:
   escape-html@1.0.3:
     optional: true
 
-  escape-string-regexp@4.0.0: {}
+  escape-string-regexp@5.0.0: {}
 
   expand-template@2.0.3:
     optional: true
@@ -2651,7 +2651,7 @@ snapshots:
 
   matcher@3.0.0:
     dependencies:
-      escape-string-regexp: 4.0.0
+      escape-string-regexp: 5.0.0
 
   math-intrinsics@1.1.0:
     optional: true
