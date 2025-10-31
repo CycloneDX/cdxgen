@@ -49,6 +49,13 @@
       "enabled": false
     },
     {
+      "description": ".versions/nvm can update minor and patch as well",
+      "matchManagers": ["custom.regex"],
+      "matchFileNames": [".versions/nvm"],
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "enabled": false
+    },
+    {
       "description": "Pin GitHub Actions digests to major version - for those actions which don't support semver",
       "extends": ["helpers:pinGitHubActionDigests"],
       "matchPackageNames": ["addnab/docker-run-action"],
