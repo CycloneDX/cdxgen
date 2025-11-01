@@ -1,2 +1,2 @@
-# renovate: datasource=github-releases packageName=nvm-sh/nvm
+# renovate: datasource=github-releases depName=nvm-sh/nvm
 v0.40.1
