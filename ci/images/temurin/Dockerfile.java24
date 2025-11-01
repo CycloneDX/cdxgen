@@ -1,6 +1,7 @@
 # Base-image
 FROM eclipse-temurin:24.0.2_12-jdk-ubi9-minimal@sha256:3f4c80b91c40a46a93279149df397c4f3cbb2cb59a43f1a8322cc1c32c94ca73 AS base
 
+ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GRADLE_8
 ARG GRADLE_VERSION=${GRADLE_8}
 ARG MAVEN_3
@@ -9,6 +10,8 @@ ARG NODE_24
 ARG NODE_VERSION=${NODE_24}
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
+ARG NVM
+ARG NVM_VERSION=${NVM}
 ARG PIP_CONFIG
 ARG PYTHON_VERSION=3.12
 ARG REDHAT_REPO
@@ -108,7 +111,7 @@ RUN set -e; \
       --upgrade \
         atom-tools \
         pipenv \
- && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
+ && curl -o- $GITHUB_RAW_URL/nvm-sh/nvm/$NVM_VERSION/install.sh | bash \
  && source ${NVM_DIR}/nvm.sh \
  && nvm install ${NODE_VERSION} \
  && node --version \
