@@ -35,9 +35,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-env:
-  NVM_VERSION: v0.40.3
-
 # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token
 permissions: {}
 
@@ -192,7 +189,8 @@ jobs:
             ${{ matrix.prepare }}
 
             # Install nvm
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/${{ env.NVM_VERSION }}/install.sh | bash
+            NVM_VERSION=`awk 'BEGIN {ORS=""}; FNR==2 {print $1}' .versions/nvm`
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh | bash
             export NVM_DIR="$HOME/.nvm"
             sed -i 's/x64-musl/"${NVM_ARCH}-musl"/g' "$NVM_DIR/nvm.sh"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
