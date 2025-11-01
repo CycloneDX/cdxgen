@@ -1,12 +1,15 @@
 # Base-image
 FROM mcr.microsoft.com/dotnet/sdk:10.0@sha256:ed46c853a4f100ba7aab2394e9fb9f9b8989e93346b04632dbce11e5da7623d8 AS base
 
+ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GITHUB_URL=https://github.com
 ARG NODE_24
 ARG NODE_VERSION=${NODE_24}
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG NUGET_REPO
+ARG NVM
+ARG NVM_VERSION=${NVM}
 ARG PIP_CONFIG
 ARG UBUNTU_REPO
 
