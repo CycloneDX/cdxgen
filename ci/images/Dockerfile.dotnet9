@@ -39,6 +39,7 @@ RUN set -e; \
  && zypper \
       --non-interactive \
         update \
+ && zypper addlock mssql-zulu-jre-8 \
  && zypper \
       --non-interactive \
         install \
