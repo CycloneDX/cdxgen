@@ -1,7 +1,8 @@
 # Base-image
-FROM registry.suse.com/bci/python:3.12.11@sha256:45a2c7cf854f17ab5784d9acd6b9a7adccdd73348eaf8b7a1babcc12c3ac2825 AS base
+FROM registry.suse.com/bci/python:3.12.11@sha256:445b377776adc14d2735be00ed3e4c62d46c3bf953a78311be265af40e53a534 AS base
 
 ARG GCC_VERSION=14
+ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GITHUB_URL=https://github.com
 ARG JAVA_VERSION=24.0.2-tem
 ARG MAVEN_3
@@ -10,6 +11,8 @@ ARG NODE_24
 ARG NODE_VERSION=${NODE_24}
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
+ARG NVM
+ARG NVM_VERSION=${NVM}
 ARG PIP_CONFIG
 ARG SDKMAN_URL=https://api.sdkman.io/2
 ARG SUSE_REPO
@@ -102,7 +105,7 @@ RUN set -e; \
         pipenv \
         poetry \
         uv \
- && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
+ && curl -o- $GITHUB_RAW_URL/nvm-sh/nvm/$NVM_VERSION/install.sh | bash \
  && source ${NVM_DIR}/nvm.sh \
  && nvm install ${NODE_VERSION} \
  && npm install -g \

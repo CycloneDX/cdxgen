@@ -62,7 +62,7 @@ if [ x"${SKIP_PYTHON}" != "xyes" ]; then
 fi
 
 if [ x"${SKIP_NODEJS}" != "xyes" ]; then
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+  curl -o- $GITHUB_RAW_URL/nvm-sh/nvm/$NVM_VERSION/install.sh | bash
   chmod +x /root/.nvm/nvm.sh
   source /root/.nvm/nvm.sh
   nvm install ${NODE_VERSION}

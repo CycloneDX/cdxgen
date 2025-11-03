@@ -1,10 +1,13 @@
 # Base-image
-FROM registry.suse.com/bci/nodejs:20.19.2@sha256:8d8c2c4f378d66782e7e6e9721c93dd3e58f45eae905e723dd3361bcacc5e59c AS base
+FROM registry.suse.com/bci/nodejs:20.19.2@sha256:740a6b6d3e255ac3ef069b138c011dd68d18ebef441e63d1131db93d15dae0ce AS base
 
+ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GITHUB_URL=https://github.com
 ARG GCC_VERSION=14
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
+ARG NVM
+ARG NVM_VERSION=${NVM}
 ARG PIP_CONFIG
 ARG SUSE_REPO
 
@@ -86,7 +89,7 @@ RUN set -e; \
  && node -v \
  && npm -v \
  && python --version \
- && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
+ && curl -o- $GITHUB_RAW_URL/nvm-sh/nvm/$NVM_VERSION/install.sh | bash \
  && source ${NVM_DIR}/nvm.sh \
  && curl -L --output /usr/bin/bazel \
       $GITHUB_URL/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \

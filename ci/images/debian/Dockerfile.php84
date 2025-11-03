@@ -1,14 +1,17 @@
 # Base-image
-FROM php:8.4.13-bookworm@sha256:e61b50da049acc7b991e3dedac62523924a363c4d7ffae508b8a2d082686861c AS base
+FROM php:8.4.14-bookworm@sha256:76284be4faf9c35ffcf97f690f2f7d706359c1bf2a7bbd238df1a70ea1a9da95 AS base
 
 ARG COMPOSER_URL=https://getcomposer.org
 ARG DEBIAN_REPO
+ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GITHUB_URL=https://github.com
 ARG JAVA_VERSION=21.0.8-tem
 ARG NODE_24
 ARG NODE_VERSION=${NODE_24}
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
+ARG NVM
+ARG NVM_VERSION=${NVM}
 ARG PIP_CONFIG
 ARG SDKMAN_URL=https://api.sdkman.io/2
 

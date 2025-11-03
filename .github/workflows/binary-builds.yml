@@ -35,9 +35,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-env:
-  NVM_VERSION: v0.40.3
-
 # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token
 permissions: {}
 
@@ -192,7 +189,8 @@ jobs:
             ${{ matrix.prepare }}
 
             # Install nvm
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/${{ env.NVM_VERSION }}/install.sh | bash
+            NVM_VERSION=`awk 'BEGIN {ORS=""}; FNR==2 {print $1}' .versions/nvm`
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh | bash
             export NVM_DIR="$HOME/.nvm"
             sed -i 's/x64-musl/"${NVM_ARCH}-musl"/g' "$NVM_DIR/nvm.sh"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -243,17 +241,17 @@ jobs:
           (Get-FileHash .\cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}).hash | Out-File -FilePath .\cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}.sha256
           (Get-FileHash .\cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}).hash | Out-File -FilePath .\cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}.sha256
           (Get-FileHash .\cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}).hash | Out-File -FilePath .\cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}.sha256
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}
           path: cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}
           if-no-files-found: error
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}
           path: cdxgen-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}-slim${{ matrix.ext }}
           if-no-files-found: error
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}
           path: cdx-verify-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.libc-suffix }}${{ matrix.ext }}
