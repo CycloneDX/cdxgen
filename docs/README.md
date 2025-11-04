@@ -6,6 +6,12 @@ cdxgen is available as an npm package, container image, and single application e
 
 #### **Generate SBOM for git repos**
 
+## For Contributors / Developers
+```shell
+npm install
+npx cdxgen
+```
+
 ## Installation
 
 ```shell
@@ -64,6 +70,13 @@ cdxgen -t c -o bom.json
 ```
 
 #### **Generate SBOM for container images**
+
+## For Contributors / Developers
+```shell
+npm install
+npx cdxgen
+```
+
 
 ## Installation
 
@@ -244,6 +257,16 @@ Use the bundled `cdx-verify` command, which supports verifying a single signatur
 ```shell
 npm install -g @cyclonedx/cdxgen
 cdx-verify -i bom.json --public-key public.key
+```
+
+### Verifying the signature (npx)
+
+Use the bundled `cdx-verify` command, which supports verifying a single signature added at the BOM level.
+
+You can run it directly using npx (no global install needed):
+
+```shell
+npx @cyclonedx/cdxgen cdx-verify -i bom.json --public-key public.key
 ```
 
 ### Custom verification tool (Node.js example)
