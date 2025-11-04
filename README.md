@@ -50,6 +50,12 @@ Sections include:
 
 ## Usage
 
+## For Contributors / Developers
+```shell
+npm install
+npx cdxgen
+```
+
 ## Installing
 
 ```shell
@@ -339,6 +345,8 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 - Ruby (Gemfile.lock)
 - Rust (Cargo.lock)
 
+
+
 ## Plugins
 
 cdxgen could be extended with external binary plugins to support more SBOM use cases. These are now installed as an optional dependency.
@@ -346,6 +354,17 @@ cdxgen could be extended with external binary plugins to support more SBOM use c
 ```shell
 sudo npm install -g @cyclonedx/cdxgen-plugins-bin
 ```
+
+
+## Plugins (npx)
+
+`cdxgen` can be extended with external binary plugins to support more SBOM use cases.  
+These are now installed as optional dependencies and can be used without a global install.
+
+```shell
+npx @cyclonedx/cdxgen-plugins-bin
+```
+
 
 ## Docker / OCI container support
 
@@ -427,6 +446,18 @@ Use the bundled `cdx-verify` command, which supports verifying a single signatur
 npm install -g @cyclonedx/cdxgen
 cdx-verify -i bom.json --public-key public.key
 ```
+
+
+### Verifying the signature (npx)
+
+Use the bundled `cdx-verify` command, which supports verifying a single signature added at the BOM level.
+
+You can run it directly using npx (no global install needed):
+
+```shell
+npx @cyclonedx/cdxgen cdx-verify -i bom.json --public-key public.key
+```
+
 
 ### Custom verification tool (Node.js example)
 
@@ -538,6 +569,18 @@ corepack pnpm setup
 corepack pnpm add -g --allow-build @appthreat/sqlite3 https://github.com/CycloneDX/cdxgen
 cdxgen --help
 ```
+
+
+### Testing main branch (No Global Install)
+
+To quickly test the latest main branch without installing globally, you can use `pnpm` in a local or temporary environment.
+
+```shell
+corepack enable
+pnpm install --prefer-offline
+pnpm exec cdxgen --help
+```
+
 
 ## Sponsors
 
