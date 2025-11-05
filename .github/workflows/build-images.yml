@@ -183,6 +183,9 @@ jobs:
 
           - lang: python313
 
+          - lang: python313
+            distro: alpine
+
           - lang: ruby25
             fix-qemu: true
             skip-arm: true
