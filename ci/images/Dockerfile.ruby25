@@ -1,5 +1,5 @@
 # Base-image
-FROM registry.suse.com/bci/ruby:2.5@sha256:f562f00aa56bfdf6b47c7e99623b4e303a7f616e73d4177e9abf84089b312443 AS base
+FROM registry.suse.com/bci/ruby:2.5@sha256:3af20f832b437ece09e5e887401631684d21ee35698798b6e2cdcc8fd9b4d5d4 AS base
 
 ARG ATOM_RUBY_VERSION=3.4.5
 ARG NODEJS_DIST_URL
