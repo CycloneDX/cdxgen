@@ -57,7 +57,7 @@ overrides:
   escape-string-regexp: 5.0.0
   glob: 11.0.3
   global-agent: 3.0.0
-  got: 14.6.1
+  got: 14.6.2
   hosted-git-info: 9.0.2
   iconv-lite: 0.7.0
   ini: 6.0.0
@@ -187,8 +187,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       got:
-        specifier: 14.6.1
-        version: 14.6.1
+        specifier: 14.6.2
+        version: 14.6.2
       hosted-git-info:
         specifier: 9.0.2
         version: 9.0.2
@@ -733,6 +733,10 @@ packages:
   buffer-equal-constant-time@1.0.1:
     resolution: {integrity: sha512-zRpUiDwd/xk6ADqPMATG8vc9VPrkck7T07OIx0gnjmJAnHnTVXNQG3vfvWNuiZIkwu9KrKdA1iJKfsfTVxE6NA==}
 
+  byte-counter@0.1.0:
+    resolution: {integrity: sha512-jheRLVMeUKrDBjVw2O5+k4EvR4t9wtxHL+bo/LxfkxsVeuGMy3a5SEGgXdAFA4FSzTrU8rQXQIrsZ3oBq5a0pQ==}
+    engines: {node: '>=20'}
+
   bytes@3.1.2:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
     engines: {node: '>= 0.8'}
@@ -1027,8 +1031,8 @@ packages:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
 
-  got@14.6.1:
-    resolution: {integrity: sha512-56lZOw904LHKr6KdKN0Zbgz9Lw6cpEAAqZcS+0iY4D27caHoLiFT0EGCbrX9ZKYvt+I2lGl3a8eeDNSbmhyjkQ==}
+  got@14.6.2:
+    resolution: {integrity: sha512-bnhvxegqufyxHAmzwCZSscjGLVpw6/NzTXOk2tQVu/b9Q9FeMAgLabYulXEQRwP04UYltnkcZwvBq14fsdqvyw==}
     engines: {node: '>=20'}
 
   graceful-fs@4.2.11:
@@ -2155,6 +2159,8 @@ snapshots:
 
   buffer-equal-constant-time@1.0.1: {}
 
+  byte-counter@0.1.0: {}
+
   bytes@3.1.2:
     optional: true
 
@@ -2504,10 +2510,11 @@ snapshots:
 
   gopd@1.2.0: {}
 
-  got@14.6.1:
+  got@14.6.2:
     dependencies:
       '@sindresorhus/is': 7.1.0
       '@szmarczak/http-timer': 5.0.1
+      byte-counter: 0.1.0
       cacheable-lookup: 7.0.0
       cacheable-request: 13.0.12
       decompress-response: 10.0.0
