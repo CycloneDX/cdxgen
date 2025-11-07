@@ -1,5 +1,5 @@
 # Base-image
-FROM registry.suse.com/bci/dotnet-sdk:9.0.10@sha256:25e481dcc98f1df3e94d639f48165335d9d305a612c1a221e3dca21c3cea1a96 AS base
+FROM registry.suse.com/bci/dotnet-sdk:9.0.10@sha256:0630dc3fc8272c6a6880f1952a15c68bd3555cb998c7e4cb055c542fac42b33a AS base
 
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
@@ -39,6 +39,7 @@ RUN set -e; \
  && zypper \
       --non-interactive \
         update \
+ && zypper addlock mssql-zulu-jre-8 \
  && zypper \
       --non-interactive \
         install \
