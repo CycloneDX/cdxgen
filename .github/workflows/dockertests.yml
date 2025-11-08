@@ -40,7 +40,7 @@ jobs:
           node-version-file: .nvmrc
       - name: pnpm install
         run: |
-          pnpm install --config.strict-dep-builds=true --package-import-method copy
+          pnpm install:frozen
           mkdir -p bomresults
         env:
           CI: true
@@ -100,7 +100,7 @@ jobs:
           node-version-file: .nvmrc
       - name: pnpm install
         run: |
-          pnpm install --config.strict-dep-builds=true --package-import-method copy
+          pnpm install:frozen
           mkdir -p bomresults repotests
         env:
           CI: true
@@ -134,7 +134,7 @@ jobs:
           node-version-file: .nvmrc
       - name: pnpm install, build and test
         run: |
-          pnpm install --config.strict-dep-builds=true --package-import-method copy
+          pnpm install:frozen
           mkdir -p bomresults
         env:
           CI: true
@@ -161,7 +161,7 @@ jobs:
           node-version-file: .nvmrc
       - name: pnpm install, build
         run: |
-          pnpm install --config.strict-dep-builds=true --package-import-method copy
+          pnpm install:frozen
           mkdir bomresults
         env:
           CI: true
