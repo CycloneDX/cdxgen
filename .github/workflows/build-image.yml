@@ -29,8 +29,9 @@ jobs:
               base: context.payload.pull_request.base.sha,
               head: context.payload.pull_request.head.sha
             });
-  
-            const files = [...new Set((data.files).map(f => f.filename))].filter(f => f.includes("Dockerfile"));
+
+            const files = [...new Set((data.files).map(f => f.filename))].filter(f => /^ci\/images\/.*\/?Dockerfile.*$/.test(f)
+            f.includes("Dockerfile"));
 
             core.setOutput("files", JSON.stringify(files));
   image:
