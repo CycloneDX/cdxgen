@@ -56,7 +56,7 @@ jobs:
         run: echo "registry=$NEXUS_URL" > .npmrc
       - name: pnpm install
         run: |
-          pnpm install --config.strict-dep-builds=true --package-import-method copy
+          pnpm install:frozen
           mkdir -p bomresults
           rm -rf $CDXGEN_TEMP_DIR && mkdir -p $CDXGEN_TEMP_DIR
         env:
@@ -142,7 +142,7 @@ jobs:
         run: echo "registry=$NEXUS_URL" > .npmrc
       - name: pnpm install
         run: |
-          pnpm install --config.strict-dep-builds=true --package-import-method copy
+          pnpm install:frozen
           mkdir -p bomresults
           rm -rf $CDXGEN_TEMP_DIR && mkdir -p $CDXGEN_TEMP_DIR
         env:
@@ -235,7 +235,7 @@ jobs:
         run: echo "registry=$NEXUS_URL" > .npmrc
       - name: pnpm install
         run: |
-          pnpm install --config.strict-dep-builds=true --package-import-method copy
+          pnpm install:frozen
           mkdir -p repotests
           mkdir -p bomresults
           mkdir -p denoresults
@@ -1033,7 +1033,7 @@ jobs:
         run: choco install -y bazel
       - name: pnpm install, build and test
         run: |
-          pnpm install --config.strict-dep-builds=true --package-import-method copy
+          pnpm install:frozen
           ls -al node_modules/@cyclonedx/cdxgen-plugins-bin*
           mkdir -p repotests
           mkdir -p bomresults

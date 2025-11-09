@@ -36,7 +36,7 @@ jobs:
       - name: Release npm package
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          pnpm install --config.strict-dep-builds=true
+          pnpm install:frozen
           npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
           echo "cyclonedx:registry=https://registry.npmjs.org" > ~/.npmrc
           NPM_CONFIG_PROVENANCE=true pnpm publish --access=public --no-git-checks

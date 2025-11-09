@@ -46,7 +46,7 @@ jobs:
           node-version-file: .nvmrc
       - name: pnpm install, build
         run: |
-          pnpm install --config.strict-dep-builds=true
+          pnpm install:frozen
           mkdir -p repotests
           mkdir -p bomresults
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
