@@ -207,6 +207,9 @@ jobs:
             distro: alpine
 
           - lang: rust1
+            distro: alpine
+
+          - lang: rust1
             distro: debian
             base-image:
               additional-image: debian-rust
