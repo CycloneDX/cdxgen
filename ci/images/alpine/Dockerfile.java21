@@ -1,5 +1,5 @@
 # Base-image
-FROM eclipse-temurin:21.0.8_9-jdk-alpine@sha256:89517925fa675c6c4b770bee7c44d38a7763212741b0d6fca5a5103caab21a97 AS base
+FROM eclipse-temurin:21.0.9_10-jdk-alpine@sha256:c4799f335a65b1ecca8a31239b05522f2b0a184d6818f6349e83484ee6956198 AS base
 
 ARG ALPINE_REPO
 ARG NODEJS_DIST_URL
