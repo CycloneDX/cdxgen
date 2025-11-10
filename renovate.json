@@ -6,6 +6,7 @@
     ":enableVulnerabilityAlerts",
     "customManagers:biomeVersions",
     "customManagers:dockerfileVersions",
+    ":disableRateLimiting",
     "docker:pinDigests",
     "helpers:pinGitHubActionDigestsToSemver"
   ],
