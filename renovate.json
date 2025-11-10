@@ -42,7 +42,6 @@
       "matchDepNames": ["golang", "php", "python", "ruby"],
       "matchFileNames": ["ci/**/*"],
       "matchUpdateTypes": ["minor"],
-      "extends": [":separatePatchReleases"],
       "enabled": false
     },
     {
