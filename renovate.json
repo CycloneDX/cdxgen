@@ -27,12 +27,6 @@
       "description": "cdxgen images: limit docker image updates to exclude major updates as we explicitly set these versions",
       "matchDatasources": ["docker"],
       "matchFileNames": ["ci/**/*"],
-      "extends": [":separatePatchReleases"]
-    },
-    {
-      "description": "cdxgen images: limit docker image updates to exclude major updates as we explicitly set these versions",
-      "matchDatasources": ["docker"],
-      "matchFileNames": ["ci/**/*"],
       "matchUpdateTypes": ["major"],
       "enabled": false
     },
@@ -42,6 +36,7 @@
       "matchDepNames": ["golang", "php", "python", "ruby"],
       "matchFileNames": ["ci/**/*"],
       "matchUpdateTypes": ["minor"],
+      "extends": [":separatePatchReleases"],
       "enabled": false
     },
     {
