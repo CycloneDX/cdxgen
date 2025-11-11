@@ -1,5 +1,5 @@
 # Base-image
-FROM rust:1.91.0-alpine3.22@sha256:a3e3d30122c08c0ed85dcd8867d956f066be23c32ed67a0453bc04ce478ad69b AS base
+FROM rust:1.91.0-alpine AS base
 
 ARG ALPINE_REPO
 ARG NODEJS_DIST_URL
