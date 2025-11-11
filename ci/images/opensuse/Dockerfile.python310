@@ -1,5 +1,5 @@
 # Base-image
-FROM registry.opensuse.org/opensuse/bci/python:3.10.16 AS base
+FROM registry.opensuse.org/opensuse/bci/python:3.13.9@sha256:71e1abbd27df8e435bed8e0ff2b48885f89225df4453ddc25068f4bac13a59e5 AS base
 
 ARG GITHUB_URL=https://github.com
 # renovate: datasource=golang-version depName=golang
