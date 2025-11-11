@@ -39,7 +39,14 @@
     {
       "description": "cdxgen images: in addition to the rule above, these specific images are excluded from minor updates as we explicitly set these versions",
       "matchDatasources": ["docker"],
-      "matchDepNames": ["golang", "php", "python", "ruby", "registry.opensuse.org/opensuse/bci/python", "registry.suse.com/bci/python"],
+      "matchDepNames": [
+        "golang",
+        "php",
+        "python",
+        "ruby",
+        "registry.opensuse.org/opensuse/bci/python",
+        "registry.suse.com/bci/python"
+      ],
       "matchFileNames": ["ci/**/*"],
       "matchUpdateTypes": ["minor"],
       "enabled": false
