@@ -8,8 +8,8 @@ cdxgen is available as an npm package, container image, and single application e
 
 ## For Contributors / Developers
 ```shell
-npm install
-npx cdxgen
+pnpm install
+pnpm dlx cdxgen
 ```
 
 ## Installation
@@ -73,8 +73,8 @@ cdxgen -t c -o bom.json
 
 ## For Contributors / Developers
 ```shell
-npm install
-npx cdxgen
+pnpm install
+pnpm dlx cdxgen
 ```
 
 
@@ -259,14 +259,14 @@ npm install -g @cyclonedx/cdxgen
 cdx-verify -i bom.json --public-key public.key
 ```
 
-### Verifying the signature (npx)
+### Verifying the signature (pnpm)
 
 Use the bundled `cdx-verify` command, which supports verifying a single signature added at the BOM level.
 
-You can run it directly using npx (no global install needed):
+You can run it directly using pnpm (no global install needed):
 
 ```shell
-npx @cyclonedx/cdxgen cdx-verify -i bom.json --public-key public.key
+pnpm dlx @cyclonedx/cdxgen cdx-verify -i bom.json --public-key public.key
 ```
 
 ### Custom verification tool (Node.js example)

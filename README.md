@@ -52,8 +52,8 @@ Sections include:
 
 ## For Contributors / Developers
 ```shell
-npm install
-npx cdxgen
+pnpm install
+pnpm dlx cdxgen
 ```
 
 ## Installing
@@ -356,13 +356,13 @@ sudo npm install -g @cyclonedx/cdxgen-plugins-bin
 ```
 
 
-## Plugins (npx)
+## Plugins (pnpm)
 
 `cdxgen` can be extended with external binary plugins to support more SBOM use cases.  
 These are now installed as optional dependencies and can be used without a global install.
 
 ```shell
-npx @cyclonedx/cdxgen-plugins-bin
+pnpm dlx @cyclonedx/cdxgen-plugins-bin
 ```
 
 
@@ -448,14 +448,14 @@ cdx-verify -i bom.json --public-key public.key
 ```
 
 
-### Verifying the signature (npx)
+### Verifying the signature (pnpm)
 
 Use the bundled `cdx-verify` command, which supports verifying a single signature added at the BOM level.
 
-You can run it directly using npx (no global install needed):
+You can run it directly using pnpm (no global install needed):
 
 ```shell
-npx @cyclonedx/cdxgen cdx-verify -i bom.json --public-key public.key
+pnpm dlx @cyclonedx/cdxgen cdx-verify -i bom.json --public-key public.key
 ```
 
 
@@ -578,7 +578,7 @@ To quickly test the latest main branch without installing globally, you can use 
 ```shell
 corepack enable
 pnpm install --prefer-offline
-pnpm exec cdxgen --help
+pnpm dlx cdxgen --help
 ```
 
 
