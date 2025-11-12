@@ -24,31 +24,30 @@
       "rangeStrategy": "auto"
     },
     {
-      "description": "cdxgen images: limit docker image updates to exclude major updates as we explicitly set these versions",
+      "description": "cdxgen images: separate minor and patch releases, required for the following rules to work correctly",
       "matchDatasources": ["docker"],
-      "matchFileNames": ["ci/**/*"],
+      "matchFileNames": ["ci/**/Dockerfile.*"],
       "extends": [":separatePatchReleases"]
     },
     {
-      "description": "cdxgen images: limit docker image updates to exclude major updates as we explicitly set these versions",
+      "description": "cdxgen images: exclude major version updates for images pinned to a specific major version by filename convention",
       "matchDatasources": ["docker"],
-      "matchFileNames": ["ci/**/*"],
+      "matchFileNames": ["/ci\\/.*\\/Dockerfile.*\\d+$/"],
       "matchUpdateTypes": ["major"],
       "enabled": false
     },
     {
-      "description": "cdxgen images: in addition to the rule above, these specific images are excluded from minor updates as we explicitly set these versions",
+      "description": "cdxgen images: exclude major and minor version updates for images pinned to a specific major and minor version by filename convention",
       "matchDatasources": ["docker"],
-      "matchDepNames": [
-        "golang",
-        "php",
-        "python",
-        "ruby",
-        "registry.opensuse.org/opensuse/bci/python",
-        "registry.suse.com/bci/python"
-      ],
-      "matchFileNames": ["ci/**/*"],
-      "matchUpdateTypes": ["minor"],
+      "matchFileNames": ["/ci\\/.*\\/Dockerfile.*\\d+\\.\\d+$/"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
+      "description": "cdxgen images: exclude major, minor and patch version updates for images pinned to a specific major and minor version by filename convention",
+      "matchDatasources": ["docker"],
+      "matchFileNames": ["/ci\\/.*\\/Dockerfile.*\\d+\\.\\d+\\.\\d+$/"],
+      "matchUpdateTypes": ["major", "minor", "patch"],
       "enabled": false
     },
     {
