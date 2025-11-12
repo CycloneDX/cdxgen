@@ -49,9 +49,9 @@ jobs:
             platform: arm64
           - imagefile: ci/images/Dockerfile.dotnet9
             platform: arm64
-          - imagefile: ci/images/Dockerfile.ruby25
+          - imagefile: ci/images/Dockerfile.ruby2.5
             platform: arm64
-          - imagefile: ci/images/debian/Dockerfile.ruby26
+          - imagefile: ci/images/debian/Dockerfile.ruby2.6
             platform: arm64
     runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
     steps:

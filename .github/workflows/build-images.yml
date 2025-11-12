@@ -89,20 +89,20 @@ jobs:
             distro: ubuntu
             runner: macos-hosted
 
-          - lang: golang123
+          - lang: golang1.23
             distro: alpine
 
-          - lang: golang123
+          - lang: golang1.23
             distro: debian
 
-          - lang: golang124
+          - lang: golang1.24
             distro: alpine
             base-image:
               additional-image: alpine-golang
             cdxgen-image:
               additional-image: cdxgen-alpine-golang
 
-          - lang: golang124
+          - lang: golang1.24
             distro: debian
             base-image:
               additional-image: debian-golang
@@ -148,62 +148,62 @@ jobs:
           - lang: node24
             distro: alpine
 
-          - lang: php83
+          - lang: php8.3
             distro: debian
             runner: macos-hosted
 
-          - lang: php84
+          - lang: php8.4
             distro: alpine
 
-          - lang: php84
+          - lang: php8.4
             distro: debian
             runner: macos-hosted
 
-          - lang: python36
+          - lang: python3.6
 
-          - lang: python39
+          - lang: python3.9
             distro: opensuse
             runner: macos-hosted
             cdxgen-image:
               additional-image: cdxgen-python39
 
-          - lang: python310
+          - lang: python3.10
             distro: opensuse
             runner: macos-hosted
             cdxgen-image:
               additional-image: cdxgen-python310
 
-          - lang: python311
+          - lang: python3.11
 
-          - lang: python312
+          - lang: python3.12
             base-image:
               lang: lang
             cdxgen-image:
               additional-image: cdxgen-python
 
-          - lang: python313
+          - lang: python3.13
 
-          - lang: python313
+          - lang: python3.13
             distro: alpine
 
-          - lang: ruby25
+          - lang: ruby.25
             fix-qemu: true
             skip-arm: true
             base-image:
               name: sle
 
-          - lang: ruby26
+          - lang: ruby.26
             distro: debian
             skip-arm: true
 
-          - lang: ruby33
+          - lang: ruby3.3
             distro: debian
             runner: macos-hosted
 
-          - lang: ruby34
+          - lang: ruby3.4
             distro: debian
 
-          - lang: ruby34
+          - lang: ruby3.4
             distro: alpine
 
           - lang: rust1
