@@ -40,7 +40,7 @@
       "description": "cdxgen images: exclude major and minor version updates for images pinned to a specific major and minor version by filename convention",
       "matchDatasources": ["docker"],
       "matchFileNames": ["/ci\\/.*\\/.*\\d+\\.\\d+$/"],
-      "matchUpdateTypes": ["minor"],
+      "matchUpdateTypes": ["major", "minor"],
       "enabled": false
     },
     {
