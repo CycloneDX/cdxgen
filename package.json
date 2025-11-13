@@ -112,7 +112,7 @@
     "*": "biome check --fix --no-errors-on-unmatched"
   },
   "overrides": {
-    "@appthreat/atom": "2.3.0",
+    "@appthreat/atom": "2.4.2",
     "@appthreat/cdx-proto": "1.1.4",
     "@babel/code-frame": "7.27.1",
     "@babel/generator": "7.28.5",
@@ -285,7 +285,7 @@
     "typescript": "5.9.3"
   },
   "optionalDependencies": {
-    "@appthreat/atom": "2.3.0",
+    "@appthreat/atom": "2.4.2",
     "@appthreat/cdx-proto": "1.1.4",
     "@bufbuild/protobuf": "2.10.0",
     "@cyclonedx/cdxgen-plugins-bin": "1.7.0",
@@ -317,7 +317,7 @@
       "@biomejs/biome"
     ],
     "overrides": {
-      "@appthreat/atom": "2.3.0",
+      "@appthreat/atom": "2.4.2",
       "@appthreat/cdx-proto": "1.1.4",
       "@babel/code-frame": "7.27.1",
       "@babel/generator": "7.28.5",
