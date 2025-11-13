@@ -1,5 +1,7 @@
-# Base-image
-FROM registry.suse.com/bci/openjdk-devel:17.0.17.0@sha256:e51828c31a8c8da0ec24f806cad535cda336b396e64967b02943836b0e7244d8 AS base
+ARG IMAGE_TYPE
+
+# Base-image (slim)
+FROM registry.suse.com/bci/openjdk-devel:17.0.17.0@sha256:e51828c31a8c8da0ec24f806cad535cda336b396e64967b02943836b0e7244d8 AS base-slim
 
 ARG GITHUB_URL=https://github.com
 ARG GRADLE_8
@@ -8,9 +10,7 @@ ARG MAVEN_3
 ARG MAVEN_VERSION=${MAVEN_3}
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
-ARG PIP_CONFIG
 ARG SBT_VERSION=1.11.6
-ARG SCALA_VERSION=3.6.4
 ARG SDKMAN_URL=https://api.sdkman.io/2
 ARG SUSE_REPO
 
@@ -22,13 +22,9 @@ ENV GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}" \
     LC_ALL=en_US.UTF-8 \
     MAVEN_HOME="/opt/maven/${MAVEN_VERSION}" \
     MAVEN_VERSION=$MAVEN_VERSION \
-    PYTHONPATH=/opt/pypi \
     SBT_HOME="/opt/sbt/${SBT_VERSION}" \
-    SBT_VERSION=$SBT_VERSION \
-    SCALA_HOME="/opt/scala/${SCALA_VERSION}" \
-    SCALA_VERSION=$SCALA_VERSION \
-    npm_config_python=/usr/bin/python3.11
-ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SCALA_HOME}/bin:${SBT_HOME}/bin
+    SBT_VERSION=$SBT_VERSION
+ENV PATH=${PATH}:/usr/local/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin
 
 RUN set -e; \
     if [ -n "$NODEJS_DIST_URL" ]; then \
@@ -38,10 +34,6 @@ RUN set -e; \
     if [ -n "$NPM_REPO" ]; then \
       export "COREPACK_NPM_REGISTRY=$NPM_REPO"; \
       printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO\n" >> $HOME/.npmrc; \
-    fi; \
-    if [ -n "$PIP_CONFIG" ]; then \
-      mkdir $HOME/.pip/; \
-      printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
     fi; \
     if [ -n "$SUSE_REPO" ]; then \
       sed -i "s|https://public-dl.suse.com|$SUSE_REPO|g" /etc/zypp/repos.d/*; \
@@ -87,22 +79,15 @@ RUN set -e; \
  && source "$HOME/.sdkman/bin/sdkman-init.sh" \
  && sdk install maven $MAVEN_VERSION \
  && sdk install gradle $GRADLE_VERSION \
- && sdk install scala $SCALA_VERSION \
  && sdk install sbt $SBT_VERSION \
  && mv /root/.sdkman/candidates/* /opt/ \
  && curl -L --output /usr/bin/bazel \
       $GITHUB_URL/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
  && chmod +x /usr/bin/bazel \
  && BAZELISK_BASE_URL=$GITHUB_URL/bazelbuild/bazel/releases/download bazel --version \
- && pip install \
-      --no-cache-dir \
-      --target ${PYTHONPATH} \
-      --upgrade \
-        atom-tools \
- && atom-tools --help \
  && npm install -g \
       corepack \
- && rm -rf $HOME/.npmrc $HOME/.pip \
+ && rm -rf $HOME/.npmrc \
  && zypper clean -a \
  && if [ -n "$SUSE_REPO" ]; then \
       sed -i "s|$SUSE_REPO|https://public-dl.suse.com|g" /etc/zypp/repos.d/*; \
@@ -112,8 +97,41 @@ CMD ["/bin/bash"]
 
 
 
+# Base-image (full)
+FROM base-slim AS base
+
+# All ARGs need to be redefined, values are inherited
+ARG PIP_CONFIG
+ARG SCALA_VERSION=3.6.4
+ARG SDKMAN_URL=https://api.sdkman.io/2
+
+ENV PYTHONPATH=/opt/pypi \
+    SCALA_HOME="/opt/scala/${SCALA_VERSION}" \
+    SCALA_VERSION=$SCALA_VERSION \
+    npm_config_python=/usr/bin/python3.11
+ENV PATH=${PATH}:${PYTHONPATH}/bin:${SCALA_HOME}/bin
+
+RUN set -e; \
+    if [ -n "$PIP_CONFIG" ]; then \
+      mkdir $HOME/.pip/; \
+      printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
+    fi; \
+    SDKMAN_BROKER_API="$SDKMAN_URL/broker" \
+ && SDKMAN_CANDIDATES_API="$SDKMAN_URL" \
+ && source "$HOME/.sdkman/bin/sdkman-init.sh" \
+ && sdk install scala $SCALA_VERSION \
+ && pip install \
+      --no-cache-dir \
+      --target ${PYTHONPATH} \
+      --upgrade \
+        atom-tools \
+ && atom-tools --help \
+ && rm -rf $HOME/.pip
+
+
+
 # cdxgen-image
-FROM base AS cdxgen
+FROM base${IMAGE_TYPE} AS cdxgen
 
 ENV CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
