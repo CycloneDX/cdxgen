@@ -112,7 +112,7 @@ overrides:
   unique-slug: 6.0.0
   uuid: 13.0.0
   walk-up-path: 4.0.0
-  which: 5.0.0
+  which: 6.0.0
   write-file-atomic: 7.0.0
   xml-js: 1.6.11
   yallist: 5.0.0
@@ -1726,9 +1726,9 @@ packages:
     resolution: {integrity: sha512-QaKxh0eNIi2mE9p2vEdzfagOKHCcj1pJ56EEHGQOVxp8r9/iszLUUV7v89x9O1p/T+NlTM5W7jW6+cz4Fq1YVg==}
     engines: {node: '>=18'}
 
-  which@5.0.0:
-    resolution: {integrity: sha512-JEdGzHwwkrbWoGOlIHqQ5gtprKGOenpDHpxE9zVR1bWbOtYRyPPHMe9FaP6x61CmNaTThSkb0DAJte5jD+DmzQ==}
-    engines: {node: ^18.17.0 || >=20.5.0}
+  which@6.0.0:
+    resolution: {integrity: sha512-f+gEpIKMR9faW/JgAgPK1D7mekkFoqbmiwvNzuhsHetni20QSgzg9Vhn0g2JSJkkfehQnqdUAx7/e15qS1lPxg==}
+    engines: {node: ^20.17.0 || >=22.9.0}
     hasBin: true
 
   wkx@0.5.0:
@@ -1991,7 +1991,7 @@ snapshots:
       proc-log: 6.0.0
       promise-retry: 2.0.1
       semver: 7.7.3
-      which: 5.0.0
+      which: 6.0.0
 
   '@npmcli/installed-package-contents@4.0.0':
     dependencies:
@@ -2019,7 +2019,7 @@ snapshots:
 
   '@npmcli/promise-spawn@8.0.3':
     dependencies:
-      which: 5.0.0
+      which: 6.0.0
 
   '@npmcli/query@5.0.0':
     dependencies:
@@ -2260,7 +2260,7 @@ snapshots:
     dependencies:
       path-key: 3.1.1
       shebang-command: 2.0.0
-      which: 5.0.0
+      which: 6.0.0
 
   css-select@5.2.2:
     dependencies:
@@ -2763,7 +2763,7 @@ snapshots:
       semver: 7.7.3
       tar: 7.5.2
       tinyglobby: 0.2.15
-      which: 5.0.0
+      which: 6.0.0
     transitivePeerDependencies:
       - supports-color
     optional: true
@@ -3272,7 +3272,7 @@ snapshots:
 
   whatwg-mimetype@4.0.0: {}
 
-  which@5.0.0:
+  which@6.0.0:
     dependencies:
       isexe: 3.1.1
 
