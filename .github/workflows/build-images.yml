@@ -12,6 +12,7 @@ name: Build images
 #   fix-qemu:              Fix the QEMU installation on the build-server   -- default: false
 #   runner:                Hint/name of the server to run the build on     -- default: 'ubuntu-24.04' (defined in `image-build.yml`)
 #   skip-arm:              Do not build an ARM64-version of this image     -- default: false
+#   slim:                  Dockerfile contains a separate slim-variant     -- default: false
 #   base-image:            Configuration specific to the base-image        -- optional
 #     additional-image:    Additional name for the base-image              -- optional
 #     lang:                Override the lang for just the base-image       -- historical, should not be used for new images
@@ -123,8 +124,7 @@ jobs:
               additional-image3: cdxgen-java-slim
 
           - lang: java17
-
-          - lang: java17-slim
+            slim: true
 
           - lang: java21
             distro: alpine
