@@ -136,6 +136,9 @@ const args = _yargs
     default: "",
     type: "string",
   })
+  .option("project-tag", {
+    description: "Dependency track project tag. Multiple values allowed.",
+  })
   .option("project-id", {
     description:
       "Dependency track project id. Either provide the id or the project name and version together",

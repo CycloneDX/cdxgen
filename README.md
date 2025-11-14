@@ -138,6 +138,7 @@ Options:
       --project-group             Dependency track project group
       --project-name              Dependency track project name. Default use the directory name
       --project-version           Dependency track project version                                [string] [default: ""]
+      --project-tag               Dependency track project tag. Multiple values allowed.                         [array]
       --project-id                Dependency track project id. Either provide the id or the project name and version tog
                                   ether                                                                         [string]
       --parent-project-id         Dependency track parent project id                                            [string]
