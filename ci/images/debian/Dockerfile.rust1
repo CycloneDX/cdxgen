@@ -1,5 +1,5 @@
 # Base-image
-FROM rust:1.89.0-slim-bookworm@sha256:d7fc7de78bb8c1469933aeecbf801314d30d7d6e9f0578bba4cfa285bfa37fe6 AS base
+FROM rust:1.91.1-slim-bookworm@sha256:ea63277ad2e4d89ea2e2b170ab0bde8813ed4809f66afa3db596d1ccf90b5903 AS base
 
 ARG DEBIAN_REPO
 ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
@@ -123,12 +123,8 @@ RUN set -e; \
     fi; \
     cd /opt/cdxgen \
  && corepack enable \
- && corepack pnpm install \
-      --config.strict-dep-builds=true \
-      --frozen-lockfile \
+ && corepack pnpm install:prod \
       --no-optional \
-      --package-import-method copy \
-      --prod \
  && corepack pnpm cache delete \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \

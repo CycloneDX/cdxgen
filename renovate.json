@@ -6,6 +6,7 @@
     ":enableVulnerabilityAlerts",
     "customManagers:biomeVersions",
     "customManagers:dockerfileVersions",
+    ":disableRateLimiting",
     "docker:pinDigests",
     "helpers:pinGitHubActionDigestsToSemver"
   ],
@@ -23,10 +24,30 @@
       "rangeStrategy": "auto"
     },
     {
-      "description": "cdxgen images: limit docker image updates to exclude major or minor updates as we explicitly set these versions",
+      "description": "cdxgen images: separate minor and patch releases, required for the following rules to work correctly",
       "matchDatasources": ["docker"],
-      "matchFileNames": ["ci/**/*"],
+      "matchFileNames": ["ci/**/Dockerfile.*"],
+      "extends": [":separatePatchReleases"]
+    },
+    {
+      "description": "cdxgen images: exclude major version updates for images pinned to a specific major version by filename convention",
+      "matchDatasources": ["docker"],
+      "matchFileNames": ["/ci\\/.*\\/Dockerfile.*\\d+$/"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "description": "cdxgen images: exclude major and minor version updates for images pinned to a specific major and minor version by filename convention",
+      "matchDatasources": ["docker"],
+      "matchFileNames": ["/ci\\/.*\\/Dockerfile.*\\d+\\.\\d+$/"],
       "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
+      "description": "cdxgen images: exclude major, minor and patch version updates for images pinned to a specific major and minor version by filename convention",
+      "matchDatasources": ["docker"],
+      "matchFileNames": ["/ci\\/.*\\/Dockerfile.*\\d+\\.\\d+\\.\\d+$/"],
+      "matchUpdateTypes": ["major", "minor", "patch"],
       "enabled": false
     },
     {

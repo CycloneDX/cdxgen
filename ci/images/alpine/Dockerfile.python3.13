@@ -1,13 +1,12 @@
 # Base-image
-FROM node:24.11.0-alpine@sha256:f36fed0b2129a8492535e2853c64fbdbd2d29dc1219ee3217023ca48aebd3787 AS base
+FROM python:3.13.9-alpine@sha256:e5fa639e49b85986c4481e28faa2564b45aa8021413f31026c3856e5911618b1 AS base
 
 ARG ALPINE_REPO
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG PIP_CONFIG
 
-ENV PATH=${PATH}:/usr/local/bin \
-    PYTHONPATH=/opt/pypi
+ENV PATH=${PATH}:/usr/local/bin
 
 RUN set -e; \
     if [ -n "$ALPINE_REPO" ]; then \
@@ -27,21 +26,12 @@ RUN set -e; \
     fi; \
     apk update \
  && apk add --no-cache \
-      gcc \
-      g++ \
-      make \
-      musl-dev \
+      nodejs \
       npm \
-      openjdk21 \
-      python3 \
-      python3-dev \
-      py3-pip \
-      py3-virtualenv \
- && npm install -g \
-      corepack \
-      npm \
- && /usr/bin/python --version \
- && /usr/bin/python -m pip install \
+ && npm install -g corepack \
+ && python --version \
+ && python -m pip install \
+      --break-system-packages \
       --no-cache-dir \
       --target ${PYTHONPATH} \
       --upgrade \
@@ -60,7 +50,7 @@ FROM base AS cdxgen
 
 ENV CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
-    PATH=${PATH}:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin
+    PATH=${PATH}:/opt/cdxgen/node_modules/.bin
 
 COPY . /opt/cdxgen
 
@@ -85,15 +75,7 @@ RUN set -e; \
  && corepack pnpm install:prod \
  && corepack pnpm cache delete \
  && npm uninstall -g corepack \
- && apk del \
-      gcc \
-      g++ \
-      make \
-      musl-dev \
-      npm \
-      python3-dev \
-      py3-pip \
-      py3-virtualenv \
+ && apk del npm \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
  && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \

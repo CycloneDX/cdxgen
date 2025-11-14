@@ -1,30 +1,37 @@
 # Base-image
-FROM registry.suse.com/bci/openjdk-devel:17.0.16.0@sha256:6dc2d83b89849b5f590be104e798f2488804d7c61aeac79d05cdae5f75e503e2 AS base
+FROM registry.suse.com/bci/python:3.11.13@sha256:f1796a36bd2cc046a5c7fe1125dbc7aadc6ab1eccd7b134d17714a68f72b1fe6 AS base
 
+ARG GCC_VERSION=14
+ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GITHUB_URL=https://github.com
-ARG GRADLE_8
-ARG GRADLE_VERSION=${GRADLE_8}
+# renovate: datasource=golang-version depName=golang
+ARG GO_VERSION=1.25.4
+ARG GOOGLE_URL=https://dl.google.com
+ARG JAVA_VERSION=24.0.2-tem
 ARG MAVEN_3
 ARG MAVEN_VERSION=${MAVEN_3}
+ARG NODE_20
+ARG NODE_VERSION=${NODE_20}
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
+ARG NVM
+ARG NVM_VERSION=${NVM}
 ARG PIP_CONFIG
-ARG SBT_VERSION=1.11.6
 ARG SDKMAN_URL=https://api.sdkman.io/2
 ARG SUSE_REPO
 
-ENV GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}" \
-    GRADLE_OPTS="-Dorg.gradle.daemon=false" \
-    GRADLE_VERSION=$GRADLE_VERSION \
+ENV GOPATH=/opt/app-root/go \
+    JAVA_HOME="/opt/java/${JAVA_VERSION}" \
+    JAVA_VERSION=$JAVA_VERSION \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8 \
     MAVEN_HOME="/opt/maven/${MAVEN_VERSION}" \
     MAVEN_VERSION=$MAVEN_VERSION \
-    SBT_HOME="/opt/sbt/${SBT_VERSION}" \
-    SBT_VERSION=$SBT_VERSION \
+    NVM_DIR="/root/.nvm" \
+    PYTHONPATH=/opt/pypi \
     npm_config_python=/usr/bin/python3.11
-ENV PATH=${PATH}:/usr/local/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin
+ENV PATH=${PATH}:/usr/local/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${PYTHONPATH}/bin:${GOPATH}/bin:/usr/local/go/bin
 
 RUN set -e; \
     if [ -n "$NODEJS_DIST_URL" ]; then \
@@ -65,32 +72,62 @@ RUN set -e; \
         install \
         -l \
         --no-recommends \
+          bzip2 \
           gawk \
+          gcc${GCC_VERSION} \
+          gcc${GCC_VERSION}-c++ \
+          gcc${GCC_VERSION}-fortran \
           git-core \
+          libxml2-devel \
           make \
-          nodejs22 \
-          npm22 \
-          python311 \
-          python311-pip \
           unzip \
           wget \
           zip \
+ && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-${GCC_VERSION} 10 \
+ && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_VERSION} 10 \
+ && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION} 10 \
+ && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-${GCC_VERSION} 10 \
  && curl -L "https://get.sdkman.io" | bash \
  && SDKMAN_BROKER_API="$SDKMAN_URL/broker" \
  && SDKMAN_CANDIDATES_API="$SDKMAN_URL" \
  && printf "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" \
       >> $HOME/.sdkman/etc/config \
  && source "$HOME/.sdkman/bin/sdkman-init.sh" \
+ && sdk install java $JAVA_VERSION \
  && sdk install maven $MAVEN_VERSION \
- && sdk install gradle $GRADLE_VERSION \
- && sdk install sbt $SBT_VERSION \
  && mv /root/.sdkman/candidates/* /opt/ \
+ && curl -LO "${GOOGLE_URL}/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz" \
+ && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
+ && rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
+ && go telemetry off \
+ && python3 -m pip install \
+      --no-cache-dir \
+      --upgrade \
+        pip \
+        setuptools==77.0.3\
+        virtualenv \
+ && python3 -m pip install \
+      --no-cache-dir \
+      --target ${PYTHONPATH} \
+      --upgrade \
+        atom-tools \
+        pipenv \
+        poetry \
+        uv \
+ && curl -o- $GITHUB_RAW_URL/nvm-sh/nvm/$NVM_VERSION/install.sh | bash \
+ && source ${NVM_DIR}/nvm.sh \
+ && nvm install ${NODE_VERSION} \
+ && npm install -g \
+      corepack \
+      node-gyp \
+ && npx node-gyp install \
+ && node -v \
+ && npm -v \
+ && gcc --version \
  && curl -L --output /usr/bin/bazel \
       $GITHUB_URL/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
  && chmod +x /usr/bin/bazel \
  && BAZELISK_BASE_URL=$GITHUB_URL/bazelbuild/bazel/releases/download bazel --version \
- && npm install -g \
-      corepack \
  && rm -rf $HOME/.npmrc $HOME/.pip \
  && zypper clean -a \
  && if [ -n "$SUSE_REPO" ]; then \
@@ -105,8 +142,16 @@ CMD ["/bin/bash"]
 FROM base AS cdxgen
 
 ENV CDXGEN_IN_CONTAINER=true \
+    CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8 \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
-    PATH=${PATH}:/opt/cdxgen/node_modules/.bin
+    PATH=${PATH}:/opt/cdxgen/node_modules/.bin \
+    PYTHON_CMD=python3 \
+    PYTHONIOENCODING="utf-8" \
+    PYTHONUNBUFFERED=1 \
+    SAFE_PIP_INSTALL=true
 
 COPY . /opt/cdxgen
 
@@ -127,7 +172,25 @@ RUN set -e; \
       sed -i "s|https://public-dl.suse.com|$SUSE_REPO|g" /etc/zypp/repos.d/*; \
       zypper --no-gpg-checks refresh; \
     fi; \
-    cd /opt/cdxgen \
+    source ${NVM_DIR}/nvm.sh \
+ && zypper \
+      --non-interactive \
+        install \
+        -l \
+        --no-recommends \
+          clang7 \
+          graphviz-devel \
+          lapacke-devel \
+          libcurl-devel \
+          libjpeg62-devel \
+          libmariadb-devel \
+          libopenblas_pthreads-devel \
+          libopenssl-devel \
+          llvm7 \
+          llvm7-devel \
+          postgresql-devel \
+          postgresql-server-devel \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install:prod \
  && corepack pnpm cache delete \
@@ -135,6 +198,7 @@ RUN set -e; \
  && node /opt/cdxgen/bin/cdxgen.js --help \
  && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \
  && chmod a-w -R /opt \
+ && zypper clean -a \
  && if [ -n "$SUSE_REPO" ]; then \
       sed -i "s|$SUSE_REPO|https://public-dl.suse.com|g" /etc/zypp/repos.d/*; \
     fi

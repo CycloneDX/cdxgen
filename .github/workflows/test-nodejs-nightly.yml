@@ -31,5 +31,5 @@ jobs:
           node-version: 26-nightly
       - name: Test
         run: |
-          pnpm install --config.strict-dep-builds=true
+          pnpm install:frozen
           pnpm test

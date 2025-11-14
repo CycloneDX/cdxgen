@@ -1,26 +1,30 @@
 # Base-image
-FROM ruby:3.4.7-slim@sha256:6ad3e90f473b88a0aa45c8cd00a99c896a7fab1c0814767d40c501028aafbeab AS base
+FROM ruby:2.6.10-slim-bullseye@sha256:3d641979a7dc819b4c253dc62d2f74800817053247005f72b871d164498109df AS base
 
+ARG ATOM_RUBY_VERSION=3.4.5
 ARG DEBIAN_REPO
 ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GITHUB_URL=https://github.com
 ARG JAVA_VERSION=21.0.8-tem
-ARG NODE_24
-ARG NODE_VERSION=${NODE_24}
+ARG NODE_20
+ARG NODE_VERSION=${NODE_20}
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG NVM
 ARG NVM_VERSION=${NVM}
 ARG PIP_CONFIG
+ARG RUBY_LANG_URL
 ARG RUBYGEMS_REPO
 ARG SDKMAN_URL=https://api.sdkman.io/2
 
-ENV ATOM_CMD=/usr/local/bin/atom \
+ENV ATOM_RUBY_VERSION=$ATOM_RUBY_VERSION \
     BUNDLE_SILENCE_ROOT_WARNING=true \
     JAVA_HOME="/opt/java/${JAVA_VERSION}" \
+    JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8" \
     JAVA_VERSION=$JAVA_VERSION \
     NVM_DIR="/root/.nvm" \
-    PYTHONPATH=/opt/pypi
+    PYTHONPATH=/opt/pypi \
+    npm_config_build_from_source=true
 ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin
 
 COPY ci/images/debian/install.sh /tmp/
@@ -64,26 +68,21 @@ RUN set -e; \
       zip \
  && apt-get install -qq -y \
       build-essential \
-      libffi-dev \
+      gcc-10 \
+      g++-10 \
       libmagic-dev \
-      libyaml-dev \
       locales \
       python3 \
       python3-dev \
       python3-pip \
+ && gem install bundler -v 1.17.3 \
+ && bundle config git.allow_insecure true \
  && chmod +x /tmp/install.sh \
- && /tmp/install.sh \
+ && SKIP_PYTHON=yes /tmp/install.sh \
  && rm /tmp/install.sh \
- && pip install \
-      --no-cache-dir \
-      --target ${PYTHONPATH} \
-      --upgrade \
-        atom-tools \
  && node -v \
  && npm -v \
- && gem install \
-      bundler \
-      cocoapods \
+ && npm install -g corepack \
  && apt-get purge -y --auto-remove \
       -o APT::AutoRemove::RecommendsImportant=false \
  && rm -rf $HOME/.npmrc $HOME/.pip /var/lib/apt/lists/* \
@@ -109,7 +108,8 @@ CMD ["/bin/bash"]
 # cdxgen-image
 FROM base AS cdxgen
 
-ENV CDXGEN_GEM_HOME="/tmp/gems" \
+ENV ATOM_RUBY_HOME=/root/.rbenv/versions/${ATOM_RUBY_VERSION} \
+    CDXGEN_GEM_HOME="/tmp/gems" \
     CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     PATH=${PATH}:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin

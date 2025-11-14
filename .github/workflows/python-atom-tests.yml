@@ -48,7 +48,7 @@ jobs:
           java-version: ${{ matrix.java-version }}
       - name: pnpm install, build and test
         run: |
-          pnpm install --config.strict-dep-builds=true
+          pnpm install:frozen
           mkdir -p repotests
           mkdir -p bomresults
         env:

@@ -1,14 +1,14 @@
 # Base-image
-FROM registry.suse.com/bci/python:3.13.7@sha256:a9d44c317d881821a0239c1dd965705315b625c2a3baa559c8bb4484c49c4e43 AS base
+FROM registry.suse.com/bci/python:3.6.15@sha256:f98d349ccc8e6c5258644ffa758497bcac18f9451a66cfe7c935a2a30528bc51 AS base
 
 ARG GCC_VERSION=14
 ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GITHUB_URL=https://github.com
-ARG JAVA_VERSION=24.0.2-tem
+ARG JAVA_VERSION=21.0.8-tem
 ARG MAVEN_3
 ARG MAVEN_VERSION=${MAVEN_3}
-ARG NODE_24
-ARG NODE_VERSION=${NODE_24}
+ARG NODE_20
+ARG NODE_VERSION=${NODE_20}
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG NVM
@@ -25,8 +25,8 @@ ENV JAVA_HOME="/opt/java/${JAVA_VERSION}" \
     MAVEN_HOME="/opt/maven/${MAVEN_VERSION}" \
     MAVEN_VERSION=$MAVEN_VERSION \
     NVM_DIR="/root/.nvm" \
-    PYTHONPATH=/opt/pypi
-ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin
+    npm_config_python=/usr/bin/python3.6
+ENV PATH=${PATH}:/usr/local/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin
 
 RUN set -e; \
     if [ -n "$NODEJS_DIST_URL" ]; then \
@@ -92,18 +92,21 @@ RUN set -e; \
  && sdk offline enable \
  && mv /root/.sdkman/candidates/* /opt/ \
  && rm -rf /root/.sdkman \
- && pip install \
+ && python3 -m pip install \
       --no-cache-dir \
-      --target ${PYTHONPATH} \
       --upgrade \
-        atom-tools \
+        pip \
+        setuptools \
+        virtualenv \
+ && python3 -m pip install \
+      --no-cache-dir \
+      --upgrade \
+      --user \
+        pipenv \
+        poetry \
  && curl -o- $GITHUB_RAW_URL/nvm-sh/nvm/$NVM_VERSION/install.sh | bash \
  && source ${NVM_DIR}/nvm.sh \
  && nvm install ${NODE_VERSION} \
- && npm install -g \
-      corepack \
-      node-gyp \
- && npx node-gyp install \
  && node -v \
  && npm -v \
  && gcc --version \
@@ -111,6 +114,8 @@ RUN set -e; \
       $GITHUB_URL/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
  && chmod +x /usr/bin/bazel \
  && BAZELISK_BASE_URL=$GITHUB_URL/bazelbuild/bazel/releases/download bazel --version \
+ && npm install -g \
+      corepack \
  && rm -rf $HOME/.npmrc $HOME/.pip \
  && zypper clean -a \
  && if [ -n "$SUSE_REPO" ]; then \
@@ -162,7 +167,6 @@ RUN set -e; \
         -l \
         --no-recommends \
           clang7 \
-          graphviz-devel \
           lapacke-devel \
           libcurl-devel \
           libjpeg62-devel \

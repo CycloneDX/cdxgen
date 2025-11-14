@@ -1,12 +1,13 @@
 # Base-image
-FROM golang:1.24.7-alpine@sha256:fc2cff6625f3c1c92e6c85938ac5bd09034ad0d4bc2dfb08278020b68540dbb5 AS base
+FROM rust:1.91.1-alpine@sha256:fbcca3e30e26f79986809d5dbfcdbeaaf8d3f8a4475b7a19a973363b45c74d97 AS base
 
 ARG ALPINE_REPO
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG PIP_CONFIG
 
-ENV PATH=${PATH}:/usr/local/bin
+ENV PATH=${PATH}:/usr/local/bin \
+    PYTHONPATH=/opt/pypi
 
 RUN set -e; \
     if [ -n "$ALPINE_REPO" ]; then \
@@ -28,9 +29,21 @@ RUN set -e; \
  && apk add --no-cache \
       nodejs \
       npm \
+      python3 \
+      python3-dev \
+      py3-pip \
+      py3-virtualenv \
  && npm install -g corepack \
+ && /usr/bin/python --version \
+ && /usr/bin/python -m pip install \
+      --no-cache-dir \
+      --target ${PYTHONPATH} \
+      --upgrade \
+        atom-tools \
  && node -v \
  && npm -v \
+ && rustc --version \
+ && cargo --version \
  && rm -rf $HOME/.npmrc $HOME/.pip /var/cache/apk/* \
  && if [ -n "$ALPINE_REPO" ]; then \
       sed -i "s|$ALPINE_REPO|https://dl-cdn.alpinelinux.org|g" /etc/apk/repositories; \
@@ -43,7 +56,7 @@ FROM base AS cdxgen
 
 ENV CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
-    PATH=${PATH}:/opt/cdxgen/node_modules/.bin
+    PATH=${PATH}:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin
 
 COPY . /opt/cdxgen
 

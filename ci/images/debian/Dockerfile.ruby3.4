@@ -1,9 +1,10 @@
 # Base-image
-FROM golang:1.24.7-bookworm@sha256:b8bae5bd9ba9b1f89b635c91c24cc75cea335a16fb5076310f38566fc674b1ec AS base
+FROM ruby:3.4.7-slim-trixie@sha256:2de50c072bed1bdaf5e6b6c132fb2bc56f03700046ad95a515b4111203bf5034 AS base
 
 ARG DEBIAN_REPO
 ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GITHUB_URL=https://github.com
+ARG JAVA_VERSION=21.0.8-tem
 ARG NODE_24
 ARG NODE_VERSION=${NODE_24}
 ARG NODEJS_DIST_URL
@@ -11,11 +12,16 @@ ARG NPM_REPO
 ARG NVM
 ARG NVM_VERSION=${NVM}
 ARG PIP_CONFIG
+ARG RUBYGEMS_REPO
+ARG SDKMAN_URL=https://api.sdkman.io/2
 
-ENV SKIP_ATOM="yes" \
+ENV ATOM_CMD=/usr/local/bin/atom \
+    BUNDLE_SILENCE_ROOT_WARNING=true \
+    JAVA_HOME="/opt/java/${JAVA_VERSION}" \
+    JAVA_VERSION=$JAVA_VERSION \
     NVM_DIR="/root/.nvm" \
     PYTHONPATH=/opt/pypi
-ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin
+ENV PATH=${PATH}:/usr/local/bin:/root/.local/bin:/root/.rbenv/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin
 
 COPY ci/images/debian/install.sh /tmp/
 
@@ -41,6 +47,11 @@ RUN set -e; \
       mkdir $HOME/.pip/; \
       printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
     fi; \
+    if [ -n "$RUBYGEMS_REPO" ]; then \
+      gem sources --add $RUBYGEMS_REPO/; \
+      gem sources --remove https://rubygems.org/; \
+      gem sources -c; \
+    fi; \
     apt-get update \
  && apt-get install -qq -y --no-install-recommends \
       bash \
@@ -53,6 +64,9 @@ RUN set -e; \
       zip \
  && apt-get install -qq -y \
       build-essential \
+      libffi-dev \
+      libmagic-dev \
+      libyaml-dev \
       locales \
       python3 \
       python3-dev \
@@ -64,9 +78,12 @@ RUN set -e; \
       --no-cache-dir \
       --target ${PYTHONPATH} \
       --upgrade \
-        blint \
+        atom-tools \
  && node -v \
  && npm -v \
+ && gem install \
+      bundler \
+      cocoapods \
  && apt-get purge -y --auto-remove \
       -o APT::AutoRemove::RecommendsImportant=false \
  && rm -rf $HOME/.npmrc $HOME/.pip /var/lib/apt/lists/* \
@@ -78,6 +95,11 @@ RUN set -e; \
       if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
         sed -i "s|$DEBIAN_REPO|http://deb.debian.org|g" /etc/apt/sources.list.d/debian.sources; \
       fi \
+    fi; \
+    if [ -n "$RUBYGEMS_REPO" ]; then \
+      gem sources --add https://rubygems.org/; \
+      gem sources --remove $RUBYGEMS_REPO/; \
+      gem sources -c; \
     fi
 
 CMD ["/bin/bash"]
@@ -87,7 +109,8 @@ CMD ["/bin/bash"]
 # cdxgen-image
 FROM base AS cdxgen
 
-ENV CDXGEN_IN_CONTAINER=true \
+ENV CDXGEN_GEM_HOME="/tmp/gems" \
+    CDXGEN_IN_CONTAINER=true \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     PATH=${PATH}:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin
 
@@ -117,15 +140,14 @@ RUN set -e; \
     fi; \
     cd /opt/cdxgen \
  && corepack enable \
- && corepack pnpm install \
-      --config.strict-dep-builds=true \
-      --frozen-lockfile \
-      --no-optional \
-      --package-import-method copy \
-      --prod \
+ && corepack pnpm install:prod \
  && corepack pnpm cache delete \
+ && npm install -g --omit=dev @appthreat/atom-parsetools@1.0.4 \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
+ && rbastgen --help \
+ && rm -rf ${CDXGEN_GEM_HOME} \
+ && mkdir -p ${CDXGEN_GEM_HOME} \
  && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \
  && chmod a-w -R /opt \
  && if [ -n "$DEBIAN_REPO" ]; then \

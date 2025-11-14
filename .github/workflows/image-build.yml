@@ -70,7 +70,7 @@ jobs:
           ./contrib/free_disk_space.sh
       - name: Set up QEMU
         if: ${{ ! fromJSON(inputs.image).runner }}
-        uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3.6.0
+        uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3.7.0
       - name: Fix QEMU
         if: ${{ fromJSON(inputs.image).fix-qemu }}
         run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
@@ -131,6 +131,11 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Convert lang to tag
+        id: lang_tag
+        run: echo "name-tag=${IMAGE_LANG//./}" >> "$GITHUB_OUTPUT"
+        env:
+          IMAGE_LANG: ${{ fromJSON(inputs.image).lang }}
 
       # Base image
       - name: Build base image
@@ -142,11 +147,28 @@ jobs:
             ${{ steps.versions.outputs.docker-args }}
             ${{ steps.nexus.outputs.docker-args }}
           images: |
-             ${{ env.REPO }}/${{ env.TEAM }}/${{ fromJSON(inputs.image).base-image.name || fromJSON(inputs.image).distro || 'bci' }}-${{ fromJSON(inputs.image).base-image.lang || fromJSON(inputs.image).lang }}
+             ${{ env.REPO }}/${{ env.TEAM }}/${{ fromJSON(inputs.image).base-image.name || fromJSON(inputs.image).distro || 'bci' }}-${{ fromJSON(inputs.image).base-image.lang || steps.lang_tag.outputs.name-tag }}
              ${{ fromJSON(inputs.image).base-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).base-image.additional-image) || '' }}
           latest: ${{ inputs.latest }}
           signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
           target: base
+
+      # Slim base image
+      - name: Build slim base image
+        if: ${{ fromJSON(inputs.image).slim }}
+        uses: ./.github/actions/build-docker-images-generate-attach-sboms
+        with:
+          build-arm: ${{ ! fromJSON(inputs.image).skip-arm }}
+          dockerfile: ci/images/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
+          docker-args: |
+            ${{ steps.versions.outputs.docker-args }}
+            ${{ steps.nexus.outputs.docker-args }}
+          images: |
+             ${{ env.REPO }}/${{ env.TEAM }}/${{ fromJSON(inputs.image).base-image.name || fromJSON(inputs.image).distro || 'bci' }}-${{ fromJSON(inputs.image).base-image.lang || steps.lang_tag.outputs.name-tag }}-slim
+             ${{ fromJSON(inputs.image).base-image.additional-image && format('{0}/{1}/{2}-slim', env.REPO, env.TEAM, fromJSON(inputs.image).base-image.additional-image) || '' }}
+          latest: ${{ inputs.latest }}
+          signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
+          target: base-slim
 
       # cdxgen image
       - name: Build cdxgen image - master-branch
@@ -159,16 +181,16 @@ jobs:
             ${{ steps.versions.outputs.docker-args }}
             ${{ steps.nexus.outputs.docker-args }}
           images: |
-            ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}
+            ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ steps.lang_tag.outputs.name-tag }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image) || '' }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image2 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image2) || '' }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3) || '' }}
           language: ${{ fromJSON(inputs.image).lang }}
           latest: ${{ inputs.latest }}
-          main-tag: ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }}
+          main-tag: ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ steps.lang_tag.outputs.name-tag }}:${{ env.TAG }}
           signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
           tags: |
-            ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}:${{ env.TAG }}
+            ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ steps.lang_tag.outputs.name-tag }}:${{ env.TAG }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}:{3}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image, env.TAG) }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image2 && format('{0}/{1}/{2}:{3}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image2, env.TAG) }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}:{3}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3, env.TAG) }}
@@ -183,10 +205,56 @@ jobs:
             ${{ steps.versions.outputs.docker-args }}
             ${{ steps.nexus.outputs.docker-args }}
           images: |
-            ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ fromJSON(inputs.image).lang }}
+            ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ steps.lang_tag.outputs.name-tag }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image) || '' }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image2 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image2) || '' }}
             ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3) || '' }}
+          language: ${{ fromJSON(inputs.image).lang }}
+          latest: ${{ inputs.latest }}
+          signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
+          target: cdxgen
+
+      # Slim cdxgen image
+      - name: Build slim cdxgen image - master-branch
+        if: ${{ fromJSON(inputs.image).slim && startsWith(github.ref, 'refs/heads/') }}
+        uses: ./.github/actions/build-docker-images-generate-attach-sboms
+        with:
+          build-arm: ${{ ! fromJSON(inputs.image).skip-arm }}
+          dockerfile: ci/images/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
+          docker-args: |
+            IMAGE_TYPE=-slim
+            ${{ steps.versions.outputs.docker-args }}
+            ${{ steps.nexus.outputs.docker-args }}
+          images: |
+            ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ steps.lang_tag.outputs.name-tag }}-slim
+            ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}-slim', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image) || '' }}
+            ${{ fromJSON(inputs.image).cdxgen-image.additional-image2 && format('{0}/{1}/{2}-slim', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image2) || '' }}
+            ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}-slim', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3) || '' }}
+          language: ${{ fromJSON(inputs.image).lang }}
+          latest: ${{ inputs.latest }}
+          main-tag: ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ steps.lang_tag.outputs.name-tag }}-slim:${{ env.TAG }}
+          signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
+          tags: |
+            ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ steps.lang_tag.outputs.name-tag }}-slim:${{ env.TAG }}
+            ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}-slim:{3}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image, env.TAG) }}
+            ${{ fromJSON(inputs.image).cdxgen-image.additional-image2 && format('{0}/{1}/{2}-slim:{3}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image2, env.TAG) }}
+            ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}-slim:{3}', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3, env.TAG) }}
+          target: cdxgen
+      - name: Build slim cdxgen image - tags
+        if: ${{ fromJSON(inputs.image).slim && startsWith(github.ref, 'refs/tags/') }}
+        uses: ./.github/actions/build-docker-images-generate-attach-sboms
+        with:
+          build-arm: ${{ ! fromJSON(inputs.image).skip-arm }}
+          dockerfile: ci/images/${{ fromJSON(inputs.image).distro }}/Dockerfile.${{ fromJSON(inputs.image).lang }}
+          docker-args: |
+            IMAGE_TYPE=-slim
+            ${{ steps.versions.outputs.docker-args }}
+            ${{ steps.nexus.outputs.docker-args }}
+          images: |
+            ${{ env.REPO }}/${{ env.TEAM }}/cdxgen${{ fromJSON(inputs.image).distro && format('-{0}', fromJSON(inputs.image).distro) }}-${{ steps.lang_tag.outputs.name-tag }}-slim
+            ${{ fromJSON(inputs.image).cdxgen-image.additional-image && format('{0}/{1}/{2}-slim', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image) || '' }}
+            ${{ fromJSON(inputs.image).cdxgen-image.additional-image2 && format('{0}/{1}/{2}-slim', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image2) || '' }}
+            ${{ fromJSON(inputs.image).cdxgen-image.additional-image3 && format('{0}/{1}/{2}-slim', env.REPO, env.TEAM, fromJSON(inputs.image).cdxgen-image.additional-image3) || '' }}
           language: ${{ fromJSON(inputs.image).lang }}
           latest: ${{ inputs.latest }}
           signing-key: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}

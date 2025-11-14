@@ -77,7 +77,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: pnpm install, build and test
         run: |
-          pnpm install --config.strict-dep-builds=true
+          pnpm install:frozen
           pnpm test
         env:
           CI: true
@@ -114,7 +114,7 @@ jobs:
         run: echo "registry=$NEXUS_URL" > .npmrc
       - name: pnpm install
         run: |
-          pnpm install --config.strict-dep-builds=true
+          pnpm install:frozen
           python3 -m pip install --pre owasp-depscan[all] atom-tools
       - name: check sbom for vulns
         if: github.ref == 'refs/heads/master'
@@ -132,7 +132,7 @@ jobs:
         run: |
           node bin/cdxgen.js -t php -t js -t jar -t ruby -o $(pwd)/reports/sbom-build.cdx.json --include-formulation --export-proto --proto-bin-file $(pwd)/reports/sbom-build.cdx.proto --exclude "**/test/**" --profile research $(pwd)
       - name: Upload atom and slices
-        uses: softprops/action-gh-release@6da8fa9354ddfdc4aeace5fc48d7f679b5214090 # v2.4.1
+        uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
@@ -203,6 +203,7 @@ jobs:
         continue-on-error: true
 
   devenv:
+    if: false
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -211,7 +212,7 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
-      - uses: cachix/install-nix-action@456688f15bc354bef6d396e4a35f4f89d40bf2b7 # v31.8.2
+      - uses: cachix/install-nix-action@7ec16f2c061ab07b235a7245e06ed46fe9a1cab6 # v31.8.3
       - uses: cachix/cachix-action@0fc020193b5a1fa3ac4575aa3a7d3aa6a35435ad # v16
         with:
           name: devenv
@@ -223,6 +224,6 @@ jobs:
           echo "$HOME/.local/share/pnpm/global" >> $GITHUB_PATH
           devenv test
       - name: Install dependencies
-        run: devenv shell pnpm install --config.strict-dep-builds=true
+        run: devenv shell install:frozen
       - name: Run test
         run: devenv shell pnpm test

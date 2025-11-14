@@ -1,32 +1,24 @@
 # Base-image
-FROM registry.suse.com/bci/python:3.6.15@sha256:74ef60601fdbd18bda19fcb41b7105d863ad005a0e76cd93e83fd25ae9ae2de7 AS base
+FROM registry.opensuse.org/opensuse/bci/python:3.10.16@sha256:b50040733c27528746e1bfc87a8d401fee75c14ed6ec371ced6f89da849067b4 AS base
 
-ARG GCC_VERSION=14
-ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GITHUB_URL=https://github.com
-ARG JAVA_VERSION=21.0.8-tem
-ARG MAVEN_3
-ARG MAVEN_VERSION=${MAVEN_3}
-ARG NODE_20
-ARG NODE_VERSION=${NODE_20}
+# renovate: datasource=golang-version depName=golang
+ARG GO_VERSION=1.25.4
+ARG GOOGLE_URL=https://dl.google.com
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
-ARG NVM
-ARG NVM_VERSION=${NVM}
+ARG OPENSUSE_CODECS_REPO
+ARG OPENSUSE_REPO
 ARG PIP_CONFIG
-ARG SDKMAN_URL=https://api.sdkman.io/2
-ARG SUSE_REPO
 
-ENV JAVA_HOME="/opt/java/${JAVA_VERSION}" \
-    JAVA_VERSION=$JAVA_VERSION \
+ENV CC=gcc \
+    GOPATH=/opt/app-root/go \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8 \
-    MAVEN_HOME="/opt/maven/${MAVEN_VERSION}" \
-    MAVEN_VERSION=$MAVEN_VERSION \
-    NVM_DIR="/root/.nvm" \
-    npm_config_python=/usr/bin/python3.6
-ENV PATH=${PATH}:/usr/local/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin
+    PYTHONPATH=/opt/pypi \
+    npm_config_python=/usr/bin/python3.10
+ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:${GOPATH}/bin:/usr/local/go/bin
 
 RUN set -e; \
     if [ -n "$NODEJS_DIST_URL" ]; then \
@@ -37,13 +29,14 @@ RUN set -e; \
       export "COREPACK_NPM_REGISTRY=$NPM_REPO"; \
       printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO\n" >> $HOME/.npmrc; \
     fi; \
+    if [ -n "$OPENSUSE_REPO" ]; then \
+      sed -i "s|http://codecs.opensuse.org|$OPENSUSE_CODECS_REPO|g" /etc/zypp/repos.d/*; \
+      sed -i "s|http://download.opensuse.org|$OPENSUSE_REPO|g" /etc/zypp/repos.d/*; \
+      zypper --no-gpg-checks refresh; \
+    fi; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \
       printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
-    fi; \
-    if [ -n "$SUSE_REPO" ]; then \
-      sed -i "s|https://public-dl.suse.com|$SUSE_REPO|g" /etc/zypp/repos.d/*; \
-      zypper --no-gpg-checks refresh; \
     fi; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
     case "${ARCH_NAME##*-}" in \
@@ -68,58 +61,69 @@ RUN set -e; \
         -l \
         --no-recommends \
           bzip2 \
+          findutils \
           gawk \
-          gcc${GCC_VERSION} \
-          gcc${GCC_VERSION}-c++ \
-          gcc${GCC_VERSION}-fortran \
+          gcc13 \
+          gcc13-c++ \
+          gcc13-fortran \
           git-core \
+          java-25-openjdk-devel \
+          libxml2-devel \
           make \
+          nodejs22 \
+          nodejs22-devel \
+          npm22 \
+          python310 \
+          python310-devel \
+          python310-pip \
           unzip \
           wget \
           zip \
- && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-${GCC_VERSION} 10 \
- && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_VERSION} 10 \
- && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION} 10 \
- && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-${GCC_VERSION} 10 \
- && curl -L "https://get.sdkman.io" | bash \
- && SDKMAN_BROKER_API="$SDKMAN_URL/broker" \
- && SDKMAN_CANDIDATES_API="$SDKMAN_URL" \
- && printf "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" \
-      >> $HOME/.sdkman/etc/config \
- && source "$HOME/.sdkman/bin/sdkman-init.sh" \
- && sdk install java $JAVA_VERSION \
- && sdk install maven $MAVEN_VERSION \
- && sdk offline enable \
- && mv /root/.sdkman/candidates/* /opt/ \
- && rm -rf /root/.sdkman \
- && python3 -m pip install \
+ && update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-13 10 \
+ && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 10 \
+ && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 10 \
+ && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-13 10 \
+ && update-alternatives --install /usr/bin/python python /usr/bin/python3.10 10 \
+ && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 10 \
+ && mkdir ${PYTHONPATH} \
+ && python -m pip install \
       --no-cache-dir \
       --upgrade \
         pip \
-        setuptools \
+        setuptools==77.0.3 \
         virtualenv \
- && python3 -m pip install \
+ && python -m pip install \
       --no-cache-dir \
+      --target ${PYTHONPATH} \
       --upgrade \
-      --user \
+        atom-tools \
         pipenv \
         poetry \
- && curl -o- $GITHUB_RAW_URL/nvm-sh/nvm/$NVM_VERSION/install.sh | bash \
- && source ${NVM_DIR}/nvm.sh \
- && nvm install ${NODE_VERSION} \
+        uv \
+ && curl -LO "$GOOGLE_URL/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz" \
+ && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
+ && rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
+ && go telemetry off \
+ && npm install -g \
+      npm \
+ && npm install -g \
+      corepack \
+      node-gyp \
+ && npx node-gyp install \
  && node -v \
  && npm -v \
+ && poetry --version \
+ && pipenv --version \
  && gcc --version \
  && curl -L --output /usr/bin/bazel \
       $GITHUB_URL/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
  && chmod +x /usr/bin/bazel \
  && BAZELISK_BASE_URL=$GITHUB_URL/bazelbuild/bazel/releases/download bazel --version \
- && npm install -g \
-      corepack \
  && rm -rf $HOME/.npmrc $HOME/.pip \
  && zypper clean -a \
- && if [ -n "$SUSE_REPO" ]; then \
-      sed -i "s|$SUSE_REPO|https://public-dl.suse.com|g" /etc/zypp/repos.d/*; \
+ && if [ -n "$OPENSUSE_REPO" ]; then \
+      sed -i "s|$OPENSUSE_CODECS_REPO|http://codecs.opensuse.org|g" /etc/zypp/repos.d/*; \
+      sed -i "s|$OPENSUSE_REPO|http://download.opensuse.org|g" /etc/zypp/repos.d/*; \
     fi
 
 CMD ["/bin/bash"]
@@ -131,14 +135,8 @@ FROM base AS cdxgen
 
 ENV CDXGEN_IN_CONTAINER=true \
     CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
-    LANG=en_US.UTF-8 \
-    LANGUAGE=en_US.UTF-8 \
-    LC_ALL=en_US.UTF-8 \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     PATH=${PATH}:/opt/cdxgen/node_modules/.bin \
-    PYTHON_CMD=python3 \
-    PYTHONIOENCODING="utf-8" \
-    PYTHONUNBUFFERED=1 \
     SAFE_PIP_INSTALL=true
 
 COPY . /opt/cdxgen
@@ -152,31 +150,33 @@ RUN set -e; \
       export "COREPACK_NPM_REGISTRY=$NPM_REPO"; \
       printf "registry=$NPM_REPO\n@jsr:registry=$NPM_REPO\n" >> $HOME/.npmrc; \
     fi; \
+    if [ -n "$OPENSUSE_REPO" ]; then \
+      sed -i "s|http://codecs.opensuse.org|$OPENSUSE_CODECS_REPO|g" /etc/zypp/repos.d/*; \
+      sed -i "s|http://download.opensuse.org|$OPENSUSE_REPO|g" /etc/zypp/repos.d/*; \
+      zypper --no-gpg-checks refresh; \
+    fi; \
     if [ -n "$PIP_CONFIG" ]; then \
       mkdir $HOME/.pip/; \
       printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
     fi; \
-    if [ -n "$SUSE_REPO" ]; then \
-      sed -i "s|https://public-dl.suse.com|$SUSE_REPO|g" /etc/zypp/repos.d/*; \
-      zypper --no-gpg-checks refresh; \
-    fi; \
-    source ${NVM_DIR}/nvm.sh \
- && zypper \
+    zypper \
       --non-interactive \
         install \
+        --allow-downgrade \
         -l \
         --no-recommends \
-          clang7 \
+          clang15 \
+          graphviz-devel \
           lapacke-devel \
-          libcurl-devel \
           libjpeg62-devel \
           libmariadb-devel \
           libopenblas_pthreads-devel \
           libopenssl-devel \
-          llvm7 \
-          llvm7-devel \
+          llvm15 \
+          llvm15-devel \
           postgresql-devel \
-          postgresql17-server-devel \
+          postgresql-server-devel \
+          readline-devel \
  && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install:prod \
@@ -184,10 +184,11 @@ RUN set -e; \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
  && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \
- && chmod a-w -R /opt \
  && zypper clean -a \
- && if [ -n "$SUSE_REPO" ]; then \
-      sed -i "s|$SUSE_REPO|https://public-dl.suse.com|g" /etc/zypp/repos.d/*; \
+ && chmod a-w -R /opt \
+ && if [ -n "$OPENSUSE_REPO" ]; then \
+      sed -i "s|$OPENSUSE_CODECS_REPO|http://codecs.opensuse.org|g" /etc/zypp/repos.d/*; \
+      sed -i "s|$OPENSUSE_REPO|http://download.opensuse.org|g" /etc/zypp/repos.d/*; \
     fi
 
 WORKDIR /app

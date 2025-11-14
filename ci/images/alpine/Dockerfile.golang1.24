@@ -1,5 +1,5 @@
 # Base-image
-FROM python:3.13-alpine3.22@sha256:e5fa639e49b85986c4481e28faa2564b45aa8021413f31026c3856e5911618b1 AS base
+FROM golang:1.24.10-alpine@sha256:12c199a889439928e36df7b4c5031c18bfdad0d33cdeae5dd35b2de369b5fbf5 AS base
 
 ARG ALPINE_REPO
 ARG NODEJS_DIST_URL
@@ -29,13 +29,6 @@ RUN set -e; \
       nodejs \
       npm \
  && npm install -g corepack \
- && python --version \
- && python -m pip install \
-      --break-system-packages \
-      --no-cache-dir \
-      --target ${PYTHONPATH} \
-      --upgrade \
-        atom-tools \
  && node -v \
  && npm -v \
  && rm -rf $HOME/.npmrc $HOME/.pip /var/cache/apk/* \

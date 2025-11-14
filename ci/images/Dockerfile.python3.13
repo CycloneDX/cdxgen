@@ -1,5 +1,5 @@
 # Base-image
-FROM registry.suse.com/bci/python:3.12.11@sha256:49af8e3acc999cb70d0fc3b641477aec4a398978fb2c42a98a9a60cad2eba452 AS base
+FROM registry.suse.com/bci/python:3.13.7@sha256:65b3f975d53eaaa4d2167dd6bea8e8982fd134d6514a2150e75a5b6406c01b64 AS base
 
 ARG GCC_VERSION=14
 ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
@@ -24,8 +24,9 @@ ENV JAVA_HOME="/opt/java/${JAVA_VERSION}" \
     LC_ALL=en_US.UTF-8 \
     MAVEN_HOME="/opt/maven/${MAVEN_VERSION}" \
     MAVEN_VERSION=$MAVEN_VERSION \
-    NVM_DIR="/root/.nvm"
-ENV PATH=${PATH}:/usr/local/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin
+    NVM_DIR="/root/.nvm" \
+    PYTHONPATH=/opt/pypi
+ENV PATH=${PATH}:/usr/local/bin:${PYTHONPATH}/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin
 
 RUN set -e; \
     if [ -n "$NODEJS_DIST_URL" ]; then \
@@ -91,20 +92,11 @@ RUN set -e; \
  && sdk offline enable \
  && mv /root/.sdkman/candidates/* /opt/ \
  && rm -rf /root/.sdkman \
- && python3 -m pip install \
+ && pip install \
       --no-cache-dir \
+      --target ${PYTHONPATH} \
       --upgrade \
-        pip \
-        virtualenv \
- && python3 -m pip install \
-      --no-cache-dir \
-      --upgrade \
-      --user \
         atom-tools \
-        blint \
-        pipenv \
-        poetry \
-        uv \
  && curl -o- $GITHUB_RAW_URL/nvm-sh/nvm/$NVM_VERSION/install.sh | bash \
  && source ${NVM_DIR}/nvm.sh \
  && nvm install ${NODE_VERSION} \
@@ -133,6 +125,7 @@ CMD ["/bin/bash"]
 FROM base AS cdxgen
 
 ENV CDXGEN_IN_CONTAINER=true \
+    CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8 \
@@ -169,6 +162,7 @@ RUN set -e; \
         -l \
         --no-recommends \
           clang7 \
+          graphviz-devel \
           lapacke-devel \
           libcurl-devel \
           libjpeg62-devel \
@@ -178,7 +172,7 @@ RUN set -e; \
           llvm7 \
           llvm7-devel \
           postgresql-devel \
-          postgresql-server-devel \
+          postgresql17-server-devel \
  && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install:prod \

@@ -1,17 +1,14 @@
 # Base-image
-FROM registry.suse.com/bci/python:3.11.13@sha256:013705f6958086fd8e7a42b029803ebee2844306643f0fe53a9f5951d39cc92a AS base
+FROM registry.suse.com/bci/python:3.12.11@sha256:675167a28a56573c98888022113e7711c723e66427ca332b89841da0aca37aed AS base
 
 ARG GCC_VERSION=14
 ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GITHUB_URL=https://github.com
-# renovate: datasource=golang-version depName=golang
-ARG GO_VERSION=1.25.3
-ARG GOOGLE_URL=https://dl.google.com
 ARG JAVA_VERSION=24.0.2-tem
 ARG MAVEN_3
 ARG MAVEN_VERSION=${MAVEN_3}
-ARG NODE_20
-ARG NODE_VERSION=${NODE_20}
+ARG NODE_24
+ARG NODE_VERSION=${NODE_24}
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG NVM
@@ -20,18 +17,15 @@ ARG PIP_CONFIG
 ARG SDKMAN_URL=https://api.sdkman.io/2
 ARG SUSE_REPO
 
-ENV GOPATH=/opt/app-root/go \
-    JAVA_HOME="/opt/java/${JAVA_VERSION}" \
+ENV JAVA_HOME="/opt/java/${JAVA_VERSION}" \
     JAVA_VERSION=$JAVA_VERSION \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8 \
     MAVEN_HOME="/opt/maven/${MAVEN_VERSION}" \
     MAVEN_VERSION=$MAVEN_VERSION \
-    NVM_DIR="/root/.nvm" \
-    PYTHONPATH=/opt/pypi \
-    npm_config_python=/usr/bin/python3.11
-ENV PATH=${PATH}:/usr/local/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${PYTHONPATH}/bin:${GOPATH}/bin:/usr/local/go/bin
+    NVM_DIR="/root/.nvm"
+ENV PATH=${PATH}:/usr/local/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin
 
 RUN set -e; \
     if [ -n "$NODEJS_DIST_URL" ]; then \
@@ -78,7 +72,6 @@ RUN set -e; \
           gcc${GCC_VERSION}-c++ \
           gcc${GCC_VERSION}-fortran \
           git-core \
-          libxml2-devel \
           make \
           unzip \
           wget \
@@ -95,22 +88,20 @@ RUN set -e; \
  && source "$HOME/.sdkman/bin/sdkman-init.sh" \
  && sdk install java $JAVA_VERSION \
  && sdk install maven $MAVEN_VERSION \
+ && sdk offline enable \
  && mv /root/.sdkman/candidates/* /opt/ \
- && curl -LO "${GOOGLE_URL}/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz" \
- && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
- && rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
- && go telemetry off \
+ && rm -rf /root/.sdkman \
  && python3 -m pip install \
       --no-cache-dir \
       --upgrade \
         pip \
-        setuptools==77.0.3\
         virtualenv \
  && python3 -m pip install \
       --no-cache-dir \
-      --target ${PYTHONPATH} \
       --upgrade \
+      --user \
         atom-tools \
+        blint \
         pipenv \
         poetry \
         uv \
@@ -142,7 +133,6 @@ CMD ["/bin/bash"]
 FROM base AS cdxgen
 
 ENV CDXGEN_IN_CONTAINER=true \
-    CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8 \
@@ -179,7 +169,6 @@ RUN set -e; \
         -l \
         --no-recommends \
           clang7 \
-          graphviz-devel \
           lapacke-devel \
           libcurl-devel \
           libjpeg62-devel \
