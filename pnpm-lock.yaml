@@ -17,7 +17,7 @@ overrides:
   '@babel/traverse': 7.28.5
   '@babel/types': 7.28.5
   '@biomejs/biome': 2.3.5
-  '@bufbuild/protobuf': 2.10.0
+  '@bufbuild/protobuf': 2.10.1
   '@cyclonedx/cdxgen-plugins-bin': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-darwin-amd64': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-darwin-arm64': 1.7.0
@@ -297,8 +297,8 @@ importers:
         specifier: 1.1.4
         version: 1.1.4
       '@bufbuild/protobuf':
-        specifier: 2.10.0
-        version: 2.10.0
+        specifier: 2.10.1
+        version: 2.10.1
       '@cyclonedx/cdxgen-plugins-bin':
         specifier: 1.7.0
         version: 1.7.0
@@ -468,8 +468,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@bufbuild/protobuf@2.10.0':
-    resolution: {integrity: sha512-fdRs9PSrBF7QUntpZpq6BTw58fhgGJojgg39m9oFOJGZT+nip9b0so5cYY1oWl5pvemDLr0cPPsH46vwThEbpQ==}
+  '@bufbuild/protobuf@2.10.1':
+    resolution: {integrity: sha512-ckS3+vyJb5qGpEYv/s1OebUHDi/xSNtfgw1wqKZo7MR9F2z+qXr0q5XagafAG/9O0QPVIUfST0smluYSTpYFkg==}
 
   '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.7.0':
     resolution: {integrity: sha512-evJAEetfhKU7N9tCaOl/CZcs4upoEIKvLdhV9ogzk9QIur+HtZX5F9LddGNoQuzhB1Umy2tAyFAKhl+EX63BFQ==}
@@ -1795,7 +1795,7 @@ snapshots:
 
   '@appthreat/cdx-proto@1.1.4':
     dependencies:
-      '@bufbuild/protobuf': 2.10.0
+      '@bufbuild/protobuf': 2.10.1
     optional: true
 
   '@appthreat/sqlite3@6.0.9':
@@ -1893,7 +1893,7 @@ snapshots:
   '@biomejs/cli-win32-x64@2.3.5':
     optional: true
 
-  '@bufbuild/protobuf@2.10.0':
+  '@bufbuild/protobuf@2.10.1':
     optional: true
 
   '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.7.0':
