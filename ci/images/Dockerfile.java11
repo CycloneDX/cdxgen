@@ -1,13 +1,18 @@
 # Base-image
 FROM registry.suse.com/bci/openjdk-devel:11.0.25.0@sha256:c50031180f882462fad08e63b78899a5427982dd89a4eb8bac14ea66d090ef7c AS base
 
+ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GITHUB_URL=https://github.com
 ARG GRADLE_8
 ARG GRADLE_VERSION=${GRADLE_8}
 ARG MAVEN_3
 ARG MAVEN_VERSION=${MAVEN_3}
+ARG NODE_20
+ARG NODE_VERSION=${NODE_20}
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
+ARG NVM
+ARG NVM_VERSION=${NVM}
 ARG PIP_CONFIG
 ARG SBT_VERSION=1.8.3
 ARG SDKMAN_URL=https://api.sdkman.io/2
@@ -22,10 +27,11 @@ ENV GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}" \
     LC_ALL=en_US.UTF-8 \
     MAVEN_HOME="/opt/maven/${MAVEN_VERSION}" \
     MAVEN_VERSION=$MAVEN_VERSION \
+    NVM_DIR="/root/.nvm" \
     SBT_HOME="/opt/sbt/${SBT_VERSION}" \
     SBT_VERSION=$SBT_VERSION \
     npm_config_python=/usr/bin/python3.11
-ENV PATH=${PATH}:/usr/local/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin
+ENV PATH=${PATH}:/usr/local/bin:${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin
 
 RUN set -e; \
     if [ -n "$NODEJS_DIST_URL" ]; then \
@@ -69,8 +75,6 @@ RUN set -e; \
           gawk \
           git-core \
           make \
-          nodejs20 \
-          npm20 \
           python311 \
           python311-pip \
           unzip \
@@ -90,6 +94,11 @@ RUN set -e; \
       $GITHUB_URL/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
  && chmod +x /usr/bin/bazel \
  && BAZELISK_BASE_URL=$GITHUB_URL/bazelbuild/bazel/releases/download bazel --version \
+ && curl -o- $GITHUB_RAW_URL/nvm-sh/nvm/$NVM_VERSION/install.sh | bash \
+ && source ${NVM_DIR}/nvm.sh \
+ && nvm install ${NODE_VERSION} \
+ && node -v \
+ && npm -v \
  && npm install -g \
       corepack \
  && rm -rf $HOME/.npmrc $HOME/.pip \

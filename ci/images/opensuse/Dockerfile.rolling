@@ -144,12 +144,12 @@ RUN set -e; \
  && curl -o- $GITHUB_RAW_URL/nvm-sh/nvm/$NVM_VERSION/install.sh | bash \
  && source ${NVM_DIR}/nvm.sh \
  && nvm install ${NODE_VERSION} \
+ && node -v \
+ && npm -v \
  && npm install -g \
       corepack \
       node-gyp \
  && npx node-gyp install \
- && node -v \
- && npm -v \
  && npm install -g corepack \
  && poetry --version \
  && pipenv --version \
