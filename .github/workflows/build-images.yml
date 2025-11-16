@@ -186,13 +186,13 @@ jobs:
           - lang: python3.13
             distro: alpine
 
-          - lang: ruby.25
+          - lang: ruby2.5
             fix-qemu: true
             skip-arm: true
             base-image:
               name: sle
 
-          - lang: ruby.26
+          - lang: ruby2.6
             distro: debian
             skip-arm: true
 
