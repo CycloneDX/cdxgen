@@ -53,7 +53,7 @@ overrides:
   '@keyv/serialize': 1.1.1
   '@npmcli/agent': 4.0.0
   '@npmcli/fs': 5.0.0
-  '@npmcli/git': 7.0.0
+  '@npmcli/git': 7.0.1
   '@npmcli/installed-package-contents': 4.0.0
   '@npmcli/map-workspaces': 5.0.1
   '@npmcli/name-from-folder': 4.0.0
@@ -356,8 +356,6 @@ overrides:
   yargs: 17.7.2
   yargs-parser: 21.1.1
   yoctocolors: 2.1.2
-
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
 
 importers:
 
@@ -740,7 +738,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -814,8 +811,8 @@ packages:
     resolution: {integrity: sha512-7OsC1gNORBEawOa5+j2pXN9vsicaIOH5cPXxoR6fJOmH6/EXpJB2CajXOu1fPRFun2m1lktEFX11+P89hqO/og==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  '@npmcli/git@7.0.0':
-    resolution: {integrity: sha512-vnz7BVGtOctJAIHouCJdvWBhsTVSICMeUgZo2c7XAi5d5Rrl80S1H7oPym7K03cRuinK5Q6s2dw36+PgXQTcMA==}
+  '@npmcli/git@7.0.1':
+    resolution: {integrity: sha512-+XTFxK2jJF/EJJ5SoAzXk3qwIDfvFc5/g+bD274LZ7uY7LE8sTfG6Z8rOanPl2ZEvZWqNvmEdtXC25cE54VcoA==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
   '@npmcli/installed-package-contents@4.0.0':
@@ -2193,7 +2190,7 @@ snapshots:
     dependencies:
       semver: 7.7.3
 
-  '@npmcli/git@7.0.0':
+  '@npmcli/git@7.0.1':
     dependencies:
       '@npmcli/promise-spawn': 8.0.3
       ini: 6.0.0
@@ -2220,7 +2217,7 @@ snapshots:
 
   '@npmcli/package-json@7.0.2':
     dependencies:
-      '@npmcli/git': 7.0.0
+      '@npmcli/git': 7.0.1
       glob: 11.0.3
       hosted-git-info: 9.0.2
       json-parse-even-better-errors: 5.0.0
