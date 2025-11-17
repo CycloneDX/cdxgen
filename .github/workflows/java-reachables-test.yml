@@ -30,7 +30,7 @@ jobs:
         os: ['ubuntu-24.04']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           persist-credentials: false
       - name: Set up JDK ${{ matrix.java-version }}
@@ -49,13 +49,13 @@ jobs:
           pnpm install:frozen
           mkdir -p repotests
           mkdir -p bomresults
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           persist-credentials: false
           repository: 'DependencyTrack/dependency-track'
           path: 'repotests/dependency-track'
           ref: '4.11.1'
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           persist-credentials: false
           repository: 'DependencyTrack/frontend'
