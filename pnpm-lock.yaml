@@ -62,7 +62,7 @@ overrides:
   '@npmcli/query': 5.0.0
   '@npmcli/redact': 4.0.0
   '@sec-ant/readable-stream': 0.4.1
-  '@sindresorhus/is': 7.1.0
+  '@sindresorhus/is': 7.1.1
   '@types/debug': 4.1.12
   '@types/http-cache-semantics': 4.0.4
   '@types/ms': 2.1.0
@@ -850,8 +850,8 @@ packages:
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
 
-  '@sindresorhus/is@7.1.0':
-    resolution: {integrity: sha512-7F/yz2IphV39hiS2zB4QYVkivrptHHh0K8qJJd9HhuWSdvf8AN7NpebW3CcDZDBQsUPMoDKWsY2WWgW7bqOcfA==}
+  '@sindresorhus/is@7.1.1':
+    resolution: {integrity: sha512-rO92VvpgMc3kfiTjGT52LEtJ8Yc5kCWhZjLQ3LwlA4pSgPpQO7bVpYXParOD8Jwf+cVQECJo3yP/4I8aZtUQTQ==}
     engines: {node: '>=18'}
 
   '@types/debug@4.1.12':
@@ -2240,7 +2240,7 @@ snapshots:
 
   '@sec-ant/readable-stream@0.4.1': {}
 
-  '@sindresorhus/is@7.1.0': {}
+  '@sindresorhus/is@7.1.1': {}
 
   '@types/debug@4.1.12':
     dependencies:
@@ -2702,7 +2702,7 @@ snapshots:
 
   got@14.6.3:
     dependencies:
-      '@sindresorhus/is': 7.1.0
+      '@sindresorhus/is': 7.1.1
       byte-counter: 0.1.0
       cacheable-lookup: 7.0.0
       cacheable-request: 13.0.12
