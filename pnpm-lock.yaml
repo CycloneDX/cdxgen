@@ -6,7 +6,7 @@ settings:
 
 overrides:
   '@appthreat/atom': 2.3.0
-  '@appthreat/atom-common': 1.0.8
+  '@appthreat/atom-common': 1.0.11
   '@appthreat/atom-parsetools': 1.0.8
   '@appthreat/cdx-proto': 1.1.4
   '@appthreat/sqlite3': 6.0.9
@@ -590,8 +590,8 @@ importers:
 
 packages:
 
-  '@appthreat/atom-common@1.0.8':
-    resolution: {integrity: sha512-JSfUNFdEFRyK678WnBlMPWk+tFZwrebUoWF9Jj0AoYVQi6NCqvzPCzsmyOI/jRYvecnN8FgdEozZsujo/nPqNQ==}
+  '@appthreat/atom-common@1.0.11':
+    resolution: {integrity: sha512-WQShpvjqdKCLuW/TeNxE9FH/SPR6Nxok+t1qcWzd3+m7X/Za57HNE0KEm0YNJ9IvBvj7mE9nMEF5r9XFDRg+xg==}
 
   '@appthreat/atom-parsetools@1.0.8':
     resolution: {integrity: sha512-W/OyTotfDFbgFpMmN1WT5QT6irVpU3EBcl/MH8vZT3OLJwYBFrV/PGkZ1o3WukJrPbivMKlsHcV0e/mr2zYawQ==}
@@ -1986,12 +1986,12 @@ packages:
 
 snapshots:
 
-  '@appthreat/atom-common@1.0.8':
+  '@appthreat/atom-common@1.0.11':
     optional: true
 
   '@appthreat/atom-parsetools@1.0.8':
     dependencies:
-      '@appthreat/atom-common': 1.0.8
+      '@appthreat/atom-common': 1.0.11
       '@babel/parser': 7.28.5
       typescript: 5.9.3
       yargs: 17.7.2
@@ -1999,7 +1999,7 @@ snapshots:
 
   '@appthreat/atom@2.3.0':
     dependencies:
-      '@appthreat/atom-common': 1.0.8
+      '@appthreat/atom-common': 1.0.11
       '@appthreat/atom-parsetools': 1.0.8
     optional: true
 
