@@ -201,29 +201,3 @@ jobs:
           mkdir build
           ${{ matrix.build }}
         continue-on-error: true
-
-  devenv:
-    if: false
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-15]
-    steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-        with:
-          persist-credentials: false
-      - uses: cachix/install-nix-action@7ec16f2c061ab07b235a7245e06ed46fe9a1cab6 # v31.8.3
-      - uses: cachix/cachix-action@0fc020193b5a1fa3ac4575aa3a7d3aa6a35435ad # v16
-        with:
-          name: devenv
-      - name: Install devenv.sh
-        run: nix profile install nixpkgs#devenv
-      - name: Build the devenv shell
-        run: |
-          mkdir -p $HOME/.local/share/pnpm/global
-          echo "$HOME/.local/share/pnpm/global" >> $GITHUB_PATH
-          devenv test
-      - name: Install dependencies
-        run: devenv shell install:frozen
-      - name: Run test
-        run: devenv shell pnpm test
