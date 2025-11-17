@@ -1064,6 +1064,7 @@
   "slugify": "unicode-slugify",
   "smarkets": "smk-python-sdk",
   "snappy": "ctypes-snappy",
+  "snsynth": "smartnoise-synth",
   "social-core": "social-auth-core",
   "social-django": "social-auth-app-django",
   "socketio": "python-socketio",
