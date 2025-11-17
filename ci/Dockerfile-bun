@@ -1,4 +1,4 @@
-FROM almalinux:10.0-minimal@sha256:cd55007b9804e36134bf488df6437171615c7a318addb13dd762375b39ef5629
+FROM almalinux:10.0-minimal@sha256:3243e2e56b1ba338ef07159994927fa7f1cf3312789b7d5a777b6c33cb1b1b3a
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
