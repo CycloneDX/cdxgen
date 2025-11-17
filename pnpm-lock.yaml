@@ -275,7 +275,7 @@ overrides:
   require-from-string: 2.0.2
   resolve-alpn: 1.2.1
   responselike: 4.0.2
-  retry: 0.12.0
+  retry: 0.13.1
   retry-as-promised: 7.1.1
   roarr: 2.15.4
   safe-buffer: 5.2.1
@@ -1670,8 +1670,8 @@ packages:
   retry-as-promised@7.1.1:
     resolution: {integrity: sha512-hMD7odLOt3LkTjcif8aRZqi/hybjpLNgSk5oF5FCowfCjok6LukpN2bDX7R5wDmbgBQFn7YoBxSagmtXHaJYJw==}
 
-  retry@0.12.0:
-    resolution: {integrity: sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==}
+  retry@0.13.1:
+    resolution: {integrity: sha512-XQBQ3I8W1Cge0Seh+6gjj03LbmRFWuoszgK9ooCpwYIrhhoO80pfq4cUkU5DkknwfOfFteRwlZ56PYOGYyFWdg==}
     engines: {node: '>= 4'}
 
   roarr@2.15.4:
@@ -3107,7 +3107,7 @@ snapshots:
   promise-retry@2.0.1:
     dependencies:
       err-code: 2.0.3
-      retry: 0.12.0
+      retry: 0.13.1
 
   properties-reader@2.3.0:
     dependencies:
@@ -3162,7 +3162,7 @@ snapshots:
   retry-as-promised@7.1.1:
     optional: true
 
-  retry@0.12.0: {}
+  retry@0.13.1: {}
 
   roarr@2.15.4:
     dependencies:
