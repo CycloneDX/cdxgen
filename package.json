@@ -115,7 +115,7 @@
   "overrides": {
     "@appthreat/atom": "2.3.0",
     "@appthreat/atom-common": "1.0.11",
-    "@appthreat/atom-parsetools": "1.0.8",
+    "@appthreat/atom-parsetools": "1.0.11",
     "@appthreat/cdx-proto": "1.1.4",
     "@appthreat/sqlite3": "6.0.9",
     "@babel/code-frame": "7.27.1",
@@ -558,7 +558,7 @@
     "overrides": {
       "@appthreat/atom": "2.3.0",
       "@appthreat/atom-common": "1.0.11",
-      "@appthreat/atom-parsetools": "1.0.8",
+      "@appthreat/atom-parsetools": "1.0.11",
       "@appthreat/cdx-proto": "1.1.4",
       "@appthreat/sqlite3": "6.0.9",
       "@babel/code-frame": "7.27.1",
