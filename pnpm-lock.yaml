@@ -122,7 +122,7 @@ overrides:
   domutils: 3.2.2
   dottie: 2.0.6
   dunder-proto: 1.0.1
-  eastasianwidth: 0.2.0
+  eastasianwidth: 0.3.0
   ecdsa-sig-formatter: 1.0.11
   edn-data: 1.1.2
   ee-first: 1.1.1
@@ -1096,8 +1096,8 @@ packages:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
 
-  eastasianwidth@0.2.0:
-    resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
+  eastasianwidth@0.3.0:
+    resolution: {integrity: sha512-JqasYqGO32J2c91uYKdhu1vNmXGADaLB7OOgjAhjMvpjdvGb0tsYcuwn381MwqCg4YBQDtByQcNlFYuv2kmOug==}
 
   ecdsa-sig-formatter@1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
@@ -2541,7 +2541,7 @@ snapshots:
       gopd: 1.2.0
     optional: true
 
-  eastasianwidth@0.2.0: {}
+  eastasianwidth@0.3.0: {}
 
   ecdsa-sig-formatter@1.0.11:
     dependencies:
@@ -3324,7 +3324,7 @@ snapshots:
 
   string-width@5.1.2:
     dependencies:
-      eastasianwidth: 0.2.0
+      eastasianwidth: 0.3.0
       emoji-regex: 9.2.2
       strip-ansi: 7.1.2
 
