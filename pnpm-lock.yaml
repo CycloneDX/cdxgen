@@ -309,7 +309,7 @@ overrides:
   ssri: 13.0.0
   statuses: 2.0.2
   streamx: 2.22.1
-  string-width: 5.1.2
+  string-width: 6.1.0
   string-width-cjs: npm:string-width@5.1.2
   strip-ansi: 7.1.2
   strip-ansi-cjs: npm:strip-ansi@7.1.2
@@ -356,8 +356,6 @@ overrides:
   yargs: 17.7.2
   yargs-parser: 21.1.1
   yoctocolors: 2.1.2
-
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
 
 importers:
 
@@ -740,7 +738,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -1819,6 +1816,10 @@ packages:
     resolution: {integrity: sha512-HnLOCR3vjcY8beoNLtcjZ5/nxn2afmME6lhrDrebokqMap+XbeW8n9TXpPDOqdGK5qcI3oT0GKTW6wC7EMiVqA==}
     engines: {node: '>=12'}
 
+  string-width@6.1.0:
+    resolution: {integrity: sha512-k01swCJAgQmuADB0YIc+7TuatfNvTBVOoaUWJjTB9R4VJzR5vNWzf5t42ESVZFPS8xTySF7CAdV4t/aaIm3UnQ==}
+    engines: {node: '>=16'}
+
   strip-ansi@7.1.2:
     resolution: {integrity: sha512-gmBGslpoQJtgnMAvOVqGZpEz9dyoKTCzy2nfz/n8aIFhN/jCE/rCmcxabB6jOOHV+0WNnylOxaxBQPSvcWklhA==}
     engines: {node: '>=12'}
@@ -2149,7 +2150,7 @@ snapshots:
 
   '@isaacs/cliui@8.0.2':
     dependencies:
-      string-width: 5.1.2
+      string-width: 6.1.0
       string-width-cjs: string-width@5.1.2
       strip-ansi: 7.1.2
       strip-ansi-cjs: strip-ansi@7.1.2
@@ -2425,7 +2426,7 @@ snapshots:
 
   cliui@8.0.1:
     dependencies:
-      string-width: 5.1.2
+      string-width: 6.1.0
       strip-ansi: 7.1.2
       wrap-ansi: 8.1.0
 
@@ -3329,6 +3330,12 @@ snapshots:
       emoji-regex: 9.2.2
       strip-ansi: 7.1.2
 
+  string-width@6.1.0:
+    dependencies:
+      eastasianwidth: 0.2.0
+      emoji-regex: 9.2.2
+      strip-ansi: 7.1.2
+
   strip-ansi@7.1.2:
     dependencies:
       ansi-regex: 6.2.2
@@ -3341,7 +3348,7 @@ snapshots:
       ajv: 8.17.1
       lodash.truncate: 4.4.2
       slice-ansi: 7.1.2
-      string-width: 5.1.2
+      string-width: 6.1.0
       strip-ansi: 7.1.2
 
   tagged-tag@1.0.0: {}
@@ -3472,7 +3479,7 @@ snapshots:
   wrap-ansi@8.1.0:
     dependencies:
       ansi-styles: 6.2.3
-      string-width: 5.1.2
+      string-width: 6.1.0
       strip-ansi: 7.1.2
 
   wrappy@1.0.2:
@@ -3501,7 +3508,7 @@ snapshots:
       escalade: 3.2.0
       get-caller-file: 2.0.5
       require-directory: 2.1.1
-      string-width: 5.1.2
+      string-width: 6.1.0
       y18n: 5.0.8
       yargs-parser: 21.1.1
 
