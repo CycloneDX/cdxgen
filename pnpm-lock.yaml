@@ -354,10 +354,8 @@ overrides:
   yallist: 5.0.0
   yaml: 2.8.1
   yargs: 17.7.2
-  yargs-parser: 21.1.1
+  yargs-parser: 22.0.0
   yoctocolors: 2.1.2
-
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
 
 importers:
 
@@ -740,7 +738,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -1972,9 +1969,9 @@ packages:
     engines: {node: '>= 14.6'}
     hasBin: true
 
-  yargs-parser@21.1.1:
-    resolution: {integrity: sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==}
-    engines: {node: '>=12'}
+  yargs-parser@22.0.0:
+    resolution: {integrity: sha512-rwu/ClNdSMpkSrUb+d6BRsSkLUq1fmfsY6TOpYzTwvwkg1/NRG85KBy3kq++A8LKQwX6lsu+aWad+2khvuXrqw==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=23}
 
   yargs@17.7.2:
     resolution: {integrity: sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==}
@@ -3492,7 +3489,7 @@ snapshots:
 
   yaml@2.8.1: {}
 
-  yargs-parser@21.1.1: {}
+  yargs-parser@22.0.0: {}
 
   yargs@17.7.2:
     dependencies:
@@ -3502,6 +3499,6 @@ snapshots:
       require-directory: 2.1.1
       string-width: 5.1.2
       y18n: 5.0.8
-      yargs-parser: 21.1.1
+      yargs-parser: 22.0.0
 
   yoctocolors@2.1.2: {}
