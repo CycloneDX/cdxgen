@@ -563,6 +563,7 @@
   "curator": "elasticsearch-curator",
   "curl": "pycurl",
   "cv2": "opencv-python",
+  "cyclonedx": "cyclonedx-python-lib",
   "daemon": "python-daemon",
   "dare": "dare",
   "database-locks": "django-database-locks",
