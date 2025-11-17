@@ -176,7 +176,7 @@ overrides:
   https-proxy-agent: 7.0.6
   iconv-lite: 0.7.0
   imurmurhash: 0.1.4
-  inflection: 1.13.4
+  inflection: 2.0.1
   inherits: 2.0.4
   ini: 6.0.0
   ip-address: 10.0.1
@@ -356,8 +356,6 @@ overrides:
   yargs: 17.7.2
   yargs-parser: 21.1.1
   yoctocolors: 2.1.2
-
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
 
 importers:
 
@@ -740,7 +738,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -1297,9 +1294,9 @@ packages:
     resolution: {integrity: sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==}
     engines: {node: '>=0.8.19'}
 
-  inflection@1.13.4:
-    resolution: {integrity: sha512-6I/HUDeYFfuNCVS3td055BaXBwKYuzw7K3ExVMStBowKo9oOAMJIXIHvdyR3iboTCp1b+1i5DSkIZTcwIktuDw==}
-    engines: {'0': node >= 0.4.0}
+  inflection@2.0.1:
+    resolution: {integrity: sha512-wzkZHqpb4eGrOKBl34xy3umnYHx8Si5R1U4fwmdxLo5gdH6mEK8gclckTj/qWqy4Je0bsDYe/qazZYuO7xe3XQ==}
+    engines: {node: '>=14.0.0'}
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
@@ -2779,7 +2776,7 @@ snapshots:
 
   imurmurhash@0.1.4: {}
 
-  inflection@1.13.4:
+  inflection@2.0.1:
     optional: true
 
   inherits@2.0.4:
@@ -3192,7 +3189,7 @@ snapshots:
       '@types/validator': 13.15.3
       debug: 4.4.3
       dottie: 2.0.6
-      inflection: 1.13.4
+      inflection: 2.0.1
       lodash: 4.17.21
       moment: 2.30.1
       moment-timezone: 0.5.48
