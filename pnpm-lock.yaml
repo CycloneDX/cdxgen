@@ -284,7 +284,7 @@ overrides:
   semver: 7.7.3
   semver-compare: 1.0.0
   sequelize: 6.37.7
-  sequelize-pool: 7.1.0
+  sequelize-pool: 8.0.1
   serialize-error: 7.0.1
   setprototypeof: 1.2.0
   shebang-command: 2.0.0
@@ -356,8 +356,6 @@ overrides:
   yargs: 17.7.2
   yargs-parser: 21.1.1
   yoctocolors: 2.1.2
-
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
 
 importers:
 
@@ -740,7 +738,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -1695,8 +1692,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  sequelize-pool@7.1.0:
-    resolution: {integrity: sha512-G9c0qlIWQSK29pR/5U2JF5dDQeqqHRragoyahj/Nx4KOOQ3CPPfzxnfqFPCSB7x5UgjOgnZ61nSxz+fjDpRlJg==}
+  sequelize-pool@8.0.1:
+    resolution: {integrity: sha512-SewZFUa5/OYHml+bD7l1c6lGn6TQCZFir7T5mIn0ruEBvadN5lZ9T7hTn+u/clvsu2h1OzBWgklYTi98NUnRBg==}
     engines: {node: '>= 10.0.0'}
 
   sequelize@6.37.7:
@@ -3183,7 +3180,7 @@ snapshots:
 
   semver@7.7.3: {}
 
-  sequelize-pool@7.1.0:
+  sequelize-pool@8.0.1:
     optional: true
 
   sequelize@6.37.7(@appthreat/sqlite3@6.0.9):
@@ -3199,7 +3196,7 @@ snapshots:
       pg-connection-string: 2.9.1
       retry-as-promised: 7.1.1
       semver: 7.7.3
-      sequelize-pool: 7.1.0
+      sequelize-pool: 8.0.1
       toposort-class: 1.0.1
       uuid: 13.0.0
       validator: 13.15.15
