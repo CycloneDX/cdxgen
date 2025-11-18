@@ -160,7 +160,7 @@
       "matchStrings": [
         "\"\\$schema\":\\s*\"https://biomejs\\.dev/schemas/(?<currentValue>[^\"]+)/schema\\.json\""
       ],
-      "depNameTemplate": "@biomejs/cli",
+      "depNameTemplate": "@biomejs/biome",
       "datasourceTemplate": "npm",
       "versioningTemplate": "semver"
     }
