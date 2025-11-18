@@ -75,7 +75,7 @@ overrides:
   ansi-regex: 6.2.2
   ansi-styles: 6.2.3
   b4a: 1.7.3
-  bare-events: 2.7.0
+  bare-events: 2.8.2
   bare-fs: 4.5.1
   bare-os: 3.6.2
   bare-path: 3.0.0
@@ -356,8 +356,6 @@ overrides:
   yargs: 17.7.2
   yargs-parser: 22.0.0
   yoctocolors: 2.1.2
-
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
 
 importers:
 
@@ -740,7 +738,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -904,8 +901,13 @@ packages:
       react-native-b4a:
         optional: true
 
-  bare-events@2.7.0:
-    resolution: {integrity: sha512-b3N5eTW1g7vXkw+0CXh/HazGTcO5KYuu/RCNaJbDMPI6LHDi+7qe8EmxKUVe1sUbY2KZOVZFyj62x0OEz9qyAA==}
+  bare-events@2.8.2:
+    resolution: {integrity: sha512-riJjyv1/mHLIPX4RwiK+oW9/4c3TEUeORHKefKAKnZ5kyslbN+HXowtbaVEqt4IMUB7OXlfixcs6gsFeo/jhiQ==}
+    peerDependencies:
+      bare-abort-controller: '*'
+    peerDependenciesMeta:
+      bare-abort-controller:
+        optional: true
 
   bare-fs@4.5.1:
     resolution: {integrity: sha512-zGUCsm3yv/ePt2PHNbVxjjn0nNB1MkIaR4wOCxJ2ig5pCf5cCVAYJXVhQg/3OhhJV6DB1ts7Hv0oUaElc2TPQg==}
@@ -927,7 +929,7 @@ packages:
     resolution: {integrity: sha512-oyXQNicV1y8nc2aKffH+BUHFRXmx6VrPzlnaEvMhram0nPBrKcEdcyBg5r08D0i8VxngHFAiVyn1QKXpSG0B8A==}
     peerDependencies:
       bare-buffer: '*'
-      bare-events: 2.7.0
+      bare-events: 2.8.2
     peerDependenciesMeta:
       bare-buffer:
         optional: true
@@ -2017,6 +2019,7 @@ snapshots:
     optionalDependencies:
       node-gyp: 12.1.0
     transitivePeerDependencies:
+      - bare-abort-controller
       - bare-buffer
       - react-native-b4a
       - supports-color
@@ -2285,17 +2288,18 @@ snapshots:
   b4a@1.7.3:
     optional: true
 
-  bare-events@2.7.0:
+  bare-events@2.8.2:
     optional: true
 
   bare-fs@4.5.1:
     dependencies:
-      bare-events: 2.7.0
+      bare-events: 2.8.2
       bare-path: 3.0.0
-      bare-stream: 2.7.0(bare-events@2.7.0)
+      bare-stream: 2.7.0(bare-events@2.8.2)
       bare-url: 2.3.2
       fast-fifo: 1.3.2
     transitivePeerDependencies:
+      - bare-abort-controller
       - react-native-b4a
     optional: true
 
@@ -2307,12 +2311,13 @@ snapshots:
       bare-os: 3.6.2
     optional: true
 
-  bare-stream@2.7.0(bare-events@2.7.0):
+  bare-stream@2.7.0(bare-events@2.8.2):
     dependencies:
       streamx: 2.22.1
     optionalDependencies:
-      bare-events: 2.7.0
+      bare-events: 2.8.2
     transitivePeerDependencies:
+      - bare-abort-controller
       - react-native-b4a
     optional: true
 
@@ -3090,6 +3095,7 @@ snapshots:
       tar-fs: 3.1.1
       tunnel-agent: 0.6.0
     transitivePeerDependencies:
+      - bare-abort-controller
       - bare-buffer
       - react-native-b4a
     optional: true
@@ -3318,8 +3324,9 @@ snapshots:
       fast-fifo: 1.3.2
       text-decoder: 1.2.3
     optionalDependencies:
-      bare-events: 2.7.0
+      bare-events: 2.8.2
     transitivePeerDependencies:
+      - bare-abort-controller
       - react-native-b4a
     optional: true
 
@@ -3354,6 +3361,7 @@ snapshots:
       bare-fs: 4.5.1
       bare-path: 3.0.0
     transitivePeerDependencies:
+      - bare-abort-controller
       - bare-buffer
       - react-native-b4a
     optional: true
@@ -3364,6 +3372,7 @@ snapshots:
       fast-fifo: 1.3.2
       streamx: 2.22.1
     transitivePeerDependencies:
+      - bare-abort-controller
       - react-native-b4a
     optional: true
 
