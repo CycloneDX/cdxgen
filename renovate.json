@@ -101,6 +101,37 @@
       "description": "Wait 7 days before updating Node.js versions",
       "matchPackageNames": ["/(?:^|/)node$/"],
       "minimumReleaseAge": "7 days"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchPackagePatterns": ["^@appthreat/atom"],
+      "groupName": "atom"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchPackagePatterns": ["^@biomejs\\/"],
+      "groupName": "biome"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchPackagePatterns": ["^@cyclonedx\\/cdxgen-plugins-bin"],
+      "groupName": "cdxgen plugins dependencies",
+      "groupSlug": "cdxgen-plugins"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchPackagePatterns": ["^string-width"],
+      "groupName": "string-width"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchPackagePatterns": ["^strip-ansi"],
+      "groupName": "strip-ansi"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchPackagePatterns": ["^wrap-ansi"],
+      "groupName": "wrap-ansi"
     }
   ],
   "customManagers": [
