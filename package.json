@@ -461,7 +461,7 @@
     "y18n": "5.0.8",
     "yallist": "5.0.0",
     "yaml": "2.8.1",
-    "yargs": "17.7.2",
+    "yargs": "18.0.0",
     "yargs-parser": "22.0.0",
     "yoctocolors": "2.1.2"
   },
@@ -515,7 +515,7 @@
     "walk-up-path": "4.0.0",
     "xml-js": "1.6.11",
     "yaml": "2.8.1",
-    "yargs": "17.7.2",
+    "yargs": "18.0.0",
     "yoctocolors": "2.1.2"
   },
   "devDependencies": {
@@ -904,7 +904,7 @@
       "y18n": "5.0.8",
       "yallist": "5.0.0",
       "yaml": "2.8.1",
-      "yargs": "17.7.2",
+      "yargs": "18.0.0",
       "yargs-parser": "22.0.0",
       "yoctocolors": "2.1.2"
     },
