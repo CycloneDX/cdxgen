@@ -246,7 +246,7 @@ overrides:
   packageurl-js: 1.0.2
   parse-conflict-json: 5.0.1
   parse5: 7.3.0
-  parse5-htmlparser2-tree-adapter: 7.1.0
+  parse5-htmlparser2-tree-adapter: 8.0.0
   parse5-parser-stream: 8.0.0
   parseurl: 1.3.3
   path-key: 4.0.0
@@ -356,8 +356,6 @@ overrides:
   yargs: 17.7.2
   yargs-parser: 22.0.0
   yoctocolors: 2.1.2
-
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
 
 importers:
 
@@ -740,7 +738,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -1556,8 +1553,8 @@ packages:
     resolution: {integrity: sha512-ZHEmNKMq1wyJXNwLxyHnluPfRAFSIliBvbK/UiOceROt4Xh9Pz0fq49NytIaeaCUf5VR86hwQ/34FCcNU5/LKQ==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  parse5-htmlparser2-tree-adapter@7.1.0:
-    resolution: {integrity: sha512-ruw5xyKs6lrpo9x9rCZqZZnIUntICjQAd0Wsmp396Ul9lN/h+ifgVV1x1gZHi8euej6wTfpqX8j+BFQxF0NS/g==}
+  parse5-htmlparser2-tree-adapter@8.0.0:
+    resolution: {integrity: sha512-h4bXApvAdtcuv3MPcLQUCSQ2bJg9pG3cS5LwlXDJqweH06+0DjXVu1zwpjlbyu9tNsHiNnm4TM0nvTsGxQi5pw==}
 
   parse5-parser-stream@8.0.0:
     resolution: {integrity: sha512-b+std4I3eeGJcO5OlBYdwBsw1FNaF+qEzzq2XGfRm1dZdqUBUirsVscPCW9X4oJU0q/0C8NqMpgokLywkgxT0A==}
@@ -2417,7 +2414,7 @@ snapshots:
       encoding-sniffer: 0.2.1
       htmlparser2: 10.0.0
       parse5: 7.3.0
-      parse5-htmlparser2-tree-adapter: 7.1.0
+      parse5-htmlparser2-tree-adapter: 8.0.0
       parse5-parser-stream: 8.0.0
       undici: 7.16.0
       whatwg-mimetype: 4.0.0
@@ -3037,7 +3034,7 @@ snapshots:
       just-diff: 6.0.2
       just-diff-apply: 5.5.0
 
-  parse5-htmlparser2-tree-adapter@7.1.0:
+  parse5-htmlparser2-tree-adapter@8.0.0:
     dependencies:
       domhandler: 5.0.3
       parse5: 7.3.0
