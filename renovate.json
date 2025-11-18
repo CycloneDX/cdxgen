@@ -131,6 +131,11 @@
     },
     {
       "matchManagers": ["npm"],
+      "matchPackageNames": ["@appthreat/sqlite3", "sqlite3"],
+      "groupName": "sqlite3"
+    },
+    {
+      "matchManagers": ["npm"],
       "matchPackagePatterns": ["^string-width"],
       "groupName": "string-width"
     },
