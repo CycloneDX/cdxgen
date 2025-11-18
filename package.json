@@ -462,7 +462,7 @@
     "yallist": "5.0.0",
     "yaml": "2.8.1",
     "yargs": "17.7.2",
-    "yargs-parser": "21.1.1",
+    "yargs-parser": "22.0.0",
     "yoctocolors": "2.1.2"
   },
   "dependencies": {
@@ -905,7 +905,7 @@
       "yallist": "5.0.0",
       "yaml": "2.8.1",
       "yargs": "17.7.2",
-      "yargs-parser": "21.1.1",
+      "yargs-parser": "22.0.0",
       "yoctocolors": "2.1.2"
     },
     "ignoredBuiltDependencies": [
