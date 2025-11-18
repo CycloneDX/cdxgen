@@ -122,11 +122,9 @@ overrides:
   domutils: 3.2.2
   dottie: 2.0.6
   dunder-proto: 1.0.1
-  eastasianwidth: 0.3.0
   ecdsa-sig-formatter: 1.0.11
   edn-data: 1.1.2
   ee-first: 1.1.1
-  emoji-regex: 9.2.2
   encodeurl: 2.0.0
   encoding: 0.1.13
   encoding-sniffer: 0.2.1
@@ -154,6 +152,7 @@ overrides:
   fs-minipass: 3.0.3
   function-bind: 1.1.2
   get-caller-file: 2.0.5
+  get-east-asian-width: 1.4.0
   get-intrinsic: 1.3.0
   get-proto: 1.0.1
   get-stream: 9.0.1
