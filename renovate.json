@@ -108,7 +108,7 @@
       "groupName": "atom"
     },
     {
-      "matchManagers": ["npm", "regex"],
+      "matchManagers": ["npm", "jsonata"],
       "matchPackagePatterns": ["^@biomejs\\/"],
       "groupName": "@biomejs/biome",
       "groupSlug": "biomejs"
@@ -154,16 +154,6 @@
       "matchStrings": [
         "# renovate: datasource=(?<datasource>[a-zA-Z0-9-._]+?) depName=(?<depName>[^\\s]+?)\\s+(?<currentValue>.+?)(\\s)?$"
       ]
-    },
-    {
-      "customType": "regex",
-      "fileMatch": ["^biome\\.json$"],
-      "matchStrings": [
-        "\"\\$schema\":\\s*\"https://biomejs\\.dev/schemas/(?<currentValue>\\d+\\.\\d+\\.\\d+)/schema\\.json\""
-      ],
-      "depNameTemplate": "@biomejs/biome",
-      "datasourceTemplate": "npm",
-      "versioningTemplate": "semver"
     }
   ]
 }
