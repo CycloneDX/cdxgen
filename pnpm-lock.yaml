@@ -288,7 +288,7 @@ overrides:
   serialize-error: 7.0.1
   setprototypeof: 1.2.0
   shebang-command: 2.0.0
-  shebang-regex: 3.0.0
+  shebang-regex: 4.0.0
   side-channel: 1.1.0
   side-channel-list: 1.0.0
   side-channel-map: 1.0.1
@@ -1744,9 +1744,9 @@ packages:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
     engines: {node: '>=8'}
 
-  shebang-regex@3.0.0:
-    resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
-    engines: {node: '>=8'}
+  shebang-regex@4.0.0:
+    resolution: {integrity: sha512-YSKeSljCliLkWidW84GWL1HCguI0iEqhnBOLhrVXw/fN9he9ngekCy8zqJ1jXTPYmJ3Xkf3gLuNDVHQWdRqinw==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
   side-channel-list@1.0.0:
     resolution: {integrity: sha512-FCLHtRD/gnpCiCHEiJLOwdmFP+wzCmDEkc9y7NsYxeF4u7Btsn1ZuwgwJGxImImHicJArLP4R0yX4c2KCrMrTA==}
@@ -3219,9 +3219,9 @@ snapshots:
 
   shebang-command@2.0.0:
     dependencies:
-      shebang-regex: 3.0.0
+      shebang-regex: 4.0.0
 
-  shebang-regex@3.0.0: {}
+  shebang-regex@4.0.0: {}
 
   side-channel-list@1.0.0:
     dependencies:
