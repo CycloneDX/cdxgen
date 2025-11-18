@@ -110,7 +110,8 @@
     {
       "matchManagers": ["npm", "regex"],
       "matchPackagePatterns": ["^@biomejs\\/"],
-      "groupName": "biome"
+      "groupName": "@biomejs/biome",
+      "groupSlug": "biomejs"
     },
     {
       "matchManagers": ["npm"],
@@ -158,7 +159,7 @@
       "customType": "regex",
       "fileMatch": ["^biome\\.json$"],
       "matchStrings": [
-        "\"\\$schema\":\\s*\"https://biomejs\\.dev/schemas/(?<currentValue>[^\"]+)/schema\\.json\""
+        "\"\\$schema\":\\s*\"https://biomejs\\.dev/schemas/(?<currentValue>\\d+\\.\\d+\\.\\d+)/schema\\.json\""
       ],
       "depNameTemplate": "@biomejs/biome",
       "datasourceTemplate": "npm",
