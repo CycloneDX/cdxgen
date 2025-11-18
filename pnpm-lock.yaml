@@ -285,7 +285,7 @@ overrides:
   semver-compare: 1.0.0
   sequelize: 6.37.7
   sequelize-pool: 8.0.1
-  serialize-error: 7.0.1
+  serialize-error: 8.1.0
   setprototypeof: 1.2.0
   shebang-command: 2.0.0
   shebang-regex: 4.0.0
@@ -356,8 +356,6 @@ overrides:
   yargs: 17.7.2
   yargs-parser: 22.0.0
   yoctocolors: 2.1.2
-
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
 
 importers:
 
@@ -740,7 +738,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -1733,8 +1730,8 @@ packages:
       tedious:
         optional: true
 
-  serialize-error@7.0.1:
-    resolution: {integrity: sha512-8I8TjW5KMOKsZQTvoxjuSIa7foAwPWGOts+6o7sgjz41/qMD9VQHEDxi6PBvK2l0MXUmqZyNpUK+T2tQaaElvw==}
+  serialize-error@8.1.0:
+    resolution: {integrity: sha512-3NnuWfM6vBYoy5gZFvHiYsVbafvI9vZv/+jlIigFn4oP4zjNPK3LhcY0xSCgeb1a5L8jO71Mit9LlNoi2UfDDQ==}
     engines: {node: '>=10'}
 
   setprototypeof@1.2.0:
@@ -2691,7 +2688,7 @@ snapshots:
       matcher: 6.0.0
       roarr: 2.15.4
       semver: 7.7.3
-      serialize-error: 7.0.1
+      serialize-error: 8.1.0
 
   globalthis@1.0.4:
     dependencies:
@@ -3210,7 +3207,7 @@ snapshots:
       - supports-color
     optional: true
 
-  serialize-error@7.0.1:
+  serialize-error@8.1.0:
     dependencies:
       type-fest: 5.2.0
 
