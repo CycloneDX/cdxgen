@@ -271,7 +271,6 @@ overrides:
   rc: 1.2.8
   read-cmd-shim: 6.0.0
   read-package-json-fast: 5.0.0
-  require-directory: 2.1.1
   require-from-string: 2.0.2
   resolve-alpn: 1.2.1
   responselike: 4.0.2
@@ -353,7 +352,7 @@ overrides:
   y18n: 5.0.8
   yallist: 5.0.0
   yaml: 2.8.1
-  yargs: 17.7.2
+  yargs: 18.0.0
   yargs-parser: 22.0.0
   yoctocolors: 2.1.2
 
@@ -511,8 +510,8 @@ importers:
         specifier: 2.8.1
         version: 2.8.1
       yargs:
-        specifier: 17.7.2
-        version: 17.7.2
+        specifier: 18.0.0
+        version: 18.0.0
       yoctocolors:
         specifier: 2.1.2
         version: 2.1.2
@@ -1659,10 +1658,6 @@ packages:
     resolution: {integrity: sha512-S16VePJnQcfmk6HIZAiP8TXW/VDlDtZfzVndRDE8lhZNA4YvAiwAjgvhoyf6+soofEH/vrZnOUctSt+jYE2tkg==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  require-directory@2.1.1:
-    resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
-    engines: {node: '>=0.10.0'}
-
   require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
@@ -1983,9 +1978,9 @@ packages:
     resolution: {integrity: sha512-rwu/ClNdSMpkSrUb+d6BRsSkLUq1fmfsY6TOpYzTwvwkg1/NRG85KBy3kq++A8LKQwX6lsu+aWad+2khvuXrqw==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=23}
 
-  yargs@17.7.2:
-    resolution: {integrity: sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==}
-    engines: {node: '>=12'}
+  yargs@18.0.0:
+    resolution: {integrity: sha512-4UEqdc2RYGHZc7Doyqkrqiln3p9X2DZVxaGbwhn2pi7MrRagKaOcIKe8L3OxYcbhXLgLFUS3zAYuQjKBQgmuNg==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=23}
 
   yoctocolors@2.1.2:
     resolution: {integrity: sha512-CzhO+pFNo8ajLM2d2IW/R93ipy99LWjtwblvC1RsoSUMZgyLbYFr221TnSNT7GjGdYui6P459mw9JH/g/zW2ug==}
@@ -2001,7 +1996,7 @@ snapshots:
       '@appthreat/atom-common': 1.0.11
       '@babel/parser': 7.28.5
       typescript: 5.9.3
-      yargs: 17.7.2
+      yargs: 18.0.0
     optional: true
 
   '@appthreat/atom@2.3.0':
@@ -3166,8 +3161,6 @@ snapshots:
       json-parse-even-better-errors: 5.0.0
       npm-normalize-package-bin: 5.0.0
 
-  require-directory@2.1.1: {}
-
   require-from-string@2.0.2: {}
 
   resolve-alpn@1.2.1: {}
@@ -3513,12 +3506,11 @@ snapshots:
 
   yargs-parser@22.0.0: {}
 
-  yargs@17.7.2:
+  yargs@18.0.0:
     dependencies:
       cliui: 9.0.1
       escalade: 3.2.0
       get-caller-file: 2.0.5
-      require-directory: 2.1.1
       string-width: 8.1.0
       y18n: 5.0.8
       yargs-parser: 22.0.0
