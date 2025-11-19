@@ -111,6 +111,7 @@ overrides:
   debug: 4.4.3
   decompress-response: 10.0.0
   deep-extend: 0.6.0
+  deepmerge: 4.3.1
   define-data-property: 1.1.4
   define-properties: 1.2.1
   depd: 2.0.0
@@ -144,6 +145,8 @@ overrides:
   exponential-backoff: 3.1.3
   fast-deep-equal: 3.1.3
   fast-fifo: 1.3.2
+  fast-json-stringify: 2.7.13
+  fast-printf: 1.6.10
   fast-uri: 3.1.0
   fdir: 6.5.0
   file-uri-to-path: 2.0.0
@@ -180,6 +183,7 @@ overrides:
   inherits: 2.0.4
   ini: 6.0.0
   ip-address: 10.1.0
+  is-circular: 1.0.2
   is-fullwidth-code-point: 5.1.0
   is-stream: 4.0.1
   isexe: 3.1.1
@@ -276,6 +280,7 @@ overrides:
   responselike: 4.0.2
   retry: 0.13.1
   retry-as-promised: 7.1.1
+  rfdc: 1.4.1
   roarr: 5.0.0
   safe-buffer: 5.2.1
   safer-buffer: 2.1.2
@@ -303,11 +308,11 @@ overrides:
   spdx-exceptions: 2.5.0
   spdx-expression-parse: 4.0.0
   spdx-license-ids: 3.0.22
-  sprintf-js: 1.1.3
   sqlite3: npm:@appthreat/sqlite3@6.0.9
   ssri: 13.0.0
   statuses: 2.0.2
   streamx: 2.23.0
+  string-similarity: 4.0.4
   string-width: 8.1.0
   string-width-cjs: npm:string-width@8.1.0
   strip-ansi: 7.1.2
