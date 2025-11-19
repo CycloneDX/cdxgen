@@ -5,6 +5,8 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
+  fast-printf: 1.6.10
+  safe-stable-stringify: 2.5.0
   '@appthreat/atom': 2.3.0
   '@appthreat/atom-common': 1.0.11
   '@appthreat/atom-parsetools': 1.0.11
@@ -111,11 +113,8 @@ overrides:
   debug: 4.4.3
   decompress-response: 10.0.0
   deep-extend: 0.6.0
-  define-data-property: 1.1.4
-  define-properties: 1.2.1
   depd: 2.0.0
   detect-libc: 2.1.2
-  detect-node: 2.1.0
   dom-serializer: 2.0.0
   domelementtype: 2.3.0
   domhandler: 5.0.3
@@ -160,11 +159,9 @@ overrides:
   github-from-package: 0.0.0
   glob: 11.0.3
   global-agent: 3.0.0
-  globalthis: 1.0.4
   gopd: 1.2.0
   got: 14.6.4
   graceful-fs: 4.2.11
-  has-property-descriptors: 1.0.2
   has-symbols: 1.1.0
   hasown: 2.0.2
   hosted-git-info: 9.0.2
@@ -189,7 +186,6 @@ overrides:
   json-parse-even-better-errors: 5.0.0
   json-schema-traverse: 1.0.0
   json-stringify-nice: 1.1.4
-  json-stringify-safe: 5.0.1
   jsonata: 2.1.0
   just-diff: 6.0.2
   just-diff-apply: 5.5.0
@@ -236,7 +232,6 @@ overrides:
   npm-pick-manifest: 11.0.3
   nth-check: 2.1.1
   object-inspect: 1.13.4
-  object-keys: 1.1.1
   on-finished: 2.4.1
   on-headers: 1.1.0
   once: 1.4.0
@@ -303,7 +298,6 @@ overrides:
   spdx-exceptions: 2.5.0
   spdx-expression-parse: 4.0.0
   spdx-license-ids: 3.0.22
-  sprintf-js: 1.1.3
   sqlite3: npm:@appthreat/sqlite3@6.0.9
   ssri: 13.0.0
   statuses: 2.0.2
