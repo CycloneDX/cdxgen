@@ -148,6 +148,11 @@
       "matchManagers": ["npm"],
       "matchPackagePatterns": ["^wrap-ansi"],
       "groupName": "wrap-ansi"
+    },
+    {
+      "matchManagers": ["docker"],
+      "matchPackageNames": ["@dependencytrack/**"],
+      "groupName": "dependencytrack"
     }
   ],
   "customManagers": [
