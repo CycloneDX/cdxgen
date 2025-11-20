@@ -109,7 +109,7 @@ services:
     restart: unless-stopped
 
   dtrack-frontend:
-    image: dependencytrack/frontend:4.13.5@sha256:9a6b755a424fe84aa4267c759a6c4a1238caf774413d39a3b62facb5d783597e
+    image: dependencytrack/frontend:4.13.6@sha256:b8e8d98568e6dd76976d46c78b5eaffc7eac9044df30f9daacc628faacab067f
     depends_on:
       - dtrack-apiserver
     environment:
