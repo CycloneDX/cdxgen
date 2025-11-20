@@ -49,6 +49,7 @@ RUN set -e; \
       py3-pip \
       py3-virtualenv \
       tar \
+ && apk add --no-cache ruby-dev build-base \
  && npm install -g corepack \
  && /usr/bin/python --version \
  && /usr/bin/python -m pip install \
