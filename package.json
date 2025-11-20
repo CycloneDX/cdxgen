@@ -113,9 +113,9 @@
     "*": "biome check --fix --no-errors-on-unmatched"
   },
   "overrides": {
-    "@appthreat/atom": "2.3.0",
-    "@appthreat/atom-common": "1.0.11",
-    "@appthreat/atom-parsetools": "1.0.11",
+    "@appthreat/atom": "2.4.3",
+    "@appthreat/atom-common": "1.0.12",
+    "@appthreat/atom-parsetools": "1.0.12",
     "@appthreat/cdx-proto": "1.1.4",
     "@appthreat/sqlite3": "6.0.9",
     "@babel/code-frame": "7.27.1",
@@ -523,7 +523,7 @@
     "typescript": "5.9.3"
   },
   "optionalDependencies": {
-    "@appthreat/atom": "2.3.0",
+    "@appthreat/atom": "2.4.3",
     "@appthreat/cdx-proto": "1.1.4",
     "@bufbuild/protobuf": "2.10.1",
     "@cyclonedx/cdxgen-plugins-bin": "1.7.0",
@@ -555,9 +555,9 @@
       "@biomejs/biome"
     ],
     "overrides": {
-      "@appthreat/atom": "2.3.0",
-      "@appthreat/atom-common": "1.0.11",
-      "@appthreat/atom-parsetools": "1.0.11",
+      "@appthreat/atom": "2.4.3",
+      "@appthreat/atom-common": "1.0.12",
+      "@appthreat/atom-parsetools": "1.0.12",
       "@appthreat/cdx-proto": "1.1.4",
       "@appthreat/sqlite3": "6.0.9",
       "@babel/code-frame": "7.27.1",
