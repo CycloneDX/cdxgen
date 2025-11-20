@@ -109,17 +109,7 @@
     },
     {
       "matchManagers": ["npm", "jsonata"],
-      "matchPackageNames": [
-        "@biomejs/biome",
-        "@biomejs/cli-darwin-arm64",
-        "@biomejs/cli-darwin-x64",
-        "@biomejs/cli-linux-arm64",
-        "@biomejs/cli-linux-arm64-musl",
-        "@biomejs/cli-linux-x64",
-        "@biomejs/cli-linux-x64-musl",
-        "@biomejs/cli-win32-arm64",
-        "@biomejs/cli-win32-x64"
-      ],
+      "matchPackageNames": ["@biomejs/**"],
       "groupName": "@biomejs/biome",
       "groupSlug": "biomejs-biome"
     },
