@@ -87,7 +87,7 @@ overrides:
   buffer-equal-constant-time: 1.0.1
   byte-counter: 0.1.0
   bytes: 3.1.2
-  cacache: 20.0.1
+  cacache: 20.0.2
   cacheable-lookup: 7.0.0
   cacheable-request: 13.0.15
   call-bind-apply-helpers: 1.0.2
@@ -922,8 +922,8 @@ packages:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
     engines: {node: '>= 0.8'}
 
-  cacache@20.0.1:
-    resolution: {integrity: sha512-+7LYcYGBYoNqTp1Rv7Ny1YjUo5E0/ftkQtraH3vkfAGgVHc+ouWdC8okAwQgQR7EVIdW6JTzTmhKFwzb+4okAQ==}
+  cacache@20.0.2:
+    resolution: {integrity: sha512-rVWvqtWcgSzB22wImrVto+7PmE+lUqv5dYzRHD0QJsfpSwTkW+GIqA4ykSt/CCjQlQle8USn8CO8vcWNrIqktg==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
   cacheable-lookup@7.0.0:
@@ -2296,7 +2296,7 @@ snapshots:
   bytes@3.1.2:
     optional: true
 
-  cacache@20.0.1:
+  cacache@20.0.2:
     dependencies:
       '@npmcli/fs': 5.0.0
       fs-minipass: 3.0.3
@@ -2790,7 +2790,7 @@ snapshots:
   make-fetch-happen@15.0.3:
     dependencies:
       '@npmcli/agent': 4.0.0
-      cacache: 20.0.1
+      cacache: 20.0.2
       http-cache-semantics: 4.2.0
       minipass: 7.1.2
       minipass-fetch: 5.0.0
