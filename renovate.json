@@ -104,8 +104,8 @@
     },
     {
       "matchManagers": ["npm"],
-      "matchPackagePatterns": ["^@appthreat/atom"],
-      "groupName": "atom"
+      "groupName": "atom",
+      "matchPackageNames": ["/^@appthreat/atom/"]
     },
     {
       "matchPackageNames": ["@biomejs/**"],
@@ -113,9 +113,9 @@
     },
     {
       "matchManagers": ["npm"],
-      "matchPackagePatterns": ["^@cyclonedx\\/cdxgen-plugins-bin"],
       "groupName": "cdxgen plugins dependencies",
-      "groupSlug": "cdxgen-plugins"
+      "groupSlug": "cdxgen-plugins",
+      "matchPackageNames": ["/^@cyclonedx\\/cdxgen-plugins-bin/"]
     },
     {
       "matchManagers": ["npm"],
@@ -124,18 +124,18 @@
     },
     {
       "matchManagers": ["npm"],
-      "matchPackagePatterns": ["^string-width"],
-      "groupName": "string-width"
+      "groupName": "string-width",
+      "matchPackageNames": ["/^string-width/"]
     },
     {
       "matchManagers": ["npm"],
-      "matchPackagePatterns": ["^strip-ansi"],
-      "groupName": "strip-ansi"
+      "groupName": "strip-ansi",
+      "matchPackageNames": ["/^strip-ansi/"]
     },
     {
       "matchManagers": ["npm"],
-      "matchPackagePatterns": ["^wrap-ansi"],
-      "groupName": "wrap-ansi"
+      "groupName": "wrap-ansi",
+      "matchPackageNames": ["/^wrap-ansi/"]
     },
     {
       "matchManagers": ["docker"],
