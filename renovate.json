@@ -108,7 +108,7 @@
       "groupName": "atom"
     },
     {
-      "matchManagers": ["npm", "jsonata"],
+      "matchManagers": ["npm", "custom"],
       "matchPackageNames": ["@biomejs/**"],
       "groupName": "@biomejs/biome",
       "groupSlug": "biomejs-biome"
