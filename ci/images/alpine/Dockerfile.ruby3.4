@@ -34,6 +34,7 @@ RUN set -e; \
     apk update \
  && apk add --no-cache \
       bash \
+      build-base \
       bzip2 \
       curl \
       gcc \
@@ -48,8 +49,8 @@ RUN set -e; \
       python3-dev \
       py3-pip \
       py3-virtualenv \
+      ruby-dev \
       tar \
- && apk add --no-cache ruby-dev build-base \
  && npm install -g corepack \
  && /usr/bin/python --version \
  && /usr/bin/python -m pip install \
