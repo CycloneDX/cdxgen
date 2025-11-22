@@ -56,7 +56,7 @@ overrides:
   '@npmcli/git': 7.0.1
   '@npmcli/map-workspaces': 5.0.1
   '@npmcli/name-from-folder': 4.0.0
-  '@npmcli/package-json': 7.0.2
+  '@npmcli/package-json': 7.0.3
   '@npmcli/promise-spawn': 9.0.1
   '@npmcli/query': 5.0.0
   '@sec-ant/readable-stream': 0.6.0
@@ -350,8 +350,6 @@ overrides:
   yargs-parser: 22.0.0
   yoctocolors: 2.1.2
 
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
-
 importers:
 
   .:
@@ -378,8 +376,8 @@ importers:
         specifier: 4.0.0
         version: 4.0.0
       '@npmcli/package-json':
-        specifier: 7.0.2
-        version: 7.0.2
+        specifier: 7.0.3
+        version: 7.0.3
       '@npmcli/query':
         specifier: 5.0.0
         version: 5.0.0
@@ -700,7 +698,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -786,8 +783,8 @@ packages:
     resolution: {integrity: sha512-qfrhVlOSqmKM8i6rkNdZzABj8MKEITGFAY+4teqBziksCQAOLutiAxM1wY2BKEd8KjUSpWmWCYxvXr0y4VTlPg==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  '@npmcli/package-json@7.0.2':
-    resolution: {integrity: sha512-0ylN3U5htO1SJTmy2YI78PZZjLkKUGg7EKgukb2CRi0kzyoDr0cfjHAzi7kozVhj2V3SxN1oyKqZ2NSo40z00g==}
+  '@npmcli/package-json@7.0.3':
+    resolution: {integrity: sha512-XT8016UrDfnR7yh2XvnIqaPnA5v2QomaWryDYYgKNT0LaX0vcKf4gu2f3CWD/ltV4tOto4MwZynWlynMJL8bBQ==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
   '@npmcli/promise-spawn@9.0.1':
@@ -2149,13 +2146,13 @@ snapshots:
   '@npmcli/map-workspaces@5.0.1':
     dependencies:
       '@npmcli/name-from-folder': 4.0.0
-      '@npmcli/package-json': 7.0.2
+      '@npmcli/package-json': 7.0.3
       glob: 12.0.0
       minimatch: 10.1.1
 
   '@npmcli/name-from-folder@4.0.0': {}
 
-  '@npmcli/package-json@7.0.2':
+  '@npmcli/package-json@7.0.3':
     dependencies:
       '@npmcli/git': 7.0.1
       glob: 12.0.0
