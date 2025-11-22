@@ -43,7 +43,6 @@ overrides:
   '@iarna/toml': 2.2.5
   '@isaacs/balanced-match': 4.0.1
   '@isaacs/brace-expansion': 5.0.0
-  '@isaacs/cliui': 8.0.2
   '@isaacs/fs-minipass': 4.0.1
   '@isaacs/string-locale-compare': 1.1.0
   '@jridgewell/gen-mapping': 0.3.13
@@ -102,7 +101,6 @@ overrides:
   compression: 1.8.1
   connect: 3.7.0
   content-type: 1.0.5
-  cross-spawn: 7.0.6
   css-select: 6.0.0
   css-what: 7.0.0
   cssesc: 3.0.0
@@ -146,7 +144,6 @@ overrides:
   fdir: 6.5.0
   file-uri-to-path: 2.0.0
   finalhandler: 2.1.0
-  foreground-child: 3.3.1
   form-data-encoder: 4.1.0
   fs-minipass: 3.0.3
   function-bind: 1.1.2
@@ -181,7 +178,6 @@ overrides:
   is-fullwidth-code-point: 5.1.0
   is-stream: 4.0.1
   isexe: 3.1.1
-  jackspeak: 4.1.1
   js-tokens: 9.0.1
   jsesc: 3.1.0
   json-parse-even-better-errors: 5.0.0
@@ -239,14 +235,12 @@ overrides:
   once: 1.4.0
   p-cancelable: 4.0.1
   p-map: 7.0.4
-  package-json-from-dist: 1.0.1
   packageurl-js: 1.0.2
   parse-conflict-json: 5.0.1
   parse5: 8.0.0
   parse5-htmlparser2-tree-adapter: 8.0.0
   parse5-parser-stream: 8.0.0
   parseurl: 1.3.3
-  path-key: 4.0.0
   path-scurry: 2.0.1
   pg-connection-string: 2.9.1
   picocolors: 1.1.1
@@ -280,8 +274,6 @@ overrides:
   sequelize-pool: 8.0.1
   serialize-error: 12.0.0
   setprototypeof: 1.2.0
-  shebang-command: 2.0.0
-  shebang-regex: 4.0.0
   side-channel: 1.1.0
   side-channel-list: 1.0.0
   side-channel-map: 1.0.1
