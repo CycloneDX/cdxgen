@@ -43,7 +43,6 @@ overrides:
   '@iarna/toml': 2.2.5
   '@isaacs/balanced-match': 4.0.1
   '@isaacs/brace-expansion': 5.0.0
-  '@isaacs/cliui': 8.0.2
   '@isaacs/fs-minipass': 4.0.1
   '@isaacs/string-locale-compare': 1.1.0
   '@jridgewell/gen-mapping': 0.3.13
@@ -102,7 +101,6 @@ overrides:
   compression: 1.8.1
   connect: 3.7.0
   content-type: 1.0.5
-  cross-spawn: 7.0.6
   css-select: 6.0.0
   css-what: 7.0.0
   cssesc: 3.0.0
@@ -146,7 +144,6 @@ overrides:
   fdir: 6.5.0
   file-uri-to-path: 2.0.0
   finalhandler: 2.1.0
-  foreground-child: 3.3.1
   form-data-encoder: 4.1.0
   fs-minipass: 3.0.3
   function-bind: 1.1.2
@@ -156,7 +153,7 @@ overrides:
   get-proto: 1.0.1
   get-stream: 9.0.1
   github-from-package: 0.0.0
-  glob: 12.0.0
+  glob: 13.0.0
   global-agent: 3.0.0
   globalthis: 1.0.4
   gopd: 1.2.0
@@ -181,7 +178,6 @@ overrides:
   is-fullwidth-code-point: 5.1.0
   is-stream: 4.0.1
   isexe: 3.1.1
-  jackspeak: 4.1.1
   js-tokens: 9.0.1
   jsesc: 3.1.0
   json-parse-even-better-errors: 5.0.0
@@ -239,14 +235,12 @@ overrides:
   once: 1.4.0
   p-cancelable: 4.0.1
   p-map: 7.0.4
-  package-json-from-dist: 1.0.1
   packageurl-js: 1.0.2
   parse-conflict-json: 5.0.1
   parse5: 8.0.0
   parse5-htmlparser2-tree-adapter: 8.0.0
   parse5-parser-stream: 8.0.0
   parseurl: 1.3.3
-  path-key: 4.0.0
   path-scurry: 2.0.1
   pg-connection-string: 2.9.1
   picocolors: 1.1.1
@@ -280,8 +274,6 @@ overrides:
   sequelize-pool: 8.0.1
   serialize-error: 12.0.0
   setprototypeof: 1.2.0
-  shebang-command: 2.0.0
-  shebang-regex: 4.0.0
   side-channel: 1.1.0
   side-channel-list: 1.0.0
   side-channel-map: 1.0.1
@@ -303,9 +295,7 @@ overrides:
   statuses: 2.0.2
   streamx: 2.23.0
   string-width: 8.1.0
-  string-width-cjs: npm:string-width@8.1.0
   strip-ansi: 7.1.2
-  strip-ansi-cjs: npm:strip-ansi@7.1.2
   strip-json-comments: 5.0.3
   table: 6.9.0
   tagged-tag: 1.0.0
@@ -339,7 +329,6 @@ overrides:
   which: 6.0.0
   wkx: 0.5.0
   wrap-ansi: 9.0.2
-  wrap-ansi-cjs: npm:wrap-ansi@9.0.2
   wrappy: 1.0.2
   write-file-atomic: 7.0.0
   xml-js: 1.6.11
@@ -402,8 +391,8 @@ importers:
         specifier: 1.1.2
         version: 1.1.2
       glob:
-        specifier: 12.0.0
-        version: 12.0.0
+        specifier: 13.0.0
+        version: 13.0.0
       global-agent:
         specifier: 3.0.0
         version: 3.0.0
@@ -739,10 +728,6 @@ packages:
     resolution: {integrity: sha512-ZT55BDLV0yv0RBm2czMiZ+SqCGO7AvmOM3G/w2xhVPH+te0aKgFjmBvGlL1dH+ql2tgGO3MVrbb3jCKyvpgnxA==}
     engines: {node: 20 || >=22}
 
-  '@isaacs/cliui@8.0.2':
-    resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
-    engines: {node: '>=12'}
-
   '@isaacs/fs-minipass@4.0.1':
     resolution: {integrity: sha512-wgm9Ehl2jpeqP3zw/7mo3kRHFp5MEDhqAdwy1fTGkHAwnkGOVsgpvQhL8B5n1qlb01jV3n/bI0ZfZp5lWA1k4w==}
     engines: {node: '>=18.0.0'}
@@ -980,10 +965,6 @@ packages:
     resolution: {integrity: sha512-nTjqfcBFEipKdXCv4YDQWCfmcLZKm81ldF0pAopTvyrFGVbcR6P/VAAd5G7N+0tTr8QqiU0tFadD6FK4NtJwOA==}
     engines: {node: '>= 0.6'}
 
-  cross-spawn@7.0.6:
-    resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
-    engines: {node: '>= 8'}
-
   css-select@6.0.0:
     resolution: {integrity: sha512-rZZVSLle8v0+EY8QAkDWrKhpgt6SA5OtHsgBnsj6ZaLb5dmDVOWUDtQitd9ydxxvEjhewNudS6eTVU7uOyzvXw==}
 
@@ -1148,10 +1129,6 @@ packages:
     resolution: {integrity: sha512-/t88Ty3d5JWQbWYgaOGCCYfXRwV1+be02WqYYlL6h0lEiUAMPM8o8qKGO01YIkOHzka2up08wvgYD0mDiI+q3Q==}
     engines: {node: '>= 0.8'}
 
-  foreground-child@3.3.1:
-    resolution: {integrity: sha512-gIXjKqtFuWEgzFRJA9WCQeSJLZDjgJUOMCMzxtvFq/37KojM1BFGufqsCy0r4qSQmYLsZYMeyRqzIWOMup03sw==}
-    engines: {node: '>=14'}
-
   form-data-encoder@4.1.0:
     resolution: {integrity: sha512-G6NsmEW15s0Uw9XnCg+33H3ViYRyiM0hMrMhhqQOR8NFc5GhYrI+6I3u7OTw7b91J2g8rtvMBZJDbcGb2YUniw==}
     engines: {node: '>= 18'}
@@ -1186,10 +1163,9 @@ packages:
   github-from-package@0.0.0:
     resolution: {integrity: sha512-SyHy3T1v2NUXn29OsWdxmK6RwHD+vkj3v8en8AOBZ1wBQ/hCAQ5bAQTD02kW4W9tUp/3Qh6J8r9EvntiyCmOOw==}
 
-  glob@12.0.0:
-    resolution: {integrity: sha512-5Qcll1z7IKgHr5g485ePDdHcNQY0k2dtv/bjYy0iuyGxQw2qSOiiXUXJ+AYQpg3HNoUMHqAruX478Jeev7UULw==}
+  glob@13.0.0:
+    resolution: {integrity: sha512-tvZgpqk6fz4BaNZ66ZsRaZnbHvP/jG3uKJvAZOwEVUL4RTA5nJeeLYfyN9/VA8NX/V3IBG+hkeuGpKjvELkVhA==}
     engines: {node: 20 || >=22}
-    hasBin: true
 
   global-agent@3.0.0:
     resolution: {integrity: sha512-PT6XReJ+D07JvGoxQMkT6qji/jVNfX/h364XHZOWeRzy64sSFr+xJ5OX7LI3b4MPQzdL4H8Y8M0xzPpsVMwA8Q==}
@@ -1281,10 +1257,6 @@ packages:
   isexe@3.1.1:
     resolution: {integrity: sha512-LpB/54B+/2J5hqQ7imZHfdU31OlgQqx7ZicVlkm9kzg9/w8GKLEcFfJl/t7DCEDueOyBAD6zCCwTO6Fzs0NoEQ==}
     engines: {node: '>=16'}
-
-  jackspeak@4.1.1:
-    resolution: {integrity: sha512-zptv57P3GpL+O0I7VdMJNBZCu+BPHVQUk55Ft8/QCJjTVxrnJHuVuX/0Bl2A6/+2oyR/ZMEuFKwmzqqZ/U5nPQ==}
-    engines: {node: 20 || >=22}
 
   js-tokens@9.0.1:
     resolution: {integrity: sha512-mxa9E9ITFOt0ban3j6L5MpjwegGz6lBQmM1IJkWeBZGcMxto50+eWdjC/52xDbS2vy0k7vIMK0Fe2wfL9OQSpQ==}
@@ -1499,9 +1471,6 @@ packages:
     resolution: {integrity: sha512-tkAQEw8ysMzmkhgw8k+1U/iPhWNhykKnSk4Rd5zLoPJCuJaGRPo6YposrZgaxHKzDHdDWWZvE/Sk7hsL2X/CpQ==}
     engines: {node: '>=18'}
 
-  package-json-from-dist@1.0.1:
-    resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
-
   packageurl-js@1.0.2:
     resolution: {integrity: sha512-fWC4ZPxo80qlh3xN5FxfIoQD3phVY4+EyzTIqyksjhKNDmaicdpxSvkWwIrYTtv9C1/RcUN6pxaTwGmj2NzS6A==}
 
@@ -1521,10 +1490,6 @@ packages:
   parseurl@1.3.3:
     resolution: {integrity: sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==}
     engines: {node: '>= 0.8'}
-
-  path-key@4.0.0:
-    resolution: {integrity: sha512-haREypq7xkM7ErfgIyA0z+Bj4AGKlMSdlQE2jvJo6huWD1EdkKYV+G/T4nq0YEF2vgTT8kqMFKo1uHn950r4SQ==}
-    engines: {node: '>=12'}
 
   path-scurry@2.0.1:
     resolution: {integrity: sha512-oWyT4gICAu+kaA7QWk/jvCHWarMKNs6pXOGWKDTr7cw4IGcUbW+PeTfbaQiLGheFRpjo6O9J0PmyMfQPjH71oA==}
@@ -1679,14 +1644,6 @@ packages:
 
   setprototypeof@1.2.0:
     resolution: {integrity: sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==}
-
-  shebang-command@2.0.0:
-    resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
-    engines: {node: '>=8'}
-
-  shebang-regex@4.0.0:
-    resolution: {integrity: sha512-YSKeSljCliLkWidW84GWL1HCguI0iEqhnBOLhrVXw/fN9he9ngekCy8zqJ1jXTPYmJ3Xkf3gLuNDVHQWdRqinw==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
   side-channel-list@1.0.0:
     resolution: {integrity: sha512-FCLHtRD/gnpCiCHEiJLOwdmFP+wzCmDEkc9y7NsYxeF4u7Btsn1ZuwgwJGxImImHicJArLP4R0yX4c2KCrMrTA==}
@@ -2089,15 +2046,6 @@ snapshots:
     dependencies:
       '@isaacs/balanced-match': 4.0.1
 
-  '@isaacs/cliui@8.0.2':
-    dependencies:
-      string-width: 8.1.0
-      string-width-cjs: string-width@8.1.0
-      strip-ansi: 7.1.2
-      strip-ansi-cjs: strip-ansi@7.1.2
-      wrap-ansi: 9.0.2
-      wrap-ansi-cjs: wrap-ansi@9.0.2
-
   '@isaacs/fs-minipass@4.0.1':
     dependencies:
       minipass: 7.1.2
@@ -2150,7 +2098,7 @@ snapshots:
     dependencies:
       '@npmcli/name-from-folder': 4.0.0
       '@npmcli/package-json': 7.0.3
-      glob: 12.0.0
+      glob: 13.0.0
       minimatch: 10.1.1
 
   '@npmcli/name-from-folder@4.0.0': {}
@@ -2158,7 +2106,7 @@ snapshots:
   '@npmcli/package-json@7.0.3':
     dependencies:
       '@npmcli/git': 7.0.1
-      glob: 12.0.0
+      glob: 13.0.0
       hosted-git-info: 9.0.2
       json-parse-even-better-errors: 5.0.0
       proc-log: 6.0.0
@@ -2300,7 +2248,7 @@ snapshots:
     dependencies:
       '@npmcli/fs': 5.0.0
       fs-minipass: 3.0.3
-      glob: 12.0.0
+      glob: 13.0.0
       lru-cache: 11.2.2
       minipass: 7.1.2
       minipass-collect: 2.0.1
@@ -2400,12 +2348,6 @@ snapshots:
 
   content-type@1.0.5:
     optional: true
-
-  cross-spawn@7.0.6:
-    dependencies:
-      path-key: 4.0.0
-      shebang-command: 2.0.0
-      which: 6.0.0
 
   css-select@6.0.0:
     dependencies:
@@ -2570,11 +2512,6 @@ snapshots:
       - supports-color
     optional: true
 
-  foreground-child@3.3.1:
-    dependencies:
-      cross-spawn: 7.0.6
-      signal-exit: 4.1.0
-
   form-data-encoder@4.1.0: {}
 
   fs-minipass@3.0.3:
@@ -2617,13 +2554,10 @@ snapshots:
   github-from-package@0.0.0:
     optional: true
 
-  glob@12.0.0:
+  glob@13.0.0:
     dependencies:
-      foreground-child: 3.3.1
-      jackspeak: 4.1.1
       minimatch: 10.1.1
       minipass: 7.1.2
-      package-json-from-dist: 1.0.1
       path-scurry: 2.0.1
 
   global-agent@3.0.0:
@@ -2739,10 +2673,6 @@ snapshots:
   is-stream@4.0.1: {}
 
   isexe@3.1.1: {}
-
-  jackspeak@4.1.1:
-    dependencies:
-      '@isaacs/cliui': 8.0.2
 
   js-tokens@9.0.1: {}
 
@@ -2967,8 +2897,6 @@ snapshots:
   p-map@7.0.4:
     optional: true
 
-  package-json-from-dist@1.0.1: {}
-
   packageurl-js@1.0.2: {}
 
   parse-conflict-json@5.0.1:
@@ -2992,8 +2920,6 @@ snapshots:
 
   parseurl@1.3.3:
     optional: true
-
-  path-key@4.0.0: {}
 
   path-scurry@2.0.1:
     dependencies:
@@ -3149,12 +3075,6 @@ snapshots:
 
   setprototypeof@1.2.0:
     optional: true
-
-  shebang-command@2.0.0:
-    dependencies:
-      shebang-regex: 4.0.0
-
-  shebang-regex@4.0.0: {}
 
   side-channel-list@1.0.0:
     dependencies:
