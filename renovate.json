@@ -6,8 +6,7 @@
     ":enableVulnerabilityAlerts",
     ":separateMultipleMajorReleases",
     "customManagers:biomeVersions",
-    "customManagers:dockerfileVersions",
-    "helpers:pinGitHubActionDigestsToSemver"
+    "customManagers:dockerfileVersions"
   ],
   "labels": ["dependency"],
   "minimumReleaseAge": "3 days",
