@@ -9,77 +9,44 @@
     "customManagers:dockerfileVersions",
     "helpers:pinGitHubActionDigestsToSemver"
   ],
-  "labels": [
-    "dependency"
-  ],
+  "labels": ["dependency"],
   "minimumReleaseAge": "3 days",
   "gitIgnoredAuthors": [
     "41898282+github-actions[bot]@users.noreply.github.com"
   ],
   "nuget": {
-    "ignorePaths": [
-      "**/test/**"
-    ]
+    "ignorePaths": ["**/test/**"]
   },
   "packageRules": [
     {
-      "matchDepTypes": [
-        "engines"
-      ],
+      "matchDepTypes": ["engines"],
       "rangeStrategy": "auto"
     },
     {
       "description": "cdxgen images: separate minor and patch releases, required for the following rules to work correctly",
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchFileNames": [
-        "ci/**/Dockerfile.*"
-      ],
-      "extends": [
-        ":separatePatchReleases"
-      ]
+      "matchDatasources": ["docker"],
+      "matchFileNames": ["ci/**/Dockerfile.*"],
+      "extends": [":separatePatchReleases"]
     },
     {
       "description": "cdxgen images: exclude major version updates for images pinned to a specific major version by filename convention",
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchFileNames": [
-        "/ci\\/.*\\/Dockerfile.*\\d+$/"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
+      "matchDatasources": ["docker"],
+      "matchFileNames": ["/ci\\/.*\\/Dockerfile.*\\d+$/"],
+      "matchUpdateTypes": ["major"],
       "enabled": false
     },
     {
       "description": "cdxgen images: exclude major and minor version updates for images pinned to a specific major and minor version by filename convention",
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchFileNames": [
-        "/ci\\/.*\\/Dockerfile.*\\d+\\.\\d+$/"
-      ],
-      "matchUpdateTypes": [
-        "major",
-        "minor"
-      ],
+      "matchDatasources": ["docker"],
+      "matchFileNames": ["/ci\\/.*\\/Dockerfile.*\\d+\\.\\d+$/"],
+      "matchUpdateTypes": ["major", "minor"],
       "enabled": false
     },
     {
       "description": "cdxgen images: exclude major, minor and patch version updates for images pinned to a specific major and minor version by filename convention",
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchFileNames": [
-        "/ci\\/.*\\/Dockerfile.*\\d+\\.\\d+\\.\\d+$/"
-      ],
-      "matchUpdateTypes": [
-        "major",
-        "minor",
-        "patch"
-      ],
+      "matchDatasources": ["docker"],
+      "matchFileNames": ["/ci\\/.*\\/Dockerfile.*\\d+\\.\\d+\\.\\d+$/"],
+      "matchUpdateTypes": ["major", "minor", "patch"],
       "enabled": false
     },
     {
@@ -90,152 +57,87 @@
         "maven",
         "node-version"
       ],
-      "matchFileNames": [
-        "ci/**/*"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
+      "matchFileNames": ["ci/**/*"],
+      "matchUpdateTypes": ["major"],
       "enabled": false
     },
     {
       "description": "Limit .versions/* files updates to non-major update types as we explicitly set major versions",
-      "matchManagers": [
-        "custom.regex"
-      ],
-      "matchFileNames": [
-        ".versions/*"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
+      "matchManagers": ["custom.regex"],
+      "matchFileNames": [".versions/*"],
+      "matchUpdateTypes": ["major"],
       "enabled": false
     },
     {
       "description": ".versions/nvm can update minor and patch as well",
-      "matchManagers": [
-        "custom.regex"
-      ],
-      "matchFileNames": [
-        ".versions/nvm"
-      ],
-      "matchUpdateTypes": [
-        "major",
-        "minor",
-        "patch"
-      ]
+      "matchManagers": ["custom.regex"],
+      "matchFileNames": [".versions/nvm"],
+      "matchUpdateTypes": ["major", "minor", "patch"]
     },
     {
       "description": "Pin GitHub Actions digests to major version - for those actions which don't support semver",
-      "extends": [
-        "helpers:pinGitHubActionDigests"
-      ],
-      "matchPackageNames": [
-        "addnab/docker-run-action"
-      ],
+      "extends": ["helpers:pinGitHubActionDigests"],
+      "matchPackageNames": ["addnab/docker-run-action"],
       "extractVersion": "^(?<version>v?\\d+)$",
       "versioning": "regex:^v?(?<major>\\d+)(\\.(?<minor>\\d+)\\.(?<patch>\\d+))?$"
     },
     {
       "description": "Automerge digest pins for latest tags",
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchUpdateTypes": [
-        "digest"
-      ],
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["digest"],
       "matchCurrentValue": "latest",
       "automerge": true,
       "automergeType": "branch"
     },
     {
       "description": "Disable digest pins for cyclonedx/cdxgen-ruby-builder",
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "ghcr.io/cyclonedx/cdxgen-ruby-builder"
-      ],
-      "matchUpdateTypes": [
-        "pinDigest"
-      ],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/cyclonedx/cdxgen-ruby-builder"],
+      "matchUpdateTypes": ["pinDigest"],
       "enabled": false
     },
     {
       "description": "Wait 7 days before updating Node.js versions",
-      "matchPackageNames": [
-        "/(?:^|/)node$/"
-      ],
+      "matchPackageNames": ["/(?:^|/)node$/"],
       "minimumReleaseAge": "7 days"
     },
     {
-      "matchManagers": [
-        "npm"
-      ],
+      "matchManagers": ["npm"],
       "groupName": "atom",
-      "matchPackageNames": [
-        "/^@appthreat/atom/"
-      ]
+      "matchPackageNames": ["/^@appthreat/atom/"]
     },
     {
-      "matchPackageNames": [
-        "@biomejs/**"
-      ],
+      "matchPackageNames": ["@biomejs/**"],
       "groupName": "@biomejs/biome"
     },
     {
-      "matchManagers": [
-        "npm"
-      ],
+      "matchManagers": ["npm"],
       "groupName": "cdxgen plugins",
-      "matchPackageNames": [
-        "@cyclonedx/cdxgen-plugins-bin**"
-      ]
+      "matchPackageNames": ["@cyclonedx/cdxgen-plugins-bin**"]
     },
     {
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@appthreat/sqlite3",
-        "sqlite3"
-      ],
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["@appthreat/sqlite3", "sqlite3"],
       "groupName": "sqlite3"
     },
     {
-      "matchManagers": [
-        "npm"
-      ],
+      "matchManagers": ["npm"],
       "groupName": "string-width",
-      "matchPackageNames": [
-        "/^string-width/"
-      ]
+      "matchPackageNames": ["/^string-width/"]
     },
     {
-      "matchManagers": [
-        "npm"
-      ],
+      "matchManagers": ["npm"],
       "groupName": "strip-ansi",
-      "matchPackageNames": [
-        "/^strip-ansi/"
-      ]
+      "matchPackageNames": ["/^strip-ansi/"]
     },
     {
-      "matchManagers": [
-        "npm"
-      ],
+      "matchManagers": ["npm"],
       "groupName": "wrap-ansi",
-      "matchPackageNames": [
-        "/^wrap-ansi/"
-      ]
+      "matchPackageNames": ["/^wrap-ansi/"]
     },
     {
-      "matchManagers": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "@dependencytrack/**"
-      ],
+      "matchManagers": ["docker"],
+      "matchPackageNames": ["@dependencytrack/**"],
       "groupName": "dependencytrack"
     }
   ],
@@ -244,9 +146,7 @@
       "description": "Custom manager for devEngines runtime in package.json",
       "customType": "jsonata",
       "fileFormat": "json",
-      "managerFilePatterns": [
-        "/^package.json$/"
-      ],
+      "managerFilePatterns": ["/^package.json$/"],
       "matchStrings": [
         "devEngines.runtime.{ \"depName\": name, \"currentValue\": version, \"depType\": \"devDependencies\"}",
         "devEngines.packageManager.{ \"depName\": name, \"currentValue\": version, \"depType\": \"packageManager\"}"
@@ -256,9 +156,7 @@
     {
       "description": "Custom manager to maintain ./versions/* files used within GitHub workflows",
       "customType": "regex",
-      "managerFilePatterns": [
-        "/.versions/.*/"
-      ],
+      "managerFilePatterns": ["/.versions/.*/"],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>[a-zA-Z0-9-._]+?) depName=(?<depName>[^\\s]+?)\\s+(?<currentValue>.+?)(\\s)?$"
       ]
