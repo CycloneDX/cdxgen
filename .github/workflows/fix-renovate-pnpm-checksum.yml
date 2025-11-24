@@ -38,7 +38,7 @@ jobs:
       - name: Comment
         run: |
           read -a array <<< "$COMMIT_MESSAGE"
-          if [ "${array[1]}" == "dependency" || "${array[2]}" == "dependency" ]; then
+          if [ "${array[2]}" == "dependency" ]; then
             node bin/cdxgen.js --exclude test/\*\* -t js --deep
             echo "Output of \`pnpm why ${array[3]}\`:" > _tree.txt
             echo "\`\`\`" >> _tree.txt
