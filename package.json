@@ -466,6 +466,7 @@
     "iconv-lite": "0.7.0",
     "json-stringify-nice": "1.1.4",
     "jws": "4.0.0",
+    "keyv": "5.5.4",
     "node-stream-zip": "1.15.0",
     "npm-package-arg": "13.0.2",
     "packageurl-js": "1.0.2",
