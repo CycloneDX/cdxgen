@@ -53,7 +53,7 @@ overrides:
   '@npmcli/agent': 4.0.0
   '@npmcli/fs': 5.0.0
   '@npmcli/git': 7.0.1
-  '@npmcli/map-workspaces': 5.0.2
+  '@npmcli/map-workspaces': 5.0.3
   '@npmcli/name-from-folder': 4.0.0
   '@npmcli/package-json': 7.0.3
   '@npmcli/promise-spawn': 9.0.1
@@ -361,8 +361,8 @@ importers:
         specifier: 5.0.0
         version: 5.0.0
       '@npmcli/map-workspaces':
-        specifier: 5.0.2
-        version: 5.0.2
+        specifier: 5.0.3
+        version: 5.0.3
       '@npmcli/name-from-folder':
         specifier: 4.0.0
         version: 4.0.0
@@ -763,8 +763,8 @@ packages:
     resolution: {integrity: sha512-+XTFxK2jJF/EJJ5SoAzXk3qwIDfvFc5/g+bD274LZ7uY7LE8sTfG6Z8rOanPl2ZEvZWqNvmEdtXC25cE54VcoA==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  '@npmcli/map-workspaces@5.0.2':
-    resolution: {integrity: sha512-Qg508s4CTD4FQxBJyvmRkf9t0s1MaaV09zo3VBg6JT7XIWZlzhcvgB/hzwS0OFRYQUgup5Ovoxb7evTW0kdnpA==}
+  '@npmcli/map-workspaces@5.0.3':
+    resolution: {integrity: sha512-o2grssXo1e774E5OtEwwrgoszYRh0lqkJH+Pb9r78UcqdGJRDRfhpM8DvZPjzNLLNYeD/rNbjOKM3Ss5UABROw==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
   '@npmcli/name-from-folder@4.0.0':
@@ -2094,7 +2094,7 @@ snapshots:
       semver: 7.7.3
       which: 6.0.0
 
-  '@npmcli/map-workspaces@5.0.2':
+  '@npmcli/map-workspaces@5.0.3':
     dependencies:
       '@npmcli/name-from-folder': 4.0.0
       '@npmcli/package-json': 7.0.3
