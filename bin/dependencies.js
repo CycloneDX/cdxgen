@@ -17,18 +17,57 @@ const missingPnpmOverrides = [];
 const obsoleteNpmOverrides = [];
 const obsoletePnpmOverrides = [];
 
-var packageName;
-var packageVersion;
-for (const _package in pnpmLockYaml.packages) {
-  const packageInfo = _package.split("@");
-  if (packageInfo.length === 2) {
-    packageName = packageInfo[0];
-    packageVersion = packageInfo[1];
-  } else {
-    packageName = `@${packageInfo[1]}`;
-    packageVersion = packageInfo[2];
+for (const _package in pnpmLockYaml.snapshots) {
+  const indexOfSeparator = _package.split("(")[0].lastIndexOf("@");
+  const packageName = _package.substring(0, indexOfSeparator);
+  const packageVersion = _package.substring(indexOfSeparator + 1);
+  if (!installedPackages.includes(packageName)) {
+    installedPackages.push(packageName);
+    checkOverride(packageName, packageVersion);
   }
-  installedPackages.push(packageName);
+  for (const dependency in pnpmLockYaml.snapshots[_package].dependencies) {
+    if (!installedPackages.includes(dependency)) {
+      installedPackages.push(dependency);
+      checkOverride(
+        dependency,
+        pnpmLockYaml.snapshots[_package].dependencies[dependency],
+      );
+    }
+  }
+  for (const dependency in pnpmLockYaml.snapshots[_package]
+    .optionalDependencies) {
+    if (!installedPackages.includes(dependency)) {
+      installedPackages.push(dependency);
+      checkOverride(
+        dependency,
+        pnpmLockYaml.snapshots[_package].optionalDependencies[dependency],
+      );
+    }
+  }
+}
+for (const override in pkgJson.overrides) {
+  checkObsolescence(override, obsoleteNpmOverrides);
+}
+for (const override in pkgJson.pnpm.overrides) {
+  checkObsolescence(override, obsoletePnpmOverrides);
+}
+
+export function checkDependencies() {
+  return (
+    incorrectNpmOverridesVersions.length +
+    incorrectPnpmOverridesVersions.length +
+    missingNpmOverrides.length +
+    missingPnpmOverrides.length +
+    obsoleteNpmOverrides.length +
+    obsoletePnpmOverrides.length
+  );
+}
+
+function checkOverride(packageName, packageVersion) {
+  packageVersion = packageVersion.split("(")[0];
+  if (packageVersion.includes("@")) {
+    packageVersion = `npm:${packageVersion}`;
+  }
   if (!Object.hasOwn(pkgJson.overrides, packageName)) {
     missingNpmOverrides.push(`  "${packageName}": "${packageVersion}"`);
   } else if (pkgJson.overrides[packageName] !== packageVersion) {
@@ -44,29 +83,9 @@ for (const _package in pnpmLockYaml.packages) {
     );
   }
 }
-for (const override in pkgJson.overrides) {
-  checkOverride(override, pkgJson.overrides, obsoleteNpmOverrides);
-}
-for (const override in pkgJson.pnpm.overrides) {
-  checkOverride(override, pkgJson.pnpm.overrides, obsoletePnpmOverrides);
-}
 
-export function checkDependencies() {
-  return (
-    incorrectNpmOverridesVersions.length +
-    incorrectPnpmOverridesVersions.length +
-    missingNpmOverrides.length +
-    missingPnpmOverrides.length +
-    obsoleteNpmOverrides.length +
-    obsoletePnpmOverrides.length
-  );
-}
-
-function checkOverride(override, overrideList, obsoletionArray) {
-  if (
-    !installedPackages.includes(override) &&
-    !overrideList[override].startsWith("npm:")
-  ) {
+function checkObsolescence(override, obsoletionArray) {
+  if (!installedPackages.includes(override)) {
     obsoletionArray.push(override);
   }
 }
