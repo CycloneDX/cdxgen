@@ -118,7 +118,7 @@ jobs:
           source venv/bin/activate
           pip install -r repotests/bandersnatch/requirements.txt
           pip install -r repotests/bandersnatch/requirements_s3.txt
-          pip install -r repotests/bandersnatch/requirements_swift.txt
+          # pip install -r repotests/bandersnatch/requirements_swift.txt
           pip install -r repotests/bandersnatch/requirements_test.txt
           pip install -r repotests/bandersnatch/requirements_docs.txt
           bin/cdxgen.js --no-install-deps -r -t python repotests/bandersnatch -o bomresults/bom-bandersnatch.json --validate
