@@ -157,7 +157,7 @@ overrides:
   global-agent: 3.0.0
   globalthis: 1.0.4
   gopd: 1.2.0
-  got: 14.6.4
+  got: 14.6.5
   graceful-fs: 4.2.11
   has-property-descriptors: 1.0.2
   has-symbols: 1.1.0
@@ -397,8 +397,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       got:
-        specifier: 14.6.4
-        version: 14.6.4
+        specifier: 14.6.5
+        version: 14.6.5
       iconv-lite:
         specifier: 0.7.0
         version: 0.7.0
@@ -1182,8 +1182,8 @@ packages:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
 
-  got@14.6.4:
-    resolution: {integrity: sha512-DjsLab39NUMf5iYlK9asVCkHMhaA2hEhrlmf+qXRhjEivuuBHWYbjmty9DA3OORUwZgENTB+6vSmY2ZW8gFHVw==}
+  got@14.6.5:
+    resolution: {integrity: sha512-Su87c0NNeg97de1sO02gy9I8EmE7DCJ1gzcFLcgGpYeq2PnLg4xz73MWrp6HjqbSsjb6Glf4UBDW6JNyZA6uSg==}
     engines: {node: '>=20'}
 
   graceful-fs@4.2.11:
@@ -2579,7 +2579,7 @@ snapshots:
 
   gopd@1.2.0: {}
 
-  got@14.6.4:
+  got@14.6.5:
     dependencies:
       '@sindresorhus/is': 7.1.1
       byte-counter: 0.1.0
