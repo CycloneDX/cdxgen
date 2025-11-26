@@ -36,7 +36,7 @@ overrides:
   '@cyclonedx/cdxgen-plugins-bin-linux-arm': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-linux-arm64': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-linux-ppc64': 1.7.0
-  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64': 1.7.0
+  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64': 1.8.0
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-windows-amd64': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-windows-arm64': 1.7.0
@@ -339,8 +339,6 @@ overrides:
   yargs-parser: 22.0.0
   yoctocolors: 2.1.2
 
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
-
 importers:
 
   .:
@@ -510,8 +508,8 @@ importers:
         specifier: 1.7.0
         version: 1.7.0
       '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64':
-        specifier: 1.7.0
-        version: 1.7.0
+        specifier: 1.8.0
+        version: 1.8.0
       '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64':
         specifier: 1.7.0
         version: 1.7.0
@@ -692,10 +690,9 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
-  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
-    resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
+  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.8.0':
+    resolution: {integrity: sha512-FO3bQ6LWKrf6iYpa2qgUmSTl1Yi7T1cPTizXfOnzqg3dBxmksb0RjKFiCKeLNULfFT/vbQcz7065JKAt0oE/5w==}
     cpu: [x64]
     os: [linux]
     libc: musl
@@ -2026,7 +2023,7 @@ snapshots:
   '@cyclonedx/cdxgen-plugins-bin-linux-ppc64@1.7.0':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
+  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.8.0':
     optional: true
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64@1.7.0':
