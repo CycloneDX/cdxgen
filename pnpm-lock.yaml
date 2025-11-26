@@ -31,7 +31,7 @@ overrides:
   '@bufbuild/protobuf': 2.10.1
   '@cyclonedx/cdxgen-plugins-bin': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-darwin-amd64': 1.7.0
-  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64': 1.7.0
+  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64': 1.8.0
   '@cyclonedx/cdxgen-plugins-bin-linux-amd64': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-linux-arm': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-linux-arm64': 1.7.0
@@ -339,8 +339,6 @@ overrides:
   yargs-parser: 22.0.0
   yoctocolors: 2.1.2
 
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
-
 importers:
 
   .:
@@ -495,8 +493,8 @@ importers:
         specifier: 1.7.0
         version: 1.7.0
       '@cyclonedx/cdxgen-plugins-bin-darwin-arm64':
-        specifier: 1.7.0
-        version: 1.7.0
+        specifier: 1.8.0
+        version: 1.8.0
       '@cyclonedx/cdxgen-plugins-bin-linux-amd64':
         specifier: 1.7.0
         version: 1.7.0
@@ -665,8 +663,8 @@ packages:
     cpu: [x64]
     os: [darwin]
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.7.0':
-    resolution: {integrity: sha512-gnQqfDNd8RXKH3n/BUtSi1aJghPLSVpAScaM0iiuGvdfOVuwqBEMAKx/SC0v5yXdCtThC45W5/Zz8Lc9eNoNAw==}
+  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.8.0':
+    resolution: {integrity: sha512-Yakqu//KVUCXMlCNJDO1pSPQoEkbBnhjJgJTlx1MOBcJRUAwezRy3SAFWBcaLgWSoTSknO7LAPtLqzQKKOwn+g==}
     cpu: [arm64]
     os: [darwin]
 
@@ -692,7 +690,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -2011,7 +2008,7 @@ snapshots:
   '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.7.0':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.7.0':
+  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.8.0':
     optional: true
 
   '@cyclonedx/cdxgen-plugins-bin-linux-amd64@1.7.0':
