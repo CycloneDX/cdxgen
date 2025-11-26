@@ -30,7 +30,7 @@ overrides:
   '@biomejs/cli-win32-x64': 2.3.7
   '@bufbuild/protobuf': 2.10.1
   '@cyclonedx/cdxgen-plugins-bin': 1.7.0
-  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64': 1.7.0
+  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64': 1.8.0
   '@cyclonedx/cdxgen-plugins-bin-darwin-arm64': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-linux-amd64': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-linux-arm': 1.7.0
@@ -339,8 +339,6 @@ overrides:
   yargs-parser: 22.0.0
   yoctocolors: 2.1.2
 
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
-
 importers:
 
   .:
@@ -492,8 +490,8 @@ importers:
         specifier: 1.7.0
         version: 1.7.0
       '@cyclonedx/cdxgen-plugins-bin-darwin-amd64':
-        specifier: 1.7.0
-        version: 1.7.0
+        specifier: 1.8.0
+        version: 1.8.0
       '@cyclonedx/cdxgen-plugins-bin-darwin-arm64':
         specifier: 1.7.0
         version: 1.7.0
@@ -660,8 +658,8 @@ packages:
   '@bufbuild/protobuf@2.10.1':
     resolution: {integrity: sha512-ckS3+vyJb5qGpEYv/s1OebUHDi/xSNtfgw1wqKZo7MR9F2z+qXr0q5XagafAG/9O0QPVIUfST0smluYSTpYFkg==}
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.7.0':
-    resolution: {integrity: sha512-evJAEetfhKU7N9tCaOl/CZcs4upoEIKvLdhV9ogzk9QIur+HtZX5F9LddGNoQuzhB1Umy2tAyFAKhl+EX63BFQ==}
+  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.8.0':
+    resolution: {integrity: sha512-0c4+VXkRtq0zNWXsKEt8Qv4PFeWAS3j4TL+yeaDXmcpLEu42UvjVtNZg7k00T5ijlV05rIWsz9mavuq+G3wOGw==}
     cpu: [x64]
     os: [darwin]
 
@@ -692,7 +690,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -2008,7 +2005,7 @@ snapshots:
   '@bufbuild/protobuf@2.10.1':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.7.0':
+  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.8.0':
     optional: true
 
   '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.7.0':
