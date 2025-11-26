@@ -33,7 +33,7 @@ overrides:
   '@cyclonedx/cdxgen-plugins-bin-darwin-amd64': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-darwin-arm64': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-linux-amd64': 1.7.0
-  '@cyclonedx/cdxgen-plugins-bin-linux-arm': 1.7.0
+  '@cyclonedx/cdxgen-plugins-bin-linux-arm': 1.8.0
   '@cyclonedx/cdxgen-plugins-bin-linux-arm64': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-linux-ppc64': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64': 1.7.0
@@ -339,8 +339,6 @@ overrides:
   yargs-parser: 22.0.0
   yoctocolors: 2.1.2
 
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
-
 importers:
 
   .:
@@ -501,8 +499,8 @@ importers:
         specifier: 1.7.0
         version: 1.7.0
       '@cyclonedx/cdxgen-plugins-bin-linux-arm':
-        specifier: 1.7.0
-        version: 1.7.0
+        specifier: 1.8.0
+        version: 1.8.0
       '@cyclonedx/cdxgen-plugins-bin-linux-arm64':
         specifier: 1.7.0
         version: 1.7.0
@@ -682,8 +680,8 @@ packages:
     os: [linux]
     libc: glibc
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.7.0':
-    resolution: {integrity: sha512-eNnS9Kd+j4YDiIotCA3EQWyiHKjx7iZqh5+gyF38zmSJQRssEWvCdv+IPvXPyZw8hh5g9/8IQWPYMFpB3fpopg==}
+  '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.8.0':
+    resolution: {integrity: sha512-+VIqa+YzxHZIPvwnol8/i2TGQ0Z16k02F0K2R/JsRVjTJnm0cfsxVxiVtpW1oAL7jAc/UUz33qfuXeL0n8UFjg==}
     cpu: [arm]
     os: [linux]
     libc: glibc
@@ -692,7 +690,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -2020,7 +2017,7 @@ snapshots:
   '@cyclonedx/cdxgen-plugins-bin-linux-arm64@1.7.0':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.7.0':
+  '@cyclonedx/cdxgen-plugins-bin-linux-arm@1.8.0':
     optional: true
 
   '@cyclonedx/cdxgen-plugins-bin-linux-ppc64@1.7.0':
