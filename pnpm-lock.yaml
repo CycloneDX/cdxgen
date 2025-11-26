@@ -38,7 +38,7 @@ overrides:
   '@cyclonedx/cdxgen-plugins-bin-linux-ppc64': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64': 1.7.0
-  '@cyclonedx/cdxgen-plugins-bin-windows-amd64': 1.7.0
+  '@cyclonedx/cdxgen-plugins-bin-windows-amd64': 1.8.0
   '@cyclonedx/cdxgen-plugins-bin-windows-arm64': 1.7.0
   '@iarna/toml': 2.2.5
   '@isaacs/balanced-match': 4.0.1
@@ -339,8 +339,6 @@ overrides:
   yargs-parser: 22.0.0
   yoctocolors: 2.1.2
 
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
-
 importers:
 
   .:
@@ -516,8 +514,8 @@ importers:
         specifier: 1.7.0
         version: 1.7.0
       '@cyclonedx/cdxgen-plugins-bin-windows-amd64':
-        specifier: 1.7.0
-        version: 1.7.0
+        specifier: 1.8.0
+        version: 1.8.0
       '@cyclonedx/cdxgen-plugins-bin-windows-arm64':
         specifier: 1.7.0
         version: 1.7.0
@@ -692,7 +690,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -706,8 +703,8 @@ packages:
     os: [linux]
     libc: musl
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.7.0':
-    resolution: {integrity: sha512-sCeTnlDq3Wojit2+MqErsYhD/Mv7VickLU2PazmamQc4LVZHakZPGxoG4CFUt4oFVux9CoY1+RxkE+Ia+E+fsA==}
+  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.8.0':
+    resolution: {integrity: sha512-DlU31Zan05YlsLHZFtAO3360NQHe9RNu/G5OK3bhSvmWoyhSxihh7x2RrxAiVePpENPQnun7HPyWOJc9ty9tIQ==}
     cpu: [x64]
     os: [win32]
 
@@ -2032,7 +2029,7 @@ snapshots:
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64@1.7.0':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.7.0':
+  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.8.0':
     optional: true
 
   '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.7.0':
