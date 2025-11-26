@@ -37,7 +37,7 @@ overrides:
   '@cyclonedx/cdxgen-plugins-bin-linux-arm64': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-linux-ppc64': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64': 1.7.0
-  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64': 1.7.0
+  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64': 1.8.0
   '@cyclonedx/cdxgen-plugins-bin-windows-amd64': 1.7.0
   '@cyclonedx/cdxgen-plugins-bin-windows-arm64': 1.7.0
   '@iarna/toml': 2.2.5
@@ -339,8 +339,6 @@ overrides:
   yargs-parser: 22.0.0
   yoctocolors: 2.1.2
 
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
-
 importers:
 
   .:
@@ -513,8 +511,8 @@ importers:
         specifier: 1.7.0
         version: 1.7.0
       '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64':
-        specifier: 1.7.0
-        version: 1.7.0
+        specifier: 1.8.0
+        version: 1.8.0
       '@cyclonedx/cdxgen-plugins-bin-windows-amd64':
         specifier: 1.7.0
         version: 1.7.0
@@ -692,7 +690,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -700,8 +697,8 @@ packages:
     os: [linux]
     libc: musl
 
-  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64@1.7.0':
-    resolution: {integrity: sha512-Rh8ChTldyY/01EWrciyhnUltC2YNLmdkwaPDZsJT/as1Bu0Q4iOnepMw2WpqwzkaGbZG5PgFtzeuV1kBKjo07Q==}
+  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64@1.8.0':
+    resolution: {integrity: sha512-l2Cui2PK58RDS84cWIqSb4BA5VO25o/Npilg9xVaGLXjpGFe9dQVtJIGkPmkFN7qtM2oUcn314dGTt+hOxxdCg==}
     cpu: [arm64]
     os: [linux]
     libc: musl
@@ -2029,7 +2026,7 @@ snapshots:
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64@1.7.0':
+  '@cyclonedx/cdxgen-plugins-bin-linuxmusl-arm64@1.8.0':
     optional: true
 
   '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.7.0':
