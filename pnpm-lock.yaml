@@ -7,7 +7,7 @@ settings:
 overrides:
   '@appthreat/atom': 2.3.0
   '@appthreat/atom-common': 1.0.11
-  '@appthreat/atom-parsetools': 1.0.11
+  '@appthreat/atom-parsetools': 1.0.12
   '@appthreat/cdx-proto': 1.1.4
   '@appthreat/sqlite3': 6.0.9
   '@babel/code-frame': 7.27.1
@@ -339,8 +339,6 @@ overrides:
   yargs-parser: 22.0.0
   yoctocolors: 2.1.2
 
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
-
 importers:
 
   .:
@@ -545,8 +543,8 @@ packages:
   '@appthreat/atom-common@1.0.11':
     resolution: {integrity: sha512-WQShpvjqdKCLuW/TeNxE9FH/SPR6Nxok+t1qcWzd3+m7X/Za57HNE0KEm0YNJ9IvBvj7mE9nMEF5r9XFDRg+xg==}
 
-  '@appthreat/atom-parsetools@1.0.11':
-    resolution: {integrity: sha512-5sqkFrckEmyFmnNQ6pCP4OxcS287KVqEdPUBBRyKfnHntYzKMiuFgIriKUPd2fTLfSTmNQ67Z3ouPS41AcOEdw==}
+  '@appthreat/atom-parsetools@1.0.12':
+    resolution: {integrity: sha512-eqU3LYaduUEFCt+tDs58txvYkyhuYLJHQm7+S+RwKaICkO8kJDrrcfBqHXngvNG0Th/TpVe4X9tl5uf5bd2I7g==}
     engines: {node: '>=16.0.0'}
     hasBin: true
 
@@ -692,7 +690,6 @@ packages:
     resolution: {integrity: sha512-AWLQ33x/mUtYLfIfCq8tZ8TykXUzzNo6ZLvf1eOmEeEyYw/9Yx6E7KzzaAakGl886lJW/1gzmhvFPXD+ZKEIpA==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.7.0':
     resolution: {integrity: sha512-miYABkiNS+0m0z9L5lfIyiAQezuYthkzzPqX6DgPeMgFT8SfoUng2dtRzkCPLtCUBj8lMyBntXTjZrmH7QOMoA==}
@@ -1890,7 +1887,7 @@ snapshots:
   '@appthreat/atom-common@1.0.11':
     optional: true
 
-  '@appthreat/atom-parsetools@1.0.11':
+  '@appthreat/atom-parsetools@1.0.12':
     dependencies:
       '@appthreat/atom-common': 1.0.11
       '@babel/parser': 7.28.5
@@ -1901,7 +1898,7 @@ snapshots:
   '@appthreat/atom@2.3.0':
     dependencies:
       '@appthreat/atom-common': 1.0.11
-      '@appthreat/atom-parsetools': 1.0.11
+      '@appthreat/atom-parsetools': 1.0.12
     optional: true
 
   '@appthreat/cdx-proto@1.1.4':
