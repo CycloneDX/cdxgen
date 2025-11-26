@@ -101,23 +101,8 @@
       "minimumReleaseAge": "7 days"
     },
     {
-      "matchManagers": ["npm"],
-      "groupName": "atom",
-      "matchPackageNames": ["/^@appthreat/atom/"]
-    },
-    {
       "matchPackageNames": ["@biomejs/**"],
       "groupName": "@biomejs/biome"
-    },
-    {
-      "matchManagers": ["npm"],
-      "groupName": "cdxgen plugins",
-      "matchPackageNames": ["@cyclonedx/cdxgen-plugins-bin**"]
-    },
-    {
-      "matchManagers": ["npm"],
-      "matchPackageNames": ["@appthreat/sqlite3", "sqlite3"],
-      "groupName": "sqlite3"
     },
     {
       "matchManagers": ["npm"],
