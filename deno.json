@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "12.0.0",
+  "version": "12.1.0",
   "exports": "./lib/cli/index.js",
   "compilerOptions": {
     "lib": ["deno.window"],
@@ -106,7 +106,7 @@
     "prettify-xml": "npm:prettify-xml@^1.2.0",
     "properties-reader": "npm:properties-reader@^2.3.0",
     "semver": "npm:semver@^7.7.2",
-    "ssri": "npm:ssri@^12.0.0",
+    "ssri": "npm:ssri@^12.1.0",
     "table": "npm:table@^6.9.0",
     "tar": "npm:tar@^7.4.3",
     "uuid": "npm:uuid@^11.1.0",

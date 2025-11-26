@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "12.0.0",
+  "version": "12.1.0",
   "description": "Creates CycloneDX Software Bill of Materials (SBOM) from source or container image",
   "keywords": [
     "sbom",
@@ -377,7 +377,7 @@
     "semver-compare": "1.0.0",
     "sequelize": "6.37.7",
     "sequelize-pool": "8.0.1",
-    "serialize-error": "12.0.0",
+    "serialize-error": "12.1.0",
     "setprototypeof": "1.2.0",
     "side-channel": "1.1.0",
     "side-channel-list": "1.0.0",
@@ -792,7 +792,7 @@
       "semver-compare": "1.0.0",
       "sequelize": "6.37.7",
       "sequelize-pool": "8.0.1",
-      "serialize-error": "12.0.0",
+      "serialize-error": "12.1.0",
       "setprototypeof": "1.2.0",
       "side-channel": "1.1.0",
       "side-channel-list": "1.0.0",
