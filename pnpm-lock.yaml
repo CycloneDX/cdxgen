@@ -80,7 +80,7 @@ overrides:
   bare-url: 2.3.2
   bin-links: 6.0.0
   bindings: 1.5.0
-  body-parser: 2.2.0
+  body-parser: 2.2.1
   boolbase: 1.0.0
   boolean: 3.2.0
   buffer-equal-constant-time: 1.0.1
@@ -339,8 +339,6 @@ overrides:
   yargs-parser: 22.0.0
   yoctocolors: 2.1.2
 
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
-
 importers:
 
   .:
@@ -522,8 +520,8 @@ importers:
         specifier: 1.8.0
         version: 1.8.0
       body-parser:
-        specifier: 2.2.0
-        version: 2.2.0
+        specifier: 2.2.1
+        version: 2.2.1
       compression:
         specifier: 1.8.1
         version: 1.8.1
@@ -692,7 +690,6 @@ packages:
     resolution: {integrity: sha512-KCZVGPh8XPPIvKQwPIYvfHb+jjCMKmPtGd9lC2LH5QfrC8jvDsu+4n+8GKTzBOYxbk18sSy+W6XjHzIcHMSvpg==}
     cpu: [ppc64]
     os: [linux]
-    libc: glibc
 
   '@cyclonedx/cdxgen-plugins-bin-linuxmusl-amd64@1.8.0':
     resolution: {integrity: sha512-FO3bQ6LWKrf6iYpa2qgUmSTl1Yi7T1cPTizXfOnzqg3dBxmksb0RjKFiCKeLNULfFT/vbQcz7065JKAt0oE/5w==}
@@ -888,8 +885,8 @@ packages:
   bindings@1.5.0:
     resolution: {integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==}
 
-  body-parser@2.2.0:
-    resolution: {integrity: sha512-02qvAaxv8tp7fBa/mw1ga98OGm+eCbqzJOKoRt70sLmfEEi+jyBYVTDGfCL/k06/4EMk/z01gCe7HoCH/f2LTg==}
+  body-parser@2.2.1:
+    resolution: {integrity: sha512-nfDwkulwiZYQIGwxdy0RUmowMhKcFVcYXUU7m4QlKYim1rUtg83xm2yjZ40QjDuc291AJjjeSc9b++AWHSgSHw==}
     engines: {node: '>=18'}
 
   boolbase@1.0.0:
@@ -2221,7 +2218,7 @@ snapshots:
       file-uri-to-path: 2.0.0
     optional: true
 
-  body-parser@2.2.0:
+  body-parser@2.2.1:
     dependencies:
       bytes: 3.1.2
       content-type: 1.0.5
