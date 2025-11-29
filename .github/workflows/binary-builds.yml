@@ -57,7 +57,7 @@ jobs:
           # Set all the runners
           - os: darwin
             arch: amd64
-            runner: macos-14-large
+            runner: macos-15-intel
           - os: darwin
             arch: arm64
             runner: macos-14
