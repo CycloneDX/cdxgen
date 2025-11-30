@@ -37,7 +37,7 @@ runs:
   steps:
     - name: Extract metadata (tags, labels) for Docker image
       id: metadata
-      uses: docker/metadata-action@318604b99e75e41977312d83839a89be02ca4893 # v5.9.0
+      uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
       with:
         flavor: latest=${{ inputs.latest }}
         images: ${{ inputs.images }}
