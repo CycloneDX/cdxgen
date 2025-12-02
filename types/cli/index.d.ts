@@ -214,7 +214,7 @@ export function createCsharpBom(path: string, options: any): Promise<any>;
 export function createCryptoCertsBom(path: string, options: any): Promise<{
     bomJson: {
         components: {
-            name: string;
+            name: any;
             type: string;
             version: string;
             "bom-ref": string;
@@ -234,11 +234,11 @@ export function createCryptoCertsBom(path: string, options: any): Promise<{
 }>;
 export function mergeDependencies(dependencies: any, newDependencies: any, parentComponent?: {}): ({
     ref: string;
-    dependsOn: any[];
-    provides: any[];
+    dependsOn: any;
+    provides: any;
 } | {
     ref: string;
-    dependsOn: any[];
+    dependsOn: any;
     provides?: undefined;
 })[];
 /**

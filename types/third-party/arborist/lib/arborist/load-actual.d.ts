@@ -3,11 +3,11 @@ declare function ActualLoader(cls: any): {
     new (options: any): {
         [x: string]: any;
         "__#private@#actualTree": any;
-        "__#private@#actualTreeLoaded": Set<any>;
+        "__#private@#actualTreeLoaded": any;
         "__#private@#actualTreePromise": any;
-        "__#private@#cache": Map<any, any>;
+        "__#private@#cache": any;
         "__#private@#filter": any;
-        "__#private@#topNodes": Set<any>;
+        "__#private@#topNodes": any;
         "__#private@#transplantFilter": any;
         actualTree: any;
         loadActual(options?: {}): Promise<any>;
@@ -26,13 +26,9 @@ declare function ActualLoader(cls: any): {
         "__#private@#loadFSTree"(node: any): any;
         "__#private@#loadFSChildren"(node: any): Promise<any>;
         "__#private@#findMissingEdges"(): Promise<void>;
-        [_rpcache]: Map<string, string>;
-        [_stcache]: Map<any, any>;
     };
     [x: string]: any;
 };
 import Node from "../node.js";
 import Link from "../link.js";
-declare const _rpcache: unique symbol;
-declare const _stcache: unique symbol;
 //# sourceMappingURL=load-actual.d.ts.map

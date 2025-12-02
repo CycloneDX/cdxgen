@@ -98,7 +98,6 @@ overrides:
   content-type: 1.0.5
   css-select: 6.0.0
   css-what: 7.0.0
-  cssesc: 3.0.0
   debug: 4.4.3
   decompress-response: 10.0.0
   deep-extend: 0.6.0
@@ -234,7 +233,6 @@ overrides:
   picocolors: 1.1.1
   picomatch: 4.0.3
   poku: 3.0.2
-  postcss-selector-parser: 7.1.0
   prebuild-install: 7.1.3
   proc-log: 6.0.0
   proggy: 4.0.0
@@ -298,7 +296,6 @@ overrides:
   unique-filename: 5.0.0
   unique-slug: 6.0.0
   unpipe: 1.0.0
-  util-deprecate: 1.0.2
   utils-merge: 1.0.1
   uuid: 13.0.0
   validate-npm-package-license: 3.0.4
@@ -319,7 +316,7 @@ overrides:
   yargs-parser: 22.0.0
   yoctocolors: 2.1.2
 
-pnpmfileChecksum: sha256-nfOeuxPm0PLhmHqhdzVKpjFk27e1GEgHAqcQJ7ot+gg=
+pnpmfileChecksum: sha256-xIqrTZsTrApDEZEhj31pihm0V6JkRY3/J80/kO0sGFM=
 
 importers:
 
@@ -937,11 +934,6 @@ packages:
     resolution: {integrity: sha512-wD5oz5xibMOPHzy13CyGmogB3phdvcDaB5t0W/Nr5Z2O/agcB8YwOz6e2Lsp10pNDzBoDO9nVa3RGs/2BttpHQ==}
     engines: {node: '>= 6'}
 
-  cssesc@3.0.0:
-    resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
-    engines: {node: '>=4'}
-    hasBin: true
-
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
     engines: {node: '>=6.0'}
@@ -1452,10 +1444,6 @@ packages:
     engines: {bun: '>=1.x.x', deno: '>=1.x.x', node: '>=14.x.x', typescript: '>=5.x.x'}
     hasBin: true
 
-  postcss-selector-parser@7.1.0:
-    resolution: {integrity: sha512-8sLjZwK0R+JlxlYcTuVnyT2v+htpdrjDOKuMcOVdYjt52Lh8hWRYpxBPoKx/Zg+bcjc3wx6fmQevMmUztS/ccA==}
-    engines: {node: '>=4'}
-
   prebuild-install@7.1.3:
     resolution: {integrity: sha512-8Mf2cbV7x1cXPUILADGI3wuhfqWvtiLA1iclTDbFRZkgRQS0NqsPZphna9V+HyTEadheuPmjaJMsbzKQFOzLug==}
     engines: {node: '>=10'}
@@ -1691,9 +1679,6 @@ packages:
   unpipe@1.0.0:
     resolution: {integrity: sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==}
     engines: {node: '>= 0.8'}
-
-  util-deprecate@1.0.2:
-    resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
   utils-merge@1.0.1:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
@@ -2005,9 +1990,7 @@ snapshots:
     dependencies:
       which: 6.0.0
 
-  '@npmcli/query@5.0.0':
-    dependencies:
-      postcss-selector-parser: 7.1.0
+  '@npmcli/query@5.0.0': {}
 
   '@sec-ant/readable-stream@0.6.0': {}
 
@@ -2225,8 +2208,6 @@ snapshots:
       nth-check: 2.1.1
 
   css-what@7.0.0: {}
-
-  cssesc@3.0.0: {}
 
   debug@4.4.3:
     dependencies:
@@ -2780,11 +2761,6 @@ snapshots:
 
   poku@3.0.2: {}
 
-  postcss-selector-parser@7.1.0:
-    dependencies:
-      cssesc: 3.0.0
-      util-deprecate: 1.0.2
-
   prebuild-install@7.1.3:
     dependencies:
       detect-libc: 2.1.2
@@ -3093,8 +3069,6 @@ snapshots:
 
   unpipe@1.0.0:
     optional: true
-
-  util-deprecate@1.0.2: {}
 
   utils-merge@1.0.1:
     optional: true

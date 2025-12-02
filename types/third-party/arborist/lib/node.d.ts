@@ -6,18 +6,18 @@ declare class Node {
     isInStore: any;
     sourceReference: any;
     name: any;
-    path: string;
-    realpath: string;
+    path: any;
+    realpath: any;
     resolved: any;
     integrity: any;
     hasShrinkwrap: any;
     installLinks: any;
     legacyPeerDeps: any;
     children: CaseInsensitiveMap;
-    fsChildren: Set<any>;
+    fsChildren: any;
     inventory: Inventory;
-    tops: Set<any>;
-    linksIn: Set<any>;
+    tops: any;
+    linksIn: any;
     dev: any;
     optional: any;
     devOptional: any;
@@ -25,7 +25,7 @@ declare class Node {
     extraneous: any;
     dummy: boolean;
     ideallyInert: any;
-    edgesIn: Set<any>;
+    edgesIn: any;
     edgesOut: CaseInsensitiveMap;
     overrides: any;
     set meta(meta: any);
@@ -58,7 +58,7 @@ declare class Node {
     get isRoot(): boolean;
     get isProjectRoot(): boolean;
     get isRegistryDependency(): boolean;
-    ancestry(): Generator<this, void, unknown>;
+    ancestry(): {};
     canReplaceWith(node: any, ignorePeers: any): boolean;
     canReplace(node: any, ignorePeers: any): any;
     canDedupe(preferDedupe?: boolean, explicitRequest?: boolean): boolean;
@@ -67,7 +67,7 @@ declare class Node {
     replaceWith(node: any): void;
     replace(node: any): void;
     get inShrinkwrap(): any;
-    location: string;
+    location: any;
     assertRootOverrides(): void;
     addEdgeOut(edge: any): void;
     recalculateOutEdgesOverrides(): void;
@@ -85,8 +85,7 @@ declare class Node {
     get fsTop(): any;
     get resolveParent(): any;
     resolve(name: any): any;
-    inNodeModules(): string | false;
-    querySelectorAll(query: any, opts: any): Promise<any[]>;
+    inNodeModules(): any;
     toJSON(): any;
     #private;
 }
