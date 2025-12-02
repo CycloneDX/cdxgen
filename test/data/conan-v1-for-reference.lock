@@ -1,0 +1,72 @@
+{
+ "graph_lock": {
+  "nodes": {
+   "1": {
+    "ref": "grpc/1.50.1",
+    "options": "<truncated>",
+    "package_id": "0febd4ee2d7c3ac6dfc28d10eef3f352c517fde7",
+    "prev": "0",
+    "requires": [
+     "2",
+     "3",
+     "5",
+     "6",
+     "7",
+     "4"
+    ],
+    "context": "host"
+   },
+   "2": {
+    "ref": "abseil/20230802.1",
+    "options": "shared=False",
+    "package_id": "3fb49604f9c2f729b85ba3115852006824e72cab",
+    "prev": "0",
+    "context": "host"
+   },
+   "3": {
+    "ref": "protobuf/3.21.12",
+    "options": "<truncated>",
+    "package_id": "6b251a3d67c612ea01b0038b4c794e87a3c4fd88",
+    "prev": "0",
+    "requires": [
+     "4"
+    ],
+    "context": "host"
+   },
+   "4": {
+    "ref": "zlib/1.3.1",
+    "options": "shared=False",
+    "package_id": "3fb49604f9c2f729b85ba3115852006824e72cab",
+    "prev": "0",
+    "context": "host"
+   },
+   "5": {
+    "ref": "c-ares/1.34.1",
+    "options": "shared=False\ntools=True",
+    "package_id": "95ac61b4b7e9e66bcc9af3260647ab977ee3250a",
+    "prev": "0",
+    "context": "host"
+   },
+   "6": {
+    "ref": "openssl/3.3.2",
+    "options": "<truncated>",
+    "package_id": "1cf626f618fdd256dd79c53f4d6cebfc2eaa1df7",
+    "prev": "0",
+    "requires": [
+     "4"
+    ],
+    "context": "host"
+   },
+   "7": {
+    "ref": "re2/20230301",
+    "options": "shared=False\nwith_icu=False",
+    "package_id": "3fb49604f9c2f729b85ba3115852006824e72cab",
+    "prev": "0",
+    "context": "host"
+   }
+  },
+  "revisions_enabled": false
+ },
+ "version": "0.4",
+ "profile_host": "<truncated>"
+}
