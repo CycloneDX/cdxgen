@@ -162,10 +162,27 @@ RUN set -e; \
       mkdir $HOME/.pip/; \
       printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
     fi; \
-    cd /opt/cdxgen \
+    ARCH_NAME="$(dpkg --print-architecture)"; \
+    case "${ARCH_NAME##*-}" in \
+      'amd64' | 'x86_64') \
+         DOSAI_ARCH_SUFFIX='-full'; \
+         ;; \
+      'aarch64' | 'arm64') \
+         DOSAI_ARCH_SUFFIX='-linux-arm64-full'; \
+         ;; \
+      *) \
+         echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; \
+         exit 1 \
+         ;; \
+    esac \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install:prod \
  && corepack pnpm cache delete \
+ && curl -L ${GITHUB_URL}/owasp-dep-scan/dosai/releases/latest/download/Dosai${DOSAI_ARCH_SUFFIX} \
+      -o /usr/local/bin/dosai \
+ && chmod +x /usr/local/bin/dosai \
+ && dosai --help \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
  && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \

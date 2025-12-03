@@ -4,8 +4,8 @@ FROM golang:1.24.10-bookworm@sha256:aaa1dedbfef846dbd62fa803cecd7486b0e98a32cb6f
 ARG DEBIAN_REPO
 ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GITHUB_URL=https://github.com
-ARG NODE_24
-ARG NODE_VERSION=${NODE_24}
+ARG NODE_25
+ARG NODE_VERSION=${NODE_25}
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG NVM
