@@ -69,7 +69,7 @@ overrides:
   ansi-styles: 6.2.3
   b4a: 1.7.3
   bare-events: 2.8.2
-  bare-fs: 4.5.1
+  bare-fs: 4.5.2
   bare-os: 3.6.2
   bare-path: 3.0.0
   bare-stream: 2.7.0
@@ -813,8 +813,8 @@ packages:
       bare-abort-controller:
         optional: true
 
-  bare-fs@4.5.1:
-    resolution: {integrity: sha512-zGUCsm3yv/ePt2PHNbVxjjn0nNB1MkIaR4wOCxJ2ig5pCf5cCVAYJXVhQg/3OhhJV6DB1ts7Hv0oUaElc2TPQg==}
+  bare-fs@4.5.2:
+    resolution: {integrity: sha512-veTnRzkb6aPHOvSKIOy60KzURfBdUflr5VReI+NSaPL6xf+XLdONQgZgpYvUuZLVQ8dCqxpBAudaOM1+KpAUxw==}
     engines: {bare: '>=1.16.0'}
     peerDependencies:
       bare-buffer: '*'
@@ -2025,7 +2025,7 @@ snapshots:
   bare-events@2.8.2:
     optional: true
 
-  bare-fs@4.5.1:
+  bare-fs@4.5.2:
     dependencies:
       bare-events: 2.8.2
       bare-path: 3.0.0
@@ -2993,7 +2993,7 @@ snapshots:
       pump: 3.0.3
       tar-stream: 3.1.7
     optionalDependencies:
-      bare-fs: 4.5.1
+      bare-fs: 4.5.2
       bare-path: 3.0.0
     transitivePeerDependencies:
       - bare-abort-controller
