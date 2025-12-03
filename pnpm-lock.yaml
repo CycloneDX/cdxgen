@@ -311,7 +311,7 @@ overrides:
   xml-js: 1.6.11
   y18n: 5.0.8
   yallist: 5.0.0
-  yaml: 2.8.1
+  yaml: 2.8.2
   yargs: 18.0.0
   yargs-parser: 22.0.0
   yoctocolors: 2.1.2
@@ -437,8 +437,8 @@ importers:
         specifier: 1.6.11
         version: 1.6.11
       yaml:
-        specifier: 2.8.1
-        version: 2.8.1
+        specifier: 2.8.2
+        version: 2.8.2
       yargs:
         specifier: 18.0.0
         version: 18.0.0
@@ -1739,8 +1739,8 @@ packages:
     resolution: {integrity: sha512-YgvUTfwqyc7UXVMrB+SImsVYSmTS8X/tSrtdNZMImM+n7+QTriRXyXim0mBrTXNeqzVF0KWGgHPeiyViFFrNDw==}
     engines: {node: '>=18'}
 
-  yaml@2.8.1:
-    resolution: {integrity: sha512-lcYcMxX2PO9XMGvAJkJ3OsNMw+/7FKes7/hgerGUYWIoWu5j/+YQqcZr5JnPZWzOsEBgMbSbiSTn/dv/69Mkpw==}
+  yaml@2.8.2:
+    resolution: {integrity: sha512-mplynKqc1C2hTVYxd0PU2xQAc22TI1vShAYGksCCfxbn/dFwnHTNi1bvYsBTkhdUNtGIf5xNOg938rrSSYvS9A==}
     engines: {node: '>= 14.6'}
     hasBin: true
 
@@ -3119,7 +3119,7 @@ snapshots:
 
   yallist@5.0.0: {}
 
-  yaml@2.8.1: {}
+  yaml@2.8.2: {}
 
   yargs-parser@22.0.0: {}
 
