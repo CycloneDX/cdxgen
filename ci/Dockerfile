@@ -17,7 +17,7 @@ ARG GO_VERSION=1.25.4
 ARG NODE_VERSION=24.11.1
 ARG RUBY_VERSION=3.4.5
 ARG JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
-ARG SCALA_VERSION=3.7.2
+ARG SCALA_VERSION=3.7.4
 
 ENV GOPATH=/opt/app-root/go \
     JAVA_VERSION=$JAVA_VERSION \
@@ -74,7 +74,7 @@ RUN set -e; \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
         python3 python3-devel python3-pip glibc-common glibc-all-langpacks \
         openssl-devel libffi-devel libyaml zlib-devel \
-        pcre2 which tar gzip zip unzip bzip2 sudo ncurses ncurses-devel sqlite-devel gnupg2 dotnet-sdk-9.0 rust cargo \
+        pcre2 which tar gzip zip unzip bzip2 sudo ncurses ncurses-devel sqlite-devel gnupg2 dotnet-sdk-10.0 rust cargo \
     && ruby --version \
     && which ruby \
     && /usr/bin/python3 --version \
@@ -144,7 +144,7 @@ LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
       org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
       org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
-      org.opencontainers.image.version="11.5.x" \
+      org.opencontainers.image.version="12.1.x" \
       org.opencontainers.image.vendor="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
