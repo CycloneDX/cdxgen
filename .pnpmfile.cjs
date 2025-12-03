@@ -24,6 +24,9 @@ function readPackage(pkg) {
       }
     }
   }
+  if (pkg.name === "@npmcli/query") {
+    delete pkg.dependencies["postcss-selector-parser"];
+  }
   return pkg;
 }
 

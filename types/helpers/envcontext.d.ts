@@ -214,7 +214,7 @@ export function getOrInstallNvmTool(toolVersion: string): string;
  * @returns {Boolean} true if rbenv is available. false otherwise.
  */
 export function isRbenvAvailable(): boolean;
-export function rubyVersionDir(rubyVersion: any): string;
+export function rubyVersionDir(rubyVersion: any): any;
 /**
  * Perform bundle install using Ruby container images. Not working cleanly yet.
  *
@@ -230,7 +230,7 @@ export function bundleInstallWithDocker(rubyVersion: any, cdxgenGemHome: any, fi
  * @param filePath File path
  */
 export function installRubyVersion(rubyVersion: any, filePath: any): {
-    fullToolBinDir: string;
+    fullToolBinDir: any;
     status: boolean;
 };
 /**

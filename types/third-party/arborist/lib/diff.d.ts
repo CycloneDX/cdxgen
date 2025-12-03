@@ -4,7 +4,7 @@ declare class Diff {
         actual: any;
         ideal: any;
         filterNodes?: any[];
-        shrinkwrapInflated?: Set<any>;
+        shrinkwrapInflated?: any;
     }): any;
     constructor({ actual, ideal, filterSet, shrinkwrapInflated }: {
         actual: any;

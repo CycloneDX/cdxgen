@@ -1,9 +1,8 @@
 export default Inventory;
-declare class Inventory extends Map<any, any> {
-    constructor();
+declare class Inventory {
     get primaryKey(): string;
     get indexes(): string[];
-    filter(fn: any): Generator<any, void, unknown>;
+    filter(fn: any): {};
     add(node: any): void;
     delete(node: any): void;
     query(key: any, val: any, ...args: any[]): any;

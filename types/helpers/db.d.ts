@@ -1,7 +1,5 @@
-import sqlite3 from 'sqlite3';
-
 export function createOrLoad(dbName: any, dbPath: any, logging?: boolean): Promise<{
-    sequelize: sqlite3.Database;
+    sequelize: any;
     Namespaces: Model;
     Usages: Model;
     DataFlows: Model;
