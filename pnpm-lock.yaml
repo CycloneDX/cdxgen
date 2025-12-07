@@ -180,7 +180,7 @@ overrides:
   just-diff-apply: 5.5.0
   jwa: 2.0.1
   jws: 4.0.0
-  keyv: 5.5.4
+  keyv: 5.5.5
   lodash.truncate: 4.4.2
   lowercase-keys: 3.0.0
   lru-cache: 11.2.2
@@ -386,8 +386,8 @@ importers:
         specifier: 4.0.0
         version: 4.0.0
       keyv:
-        specifier: 5.5.4
-        version: 5.5.4
+        specifier: 5.5.5
+        version: 5.5.5
       node-stream-zip:
         specifier: 1.15.0
         version: 1.15.0
@@ -1241,8 +1241,8 @@ packages:
   jws@4.0.0:
     resolution: {integrity: sha512-KDncfTmOZoOMTFG4mBlG0qUIOlc03fmzH+ru6RgYVZhPkyiy/92Owlt/8UEN+a4TXR1FQetfIpJE8ApdvdVxTg==}
 
-  keyv@5.5.4:
-    resolution: {integrity: sha512-eohl3hKTiVyD1ilYdw9T0OiB4hnjef89e3dMYKz+mVKDzj+5IteTseASUsOB+EU9Tf6VNTCjDePcP6wkDGmLKQ==}
+  keyv@5.5.5:
+    resolution: {integrity: sha512-FA5LmZVF1VziNc0bIdCSA1IoSVnDCqE8HJIZZv2/W8YmoAM50+tnUgJR/gQZwEeIMleuIOnRnHA/UaZRNeV4iQ==}
 
   lodash.truncate@4.4.2:
     resolution: {integrity: sha512-jttmRe7bRse52OsWIMDLaXxWqRAmtIUccAQ3garviCqJjafXOfNMO0yMfNpdD6zbGaTU0P5Nz7e7gAT6cKmJRw==}
@@ -2116,7 +2116,7 @@ snapshots:
       '@types/http-cache-semantics': 4.0.4
       get-stream: 9.0.1
       http-cache-semantics: 4.2.0
-      keyv: 5.5.4
+      keyv: 5.5.5
       mimic-response: 4.0.0
       normalize-url: 8.1.0
       responselike: 4.0.2
@@ -2427,7 +2427,7 @@ snapshots:
       decompress-response: 10.0.0
       form-data-encoder: 4.1.0
       http2-wrapper: 2.2.1
-      keyv: 5.5.4
+      keyv: 5.5.5
       lowercase-keys: 3.0.0
       p-cancelable: 4.0.1
       responselike: 4.0.2
@@ -2543,7 +2543,7 @@ snapshots:
       jwa: 2.0.1
       safe-buffer: 5.2.1
 
-  keyv@5.5.4:
+  keyv@5.5.5:
     dependencies:
       '@keyv/serialize': 1.1.1
 
