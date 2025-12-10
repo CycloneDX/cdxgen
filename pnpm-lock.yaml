@@ -289,7 +289,7 @@ overrides:
   toidentifier: 1.0.1
   treeverse: 3.0.0
   tunnel-agent: 0.6.0
-  type-fest: 5.3.0
+  type-fest: 5.3.1
   type-is: 2.0.1
   typescript: 5.9.3
   undici: 7.16.0
@@ -1651,8 +1651,8 @@ packages:
   tunnel-agent@0.6.0:
     resolution: {integrity: sha512-McnNiV1l8RYeY8tBgEpuodCC1mLUdbSN+CYBL7kJsJNInOP8UjDDEwdk6Mw60vdLLrr5NHKZhMAOSrR2NZuQ+w==}
 
-  type-fest@5.3.0:
-    resolution: {integrity: sha512-d9CwU93nN0IA1QL+GSNDdwLAu1Ew5ZjTwupvedwg3WdfoH6pIDvYQ2hV0Uc2nKBLPq7NB5apCx57MLS5qlmO5g==}
+  type-fest@5.3.1:
+    resolution: {integrity: sha512-VCn+LMHbd4t6sF3wfU/+HKT63C9OoyrSIf4b+vtWHpt2U7/4InZG467YDNMFMR70DdHjAdpPWmw2lzRdg0Xqqg==}
     engines: {node: '>=20'}
 
   type-is@2.0.1:
@@ -2431,7 +2431,7 @@ snapshots:
       lowercase-keys: 3.0.0
       p-cancelable: 4.0.1
       responselike: 4.0.2
-      type-fest: 5.3.0
+      type-fest: 5.3.1
 
   graceful-fs@4.2.11:
     optional: true
@@ -2861,7 +2861,7 @@ snapshots:
 
   serialize-error@12.0.0:
     dependencies:
-      type-fest: 5.3.0
+      type-fest: 5.3.1
 
   setprototypeof@1.2.0:
     optional: true
@@ -3042,7 +3042,7 @@ snapshots:
       safe-buffer: 5.2.1
     optional: true
 
-  type-fest@5.3.0:
+  type-fest@5.3.1:
     dependencies:
       tagged-tag: 1.0.0
 
