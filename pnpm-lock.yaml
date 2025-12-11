@@ -7,7 +7,7 @@ settings:
 overrides:
   '@appthreat/atom': 2.4.3
   '@appthreat/atom-common': 1.0.12
-  '@appthreat/atom-parsetools': 1.0.12
+  '@appthreat/atom-parsetools': 1.0.13
   '@appthreat/cdx-proto': 1.2.0
   '@appthreat/sqlite3': 7.0.2
   '@babel/code-frame': 7.27.1
@@ -519,8 +519,8 @@ packages:
   '@appthreat/atom-common@1.0.12':
     resolution: {integrity: sha512-bsy1J/1Ge9uO+/VBUH79F9btmnJfedvytF3jFpDsINabF+x0koWdegXsjYg5sBuI9D8bfODail7vNJCBPl2u0g==}
 
-  '@appthreat/atom-parsetools@1.0.12':
-    resolution: {integrity: sha512-eqU3LYaduUEFCt+tDs58txvYkyhuYLJHQm7+S+RwKaICkO8kJDrrcfBqHXngvNG0Th/TpVe4X9tl5uf5bd2I7g==}
+  '@appthreat/atom-parsetools@1.0.13':
+    resolution: {integrity: sha512-NaLDf4auGwI61Ca7dnjTIiMnLBDMGcr3DekzTNFDfDld3smugiGEMuITjNfiaoIGDLwR/E6PTFdzZjgExFfMbw==}
     engines: {node: '>=16.0.0'}
     hasBin: true
 
@@ -1761,7 +1761,7 @@ snapshots:
   '@appthreat/atom-common@1.0.12':
     optional: true
 
-  '@appthreat/atom-parsetools@1.0.12':
+  '@appthreat/atom-parsetools@1.0.13':
     dependencies:
       '@appthreat/atom-common': 1.0.12
       '@babel/parser': 7.28.5
@@ -1772,7 +1772,7 @@ snapshots:
   '@appthreat/atom@2.4.3':
     dependencies:
       '@appthreat/atom-common': 1.0.12
-      '@appthreat/atom-parsetools': 1.0.12
+      '@appthreat/atom-parsetools': 1.0.13
     optional: true
 
   '@appthreat/cdx-proto@1.2.0':
