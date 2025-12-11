@@ -1,10 +1,10 @@
-FROM ghcr.io/cyclonedx/cdxgen:master@sha256:0fe2b2f099e1e7108c8ac8a722cc6621f204b2c63c0da2ff5c9641017365178b
+FROM ghcr.io/cyclonedx/cdxgen:master@sha256:a9b05bce2a320cbe3916645f4feb59a757b95577a47ddd78d96a8e9d89f31e5c
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
       org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
       org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
-      org.opencontainers.image.version="11.5.x" \
+      org.opencontainers.image.version="12.1.x" \
       org.opencontainers.image.vendor="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \

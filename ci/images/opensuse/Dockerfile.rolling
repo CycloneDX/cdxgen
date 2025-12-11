@@ -1,5 +1,5 @@
 # Base-image
-FROM opensuse/tumbleweed:latest@sha256:694bd2c55ea85dc35ceed6e6e6647a08f5b0741bbad4684d03948d31a6557065 AS base
+FROM opensuse/tumbleweed:latest@sha256:d1e7d50ab573428611096f6349e31c1b216158325a7ba2b2ac2172193c27272e AS base
 
 ARG DOTNET_SDK_VERSION=9.0.305
 ARG DOTNETCLI_URL=https://dotnetcli.azureedge.net
@@ -144,12 +144,12 @@ RUN set -e; \
  && curl -o- $GITHUB_RAW_URL/nvm-sh/nvm/$NVM_VERSION/install.sh | bash \
  && source ${NVM_DIR}/nvm.sh \
  && nvm install ${NODE_VERSION} \
+ && node -v \
+ && npm -v \
  && npm install -g \
       corepack \
       node-gyp \
  && npx node-gyp install \
- && node -v \
- && npm -v \
  && npm install -g corepack \
  && poetry --version \
  && pipenv --version \

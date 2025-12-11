@@ -30,7 +30,7 @@ jobs:
         os: ['ubuntu-24.04']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -38,11 +38,11 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
       - name: Use Node.js
-        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version-file: .nvmrc
       - name: Set up JDK ${{ matrix.java-version }}
-        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
+        uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5.1.0
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
@@ -53,43 +53,43 @@ jobs:
           mkdir -p bomresults
         env:
           CI: true
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
           repository: 'scipy/scipy'
           path: 'repotests/scipy'
           ref: 'v1.15.2'
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
           repository: 'psf/black'
           path: 'repotests/black'
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
           repository: 'psf/pyperf'
           path: 'repotests/pyperf'
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
           repository: 'psf/cachecontrol'
           path: 'repotests/cachecontrol'
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
           repository: 'pallets/flask'
           path: 'repotests/flask'
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
           repository: 'pallets/click'
           path: 'repotests/click'
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
           repository: 'pallets/jinja'
           path: 'repotests/jinja'
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
           repository: 'pypa/bandersnatch'
@@ -118,7 +118,7 @@ jobs:
           source venv/bin/activate
           pip install -r repotests/bandersnatch/requirements.txt
           pip install -r repotests/bandersnatch/requirements_s3.txt
-          pip install -r repotests/bandersnatch/requirements_swift.txt
+          # pip install -r repotests/bandersnatch/requirements_swift.txt
           pip install -r repotests/bandersnatch/requirements_test.txt
           pip install -r repotests/bandersnatch/requirements_docs.txt
           bin/cdxgen.js --no-install-deps -r -t python repotests/bandersnatch -o bomresults/bom-bandersnatch.json --validate

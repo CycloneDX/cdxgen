@@ -3,8 +3,8 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0.100-noble@sha256:c7445f141c04f1a6b454181b
 
 ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GITHUB_URL=https://github.com
-ARG NODE_24
-ARG NODE_VERSION=${NODE_24}
+ARG NODE_25
+ARG NODE_VERSION=${NODE_25}
 ARG NODEJS_DIST_URL
 ARG NPM_REPO
 ARG NUGET_REPO

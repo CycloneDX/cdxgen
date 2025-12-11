@@ -1,14 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended",
-    ":separateMultipleMajorReleases",
-    ":enableVulnerabilityAlerts",
-    "customManagers:biomeVersions",
-    "customManagers:dockerfileVersions",
+    "config:best-practices",
     ":disableRateLimiting",
-    "docker:pinDigests",
-    "helpers:pinGitHubActionDigestsToSemver"
+    ":enableVulnerabilityAlerts",
+    ":separateMultipleMajorReleases",
+    "customManagers:biomeVersions",
+    "customManagers:dockerfileVersions"
   ],
   "labels": ["dependency"],
   "minimumReleaseAge": "3 days",
@@ -101,6 +99,35 @@
       "description": "Wait 7 days before updating Node.js versions",
       "matchPackageNames": ["/(?:^|/)node$/"],
       "minimumReleaseAge": "7 days"
+    },
+    {
+      "matchPackageNames": ["@biomejs/**"],
+      "groupName": "@biomejs/biome"
+    },
+    {
+      "matchManagers": ["npm"],
+      "groupName": "cdxgen plugins",
+      "matchPackageNames": ["@cyclonedx/cdxgen-plugins-bin**"]
+    },
+    {
+      "matchManagers": ["npm"],
+      "groupName": "string-width",
+      "matchPackageNames": ["/^string-width/"]
+    },
+    {
+      "matchManagers": ["npm"],
+      "groupName": "strip-ansi",
+      "matchPackageNames": ["/^strip-ansi/"]
+    },
+    {
+      "matchManagers": ["npm"],
+      "groupName": "wrap-ansi",
+      "matchPackageNames": ["/^wrap-ansi/"]
+    },
+    {
+      "matchManagers": ["docker"],
+      "matchPackageNames": ["@dependencytrack/**"],
+      "groupName": "dependencytrack"
     }
   ],
   "customManagers": [

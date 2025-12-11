@@ -49,7 +49,7 @@ jobs:
     outputs:
       node-versions: ${{ steps.read-versions.outputs.versions }}
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
       - id: read-versions
@@ -66,13 +66,13 @@ jobs:
         os: ['ubuntu-22.04', 'ubuntu-24.04', 'windows-latest', 'windows-11-arm', 'ubuntu-22.04-arm', 'ubuntu-24.04-arm', 'macos-15', 'macos-latest']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
       - name: Setup pnpm
         uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version: ${{ matrix.node-version }}
       - name: pnpm install, build and test
@@ -93,15 +93,15 @@ jobs:
       matrix:
         java-version: ['24']
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
       - name: Set up Python
-        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
+        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
         with:
           python-version: 3.13
       - name: Set up JDK ${{ matrix.java-version }}
-        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
+        uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5.1.0
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
@@ -119,7 +119,7 @@ jobs:
       - name: check sbom for vulns
         if: github.ref == 'refs/heads/master'
         run: |
-          node bin/cdxgen.js -t php -t js -t jar -t ruby -o $(pwd)/reports/sbom-build.cdx.json --include-formulation --export-proto --proto-bin-file $(pwd)/reports/sbom-build.cdx.proto --exclude "**/test/**" --profile research $(pwd)
+          node bin/cdxgen.js -t js -t php -t jar -t ruby -o $(pwd)/reports/sbom-build.cdx.json --include-formulation --export-proto --proto-bin-file $(pwd)/reports/sbom-build.cdx.proto --exclude "**/test/**" --profile research $(pwd)
           docker pull ghcr.io/cyclonedx/cdxgen:master
           node bin/cdxgen.js -t docker -o $(pwd)/reports/sbom-container-js.cdx.json ghcr.io/cyclonedx/cdxgen:master
           depscan --src $(pwd) --bom-dir $(pwd)/reports --reports-dir $(pwd)/reports --reachability-analyzer SemanticReachability --explain
@@ -130,7 +130,7 @@ jobs:
       - name: Generate atom and slices
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          node bin/cdxgen.js -t php -t js -t jar -t ruby -o $(pwd)/reports/sbom-build.cdx.json --include-formulation --export-proto --proto-bin-file $(pwd)/reports/sbom-build.cdx.proto --exclude "**/test/**" --profile research $(pwd)
+          node bin/cdxgen.js -t js -t php -t jar -t ruby -o $(pwd)/reports/sbom-build.cdx.json --include-formulation --export-proto --proto-bin-file $(pwd)/reports/sbom-build.cdx.proto --exclude "**/test/**" --profile research $(pwd)
       - name: Upload atom and slices
         uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
         if: startsWith(github.ref, 'refs/tags/')
@@ -179,13 +179,13 @@ jobs:
             artifact: cdxgenx
     runs-on: ${{ matrix.os }}-latest
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
       - name: Setup pnpm
         uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
       - name: Use Node.js
-        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version-file: .nvmrc
       - uses: denoland/setup-deno@e95548e56dfa95d4e1a28d6f422fafe75c4c26fb # v2.0.3
@@ -201,29 +201,3 @@ jobs:
           mkdir build
           ${{ matrix.build }}
         continue-on-error: true
-
-  devenv:
-    if: false
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-15]
-    steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-        with:
-          persist-credentials: false
-      - uses: cachix/install-nix-action@7ec16f2c061ab07b235a7245e06ed46fe9a1cab6 # v31.8.3
-      - uses: cachix/cachix-action@0fc020193b5a1fa3ac4575aa3a7d3aa6a35435ad # v16
-        with:
-          name: devenv
-      - name: Install devenv.sh
-        run: nix profile install nixpkgs#devenv
-      - name: Build the devenv shell
-        run: |
-          mkdir -p $HOME/.local/share/pnpm/global
-          echo "$HOME/.local/share/pnpm/global" >> $GITHUB_PATH
-          devenv test
-      - name: Install dependencies
-        run: devenv shell install:frozen
-      - name: Run test
-        run: devenv shell pnpm test

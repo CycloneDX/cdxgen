@@ -1,5 +1,5 @@
 # Base-image
-FROM eclipse-temurin:21.0.9_10-jdk-ubi9-minimal@sha256:58a89c2fd9d17867906bd66102009de4bd2eef95ba7289fed7289fa8951cb7fd AS base
+FROM eclipse-temurin:21.0.9_10-jdk-ubi9-minimal@sha256:29dcae3dc84889965aa4994984b6a4dbfcb36382feba4e6f9dbb86d6035378e9 AS base
 
 ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GRADLE_8
@@ -16,7 +16,7 @@ ARG PIP_CONFIG
 ARG PYTHON_VERSION=3.12
 ARG REDHAT_REPO
 ARG SBT_VERSION=1.11.6
-ARG SCALA_VERSION=3.7.2
+ARG SCALA_VERSION=3.7.4
 ARG SDKMAN_URL=https://api.sdkman.io/2
 
 ENV CDXGEN_IN_CONTAINER=true \

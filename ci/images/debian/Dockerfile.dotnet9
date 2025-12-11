@@ -1,5 +1,5 @@
 # Base-image
-FROM mcr.microsoft.com/dotnet/sdk:9.0.307-bookworm-slim@sha256:1ea5b7f2154cbd1e20a336cb56957dba30a7ce30ef5c1c032a37c42801594713 AS base
+FROM mcr.microsoft.com/dotnet/sdk:9.0.308-bookworm-slim@sha256:6c7713b7d107f743015b863f6bb028fca7430192140536779c0464f1ece899bc AS base
 
 ARG DEBIAN_REPO
 ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
@@ -162,10 +162,27 @@ RUN set -e; \
       mkdir $HOME/.pip/; \
       printf "$PIP_CONFIG" > $HOME/.pip/pip.conf; \
     fi; \
-    cd /opt/cdxgen \
+    ARCH_NAME="$(dpkg --print-architecture)"; \
+    case "${ARCH_NAME##*-}" in \
+      'amd64' | 'x86_64') \
+         DOSAI_ARCH_SUFFIX='-full'; \
+         ;; \
+      'aarch64' | 'arm64') \
+         DOSAI_ARCH_SUFFIX='-linux-arm64-full'; \
+         ;; \
+      *) \
+         echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; \
+         exit 1 \
+         ;; \
+    esac \
+ && cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install:prod \
  && corepack pnpm cache delete \
+ && curl -L ${GITHUB_URL}/owasp-dep-scan/dosai/releases/latest/download/Dosai${DOSAI_ARCH_SUFFIX} \
+      -o /usr/local/bin/dosai \
+ && chmod +x /usr/local/bin/dosai \
+ && dosai --help \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
  && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \

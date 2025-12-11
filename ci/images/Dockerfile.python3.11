@@ -1,11 +1,11 @@
 # Base-image
-FROM registry.suse.com/bci/python:3.11.13@sha256:f1796a36bd2cc046a5c7fe1125dbc7aadc6ab1eccd7b134d17714a68f72b1fe6 AS base
+FROM registry.suse.com/bci/python:3.11.13@sha256:7d3ea7637c33ac28e393a2a38d543bce74f97c8013bcad41ba10f41f01c05c23 AS base
 
 ARG GCC_VERSION=14
 ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GITHUB_URL=https://github.com
 # renovate: datasource=golang-version depName=golang
-ARG GO_VERSION=1.25.4
+ARG GO_VERSION=1.25.5
 ARG GOOGLE_URL=https://dl.google.com
 ARG JAVA_VERSION=24.0.2-tem
 ARG MAVEN_3

@@ -1,5 +1,5 @@
 # Base-image
-FROM ruby:3.4.7-alpine@sha256:cdb113e8110f2ed8c5e2e1ef4b02494e0243f8d6fe59e4c0348441437ded2aaa AS base
+FROM ruby:3.4.7-alpine@sha256:08031b3b11a8448b7e9703a214ece92c60e19c06c0234625ab051cc4b37bf42b AS base
 
 ARG ALPINE_REPO
 ARG NODEJS_DIST_URL
@@ -34,6 +34,7 @@ RUN set -e; \
     apk update \
  && apk add --no-cache \
       bash \
+      build-base \
       bzip2 \
       curl \
       gcc \
@@ -48,6 +49,7 @@ RUN set -e; \
       python3-dev \
       py3-pip \
       py3-virtualenv \
+      ruby-dev \
       tar \
  && npm install -g corepack \
  && /usr/bin/python --version \

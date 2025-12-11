@@ -14,7 +14,7 @@ services:
     command: cdxgen --server --server-host 0.0.0.0 --server-port 9090 --server-url http://dtrack-apiserver:8081
 
   dtrack-apiserver:
-    image: dependencytrack/apiserver:4.13.5@sha256:ca16cf0e6b2550a1c39a726070ca2d7c7de8d8d7a386ea29d2a5a668e89e9708
+    image: dependencytrack/apiserver:4.13.6@sha256:74bb6e9d82a4370930085934b4a4089864fefc7c65fcd180b45b045f7671c3d6
     # environment:
     # The Dependency-Track container can be configured using any of the
     # available configuration properties defined in:
@@ -109,7 +109,7 @@ services:
     restart: unless-stopped
 
   dtrack-frontend:
-    image: dependencytrack/frontend:4.13.5@sha256:9a6b755a424fe84aa4267c759a6c4a1238caf774413d39a3b62facb5d783597e
+    image: dependencytrack/frontend:4.13.6@sha256:b8e8d98568e6dd76976d46c78b5eaffc7eac9044df30f9daacc628faacab067f
     depends_on:
       - dtrack-apiserver
     environment:

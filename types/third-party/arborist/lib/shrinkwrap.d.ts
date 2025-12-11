@@ -14,19 +14,19 @@ declare class Shrinkwrap {
         optional: boolean;
         devOptional: boolean;
     } | {
-        resolved: string;
+        resolved: any;
         link: boolean;
     };
     constructor(options?: {});
-    lockfileVersion: number;
+    lockfileVersion: any;
     tree: any;
-    path: string;
-    filename: string;
+    path: any;
+    filename: any;
     data: any;
     indent: any;
     newline: any;
     loadedFromDisk: boolean;
-    type: string;
+    type: any;
     yarnLock: YarnLock;
     hiddenLockfile: any;
     loadingError: any;
@@ -35,8 +35,8 @@ declare class Shrinkwrap {
     checkYarnLock(spec: any, options?: {}): any;
     reset(): void;
     originalLockfileVersion: any;
-    get loadFiles(): Promise<string[]>;
-    get resetFiles(): Promise<any[]>;
+    get loadFiles(): any;
+    get resetFiles(): any;
     inferFormattingOptions(packageJSONData: any): void;
     load(): Promise<this>;
     ancientLockfile: boolean;
@@ -47,7 +47,7 @@ declare class Shrinkwrap {
     commit(): any;
     toJSON(): any;
     toString(options?: {}): any;
-    save(options?: {}): Promise<[void, void]>;
+    save(options?: {}): any;
     #private;
 }
 import YarnLock from "./yarn-lock.js";

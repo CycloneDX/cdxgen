@@ -15,9 +15,9 @@ declare class PlaceDep {
     updateNames: any;
     canPlace: any;
     canPlaceSelf: any;
-    checks: Map<any, any>;
+    checks: any;
     children: PlaceDep[];
-    needEvaluation: Set<any>;
+    needEvaluation: any;
     peerConflict: any;
     placed: any;
     target: any;
