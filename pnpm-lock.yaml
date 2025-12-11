@@ -58,7 +58,6 @@ overrides:
   '@npmcli/package-json': 7.0.4
   '@npmcli/promise-spawn': 9.0.1
   '@npmcli/query': 5.0.0
-  '@npmcli/redact': 4.0.0
   '@sinonjs/commons': 3.0.1
   '@sinonjs/fake-timers': 13.0.5
   '@sinonjs/samsam': 8.0.3
