@@ -1,5 +1,0 @@
-node = "^20"
-pnpm = "^10"
-
-[settings]
-auto-install = true
