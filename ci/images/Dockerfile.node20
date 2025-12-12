@@ -1,5 +1,5 @@
 # Base-image
-FROM registry.suse.com/bci/nodejs:20.19.2@sha256:35dedbee604e907f502dbd12145a701451f618263b40af1508b8515ff9741ce6 AS base
+FROM registry.suse.com/bci/nodejs:20.19.2@sha256:d3d1155368407b5521bae258fe3192ac83999a54fac6d1deb320058fcd4ed13c AS base
 
 ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GITHUB_URL=https://github.com
