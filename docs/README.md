@@ -146,6 +146,8 @@ Invoke cdxgen with the below arguments to automatically submit the BOM to your o
       --project-name           Dependency track project name. Default use the di
                                rectory name
       --project-version        Dependency track project version    [default: ""]
+      --project-tag            Dependency track project tag. Multiple values all
+                               owed.                                     [array]
       --project-id             Dependency track project id. Either provide the i
                                d or the project name and version together
       --parent-project-id      Dependency track parent project id
