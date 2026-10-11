@@ -797,7 +797,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   containers-ppc64:
+    # The QEMU-emulated ppc64le build crashes intermittently (SIGSEGV in the
+    # emulated node/pnpm process), so let the rest of the release proceed when
+    # it fails instead of failing the whole run.
     if: github.repository == 'cdxgen/cdxgen'
+    continue-on-error: true
     runs-on: ubuntu-latest
     permissions:
       packages: write  # needed for uploading images to GH package registry
