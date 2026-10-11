@@ -408,6 +408,12 @@ jobs:
           SBOM_SIGN_PRIVATE_KEY_BASE64: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
           STEPS_META_OUTPUTS_TAGS: ${{ steps.meta.outputs.tags }}
       - name: Attach cdx sbom to release
+        # Best effort: the OCI-attached SBOM from the previous step is the
+        # primary artifact. Mirroring the file onto the GitHub release has
+        # failed in ways outside this workflow's control (e.g. GitHub
+        # rejecting update-a-release when the release row carries a SHA
+        # target_commitish), and that must not fail the whole rebuild.
+        continue-on-error: true
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64  # v3.0.3
         if: startsWith(env.REF, 'refs/tags/')
         with:
@@ -604,6 +610,12 @@ jobs:
           SBOM_SIGN_PRIVATE_KEY_BASE64: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
           STEPS_META_OUTPUTS_TAGS: ${{ steps.meta.outputs.tags }}
       - name: Attach cdx secure sbom to release
+        # Best effort: the OCI-attached SBOM from the previous step is the
+        # primary artifact. Mirroring the file onto the GitHub release has
+        # failed in ways outside this workflow's control (e.g. GitHub
+        # rejecting update-a-release when the release row carries a SHA
+        # target_commitish), and that must not fail the whole rebuild.
+        continue-on-error: true
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64  # v3.0.3
         if: startsWith(env.REF, 'refs/tags/')
         with:
@@ -800,6 +812,12 @@ jobs:
           SBOM_SIGN_PRIVATE_KEY_BASE64: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
           STEPS_META_OUTPUTS_TAGS: ${{ steps.meta.outputs.tags }}
       - name: Attach cdx deno sbom to release
+        # Best effort: the OCI-attached SBOM from the previous step is the
+        # primary artifact. Mirroring the file onto the GitHub release has
+        # failed in ways outside this workflow's control (e.g. GitHub
+        # rejecting update-a-release when the release row carries a SHA
+        # target_commitish), and that must not fail the whole rebuild.
+        continue-on-error: true
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64  # v3.0.3
         if: startsWith(env.REF, 'refs/tags/')
         with:
@@ -1057,6 +1075,12 @@ jobs:
           SBOM_SIGN_PRIVATE_KEY_BASE64: ${{ secrets.SBOM_SIGN_PRIVATE_KEY }}
           STEPS_META_OUTPUTS_TAGS: ${{ steps.meta.outputs.tags }}
       - name: Attach cdx bun sbom to release
+        # Best effort: the OCI-attached SBOM from the previous step is the
+        # primary artifact. Mirroring the file onto the GitHub release has
+        # failed in ways outside this workflow's control (e.g. GitHub
+        # rejecting update-a-release when the release row carries a SHA
+        # target_commitish), and that must not fail the whole rebuild.
+        continue-on-error: true
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64  # v3.0.3
         if: startsWith(env.REF, 'refs/tags/')
         with:
