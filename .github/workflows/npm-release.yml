@@ -391,6 +391,10 @@ jobs:
           tags="${STEPS_META_OUTPUTS_TAGS}"
           first_tag=$(echo "$tags" | head -n 1)
           node bin/cdxgen.js -t docker -o cdxgen-oci-image.cdx.json "$first_tag"
+          # Re-sign with the current signer before verifying: older tags
+          # auto-sign in the pre-13.3.0 signature format, which cdx-verify
+          # rejects, and bash -e would abort before sign.js below can fix it.
+          node latest-cdxgen/bin/sign.js -i cdxgen-oci-image.cdx.json
           node latest-cdxgen/bin/verify.js -i cdxgen-oci-image.cdx.json --public-key contrib/bom-signer/public.key
           for tag in $tags; do
             echo "Processing tag: $tag"
@@ -583,6 +587,10 @@ jobs:
           tags="${STEPS_META_OUTPUTS_TAGS}"
           first_tag=$(echo "$tags" | head -n 1)
           node bin/cdxgen.js -t docker -o cdxgen-secure-oci-image.cdx.json "$first_tag"
+          # Re-sign with the current signer before verifying: older tags
+          # auto-sign in the pre-13.3.0 signature format, which cdx-verify
+          # rejects, and bash -e would abort before sign.js below can fix it.
+          node latest-cdxgen/bin/sign.js -i cdxgen-secure-oci-image.cdx.json
           node latest-cdxgen/bin/verify.js -i cdxgen-secure-oci-image.cdx.json --public-key contrib/bom-signer/public.key
           for tag in $tags; do
             echo "Processing tag: $tag"
@@ -775,6 +783,10 @@ jobs:
           tags="${STEPS_META_OUTPUTS_TAGS}"
           first_tag=$(echo "$tags" | head -n 1)
           node bin/cdxgen.js -t docker -o cdxgen-deno-oci-image.cdx.json "$first_tag"
+          # Re-sign with the current signer before verifying: older tags
+          # auto-sign in the pre-13.3.0 signature format, which cdx-verify
+          # rejects, and bash -e would abort before sign.js below can fix it.
+          node latest-cdxgen/bin/sign.js -i cdxgen-deno-oci-image.cdx.json
           node latest-cdxgen/bin/verify.js -i cdxgen-deno-oci-image.cdx.json --public-key contrib/bom-signer/public.key
           for tag in $tags; do
             echo "Processing tag: $tag"
@@ -1028,6 +1040,10 @@ jobs:
           tags="${STEPS_META_OUTPUTS_TAGS}"
           first_tag=$(echo "$tags" | head -n 1)
           node bin/cdxgen.js -t docker -o cdxgen-bun-oci-image.cdx.json "$first_tag"
+          # Re-sign with the current signer before verifying: older tags
+          # auto-sign in the pre-13.3.0 signature format, which cdx-verify
+          # rejects, and bash -e would abort before sign.js below can fix it.
+          node latest-cdxgen/bin/sign.js -i cdxgen-bun-oci-image.cdx.json
           node latest-cdxgen/bin/verify.js -i cdxgen-bun-oci-image.cdx.json --public-key contrib/bom-signer/public.key
           for tag in $tags; do
             echo "Processing tag: $tag"
