@@ -1807,12 +1807,15 @@ jobs:
         run: |
           python -m pip install atom-tools || true
           which atom-tools
+          # The checkout is fresh, so there is no target/ for sbt clean to
+          # remove; clean deletes target/ while ivyConfiguration is creating
+          # its stream files there, which fails the build intermittently.
           cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
-          sbt clean stage
+          sbt stage
           cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-rest-api-example
-          sbt clean stage
+          sbt stage
           cd $GITHUB_WORKSPACE/repotests/play-samples/play-scala-grpc-example
-          sbt clean stage
+          sbt stage
           cd $GITHUB_WORKSPACE
           bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example -o bomresults/bom-simple-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example
           bin/cdxgen.js -t scala $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example --profile research -o bomresults/bom-play-scala-slick-example.json $GITHUB_WORKSPACE/repotests/play-samples/play-scala-slick-example

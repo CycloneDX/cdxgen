@@ -1366,7 +1366,10 @@
       "ref": "pkg:pypi/urllib3@2.8.0"
     },
     {
-      "dependsOn": [],
+      "dependsOn": [
+        "pkg:pypi/lib-a@0.2.0",
+        "pkg:pypi/lib-b@0.3.0"
+      ],
       "ref": "pkg:pypi/ws-root@0.1.0"
     }
   ],
