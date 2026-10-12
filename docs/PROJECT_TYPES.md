@@ -82,7 +82,8 @@ _*NOTE:*_
 > - Apache maven 3.x is required for parsing pom.xml.
 > - gradle or gradlew is required to parse gradle projects.
 > - quarkus plugin is automatically detected and used by parsing pom.xml files (since cdxgen version 11.0.5) for java types. To explicitly specify this type, use `-t quarkus`. This is especially needed when cdxgen is invoked with `--no-recurse` argument for performance reasons.
-> - sbt is required for parsing scala sbt projects. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ are currently supported.
+> - sbt is required for parsing scala sbt projects. Only scala 2.10 + sbt 0.13.6+, 2.12 + sbt 1.0+ and sbt 2.x are currently supported.
+>   - The `sbt.version` in `project/build.properties` decides how sbt runs. sbt 1 builds get the dependency tree plugin for the duration of the scan. sbt 2 builds ship the dependency tree themselves, so their `plugins.sbt` is left untouched; the sbt 2 launcher runs in-process (`--server`) rather than as a thin client, and every subproject tree is written with `dependencyTree --out`.
 >   - Alternatively, create a lock file using sbt-dependency-lock [plugin](https://github.com/stringbean/sbt-dependency-lock)
 > - Scala evidence (`--evidence`, `evinse -l scala`, `cbom`, `saasbom`) runs the scalasem analyzer from `@appthreat/atom-parsetools`, never atom. Scala 2 modules need SemanticDB, which scalasem requests from the build without editing any build file. With `--no-install-deps` no build tool runs at all. See [SCALA_EVINSE.md](SCALA_EVINSE.md).
 > - Scala.js builds bundle npm packages: the lock files of scalajs-bundler's install under `target` and of a workspace beside the build whose manifest uses Scala.js contribute npm components to the BOM. Scala Native and Scala.js libraries keep their platform suffix (`_sjs1`, `_native0.x`) in the purl.
