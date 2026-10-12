@@ -1,0 +1,19 @@
+SECURITY.md
+  s_1d1ea01ecd5140::t_d71f7ed19fffb3 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "1c9e9f95d3a22c9cbf9d753d9888a185c9c669c1",
+  "prompts": {},
+  "sessions": {
+    "s_1d1ea01ecd5140": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4fff614d-79cc-4978-a7b0-2e4743b4ca67",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
