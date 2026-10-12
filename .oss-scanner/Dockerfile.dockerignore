@@ -1,0 +1,6 @@
+# Docker uses this file instead of the root .dockerignore when it builds .oss-scanner/Dockerfile.
+# The root file is an allowlist for the release images and leaves out the tests, fixtures and docs
+# that the scanner needs, so this one only skips local install output.
+/node_modules
+/.venv
+/.direnv
