@@ -77,7 +77,7 @@ The image has Node.js 24, pnpm, Python 3 and git. It has no JDK, Maven, Gradle, 
 
 Secure mode is `CDXGEN_SECURE_MODE=true` plus the allowlist variables, and the Node.js permission model is set through `NODE_OPTIONS` as shown in `docs/PERMISSIONS.md`. The server starts with `cdxgen --server --server-host 127.0.0.1 --server-port 9090` and answers `curl 'http://127.0.0.1:9090/sbom?path=/src/test/data&type=js'`. The request options are described in `docs/SERVER.md` and `lib/server/openapi.yaml`.
 
-`pnpm test` runs every poku suite in under a minute. A single suite runs with `node lib/core/fs.poku.js`. Fixtures, many of them crafted edge cases, live under `test/`. Six suites fail in this image for reasons that have nothing to do with a finding. `lib/stages/pregen/envAudit.poku.js` and the secure-mode Dependency-Track case in `lib/cli/index.poku.js` expect a non-root user. `lib/third-party/arborist/spec-from-lock.poku.js` and `lib/stages/postgen/postgen.poku.js` expect the checkout to sit at least two directories below `/`. `lib/ecosystems/ecosystems.poku.js` and `lib/inventory/licenseFetchJourney.repo.poku.js` need network access. Any other failure is worth a look.
+`pnpm test` runs every poku suite in under a minute. A single suite runs with `node lib/core/fs.poku.js`. Fixtures, many of them crafted edge cases, live under `test/`. Two suites need network access and fail here for that reason alone: `lib/ecosystems/ecosystems.poku.js` and `lib/inventory/licenseFetchJourney.repo.poku.js`. Any other failure is worth a look.
 
 ## Anything to leave alone
 
