@@ -11,8 +11,10 @@ somewhere you do not fully trust, and it is the question this lesson practices.
 ## Goal
 
 Pre-requisites: Node.js 24 or newer with `@cdxgen/cdxgen` installed globally,
-on Linux or macOS. Root is not required except where the lesson says so. Any
-small project with a build or install step works as a trace target.
+on Linux, macOS, or Windows 11 (see the
+[Windows requirements](TRACEBOM.md#windows)). Root is not required except where
+the lesson says so. Any small project with a build or install step works as a
+trace target.
 
 By the end of this lesson you should be able to:
 
@@ -42,8 +44,10 @@ libraries. A plain HTTP request never passes through them.
 forces every connection through a hostname-pinning proxy, and only hosts
 listed in `--allow-host` or `--allow-url` are reachable. It fails closed: with
 an empty allowlist every target is denied. It works on every platform the
-sandbox works on, including macOS where eBPF is unavailable, and it records
-denied attempts as faithfully as allowed ones. The trade-off is resolution:
+sandbox works on, including macOS and Windows where eBPF is unavailable, and it
+records denied attempts as faithfully as allowed ones. On Windows it is also
+the only way to pin egress to hostnames: a plain `--allow-host` there is
+resolved to addresses, which other sites on the same CDN share. The trade-off is resolution:
 the proxy sees scheme and host, not the path, so an endpoint like
 `https://telemetry.example.com/collect?token=xyz` is recorded as
 `https://telemetry.example.com` with the decision `denied`. For an inventory
@@ -83,6 +87,15 @@ telemetry host the script reaches for appears in the same list with
 reading in the whole BOM. Note that the service endpoint is the scheme and
 authority only, and the decision is the only judgment recorded; the proxy
 never writes query strings, tokens, or request bodies into the BOM.
+
+The proxy reads one more thing on the way through. A TLS handshake starts in
+the clear, so for every HTTPS connection it records the TLS version, the cipher
+suite, and the key-exchange group, which appear as `cryptographic-asset`
+components next to the services. That makes the proxy a quick post-quantum
+readiness check on any platform: a connection that negotiated the hybrid
+`X25519MLKEM768` group shows up as both `x25519` and `ml-kem-768`. Treat these
+as an inventory of what the handshakes claimed, not as proof: a command
+talking to a server it controls can make its handshake say anything.
 
 Two warnings to read carefully when a trace behaves oddly. If the traced
 command exits non-zero, tracebom warns you because the trace may be partial:
@@ -127,7 +140,9 @@ source, which in practice means `strace`. Without it, or with a strict
 `ptrace_scope`, every side effect is still denied but nothing can be counted,
 and the BOM says so with `cdx:dynamic:dryRun:captured=false`. Absence of
 counts is not absence of activity. Check the `captured` property before you
-report a quiet run as a clean one.
+report a quiet run as a clean one. On Windows the counts come from the
+container's denial capture, which is best-effort and misses accesses outside
+every granted path, so read Windows counts as a lower bound.
 
 The flag is named `--sandbox-dry-run` rather than `--dry-run` because
 `--dry-run` already means something else across cdxgen: it is the global
@@ -150,17 +165,20 @@ The available names include `npm`, `pnpm`, `pypi`, `uv`, `maven`, `cargo`,
 `gomod`, and `nuget`. `--policy-file` accepts a safer-exec JSON policy file
 instead. An unknown policy name or an unreadable file fails the run with an
 error; it does not fall back to an empty sandbox, because a silently ignored
-policy would read exactly like a satisfied one in the resulting BOM.
+policy would read exactly like a satisfied one in the resulting BOM. The named
+policies list Linux and macOS locations such as `~/.npm`, which Windows skips,
+so on Windows add the real cache directories (for example
+`%LOCALAPPDATA%\npm-cache`) with `--write-paths`.
 
 On top of a policy, the hardening flags close specific doors:
 
-| Flag                        | Platform | What it adds                                                                       |
-| --------------------------- | -------- | ---------------------------------------------------------------------------------- |
-| `--allow-loopback`          | all      | permits connections to loopback addresses                                          |
-| `--block-interpreters`      | macOS    | blocks interpreters holding sandbox or task-port exemptions                        |
-| `--deny-persistence-writes` | all      | denies writes to LaunchAgents, shell rc files, cron; `--write-paths` stay writable |
-| `--private-tmp`             | Linux    | private `/tmp` and `/var/tmp` mounts                                               |
-| `--protect-home`            | Linux    | `off`, `read-only`, or `tmpfs` isolation for `$HOME`                               |
+| Flag                        | Platform | What it adds                                                                                                             |
+| --------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `--allow-loopback`          | all      | permits connections to loopback addresses (on Windows, every loopback port)                                              |
+| `--block-interpreters`      | macOS    | blocks interpreters holding sandbox or task-port exemptions                                                              |
+| `--deny-persistence-writes` | all      | denies writes to LaunchAgents, Startup folders, shell rc files, cron, PowerShell profiles; `--write-paths` stay writable |
+| `--private-tmp`             | Linux    | private `/tmp` and `/var/tmp` mounts                                                                                     |
+| `--protect-home`            | Linux    | `off`, `read-only`, or `tmpfs` isolation for `$HOME`                                                                     |
 
 ## Step 4: Read the run like an analyst
 
@@ -184,8 +202,9 @@ you already know from Lesson 16; the network behavior is the new ground.
 ## Recap
 
 The sandbox stopped being just a cage. Used deliberately, the three network
-modes give you a ladder of visibility: none by default, hosts and decisions
-everywhere through the proxy, and full URLs where eBPF is available. The dry
+modes give you a ladder of visibility: none by default, hosts, decisions, and
+TLS parameters everywhere through the proxy, and full URLs where eBPF is
+available. The dry
 run converts a command's intentions into countable facts without granting
 any of them, with `captured=false` as the honest marker of a host that could
 not count. Policies encode what an ecosystem's build step legitimately

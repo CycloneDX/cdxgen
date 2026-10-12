@@ -20,7 +20,8 @@ $defaultTargets = @(
   "cdx-validate",
   "cdx-convert",
   "hbom",
-  "hbom-slim"
+  "hbom-slim",
+  "tracebom"
 )
 
 # See COMMON_SBOM_ARGS and write_postbuild_sbom in build-standalone.sh.
@@ -202,6 +203,18 @@ function Promote-OptionalDependencies {
     $packageJson["dependencies"] = [ordered]@{}
   }
   foreach ($packageName in $PackageNames) {
+    if ($packageName.StartsWith("@cdxgen/safer-exec-")) {
+      # The platform package is an optional dependency of @cdxgen/safer-exec,
+      # not of cdxgen, and shares its version. See
+      # promote_optional_dependencies in build-standalone.sh.
+      $packageVersion = $packageJson["optionalDependencies"]["@cdxgen/safer-exec"]
+      if (-not $packageVersion) {
+        throw "Missing optional dependency version for @cdxgen/safer-exec"
+      }
+      $packageJson["dependencies"]["@cdxgen/safer-exec"] = $packageVersion
+      $packageJson["dependencies"][$packageName] = $packageVersion
+      continue
+    }
     $packageVersion = $packageJson["optionalDependencies"][$packageName]
     if (-not $packageVersion) {
       throw "Missing optional dependency version for $packageName"
@@ -296,6 +309,49 @@ function Remove-RedundantAtomJar {
   Write-Host "Removed @appthreat/atom-jar: the $PackageName payload is what atom resolves."
   Assert-PackagePresent -StagingDir $StagingDir -PackageName $PackageName
   Assert-AtomPayloadPresent -StagingDir $StagingDir -PackageName $PackageName
+}
+
+# Mirrors resolve_safer_exec_package_name in build-standalone.sh. The Windows
+# packages ship the MXC executor (wxc-exec.exe) next to the engine.
+function Resolve-SaferExecPackageName {
+  $targetArch = if ($env:TARGET_ARCH) { $env:TARGET_ARCH } else {
+    if ([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture -eq [System.Runtime.InteropServices.Architecture]::Arm64) { "arm64" } else { "amd64" }
+  }
+  if ($targetArch -notin @("amd64", "arm64")) {
+    throw "Unmapped safer-exec platform: windows/$targetArch"
+  }
+  return "@cdxgen/safer-exec-windows-$targetArch"
+}
+
+# See ensure_safer_exec_payload_present in build-standalone.sh. A tracebom
+# without the engine or its executor exits 0 with an empty BOM (#4378).
+function Assert-SaferExecPayloadPresent {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$StagingDir,
+    [Parameter(Mandatory = $true)]
+    [string]$PackageName
+  )
+  Assert-PackagePresent -StagingDir $StagingDir -PackageName $PackageName
+  foreach ($file in @("safer-exec-rt.exe", "wxc-exec.exe")) {
+    $payloadPath = Join-Path $StagingDir "node_modules/$PackageName/bin/$file"
+    if (-not (Test-Path $payloadPath)) {
+      throw "Standalone safer-exec payload missing: $payloadPath. The dispatcher would be payload-less."
+    }
+  }
+  Write-Host "Standalone safer-exec payload present: $PackageName."
+}
+
+# See remove_non_target_safer_exec_platforms in build-standalone.sh.
+function Remove-NonTargetSaferExecPlatforms {
+  param([string]$StagingDir, [string]$KeepPackage)
+  $cdxgenScopeDir = Join-Path $StagingDir "node_modules/@cdxgen"
+  if (-not (Test-Path $cdxgenScopeDir)) { return }
+  Get-ChildItem -Path $cdxgenScopeDir -Directory -Filter "safer-exec-*" -ErrorAction SilentlyContinue | ForEach-Object {
+    if ("@cdxgen/$($_.Name)" -ne $KeepPackage) {
+      Remove-Item -Path $_.FullName -Force -Recurse -ErrorAction SilentlyContinue
+    }
+  }
 }
 
 function Resolve-PlatformPluginPackageName {
@@ -414,6 +470,7 @@ function Install-ProfileDependencies {
       # with build-standalone.sh.
       "atom-analysis" { $selectedOptionalPackages = @("@appthreat/atom", "@appthreat/atom-parsetools", "@cdxgen/cdx-proto", "@bufbuild/protobuf") }
       "os-runtime" { $selectedOptionalPackages = @("@cdxgen/cdx-proto", "@bufbuild/protobuf", (Resolve-PlatformPluginPackageName)) }
+      "trace-runtime" { $selectedOptionalPackages = @("@cdxgen/cdx-proto", (Resolve-SaferExecPackageName)) }
       { $_ -in @("no-optional", "json-signature") } { }
       default { throw "Unknown standalone dependency profile: $Profile" }
     }
@@ -565,6 +622,21 @@ function Invoke-ProfilePruningAndPreflight {
       Assert-PackageAbsent -StagingDir $StagingDir -PackageName "@cdxgen/cdx-hbom"
       Assert-PackageAbsent -StagingDir $StagingDir -PackageName "jsonata"
     }
+    "trace-runtime" {
+      # tracebom's native helper is safer-exec itself, so only the plugins-bin
+      # payloads and other platforms' engines are pruned. The payload is
+      # asserted after pruning, as in build-standalone.sh.
+      $saferExecPkg = Resolve-SaferExecPackageName
+      Assert-PackagePresent -StagingDir $StagingDir -PackageName "@cdxgen/safer-exec"
+      Assert-PackagePresent -StagingDir $StagingDir -PackageName "@cdxgen/cdx-proto"
+      Remove-PlatformPlugins -StagingDir $StagingDir
+      Remove-NonTargetSaferExecPlatforms -StagingDir $StagingDir -KeepPackage $saferExecPkg
+      Assert-PackageAbsent -StagingDir $StagingDir -PackageName "@appthreat/atom"
+      Assert-PackageAbsent -StagingDir $StagingDir -PackageName "@cdxgen/cdx-hbom"
+      Assert-PackageAbsent -StagingDir $StagingDir -PackageName "jsonata"
+      Assert-PackagePresent -StagingDir $StagingDir -PackageName "@cdxgen/safer-exec"
+      Assert-SaferExecPayloadPresent -StagingDir $StagingDir -PackageName $saferExecPkg
+    }
     { $_ -in @("no-optional", "json-signature") } {
       Remove-PlatformPlugins -StagingDir $StagingDir
       Assert-PackageAbsent -StagingDir $StagingDir -PackageName "@appthreat/atom"
@@ -587,6 +659,7 @@ function Get-TargetEntryPoint {
     "cdx-validate" { return "bin/validate.js" }
     "cdx-convert" { return "bin/convert.js" }
     { $_ -in @("hbom", "hbom-slim") } { return "bin/hbom.js" }
+    "tracebom" { return "bin/tracebom.js" }
     default { throw "Unknown standalone target: $Target" }
   }
 }
@@ -604,6 +677,7 @@ function Get-TargetProfile {
     { $_ -in @("cdx-validate", "cdx-convert") } { return "proto-reader" }
     "hbom" { return "hbom-runtime" }
     "hbom-slim" { return "hbom-slim" }
+    "tracebom" { return "trace-runtime" }
     default { throw "Unknown standalone target: $Target" }
   }
 }
@@ -634,8 +708,8 @@ function Invoke-StandaloneTargetBuild {
 }
 
 try {
-  Remove-Item -Path aibom.exe, cdxgen.exe, cdxgen-slim.exe, cbom.exe, obom.exe, saasbom.exe, cdx-audit.exe, cdx-verify.exe, cdx-sign.exe, cdx-validate.exe, cdx-convert.exe, hbom.exe, hbom-slim.exe -Force -ErrorAction SilentlyContinue
-  Remove-Item -Path .aibom-postbuild.cdx.json, .cdxgen-postbuild.cdx.json, .cdxgen-slim-postbuild.cdx.json, .cbom-postbuild.cdx.json, .obom-postbuild.cdx.json, .saasbom-postbuild.cdx.json, .cdx-audit-postbuild.cdx.json, .cdx-verify-postbuild.cdx.json, .cdx-sign-postbuild.cdx.json, .cdx-validate-postbuild.cdx.json, .cdx-convert-postbuild.cdx.json, .hbom-postbuild.cdx.json, .hbom-slim-postbuild.cdx.json -Force -ErrorAction SilentlyContinue
+  Remove-Item -Path aibom.exe, cdxgen.exe, cdxgen-slim.exe, cbom.exe, obom.exe, saasbom.exe, cdx-audit.exe, cdx-verify.exe, cdx-sign.exe, cdx-validate.exe, cdx-convert.exe, hbom.exe, hbom-slim.exe, tracebom.exe -Force -ErrorAction SilentlyContinue
+  Remove-Item -Path .aibom-postbuild.cdx.json, .cdxgen-postbuild.cdx.json, .cdxgen-slim-postbuild.cdx.json, .cbom-postbuild.cdx.json, .obom-postbuild.cdx.json, .saasbom-postbuild.cdx.json, .cdx-audit-postbuild.cdx.json, .cdx-verify-postbuild.cdx.json, .cdx-sign-postbuild.cdx.json, .cdx-validate-postbuild.cdx.json, .cdx-convert-postbuild.cdx.json, .hbom-postbuild.cdx.json, .hbom-slim-postbuild.cdx.json, .tracebom-postbuild.cdx.json -Force -ErrorAction SilentlyContinue
   foreach ($target in Get-SelectedTargets) {
     Invoke-StandaloneTargetBuild -Target $target
   }

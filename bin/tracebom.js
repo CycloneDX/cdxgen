@@ -14,6 +14,7 @@ import {
   safeWriteSync,
 } from "../lib/ecosystems/utils.js";
 import { DEFAULT_CDX_SPEC_VERSION } from "../lib/inventory/bomUtils.js";
+import { applySpecVersionCompatibility } from "../lib/stages/postgen/specVersionCompat.js";
 
 const _yargs = yargs(hideBin(process.argv));
 
@@ -166,7 +167,7 @@ const args = _yargs
   })
   .option("trace-crypto", {
     description:
-      "Enable eBPF-based cryptographic library and cipher suite tracing (Linux only).",
+      "Trace cryptographic libraries and TLS parameters: eBPF on Linux, crypto DLLs on Windows (elevated prompt), and TLS handshakes through --proxy-egress on every platform.",
     default: true,
     type: "boolean",
   })
@@ -337,6 +338,9 @@ const options = {
     console.error("Dynamic SBOM generation failed: no output was produced.");
     process.exit(1);
   }
+  // tracebom skips postProcess, so the downgrade to an older --spec-version
+  // (for example dropping the 1.7 algorithmFamily of traced crypto) runs here.
+  applySpecVersionCompatibility(bomJson, options);
 
   const jsonPayload = JSON.stringify(bomJson, null, DEBUG_MODE ? 2 : null);
 

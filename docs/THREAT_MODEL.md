@@ -466,9 +466,12 @@ Trust boundary 5: cdxgen container ←→ container host
 
 **Mitigations:**
 
-- `@cdxgen/safer-exec` implements kernel-level namespace isolation, Landlock network confinement, and cgroup v2 resource limits on Linux, and Seatbelt sandboxing on macOS.
-- Tracing is locked down using LD_AUDIT / DYLD_INSERT_LIBRARIES mechanism enforced securely by the sandbox boundary.
+- `@cdxgen/safer-exec` implements kernel-level namespace isolation, Landlock network confinement, and cgroup v2 resource limits on Linux, Seatbelt sandboxing on macOS, and a Microsoft eXecution Container (BaseContainer with Windows Filtering Platform rules and a job object) on Windows 11.
+- Tracing is locked down using LD_AUDIT / DYLD_INSERT_LIBRARIES mechanism enforced securely by the sandbox boundary. On Windows DLL loads come from an ETW session the engine runs outside the container, which the low-privilege workload cannot stop.
+- safer-exec 1.1 sends audit entries and results to the engine over a pipe the workload does not inherit, so a traced command cannot forge components, services, or diff entries by printing look-alike lines. On Linux, `lib-load` entries still come from a helper inside the workload and can be forged.
 - Configurable sandbox limits (`--max-memory`, `--max-cpu`, `--max-processes`, `--timeout`, `--disable-network`, `--read-paths`, `--write-paths`, `--strict`, `--sanitize-env`, `--diff`, `--block-fork`, `--trace-exec`, `--allow-exec`, `--block-exec`, `--allow-host`, `--allow-port`, `--allow-url`) allow operators to restrict the traced process.
+
+**Residual risk:** On Windows, `--private-tmp` and `--protect-home` hold only while no granted path reaches the host's temp directory or the user profile; safer-exec reports a grant that does, and `--strict` refuses the run. `--block-interpreters` has no effect on Windows (tracebom warns). TLS parameters recorded through `--proxy-egress` are what each handshake claimed; a command talking to a server it controls can make them say anything, so treat traced crypto assets as an inventory rather than proof.
 
 #### T7.2 — Arbitrary command execution on host operating system
 
