@@ -1,21 +1,12 @@
 name: Node CI
 
+# golden-tests and rust-fetch-tests are required status checks on master and
+# run on every pull request and merge-group build. The heavy jobs below are
+# path-gated through the changes job instead, and stay out of merge-group
+# builds, where only the required checks re-run.
 on:
   pull_request:
-    paths:
-      - '.github/workflows/nodejs.yml'
-      - '.nvmrc'
-      - '.pnpmfile.cjs'
-      - '.versions/node_*'
-      - 'bin/**'
-      - 'contrib/**'
-      - 'data/**'
-      - 'index.cjs'
-      - 'lib/**'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - 'test/repotests/**'
-      - 'devenv*'
+  merge_group:
   push:
     branches:
       - master
@@ -45,6 +36,34 @@ concurrency:
 permissions: {}
 
 jobs:
+  changes:
+    runs-on: 'ubuntu-latest'
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36  # v3.0.2
+        id: filter
+        with:
+          filters: |
+            code:
+              - '.github/workflows/nodejs.yml'
+              - '.github/actions/**'
+              - '.nvmrc'
+              - '.pnpmfile.cjs'
+              - '.versions/node_*'
+              - 'bin/**'
+              - 'contrib/**'
+              - 'data/**'
+              - 'index.cjs'
+              - 'lib/**'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'test/repotests/**'
+              - 'devenv*'
+
   read-node-versions:
     runs-on: 'ubuntu-latest'
     outputs:
@@ -59,7 +78,8 @@ jobs:
           echo "versions=$VERSIONS" >> "$GITHUB_OUTPUT"
 
   matrix-unit-test:
-    needs: read-node-versions
+    needs: [read-node-versions, changes]
+    if: needs.changes.outputs.code == 'true' && github.event_name != 'merge_group'
     strategy:
       fail-fast: false
       matrix:
@@ -103,6 +123,8 @@ jobs:
           CI: true
 
   depscan:
+    needs: changes
+    if: needs.changes.outputs.code == 'true' && github.event_name != 'merge_group'
     continue-on-error: true
     runs-on: ["self-hosted", "ubuntu", "arm64"]
     permissions:
@@ -255,6 +277,8 @@ jobs:
           CDXGEN_REQUIRE_CDXRS: '1'
 
   deno-build:
+    needs: changes
+    if: needs.changes.outputs.code == 'true' && github.event_name != 'merge_group'
     strategy:
       fail-fast: true
       matrix:

@@ -1,11 +1,12 @@
 name: "CodeQL Advanced"
 
+# Both analyze jobs are required status checks on master, so this workflow
+# must trigger on every pull request and on merge-group builds; a paths
+# filter here would leave pull requests touching no code waiting forever
+# for a check that never reports.
 on:
   pull_request:
-    paths:
-      - '.github/actions/**'
-      - '.github/workflows/**'
-      - '**.js'
+  merge_group:
   push:
     branches:
       - master
