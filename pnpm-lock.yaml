@@ -315,8 +315,8 @@ importers:
         specifier: 4.1.1
         version: 4.1.1
       '@cdxgen/safer-exec':
-        specifier: 1.1.0
-        version: 1.1.0
+        specifier: 1.1.1
+        version: 1.1.1
       body-parser:
         specifier: 2.3.0
         version: 2.3.0
@@ -581,38 +581,38 @@ packages:
   '@cdxgen/cdxgen-plugins-bin@4.1.1':
     resolution: {integrity: sha512-Dz3yBqOrXwgMmIkl6sXsEYAfxc6V8T0F4PWaCVIG9JyU5wk11iqh/eDbrR7HG9YcUnQDLEs3OgZ02cwzG3hGjQ==, tarball: https://registry.npmjs.org/@cdxgen/cdxgen-plugins-bin/-/cdxgen-plugins-bin-4.1.1.tgz}
 
-  '@cdxgen/safer-exec-darwin-amd64@1.1.0':
-    resolution: {integrity: sha512-WJfOdCQ+F8ipyI9/IZc529kzPr4q3KUvbWu0ZaO/BpPeG5Yf61Qf01i9Ql4lN+WBPDR2p0FrjDciPPgGpJJsdA==, tarball: https://registry.npmjs.org/@cdxgen/safer-exec-darwin-amd64/-/safer-exec-darwin-amd64-1.1.0.tgz}
+  '@cdxgen/safer-exec-darwin-amd64@1.1.1':
+    resolution: {integrity: sha512-iX8tjgO4D9Xo9HguH8QD42C/3tfDiVoCc1G8gI53avkgSk3nHFqCI5jc4CkG/1l/N60IsqI9QK/mLQtnpPLB9w==, tarball: https://registry.npmjs.org/@cdxgen/safer-exec-darwin-amd64/-/safer-exec-darwin-amd64-1.1.1.tgz}
     cpu: [x64]
     os: [darwin]
 
-  '@cdxgen/safer-exec-darwin-arm64@1.1.0':
-    resolution: {integrity: sha512-gAOEB3/PsUe1XhlE9vpwHHDrLi0uKVolqjE7IqmUtPh2BWenAAb1BBU8FPGCGKofUpHJz1DcU5O7hq9u6QPVWQ==, tarball: https://registry.npmjs.org/@cdxgen/safer-exec-darwin-arm64/-/safer-exec-darwin-arm64-1.1.0.tgz}
+  '@cdxgen/safer-exec-darwin-arm64@1.1.1':
+    resolution: {integrity: sha512-1rU9Mf8OU2d67KdoUSnWouDYa8YcNfbpOKvTzfI30PcoJ0M6nAqQXBP6/fp26VHZ2alZY3iefp4FJ93T6dWxqg==, tarball: https://registry.npmjs.org/@cdxgen/safer-exec-darwin-arm64/-/safer-exec-darwin-arm64-1.1.1.tgz}
     cpu: [arm64]
     os: [darwin]
 
-  '@cdxgen/safer-exec-linux-amd64@1.1.0':
-    resolution: {integrity: sha512-dGQl3zaYWesHOkcZEHjcrA3ovMYF64KXaISJyeZX0kmMHUhsshA+NMeof+G0avWYfUVKc0oZ2g4iZ3mB+HS0Fw==, tarball: https://registry.npmjs.org/@cdxgen/safer-exec-linux-amd64/-/safer-exec-linux-amd64-1.1.0.tgz}
+  '@cdxgen/safer-exec-linux-amd64@1.1.1':
+    resolution: {integrity: sha512-k8pdjh27IlOTHkKBndH8VgGtpC0Qx2LoacKGZYc7e60kI2Jw8/LE6rioOEOQhav5iXstgXqIgLpFDzmyBJC9Qw==, tarball: https://registry.npmjs.org/@cdxgen/safer-exec-linux-amd64/-/safer-exec-linux-amd64-1.1.1.tgz}
     cpu: [x64]
     os: [linux]
 
-  '@cdxgen/safer-exec-linux-arm64@1.1.0':
-    resolution: {integrity: sha512-weoDL/+HExXHANeQ9OOrNH1x1FSHB7Mmdp8RPDx3lKWsVNzByBH1ZIcAJiZs08QKHsvIMZs/0EcGx/ALT5gPTQ==, tarball: https://registry.npmjs.org/@cdxgen/safer-exec-linux-arm64/-/safer-exec-linux-arm64-1.1.0.tgz}
+  '@cdxgen/safer-exec-linux-arm64@1.1.1':
+    resolution: {integrity: sha512-mVMKhKO/quVMiy6ubGcrxK8TrkAdka2Zucat4CSFu88Hkpqo9YwInFP+R955o3KOQ6erc45cgpj0W7PHis9W+g==, tarball: https://registry.npmjs.org/@cdxgen/safer-exec-linux-arm64/-/safer-exec-linux-arm64-1.1.1.tgz}
     cpu: [arm64]
     os: [linux]
 
-  '@cdxgen/safer-exec-windows-amd64@1.1.0':
-    resolution: {integrity: sha512-3Rmr9bGOb/ibL9a7wDRaH/nAvu0lkS6anokRCLc9JOVSpBjS4KI8SQbLfWXlzt111Auzhsxxd0jbeFixnjKvnw==, tarball: https://registry.npmjs.org/@cdxgen/safer-exec-windows-amd64/-/safer-exec-windows-amd64-1.1.0.tgz}
+  '@cdxgen/safer-exec-windows-amd64@1.1.1':
+    resolution: {integrity: sha512-ZuZbgHaWglKeAWhysq4+9HzjfopYrPaiY2LPSKQeo+K7C5BLJXj9K38zLcEh9kzyqy640x6+hIJlzOFi0OQU8Q==, tarball: https://registry.npmjs.org/@cdxgen/safer-exec-windows-amd64/-/safer-exec-windows-amd64-1.1.1.tgz}
     cpu: [x64]
     os: [win32]
 
-  '@cdxgen/safer-exec-windows-arm64@1.1.0':
-    resolution: {integrity: sha512-T4qpRZA8XtYa9pJNUCPj5+Yua2saolAFVl2v9X3UQmuOnZcIsHENSJh4DIXXVyCrH/8NQrxOcPaliqT9ycHLWA==, tarball: https://registry.npmjs.org/@cdxgen/safer-exec-windows-arm64/-/safer-exec-windows-arm64-1.1.0.tgz}
+  '@cdxgen/safer-exec-windows-arm64@1.1.1':
+    resolution: {integrity: sha512-CIwBeTpi5tVJjpAUokwA0lH5mJ0swW8lPZiLd/B4XoQe2/zivSrP0UnMMQzRcgzgpRKtNXvhO+uKMn5BdOvcTw==, tarball: https://registry.npmjs.org/@cdxgen/safer-exec-windows-arm64/-/safer-exec-windows-arm64-1.1.1.tgz}
     cpu: [arm64]
     os: [win32]
 
-  '@cdxgen/safer-exec@1.1.0':
-    resolution: {integrity: sha512-pQzes4mqORUkHXFgGcmpHYXoaYk/hwGKvxSvLcG4LaUuJuEYdyD0Z/8gSN8WO5kwIEexxWkalai+f8JTAOHDfg==, tarball: https://registry.npmjs.org/@cdxgen/safer-exec/-/safer-exec-1.1.0.tgz}
+  '@cdxgen/safer-exec@1.1.1':
+    resolution: {integrity: sha512-8H8AF4WWekG9RZIBif1O9hm5vBjMSN+ETjKrM3JetCZ6UO8pIheRcxdZEl5r9AjDNfXBguDxKAbUTa8PO7t75w==, tarball: https://registry.npmjs.org/@cdxgen/safer-exec/-/safer-exec-1.1.1.tgz}
     engines: {node: '>=20.0.0'}
     hasBin: true
 
@@ -1565,32 +1565,32 @@ snapshots:
   '@cdxgen/cdxgen-plugins-bin@4.1.1':
     optional: true
 
-  '@cdxgen/safer-exec-darwin-amd64@1.1.0':
+  '@cdxgen/safer-exec-darwin-amd64@1.1.1':
     optional: true
 
-  '@cdxgen/safer-exec-darwin-arm64@1.1.0':
+  '@cdxgen/safer-exec-darwin-arm64@1.1.1':
     optional: true
 
-  '@cdxgen/safer-exec-linux-amd64@1.1.0':
+  '@cdxgen/safer-exec-linux-amd64@1.1.1':
     optional: true
 
-  '@cdxgen/safer-exec-linux-arm64@1.1.0':
+  '@cdxgen/safer-exec-linux-arm64@1.1.1':
     optional: true
 
-  '@cdxgen/safer-exec-windows-amd64@1.1.0':
+  '@cdxgen/safer-exec-windows-amd64@1.1.1':
     optional: true
 
-  '@cdxgen/safer-exec-windows-arm64@1.1.0':
+  '@cdxgen/safer-exec-windows-arm64@1.1.1':
     optional: true
 
-  '@cdxgen/safer-exec@1.1.0':
+  '@cdxgen/safer-exec@1.1.1':
     optionalDependencies:
-      '@cdxgen/safer-exec-darwin-amd64': 1.1.0
-      '@cdxgen/safer-exec-darwin-arm64': 1.1.0
-      '@cdxgen/safer-exec-linux-amd64': 1.1.0
-      '@cdxgen/safer-exec-linux-arm64': 1.1.0
-      '@cdxgen/safer-exec-windows-amd64': 1.1.0
-      '@cdxgen/safer-exec-windows-arm64': 1.1.0
+      '@cdxgen/safer-exec-darwin-amd64': 1.1.1
+      '@cdxgen/safer-exec-darwin-arm64': 1.1.1
+      '@cdxgen/safer-exec-linux-amd64': 1.1.1
+      '@cdxgen/safer-exec-linux-arm64': 1.1.1
+      '@cdxgen/safer-exec-windows-amd64': 1.1.1
+      '@cdxgen/safer-exec-windows-arm64': 1.1.1
     optional: true
 
   '@gar/promise-retry@1.0.3': {}

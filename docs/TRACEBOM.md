@@ -30,7 +30,7 @@ tracebom --cmd <command> [options]
 | `--crypto-probe-mode`       | string  | `tls-only` | Crypto probe mode controlling tracing depth: `tls-only` (default) or `operations` (digest, encrypt, sign; Linux only).                    |
 | `--trace-period`            | number  | —          | Stop tracing after N seconds. Useful for tracing long-running or persistent commands.                                                     |
 | `--diff`                    | boolean | `false`    | Enable filesystem mutation diffing. Tracks which files are created, modified, or deleted.                                                 |
-| `--strict`                  | boolean | `false`    | Treat sandbox setup warnings as hard errors. Useful for CI/CD pipelines.                                                                  |
+| `--strict`                  | boolean | `false`    | Treat sandbox setup warnings as hard errors: a run the sandbox refuses fails tracebom without writing a BOM. Useful for CI/CD pipelines.  |
 | `--allow-host`              | string  | —          | Comma-separated hostnames to allow network access to (when network is enabled).                                                           |
 | `--allow-port`              | string  | —          | Comma-separated TCP ports to allow network access to.                                                                                     |
 | `--allow-url`               | string  | —          | Comma-separated URL allow rules for fine-grained HTTP access control (Linux only, requires `--trace-http-urls`).                          |
@@ -127,6 +127,7 @@ The sandbox blocks network access by default, restricts write paths to the OS te
 - HTTP URL tracing (`--trace-http-urls`) requires Linux kernel >= 5.8 with eBPF support and CAP_BPF / CAP_PERFMON capabilities (effectively root)
 - `--trace-http-urls` captures HTTPS requests (TLS library uprobes). Plain-HTTP requests are not captured; use `--proxy-egress`, which records every host the command connects to over HTTP or HTTPS
 - Without those capabilities tracebom prints why URL tracing is unavailable and still writes the library BOM; a traced command that exits non-zero is reported as a warning because the trace may be partial
+- tracebom prints the sandbox's own warnings (`safer-exec: warning: ...`), such as a resource limit or isolation control the host could not apply. Read them before trusting a quiet BOM, or pass `--strict` to make them fatal
 
 ## Windows
 
@@ -154,7 +155,7 @@ What each kind of evidence needs on Windows:
 
 Other Windows differences:
 
-- `--private-tmp` and `--protect-home` are Linux-only and `--block-interpreters` is macOS-only; tracebom warns that they have no effect on Windows. The container already hides the user profile unless a path in it is granted, but the OS temp directory, the default write path, is shared with the host.
+- The container already hides the user profile and keeps its temp files away from the host's temp directory, so `--protect-home` and `--private-tmp` hold until a granted path reaches into those directories (for example `--write-paths %TEMP%`). safer-exec then warns that the flag is not enforced, and `--strict` fails. `--block-interpreters` is macOS-only, and tracebom warns that it has no effect on Windows.
 - The named policies (`--policy npm` and others) list Linux and macOS locations such as `~/.npm`, which Windows skips. Pass the Windows locations with `--read-paths` and `--write-paths`, or in a policy file.
 - To trace a Node.js script, allow `NODE_OPTIONS` and set it to `--preserve-symlinks --preserve-symlinks-main`. Node resolves script paths by walking up from the drive root, and those parent directories are hidden inside the container.
 

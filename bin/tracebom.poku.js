@@ -212,7 +212,7 @@ describe("tracebom CLI", () => {
 
   it("--strict is accepted", async () => {
     const tmpFile = join(process.cwd(), "tmp-tracebom-strict.json");
-    const { status } = await execNode([
+    const { status, stderr } = await execNode([
       binPath,
       "--cmd",
       "echo hello",
@@ -220,7 +220,14 @@ describe("tracebom CLI", () => {
       "--output",
       tmpFile,
     ]);
-    assert.strictEqual(status, 0);
+    // Where the sandbox cannot run the command as asked (no "echo" program
+    // on Windows, a host that refuses a control), --strict fails the trace
+    // instead of writing an empty BOM.
+    if (status !== 0) {
+      assert.match(stderr, /Tracing refused under --strict: safer-exec: /);
+      assert.ok(!existsSync(tmpFile));
+      return;
+    }
     assert.ok(existsSync(tmpFile));
     unlinkSync(tmpFile);
   });
