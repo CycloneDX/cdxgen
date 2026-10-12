@@ -1,0 +1,25 @@
+.oss-scanner/Dockerfile
+  s_1d1ea01ecd5140::t_396abe7bf5f6bd 1-34
+.oss-scanner/Dockerfile.dockerignore
+  s_1d1ea01ecd5140::t_9b978ca4490181 1-6
+.oss-scanner/threat_model.md
+  s_1d1ea01ecd5140::t_8eb38c7b933578 76
+  s_1d1ea01ecd5140::t_637ce6506ed54e 80
+  s_1d1ea01ecd5140::t_a8a6548d86e170 1-75,77-79,81-84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "15b99aaf5bfa177ece799738fdd2609c3f361cde",
+  "prompts": {},
+  "sessions": {
+    "s_1d1ea01ecd5140": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4fff614d-79cc-4978-a7b0-2e4743b4ca67",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
