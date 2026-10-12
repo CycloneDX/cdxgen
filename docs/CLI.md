@@ -637,7 +637,7 @@ Refer to [cdx-convert — CycloneDX converter](CDX_CONVERT.md) for complete usag
 
 ## Dynamic Process Tracing (Dynamic SBOM)
 
-Dynamic tracing is performed with the dedicated `tracebom` command, which runs a target command under the `@cdxgen/safer-exec` sandbox and records the shared libraries it loads at runtime (via `dlopen`), the HTTP URLs it opens, and the services it contacts:
+Dynamic tracing is performed with the dedicated `tracebom` command, which runs a target command under the `@cdxgen/safer-exec` sandbox on Linux, macOS, or Windows and records the shared libraries and DLLs it loads at runtime, the HTTP URLs it opens, and the services it contacts:
 
 ```shell
 tracebom --cmd "node app.js" --working-dir /path/to/project

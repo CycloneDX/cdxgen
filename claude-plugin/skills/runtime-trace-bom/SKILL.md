@@ -1,6 +1,6 @@
 ---
 name: runtime-trace-bom
-description: Produces a dynamic CycloneDX BOM by executing a command under the cdxgen safer-exec sandbox with tracebom, tracing dlopen shared-library loads, eBPF HTTP URL access, cryptographic library and cipher-suite usage, child process execution, and filesystem mutations. Use when asked what a program actually loads or calls at runtime, for a dynamic or runtime SBOM, to observe a binary's real behaviour, or to trace network and crypto usage of a process.
+description: Produces a dynamic CycloneDX BOM by executing a command under the cdxgen safer-exec sandbox with tracebom on Linux, macOS, or Windows, tracing shared-library and DLL loads, eBPF HTTP URL access, egress hosts, cryptographic library and cipher-suite usage, child process execution, and filesystem mutations. Use when asked what a program actually loads or calls at runtime, for a dynamic or runtime SBOM, to observe a binary's real behaviour, or to trace network and crypto usage of a process.
 ---
 
 # Runtime-traced BOM
@@ -10,6 +10,11 @@ what it actually does: which shared libraries it `dlopen`s, which HTTP URLs it
 reaches, which crypto primitives it exercises, which children it spawns, and
 which files it mutates. The output is a CycloneDX BOM with library components
 and enumerated services.
+
+It runs on Linux, macOS, and Windows 11. On Windows, recording DLL loads needs
+an elevated prompt; without one the BOM has no library components but still
+gets egress services and TLS assets through `--proxy-egress`. See the Windows
+section of the tracebom reference for the full list.
 
 This is observation of real execution, not static inference. It complements
 `sbom-generate` rather than replacing it: a trace shows only what the traced run
@@ -79,6 +84,7 @@ installer/build script change?"
 | `--allow-port`      | —        | TCP ports allowed                                              |
 | `--allow-url`       | —        | Fine-grained URL allow rules                                   |
 | `--allow-listen`    | —        | IPs or `ip:port` the process may bind                          |
+| `--proxy-egress`    | `false`  | Hostname-pinning egress proxy; **enables network** (all OSes)  |
 
 Network is **off by default**, and `--trace-http-urls` turns it on. Say that out
 loud when enabling it — the user is choosing to let the traced process reach the
@@ -96,13 +102,15 @@ Keep the allowlist narrow, consistent with the host-allowlist rule in
 
 **Platform constraint:** eBPF HTTP URL tracing is Linux-only, needs kernel
 >= 5.8, and requires `CAP_BPF`. On macOS or Windows it will not work — do not
-present its absence as a cdxgen failure.
+present its absence as a cdxgen failure. Offer `--proxy-egress` with
+`--allow-host` instead: it records every allowed and denied host as a service
+on every platform, without paths.
 
 ## Crypto tracing
 
 | Flag                  | Default     | Purpose                                                       |
 | --------------------- | ----------- | ------------------------------------------------------------- |
-| `--trace-crypto`      | `true`      | eBPF crypto library and cipher-suite tracing                  |
+| `--trace-crypto`      | `true`      | Crypto libraries, cipher suites, and TLS key-exchange groups  |
 | `--crypto-probe-mode` | `tls-only`  | `tls-only`, or `operations` for digest, encrypt, sign         |
 
 ```bash
@@ -111,9 +119,13 @@ tracebom --cmd "node app.js" \
   -o /absolute/path/to/bom.json
 ```
 
-Also Linux-only with kernel >= 5.8. Use `operations` when the user wants
-observed cryptographic operations rather than just negotiated TLS; pair it with
-`crypto-bom` for the static side of the same question.
+eBPF crypto tracing and `operations` are Linux-only with kernel >= 5.8. On
+every platform, `--proxy-egress` adds the TLS version, cipher suite, and
+key-exchange group of each connection (post-quantum hybrids appear as their
+`ml-kem-*` half), and on Windows an elevated run adds the crypto DLLs with their
+versions. Use `operations` when the user wants observed cryptographic operations
+rather than just negotiated TLS; pair it with `crypto-bom` for the static side
+of the same question.
 
 ## Process execution
 

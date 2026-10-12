@@ -1706,6 +1706,7 @@ property is emitted that appears nowhere in this file.
 
 **`cdx:dynamic:*`**
 
+- `cdx:dynamic:cryptoLibrary`
 - `cdx:dynamic:dryRun`
 - `cdx:dynamic:dryRun:captured`
 - `cdx:dynamic:dryRun:<metric>` (`totalEvents`, `fileReads`, `fileWrites`, `fileMetadata`, `networkOutbound`, `networkBind`, `execAttempts`, `forkAttempts`)

@@ -12,6 +12,20 @@ mkdir -p "$RESULTS_DIR"
 
 echo "=== tracebom SaaSBOM smoke test ==="
 
+# Schema validity is deterministic, unlike the network-dependent checks below,
+# so an invalid BOM fails the run.
+validate_bom() {
+  node --input-type=module -e '
+import { readFileSync } from "node:fs";
+import { validateBom } from "'"$REPO_DIR"'/lib/validator/bomValidator.js";
+if (!(await validateBom(JSON.parse(readFileSync(process.argv[1], "utf8"))))) {
+  console.log("FAIL: " + process.argv[1] + " is not a valid CycloneDX BOM");
+  process.exit(1);
+}
+console.log("PASS: " + process.argv[1] + " validates");
+' "$1"
+}
+
 # ---------------------------------------------------------------
 # Test 1: Basic library tracing (no HTTP URLs)
 echo "--- Basic library tracing ---"
@@ -28,6 +42,34 @@ const libs = j.components.filter(c => c.type === "library" && c.scope === "requi
 if (libs.length < 1) { console.log("FAIL: no library components"); process.exit(0); }
 console.log("PASS: basic library tracing (" + libs.length + " components)");
 '
+validate_bom "$OUTPUT"
+rm -rf "$TESTDIR"
+
+# ---------------------------------------------------------------
+# Egress proxy (no root needed): the allowed host becomes a service, and the
+# proxy reads the TLS parameters from the handshake.
+echo "--- Egress proxy and TLS parameters ---"
+TESTDIR="$(mktemp -d)"
+cd "$TESTDIR"
+OUTPUT="$RESULTS_DIR/tracebom-proxy.json"
+if node "$TRACEBOM" --cmd "curl -s -o /dev/null https://registry.npmjs.org/" --proxy-egress --allow-host registry.npmjs.org --output "$OUTPUT" 2>&1; then
+  node -e '
+const j = require("'"$OUTPUT"'");
+const allowed = (j.services || []).some(s => (s.properties || []).some(p => p.name === "cdx:dynamic:egressDecision" && p.value === "allowed"));
+console.log(allowed ? "PASS: allowed egress service recorded" : "WARN: no allowed egress service (network may be unavailable)");
+const assets = j.components.filter(c => c.type === "cryptographic-asset");
+const protocol = assets.find(c => c.cryptoProperties.assetType === "protocol");
+const algorithms = assets.filter(c => c.cryptoProperties.assetType === "algorithm");
+if (protocol && algorithms.length) {
+  console.log("PASS: TLS protocol and " + algorithms.length + " algorithm(s) recorded through the proxy");
+} else {
+  console.log("WARN: no TLS parameters recorded through the proxy");
+}
+'
+  validate_bom "$OUTPUT"
+else
+  echo "WARN: egress proxy test skipped (sandbox unavailable on this system)"
+fi
 rm -rf "$TESTDIR"
 
 # ---------------------------------------------------------------
@@ -135,6 +177,7 @@ if (cryptoAssets.length > 0) {
   process.exit(0);
 }
 '
+      validate_bom "$OUTPUT"
     else
       echo "WARN: Crypto CBOM test skipped (sandbox or BPF unavailable)"
     fi

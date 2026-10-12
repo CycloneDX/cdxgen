@@ -1,6 +1,6 @@
 # Tutorial: Dynamic Process Tracing and Library-Load SBOM Generation
 
-This lesson shows how to generate a Software Bill of Materials (SBOM) by executing and tracing a target binary using process execution tracking and native OS sandboxing with `@cdxgen/safer-exec`.
+This lesson shows how to generate a Software Bill of Materials (SBOM) by executing and tracing a target binary using process execution tracking and native OS sandboxing with `@cdxgen/safer-exec`. It works on Linux, macOS, and Windows 11; the [Windows section of the tracebom reference](TRACEBOM.md#windows) lists what Windows needs, and Step 5 below walks through a Windows run.
 
 ## Goal
 
@@ -32,8 +32,8 @@ tracebom --cmd "node app.js" -d /path/to/app -o bom.json
 
 The dynamic tracing engine automatically:
 
-- Captures runtime `dlopen`-ed libraries, platform libraries, and dynamic linkers.
-- Queries host package managers (`dpkg`, `apk`, `rpm`, `brew`) to resolve the file paths to system package metadata.
+- Captures runtime `dlopen`-ed libraries, platform libraries, and dynamic linkers on Linux and macOS, and every DLL the process tree loads on Windows.
+- Queries host package managers (`dpkg`, `apk`, `rpm`, `brew`) to resolve the file paths to system package metadata. Windows has no package manager to ask, so a DLL gets a `pkg:generic` purl with its path as the subpath.
 - Calculates `SHA-256` hashes of the libraries.
 - Tags components with `scope=required`.
 - Populates the `evidence` field indicating the component identity was verified via `instrumentation` technique, setting the confidence to `0.8` if version is resolved or `0.5` if unknown.
@@ -55,7 +55,7 @@ Example component output in JSON:
   ],
   "properties": [
     {
-      "name": "cdx:file_path",
+      "name": "cdx:dynamic:filePath",
       "value": "/lib/x86_64-linux-gnu/libc.so.6"
     }
   ],
@@ -95,7 +95,7 @@ Collected HTTP URLs are grouped by host and enumerated as CycloneDX `services`:
   "services": [
     {
       "name": "dynamic-api.example.com-443",
-      "bomRef": "urn:service:dynamic:dynamic-api.example.com-443",
+      "bom-ref": "urn:service:dynamic:dynamic-api.example.com-443",
       "endpoints": [
         "https://api.example.com/v1/users",
         "https://api.example.com/v1/items"
@@ -111,9 +111,13 @@ Collected HTTP URLs are grouped by host and enumerated as CycloneDX `services`:
 
 ## Step 3b: Cryptographic Tracing and CBOM Generation
 
-When `--trace-crypto` is enabled (default), tracebom intercepts cryptographic operations and TLS cipher negotiation events using eBPF uprobes/uretprobes on OpenSSL, GnuTLS, and Go's `crypto/tls` libraries.
+When `--trace-crypto` is enabled (default), tracebom records cryptography from up to three sources, depending on the platform:
 
-This generates **CycloneDX 1.7** compliant `cryptographic-asset` components in the SBOM representing the cryptographic libraries and algorithms (and protocols such as `TLS` with active `cipherSuites`) detected during runtime:
+- **Linux:** eBPF uprobes on OpenSSL, GnuTLS, and Go's `crypto/tls` record TLS cipher negotiation and, with `--crypto-probe-mode operations`, digest, encrypt, and sign calls. This needs root or CAP_BPF and CAP_PERFMON.
+- **Every platform, with `--proxy-egress`:** the egress proxy reads the unencrypted start of each TLS handshake and records the TLS version, cipher suite, and key-exchange group. It sees the handshake whichever TLS library made it, including runtimes such as Node.js and Go that build TLS in.
+- **Windows, from an elevated prompt:** the crypto DLLs the process loads (CNG, Schannel, CryptoAPI, and bundled copies of OpenSSL and others), with their file versions.
+
+This generates **CycloneDX 1.7** compliant `cryptographic-asset` components in the SBOM representing the algorithms and protocols (such as `TLS` with its `cipherSuites`) detected during runtime. Each suite refers to its bulk cipher (for example `aes256-GCM`) by bom-ref, and a post-quantum hybrid group such as `X25519MLKEM768` is recorded as its two halves, `x25519` and `ml-kem-768`. The library that implements the cryptography is not a separate asset: its library component carries `cdx:dynamic:cryptoLibrary`.
 
 ```bash
 # Trace app.js and capture cryptographic assets into the same BOM output
@@ -124,11 +128,10 @@ The cryptographic assets are written into the same output file as the library
 components; there is no separate CBOM output flag.
 
 Traced assets use the same 1.7 shape as statically detected ones: an
-`assetType`, an `oid` where one is known, and an `algorithmProperties` block
-carrying `algorithmFamily` and — for elliptic-curve assets — `ellipticCurve`.
-Because a runtime trace often observes one algorithm used several ways, read the
-repeated `cdx:crypto:primitive` properties rather than the single structured
-`primitive` field when you need every observed usage. The field reference is in
+`assetType`, an `oid`, and an `algorithmProperties` block carrying
+`algorithmFamily` and — for elliptic-curve assets — `ellipticCurve`. An
+algorithm without a known OID is left out, as it is for static detection. The
+field reference is in
 [ADVANCED.md](ADVANCED.md#the-shape-of-a-cryptographic-asset-component).
 
 ### Additional sandbox controls
@@ -166,3 +169,47 @@ To list all dynamically instrumented components along with their paths, techniqu
 ```
 
 This prints a formatted table of all dynamically tracked libraries.
+
+## Step 5: Trace a command on Windows
+
+On Windows 11 the sandbox is a Microsoft eXecution Container, and DLL loads are
+recorded by an ETW session that only an elevated prompt can start. Open
+**Terminal (Admin)** and trace a command that makes an HTTPS request:
+
+```powershell
+tracebom --cmd "curl.exe -s -o NUL https://example.com" --proxy-egress --allow-host example.com -o bom.json
+```
+
+The BOM lists every DLL `curl.exe` loaded. The crypto DLLs among them carry
+their file version and the library they belong to:
+
+```json
+{
+  "name": "schannel.dll",
+  "version": "6.2.26100.9444",
+  "type": "library",
+  "purl": "pkg:generic/schannel.dll@6.2.26100.9444#Windows/System32/schannel.dll",
+  "properties": [
+    {
+      "name": "cdx:dynamic:filePath",
+      "value": "C:\\Windows\\System32\\schannel.dll"
+    },
+    { "name": "cdx:dynamic:cryptoLibrary", "value": "Windows Schannel" }
+  ]
+}
+```
+
+Next to them sit the `TLSv1.3` protocol, `aes256-GCM` and `x25519` assets from
+the handshake, and an `example.com` service with
+`cdx:dynamic:egressDecision=allowed`.
+
+Run the same command from a normal prompt and compare. tracebom warns that
+library tracing needs an elevated prompt and the BOM has no library
+components, but the TLS assets and the egress service are still there: the
+proxy does not need elevation. Two more things to know before you trace your
+own commands:
+
+- Node.js and Java load `user32.dll`, which fails inside the container when it
+  was started over SSH or from a service. Trace them from a desktop session.
+- `--trace-http-urls` and `--crypto-probe-mode operations` use eBPF and do
+  nothing on Windows. Use `--proxy-egress` for the network view.
