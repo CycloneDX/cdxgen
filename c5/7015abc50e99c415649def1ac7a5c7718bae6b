@@ -1,0 +1,18 @@
+lib/inventory/dosai.js
+  h_6a4cc5cdf68def 448-450,461-463,466
+lib/inventory/dosai.poku.js
+  h_6a4cc5cdf68def 258,262,266,270,294,300
+lib/inventory/evidenceUtils.poku.js
+  h_6a4cc5cdf68def 259,263,267,271
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c57015abc50e99c415649def1ac7a5c7718bae6b",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
