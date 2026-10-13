@@ -1,0 +1,32 @@
+lib/cli/index.poku.js
+  s_1d1ea01ecd5140::t_b7aa5cc3ad8165 178
+  s_1d1ea01ecd5140::t_ce875cd3fd7c88 154-157
+lib/third-party/arborist/spec-from-lock.poku.js
+  s_1d1ea01ecd5140::t_26da49644f5318 18-22,24-27
+  s_1d1ea01ecd5140::t_e5b6c0dc5b87c8 29
+  s_1d1ea01ecd5140::t_56dc53b13fb026 23
+.oss-scanner/threat_model.md
+  s_1d1ea01ecd5140::t_c595d7d5a77de7 80
+lib/stages/postgen/postgen.poku.js
+  s_1d1ea01ecd5140::t_78189db2ca2670 2014-2019
+lib/stages/pregen/envAudit.poku.js
+  s_1d1ea01ecd5140::t_4621c90d8e53f8 671-702
+  s_1d1ea01ecd5140::t_55887bd31090f9 2,8-11
+  s_1d1ea01ecd5140::t_7ac1804d557278 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "a99797ba8023bc47e4385ee2ed489bc1017fb487",
+  "prompts": {},
+  "sessions": {
+    "s_1d1ea01ecd5140": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4fff614d-79cc-4978-a7b0-2e4743b4ca67",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
