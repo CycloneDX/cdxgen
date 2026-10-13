@@ -100,9 +100,6 @@ jobs:
           repository: 'hashicorp-education/learn-terraform-modules-use'
           ref: '753518c20cdca94c67e1f0e2890e71f6a96af262'
           path: 'repotests/learn-terraform-modules-use'
-      - name: Trim CI agent
-        run: |
-          rm -rf /tmp/docker-images-* /tmp/atom-usages-* /tmp/atom-reachables-* /tmp/cdx*
       - name: Setup pnpm
         uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413  # v6.1.0
       - name: Use Node.js
