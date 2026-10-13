@@ -51,14 +51,6 @@
           "value": "packages/tools"
         },
         {
-          "name": "internal:LocalNodeModulesPath",
-          "value": "node_modules/@acme/tools"
-        },
-        {
-          "name": "internal:LocalNodeModulesPath",
-          "value": "packages/tools"
-        },
-        {
           "name": "internal:SrcFile",
           "value": "$ROOT/package-lock.json"
         },
@@ -115,10 +107,6 @@
         {
           "name": "cdx:npm:deprecated",
           "value": "use String.prototype.padStart()"
-        },
-        {
-          "name": "internal:LocalNodeModulesPath",
-          "value": "node_modules/left-pad"
         },
         {
           "name": "internal:ResolvedUrl",
@@ -189,10 +177,6 @@
           "value": "node_modules/localdep"
         },
         {
-          "name": "internal:LocalNodeModulesPath",
-          "value": "node_modules/localdep"
-        },
-        {
           "name": "internal:SrcFile",
           "value": "$ROOT/package-lock.json"
         }
@@ -248,14 +232,6 @@
         },
         {
           "name": "cdx:npm:resolvedPath",
-          "value": "packages/wsmember"
-        },
-        {
-          "name": "internal:LocalNodeModulesPath",
-          "value": "node_modules/wsmember"
-        },
-        {
-          "name": "internal:LocalNodeModulesPath",
           "value": "packages/wsmember"
         },
         {

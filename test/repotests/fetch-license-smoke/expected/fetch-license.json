@@ -84,10 +84,6 @@
           "value": "1"
         },
         {
-          "name": "internal:LocalNodeModulesPath",
-          "value": "node_modules/@scope/widget"
-        },
-        {
           "name": "internal:ResolvedUrl",
           "value": "https://registry.npmjs.org/@scope/widget/-/widget-2.1.0.tgz"
         },
@@ -219,10 +215,6 @@
           "value": "2"
         },
         {
-          "name": "internal:LocalNodeModulesPath",
-          "value": "node_modules/left-pad"
-        },
-        {
           "name": "internal:ResolvedUrl",
           "value": "https://registry.npmjs.org/left-pad/-/left-pad-1.3.0.tgz"
         },
@@ -296,10 +288,6 @@
         {
           "name": "cdx:npm:versionCount",
           "value": "1"
-        },
-        {
-          "name": "internal:LocalNodeModulesPath",
-          "value": "node_modules/unlicensed-thing"
         },
         {
           "name": "internal:ResolvedUrl",
