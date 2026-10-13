@@ -1,0 +1,14 @@
+.github/workflows/npm-release.yml
+  h_6a4cc5cdf68def 394-397,590-593,786-789,1043-1046
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8c1baa2d51fa8c5d3fc34ab19221b2d849eb4327",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
