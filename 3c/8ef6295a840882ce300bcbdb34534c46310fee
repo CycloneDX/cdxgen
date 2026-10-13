@@ -1,0 +1,26 @@
+.gitignore
+  h_6a4cc5cdf68def 202-205
+lib/cli/jsBom.poku.js
+  h_6a4cc5cdf68def 511-518,614-670
+lib/ecosystems/jsEvidence.js
+  h_6a4cc5cdf68def 9,107-180,213-219
+lib/ecosystems/jsEvidence.poku.js
+  h_6a4cc5cdf68def 1-5,24-36,149-380
+test/data/js-deep-metadata-repotest/package-lock.json
+  h_6a4cc5cdf68def 1-27
+test/data/js-deep-metadata-repotest/package.json
+  h_6a4cc5cdf68def 1-9
+test/data/js-deep-metadata-repotest/src/index.js
+  h_6a4cc5cdf68def 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3c8ef6295a840882ce300bcbdb34534c46310fee",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
