@@ -1,0 +1,14 @@
+.github/workflows/wslc-test.yml
+  h_6a4cc5cdf68def 79-91,99-100,108-109,111-113
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "96253da765ea4d5933f3c0797f17f7589a989b89",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
