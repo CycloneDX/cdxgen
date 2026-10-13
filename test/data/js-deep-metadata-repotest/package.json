@@ -1,0 +1,9 @@
+{
+  "name": "deep-metadata-demo",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@scope/demo": "2.0.0",
+    "demo-lib": "1.1.0"
+  }
+}
