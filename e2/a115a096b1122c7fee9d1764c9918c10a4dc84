@@ -1,0 +1,122 @@
+ci/Dockerfile-swift-evinse
+  h_6a4cc5cdf68def 1-33
+lib/cli/nativeBom.js
+  h_6a4cc5cdf68def 95,2050-2075,2199-2217
+lib/ecosystems/parsers-misc.js
+  h_6a4cc5cdf68def 1930-1996
+lib/ecosystems/parsers-misc.poku.js
+  h_6a4cc5cdf68def 7-11,1474-1550
+lib/evinser/evinser.js
+  h_6a4cc5cdf68def 739-784,1117-1121,1124-1126,1555,1565-1569,1574-1579,1586-1590,1615-1705,1717-1724
+lib/evinser/evinser.poku.js
+  h_6a4cc5cdf68def 131-169
+lib/evinser/swiftsem.js
+  h_6a4cc5cdf68def 1-2,7-14,16,82-228,238,315-497,512-514,521-534,536,539-569,615,755,759-762,764-766,768-772,782-784,805,882-899,907-908,913-919,923,926-939,943-951,960-964,970-994,997-1003,1005-1007,1009-1284,1324,1343-1350,1357-1360,1362-1366,1374,1381,1393-1398,1406
+lib/evinser/swiftsem.poku.js
+  h_6a4cc5cdf68def 6-7,9,15-17,62-64,130-134,488-678
+lib/managers/binary.js
+  h_6a4cc5cdf68def 538-539,542,544-548
+test/data/swiftsem/bom-argparser-demo-components.json
+  h_6a4cc5cdf68def 1-24
+test/data/swiftsem/build-tree/.build/arm64-apple-macosx/debug/ArgumentParser-tool.build/output-file-map.json
+  h_6a4cc5cdf68def 1-317
+test/data/swiftsem/build-tree/.build/arm64-apple-macosx/debug/Yams.build/output-file-map.json
+  h_6a4cc5cdf68def 1-131
+test/data/swiftsem/build-tree/.build/arm64-apple-macosx/debug/argparser_demoTests.build/output-file-map.json
+  h_6a4cc5cdf68def 1-11
+test/data/swiftsem/build-tree/.build/manifest.pif
+  h_6a4cc5cdf68def 1-9678
+test/data/swiftsem/build-tree/.build/out/Intermediates.noindex/argparser-demo.build/Debug/argparser-demo-p.build/Objects-normal/arm64/argparser-demo-OutputFileMap.json
+  h_6a4cc5cdf68def 1-19
+test/data/swiftsem/build-tree/.build/out/Intermediates.noindex/swift-argument-parser.build/Debug/ArgumentParser-t.build/Objects-normal/arm64/ArgumentParser-OutputFileMap.json
+  h_6a4cc5cdf68def 1-529
+test/data/swiftsem/swift-dump-package-argparser-demo.json
+  h_6a4cc5cdf68def 1-172
+test/data/swiftsem/swift-dump-package-scoped-demo.json
+  h_6a4cc5cdf68def 1-140
+test/data/swiftsem/swift-dump-package-swift-argument-parser.json
+  h_6a4cc5cdf68def 1-608
+test/data/swiftsem/swift-dump-package-yams.json
+  h_6a4cc5cdf68def 1-126
+test/data/swiftsem/swift-module-info-yams.json
+  h_6a4cc5cdf68def 1
+test/data/swiftsem/swift-package-resolved-v3.json
+  h_6a4cc5cdf68def 1-33
+test/data/swiftsem/swiftbuild-manifest.pif
+  h_6a4cc5cdf68def 1-9678
+test/data/swiftsem/swiftbuild-verbose-output.txt
+  h_6a4cc5cdf68def 1-1030
+test/data/swiftsem/swiftbuild-workspace-state.json
+  h_6a4cc5cdf68def 1-64
+test/data/swiftsem/swiftbuild/ArgumentParser-OutputFileMap.json
+  h_6a4cc5cdf68def 1-529
+test/data/swiftsem/swiftbuild/argparser-demo-OutputFileMap.json
+  h_6a4cc5cdf68def 1-19
+types/lib/cli/bomAssembly.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/cli/jsBom.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/cli/managedBom.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/cli/nativeBom.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/core/env.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/core/fs.d.ts
+  h_6a4cc5cdf68def 28-39
+types/lib/core/fs.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/ecosystems/caxa.d.ts
+  h_6a4cc5cdf68def 8-21
+types/lib/ecosystems/caxa.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/ecosystems/cppEvidence.d.ts
+  h_6a4cc5cdf68def 22
+types/lib/ecosystems/parsers-misc.d.ts
+  h_6a4cc5cdf68def 332-353
+types/lib/ecosystems/parsers-misc.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/ecosystems/parsers-rust.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/ecosystems/pythonutils.d.ts
+  h_6a4cc5cdf68def 74
+types/lib/evinser/evinser.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/evinser/swiftsem.d.ts
+  h_6a4cc5cdf68def 1-29,37,43-45,105-111,115,122-126,131-179,188
+types/lib/evinser/swiftsem.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/inventory/cdxrs.d.ts
+  h_6a4cc5cdf68def 6-8,70-74
+types/lib/inventory/cdxrs.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/inventory/dosai.d.ts
+  h_6a4cc5cdf68def 44-77
+types/lib/inventory/dosai.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/inventory/evidenceUtils.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/inventory/fetchBatch.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/managers/binary.d.ts
+  h_6a4cc5cdf68def 22-23,26
+types/lib/managers/binary.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/parsers/largeJson.d.ts
+  h_6a4cc5cdf68def 1-52
+types/lib/parsers/largeJson.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/stages/postgen/postgen.d.ts.map
+  h_6a4cc5cdf68def 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e2a115a096b1122c7fee9d1764c9918c10a4dc84",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
