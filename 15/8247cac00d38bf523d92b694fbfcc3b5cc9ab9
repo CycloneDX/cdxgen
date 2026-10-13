@@ -1,0 +1,16 @@
+lib/managers/docker.js
+  h_6a4cc5cdf68def 314-316,1183-1194,1288,2048
+lib/managers/docker.poku.js
+  h_6a4cc5cdf68def 677-755
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "158247cac00d38bf523d92b694fbfcc3b5cc9ab9",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
