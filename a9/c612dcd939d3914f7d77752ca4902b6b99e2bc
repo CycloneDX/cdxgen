@@ -1,0 +1,78 @@
+lib/cli/jsBom.js
+  h_6a4cc5cdf68def 574-583,973-978
+lib/cli/jvmBom.js
+  h_6a4cc5cdf68def 170,177,456,476,1044-1060,1088-1095,1136-1137,1185,1663-1669,1924,1937
+lib/cli/managedBom.js
+  h_6a4cc5cdf68def 579-589
+lib/cli/securityGates.e2e.poku.js
+  h_6a4cc5cdf68def 1-235
+lib/ecosystems/gradleutils.js
+  h_6a4cc5cdf68def 44-48,51,53,56-59,66-70,89,398,400,1224-1227,1229,1231,1233,1250-1253,1256,1258,1264-1267,1280-1284,1304
+lib/ecosystems/gradleutils.poku.js
+  h_6a4cc5cdf68def 13,1022-1133
+lib/ecosystems/npmutils.js
+  h_6a4cc5cdf68def 618-620,631-634
+lib/ecosystems/npmutils.poku.js
+  h_6a4cc5cdf68def 7,270-301
+lib/ecosystems/parsers-js.js
+  h_6a4cc5cdf68def 3498-3502,3511-3513
+lib/ecosystems/parsers-js.poku.js
+  h_6a4cc5cdf68def 3826-3856
+lib/ecosystems/parsers-misc.js
+  h_6a4cc5cdf68def 52-61,1221-1231,1233-1234,1236-1244,1250-1252,1254-1255
+lib/ecosystems/parsers-misc.poku.js
+  h_6a4cc5cdf68def 3,2394-2442
+lib/ecosystems/parsers-python.js
+  h_6a4cc5cdf68def 1528-1534
+lib/ecosystems/parsers-python.poku.js
+  h_6a4cc5cdf68def 1794-1838
+lib/managers/docker.js
+  h_6a4cc5cdf68def 9-16,1947-1995,2053-2060,2062,2076,2096-2101,2104,2106-2107,2109-2111,2120-2125,2127-2144
+lib/managers/docker.poku.js
+  h_6a4cc5cdf68def 1-7,9,2665-2840
+lib/managers/oci.js
+  h_6a4cc5cdf68def 232-260,290-295,297-300
+lib/managers/oci.poku.js
+  h_6a4cc5cdf68def 5-6,310-437
+lib/parsers/npmrc.js
+  h_6a4cc5cdf68def 26-35,39-43,64-66,74
+lib/parsers/npmrc.poku.js
+  h_6a4cc5cdf68def 529-552
+test/data/sec-npmrc-protocrash/.npmrc
+  h_6a4cc5cdf68def 1-4
+test/data/sec-npmrc-protocrash/package.json
+  h_6a4cc5cdf68def 1
+test/data/sec-pnpm-protokey/package.json
+  h_6a4cc5cdf68def 1-7
+test/data/sec-pnpm-protokey/pnpm-lock.yaml
+  h_6a4cc5cdf68def 1-23
+test/data/sec-wrapper-gate/gradle/build.gradle
+  h_6a4cc5cdf68def 1-3
+test/data/sec-wrapper-gate/gradle/gradlew
+  h_6a4cc5cdf68def 1-3
+test/data/sec-wrapper-gate/maven/mvnw
+  h_6a4cc5cdf68def 1-3
+test/data/sec-wrapper-gate/maven/pom.xml
+  h_6a4cc5cdf68def 1-14
+test/data/sec-wrapper-gate/mill/build.mill
+  h_6a4cc5cdf68def 1-2
+test/data/sec-wrapper-gate/mill/mill
+  h_6a4cc5cdf68def 1-3
+test/data/sec-wrapper-gate/pipenv/Pipfile
+  h_6a4cc5cdf68def 1-2
+test/data/sec-wrapper-gate/rush/package.json
+  h_6a4cc5cdf68def 1
+test/data/sec-wrapper-gate/rush/rush.json
+  h_6a4cc5cdf68def 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a9c612dcd939d3914f7d77752ca4902b6b99e2bc",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
