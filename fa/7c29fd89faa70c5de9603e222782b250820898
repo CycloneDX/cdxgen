@@ -1,0 +1,31 @@
+lib/stages/postgen/postgen.js
+  s_b9c53402783484::t_6493192066a007 759-761
+lib/stages/postgen/postgen.poku.js
+  s_b9c53402783484::t_96ed4e8acc83cd 2086
+lib/cli/jsBomPnpmMetadata.poku.js
+  s_b9c53402783484::t_57eca44c6d5391 8-10
+  s_b9c53402783484::t_2e4a4e5a87e588 46
+lib/cli/jsBom.js
+  s_b9c53402783484::t_af8bf83e7c2efd 1502-1503
+.github/workflows/repotests.yml
+  s_b9c53402783484::t_c57c8871d816cc 37
+  s_b9c53402783484::t_ba7952cb97160d 281-289
+.gitignore
+  s_b9c53402783484::t_f0805eb3bf7cf3 196-197
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fa7c29fd89faa70c5de9603e222782b250820898",
+  "prompts": {},
+  "sessions": {
+    "s_b9c53402783484": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "aee085a0-4e8a-4d32-9a37-83e737f97349",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
