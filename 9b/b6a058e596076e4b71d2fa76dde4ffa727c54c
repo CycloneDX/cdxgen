@@ -1,0 +1,26 @@
+docs/CDXRS_PROTOCOL.md
+  h_6a4cc5cdf68def 311,313,320-325
+docs/ENV.md
+  h_6a4cc5cdf68def 304
+lib/cli/managedBom.js
+  h_6a4cc5cdf68def 2032-2035,2038,2051-2055
+lib/cli/managedBom.poku.js
+  h_6a4cc5cdf68def 1505-1707
+lib/inventory/cdxrs.js
+  h_6a4cc5cdf68def 6-8,45-83,206-210,331-333,363-373,381,385-400,436-465
+lib/inventory/cdxrs.poku.js
+  h_6a4cc5cdf68def 87,142-217
+test/fixtures/cdxrs-fakes/fake-stdout-flood.js
+  h_6a4cc5cdf68def 1-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9bb6a058e596076e4b71d2fa76dde4ffa727c54c",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
