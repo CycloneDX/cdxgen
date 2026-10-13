@@ -1,0 +1,20 @@
+lib/cli/securityGates.e2e.poku.js
+  h_6a4cc5cdf68def 201-203,234-243
+test/data/sec-wrapper-gate/gradle/gradlew.bat
+  h_6a4cc5cdf68def 1-4
+test/data/sec-wrapper-gate/maven/mvnw.bat
+  h_6a4cc5cdf68def 1-4
+test/data/sec-wrapper-gate/mill/mill.bat
+  h_6a4cc5cdf68def 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cc0c50e7011f170dadbc5a259221b69c1208fb67",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
