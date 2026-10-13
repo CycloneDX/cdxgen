@@ -1,0 +1,44 @@
+.versions/gradle_9
+  h_6a4cc5cdf68def 2
+ci/Dockerfile
+  h_6a4cc5cdf68def 13
+ci/Dockerfile-bun
+  h_6a4cc5cdf68def 24
+ci/Dockerfile-deno
+  h_6a4cc5cdf68def 24
+ci/Dockerfile-ppc64
+  h_6a4cc5cdf68def 18
+ci/images/Dockerfile.python3.6
+  h_6a4cc5cdf68def 7
+ci/images/debian/Dockerfile.php8.3
+  h_6a4cc5cdf68def 8
+ci/images/debian/Dockerfile.php8.4
+  h_6a4cc5cdf68def 8
+ci/images/debian/Dockerfile.php8.5
+  h_6a4cc5cdf68def 8
+ci/images/debian/Dockerfile.ruby2.6
+  h_6a4cc5cdf68def 8
+ci/images/debian/Dockerfile.ruby3.3
+  h_6a4cc5cdf68def 8
+ci/images/debian/Dockerfile.ruby3.4
+  h_6a4cc5cdf68def 7
+ci/images/debian/Dockerfile.ruby4
+  h_6a4cc5cdf68def 7
+docs/ENV.md
+  h_6a4cc5cdf68def 48-49,51,56
+lib/inventory/envcontext.js
+  h_6a4cc5cdf68def 104-108,110,115
+lib/stages/pregen/pregen.poku.js
+  h_6a4cc5cdf68def 47-48,50,336,516
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d6cb20b6d3cb2ec303bf01824994adbb03af7cce",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
