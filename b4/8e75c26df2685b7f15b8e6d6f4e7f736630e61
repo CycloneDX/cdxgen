@@ -1,0 +1,24 @@
+.github/workflows/wslc-test.yml
+  h_6a4cc5cdf68def 1-82
+ADVANCED.md
+  h_6a4cc5cdf68def 192-211
+README.md
+  h_6a4cc5cdf68def 686-696,999
+docs/ENV.md
+  h_6a4cc5cdf68def 123
+lib/managers/docker.js
+  h_6a4cc5cdf68def 296-314,1139-1179,1182-1183,1185,1187-1190,1196-1203,1269-1273,1414,2032-2034
+lib/managers/docker.poku.js
+  h_6a4cc5cdf68def 200,227-236,260,499-689
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b48e75c26df2685b7f15b8e6d6f4e7f736630e61",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

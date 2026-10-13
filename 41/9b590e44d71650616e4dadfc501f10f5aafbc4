@@ -1,0 +1,18 @@
+docs/ENV.md
+  h_6a4cc5cdf68def 263,268
+lib/inventory/atomUtils.js
+  h_6a4cc5cdf68def 9-15,900-902,909-912,930-980,1273,1336,1338-1349,1351-1353,1355-1357,1359-1396,1398,1531
+lib/inventory/atomUtils.poku.js
+  h_6a4cc5cdf68def 1,9,15,25,42,166-167,749-863
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "419b590e44d71650616e4dadfc501f10f5aafbc4",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

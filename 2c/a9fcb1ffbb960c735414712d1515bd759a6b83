@@ -1,0 +1,18 @@
+lib/cli/managedBom.js
+  h_6a4cc5cdf68def 2148-2149,2152-2153,2155
+lib/inventory/dosai.js
+  h_6a4cc5cdf68def 23,679-700,782-794
+lib/inventory/dosai.poku.js
+  h_6a4cc5cdf68def 25,851-899
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2ca9fcb1ffbb960c735414712d1515bd759a6b83",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

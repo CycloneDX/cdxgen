@@ -1,0 +1,14 @@
+.github/workflows/repotests.yml
+  h_6a4cc5cdf68def 1328-1329,1552-1726
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "23ca42818ec1dfc0daef7a985a781b2f5aac452c",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

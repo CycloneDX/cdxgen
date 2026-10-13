@@ -1,0 +1,26 @@
+lib/ecosystems/bunutils.js
+  h_6a4cc5cdf68def 56-78,201-206,208-213,249,253-256,258,264,271
+lib/ecosystems/bunutils.poku.js
+  h_6a4cc5cdf68def 146-263
+test/data/bun/nesting/bun.lock
+  h_6a4cc5cdf68def 1-56
+test/data/bun/nesting/package.json
+  h_6a4cc5cdf68def 1-10
+test/data/bun/workspace/bun.lock
+  h_6a4cc5cdf68def 1-30
+test/data/bun/workspace/package.json
+  h_6a4cc5cdf68def 1-8
+test/data/bun/workspace/packages/pkg-a/package.json
+  h_6a4cc5cdf68def 1-7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3295dc44c2721ce7560f0d6f8af3914f60294c8a",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

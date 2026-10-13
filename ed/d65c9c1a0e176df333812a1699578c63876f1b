@@ -1,0 +1,16 @@
+lib/inventory/atomUtils.js
+  h_6a4cc5cdf68def 754-758,762-771,773,779,925-926,943-981,992,1275-1309,1440
+lib/inventory/atomUtils.poku.js
+  h_6a4cc5cdf68def 41-42,143-206
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "edd65c9c1a0e176df333812a1699578c63876f1b",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

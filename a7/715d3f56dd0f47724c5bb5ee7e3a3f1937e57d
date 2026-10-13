@@ -1,0 +1,54 @@
+lib/cli/bomAssembly.js
+  h_6a4cc5cdf68def 154-156,160,164,177,1472
+lib/cli/bomAssembly.poku.js
+  h_6a4cc5cdf68def 296-297
+lib/cli/jsBom.poku.js
+  h_6a4cc5cdf68def 838-839,842
+lib/cli/managedBom.js
+  h_6a4cc5cdf68def 1438-1525
+lib/cli/managedBom.poku.js
+  h_6a4cc5cdf68def 32-36,1621-1737
+lib/ecosystems/rubyutils.js
+  h_6a4cc5cdf68def 3,171,222-288,1113,1122-1130,1155-1161,1170-1173,1225-1228,1230-1237,1242,1247-1250,1254-1255,1257-1258,1260,1323-1327,1332-1353,1357,1363,1401-1419,1422
+lib/ecosystems/rubyutils.poku.js
+  h_6a4cc5cdf68def 1-3,652,707,711,762,766,770,774,778,782,786,872,876-882,924-1099
+lib/inventory/depsUtils.js
+  h_6a4cc5cdf68def 418-462
+lib/inventory/depsUtils.poku.js
+  h_6a4cc5cdf68def 437-544
+test/data/opentelemetry-instrumentation-action_mailer-0.8.1.gemspec
+  h_6a4cc5cdf68def 1-26
+test/data/otel-action-mailer/Gemfile
+  h_6a4cc5cdf68def 1-32
+test/data/otel-action-mailer/Gemfile.lock
+  h_6a4cc5cdf68def 1-164
+test/data/otel-action-mailer/lib/opentelemetry/instrumentation/action_mailer/version.rb
+  h_6a4cc5cdf68def 1-13
+test/data/otel-action-mailer/opentelemetry-instrumentation-action_mailer.gemspec
+  h_6a4cc5cdf68def 1-36
+test/repotests/ruby-otel-action-mailer/Gemfile
+  h_6a4cc5cdf68def 1-32
+test/repotests/ruby-otel-action-mailer/Gemfile.lock
+  h_6a4cc5cdf68def 1-164
+test/repotests/ruby-otel-action-mailer/expected/default.json
+  h_6a4cc5cdf68def 1-1898
+test/repotests/ruby-otel-action-mailer/golden.manifest.json
+  h_6a4cc5cdf68def 1-10
+test/repotests/ruby-otel-action-mailer/lib/opentelemetry/instrumentation/action_mailer/version.rb
+  h_6a4cc5cdf68def 1-13
+test/repotests/ruby-otel-action-mailer/opentelemetry-instrumentation-action_mailer.gemspec
+  h_6a4cc5cdf68def 1-36
+test/repotests/ruby-smoke/expected/default.json
+  h_6a4cc5cdf68def 3708-3709,3711-3717
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a7715d3f56dd0f47724c5bb5ee7e3a3f1937e57d",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

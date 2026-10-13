@@ -1,0 +1,14 @@
+.github/workflows/runner-maven-mirror.yml
+  h_6a4cc5cdf68def 1-67
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f57664a5aefe7bf4200ca1787c9894810893c4b5",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

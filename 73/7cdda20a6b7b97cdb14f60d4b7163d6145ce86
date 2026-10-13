@@ -1,0 +1,190 @@
+.github/actions/build-docker-image/action.yml
+  h_6a4cc5cdf68def 35
+.github/workflows/binary-builds.yml
+  h_6a4cc5cdf68def 146
+.github/workflows/codeql.yml
+  h_6a4cc5cdf68def 43,59
+.github/workflows/image-build.yml
+  h_6a4cc5cdf68def 170,178,407,415,692,738,784,826,872,914,964,972,1074,1082
+.github/workflows/java-reachables-test.yml
+  h_6a4cc5cdf68def 37
+.github/workflows/nodejs.yml
+  h_6a4cc5cdf68def 82,120,210
+.github/workflows/npm-release.yml
+  h_6a4cc5cdf68def 102,104,119,146,148,163,200,222,230,245,274,282,297,333,359,429,437,452,481,489,504,540,566,621,629,644,673,681,696,732,758,818,826,828,848,871,879,894,922,930,945,981,1007
+.github/workflows/nydus-demo.yml
+  h_6a4cc5cdf68def 27
+.github/workflows/python-atom-tests.yml
+  h_6a4cc5cdf68def 46
+.github/workflows/repotests.yml
+  h_6a4cc5cdf68def 469,494,523,543,1357,1361-1362,1618,2110,2148,2217,2221-2222,2240,2273,2346
+.nvmrc
+  h_6a4cc5cdf68def 1
+.versions/gradle_9
+  h_6a4cc5cdf68def 2
+.versions/node_24
+  h_6a4cc5cdf68def 2
+.versions/node_26
+  h_6a4cc5cdf68def 2
+.versions/nvm
+  h_6a4cc5cdf68def 2
+ci/Dockerfile
+  h_6a4cc5cdf68def 5-6,9,13,17-18,20,58,89
+ci/Dockerfile-bun
+  h_6a4cc5cdf68def 16-17,20,24
+ci/Dockerfile-deno
+  h_6a4cc5cdf68def 16-17,20,24,28-29,65
+ci/Dockerfile-ppc64
+  h_6a4cc5cdf68def 14,18
+ci/images/Dockerfile.dotnet8
+  h_6a4cc5cdf68def 2
+ci/images/Dockerfile.dotnet9
+  h_6a4cc5cdf68def 2
+ci/images/Dockerfile.java11
+  h_6a4cc5cdf68def 15
+ci/images/Dockerfile.java17
+  h_6a4cc5cdf68def 4,13
+ci/images/Dockerfile.python3.11
+  h_6a4cc5cdf68def 2,18
+ci/images/Dockerfile.python3.12
+  h_6a4cc5cdf68def 15
+ci/images/Dockerfile.python3.13
+  h_6a4cc5cdf68def 2,15
+ci/images/Dockerfile.python3.6
+  h_6a4cc5cdf68def 2,7,15
+ci/images/Dockerfile.ruby2.5
+  h_6a4cc5cdf68def 2,4
+ci/images/al10/Dockerfile.ruby-builder
+  h_6a4cc5cdf68def 13,18
+ci/images/alpine/Dockerfile.dotnet10
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.dotnet9
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.elixir1
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.golang1.26
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.golang1.27
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.java21
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.java25
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.java26
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.node24
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.node26
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.php8.3
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.php8.4
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.php8.5
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.python3.12
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.python3.13
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.python3.14
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.ruby3.3
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.ruby3.4
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.ruby4
+  h_6a4cc5cdf68def 2
+ci/images/alpine/Dockerfile.rust1
+  h_6a4cc5cdf68def 2
+ci/images/debian/Dockerfile.dart3
+  h_6a4cc5cdf68def 2,12
+ci/images/debian/Dockerfile.dotnet8
+  h_6a4cc5cdf68def 2,13
+ci/images/debian/Dockerfile.dotnet9
+  h_6a4cc5cdf68def 2,13
+ci/images/debian/Dockerfile.elixir1
+  h_6a4cc5cdf68def 2,12
+ci/images/debian/Dockerfile.golang1.23
+  h_6a4cc5cdf68def 12
+ci/images/debian/Dockerfile.golang1.24
+  h_6a4cc5cdf68def 12
+ci/images/debian/Dockerfile.golang1.25
+  h_6a4cc5cdf68def 12
+ci/images/debian/Dockerfile.golang1.26
+  h_6a4cc5cdf68def 2,12
+ci/images/debian/Dockerfile.golang1.27
+  h_6a4cc5cdf68def 2,12
+ci/images/debian/Dockerfile.node24
+  h_6a4cc5cdf68def 2
+ci/images/debian/Dockerfile.node26
+  h_6a4cc5cdf68def 2
+ci/images/debian/Dockerfile.php8.3
+  h_6a4cc5cdf68def 2,8,14
+ci/images/debian/Dockerfile.php8.4
+  h_6a4cc5cdf68def 2,8,14
+ci/images/debian/Dockerfile.php8.5
+  h_6a4cc5cdf68def 2,8,14
+ci/images/debian/Dockerfile.python3.12
+  h_6a4cc5cdf68def 2,12
+ci/images/debian/Dockerfile.python3.13
+  h_6a4cc5cdf68def 2,12
+ci/images/debian/Dockerfile.python3.14
+  h_6a4cc5cdf68def 2,12
+ci/images/debian/Dockerfile.ruby2.6
+  h_6a4cc5cdf68def 4,8,14,94
+ci/images/debian/Dockerfile.ruby3.3
+  h_6a4cc5cdf68def 2,4,8,14,95
+ci/images/debian/Dockerfile.ruby3.4
+  h_6a4cc5cdf68def 2,7,13
+ci/images/debian/Dockerfile.ruby4
+  h_6a4cc5cdf68def 2,7,13
+ci/images/debian/Dockerfile.rust1
+  h_6a4cc5cdf68def 2,12
+ci/images/debian/Dockerfile.swift6
+  h_6a4cc5cdf68def 2,12,14,18
+ci/images/opensuse/Dockerfile.python3.10
+  h_6a4cc5cdf68def 14
+ci/images/opensuse/Dockerfile.python3.9
+  h_6a4cc5cdf68def 11
+ci/images/opensuse/Dockerfile.rolling
+  h_6a4cc5cdf68def 2,4,17,21
+ci/images/temurin/Dockerfile.java21
+  h_6a4cc5cdf68def 2,14,18-19
+ci/images/temurin/Dockerfile.java24
+  h_6a4cc5cdf68def 14,18-19
+ci/images/temurin/Dockerfile.java25
+  h_6a4cc5cdf68def 2,14,18-19
+ci/images/temurin/Dockerfile.java26
+  h_6a4cc5cdf68def 2,14,18-19
+ci/images/temurin/Dockerfile.java8
+  h_6a4cc5cdf68def 2,14,18
+ci/images/ubuntu/Dockerfile.dotnet10
+  h_6a4cc5cdf68def 2,12
+ci/images/ubuntu/Dockerfile.dotnet11
+  h_6a4cc5cdf68def 2,12
+docs/ENV.md
+  h_6a4cc5cdf68def 48-51,55-56
+lib/inventory/envcontext.js
+  h_6a4cc5cdf68def 104-107,111-112
+lib/inventory/jvmToolEnv.js
+  h_6a4cc5cdf68def 48-52,67
+lib/inventory/jvmToolEnv.poku.js
+  h_6a4cc5cdf68def 55,57-59,91-92
+lib/stages/pregen/pregen.poku.js
+  h_6a4cc5cdf68def 47-50,277,316,336,516,702
+package.json
+  h_6a4cc5cdf68def 202,216
+pnpm-lock.yaml
+  h_6a4cc5cdf68def 10-11,15-16,20-21,25-26,30-31,35-36,40-41,46-47,52-53,58-59,64-65,70-71,76-77,82-83,87-88,92-93,99,102,105,108,111,114,117,120,123,126,129,132,135,138,141,143-156
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "737cdda20a6b7b97cdb14f60d4b7163d6145ce86",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

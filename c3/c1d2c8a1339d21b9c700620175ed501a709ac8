@@ -1,0 +1,30 @@
+bin/cdxgen.js
+  h_6a4cc5cdf68def 2146-2173
+lib/core/pluginRun.js
+  h_6a4cc5cdf68def 1-116
+lib/core/pluginRun.poku.js
+  h_6a4cc5cdf68def 1-106
+lib/ecosystems/golem.js
+  h_6a4cc5cdf68def 14-17,1645-1650,1654,1679,1683-1692
+lib/ecosystems/golem.poku.js
+  h_6a4cc5cdf68def 5,11,590-677
+lib/ecosystems/kosi.js
+  h_6a4cc5cdf68def 13,178-188,192,196,206-211,214
+lib/ecosystems/rusi.js
+  h_6a4cc5cdf68def 13-16,825-830,832,863,868-877
+lib/ecosystems/rusi.poku.js
+  h_6a4cc5cdf68def 6,12,370-498
+lib/evinser/evinser.js
+  h_6a4cc5cdf68def 181-183
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c3c1d2c8a1339d21b9c700620175ed501a709ac8",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

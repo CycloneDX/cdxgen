@@ -1,0 +1,16 @@
+lib/ecosystems/parsers-js.js
+  h_6a4cc5cdf68def 911-914,916-918,936
+lib/ecosystems/parsers-js.poku.js
+  h_6a4cc5cdf68def 681-733
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "39aa570ebf7a9f8b5d57ed2c2aebf3a777061adc",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

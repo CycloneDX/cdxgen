@@ -1,0 +1,50 @@
+.gitignore
+  h_6a4cc5cdf68def 187-192,195-197
+lib/ecosystems/gradleutils.js
+  h_6a4cc5cdf68def 285-291,300-314,316-334,336-337,339-345
+lib/ecosystems/gradleutils.poku.js
+  h_6a4cc5cdf68def 117-218
+lib/ecosystems/npmutils.js
+  h_6a4cc5cdf68def 22-24,316-359
+lib/ecosystems/npmutils.poku.js
+  h_6a4cc5cdf68def 13,302-362
+lib/ecosystems/parsers-js.js
+  h_6a4cc5cdf68def 34,480,1107-1110,1113-1115,1269-1270,1272,4194
+lib/ecosystems/parsers-js.poku.js
+  h_6a4cc5cdf68def 682-729
+lib/inventory/spdx.js
+  h_6a4cc5cdf68def 108-120
+lib/inventory/spdx.poku.js
+  h_6a4cc5cdf68def 222-263
+test/data/package-json/legacy-licenses/node_modules/fuzzy/lib/fuzzy.js
+  h_6a4cc5cdf68def 1-144
+test/data/package-json/legacy-licenses/node_modules/fuzzy/package.json
+  h_6a4cc5cdf68def 1-46
+test/data/package-json/legacy-licenses/node_modules/semver/bin/semver
+  h_6a4cc5cdf68def 1-160
+test/data/package-json/legacy-licenses/node_modules/semver/package.json
+  h_6a4cc5cdf68def 1-38
+test/data/package-json/legacy-licenses/package-lock.json
+  h_6a4cc5cdf68def 1-34
+test/data/package-json/legacy-licenses/package.json
+  h_6a4cc5cdf68def 1-10
+test/gradle-dep-parallel-interleaved.out
+  h_6a4cc5cdf68def 1-519
+test/repotests/npm-smoke/expected/default.json
+  h_6a4cc5cdf68def 171
+test/repotests/npm-smoke/expected/spec-1.6.json
+  h_6a4cc5cdf68def 171
+test/repotests/npm-smoke/expected/spec-1.7.json
+  h_6a4cc5cdf68def 171
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d9d42ae377858928c4acdca3fa89e69d59f82d82",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

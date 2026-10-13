@@ -1,0 +1,20 @@
+.github/workflows/build-images.yml
+  h_6a4cc5cdf68def 234-235,243-244
+ci/images/README.md
+  h_6a4cc5cdf68def 102
+ci/images/alpine/Dockerfile.python3.15
+  h_6a4cc5cdf68def 1-75
+ci/images/debian/Dockerfile.python3.15
+  h_6a4cc5cdf68def 1-87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1e34864eec11d066e7cdc11e0b092caa02c10cb3",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

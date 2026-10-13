@@ -1,0 +1,16 @@
+lib/ecosystems/gradleutils.poku.js
+  h_6a4cc5cdf68def 135-136,138-140
+lib/ecosystems/scalasem.poku.js
+  h_6a4cc5cdf68def 219-224,229
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "025a67d99426e79f8857f5f7afbb5404a7525f92",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
