@@ -199,7 +199,4 @@ package-lock.json
 # this fixture lockfile is committed test input.
 !test/data/package-json/legacy-licenses/package-lock.json
 !test/data/angular-app-config-repotest/package-lock.json
-# Committed test input: the deep-metadata fixture is the lockfile-only shape of
-# issue 4443 (npm install --package-lock-only), so deep-mode metadata
-# enrichment must not fall back to the node_modules of the invoking directory.
 !test/data/js-deep-metadata-repotest/package-lock.json
