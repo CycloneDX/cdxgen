@@ -193,10 +193,8 @@ test/data/mcp-repotest/js-openapi.json
 test/data/package-json/legacy-licenses/node_modules/**
 !test/data/package-json/legacy-licenses/node_modules/*/
 !test/data/package-json/legacy-licenses/node_modules/*/package.json
-# The pnpm metadata fixture ships the virtual-store manifests of a real pnpm
-# install of left-pad 1.3.0, so metadata parsing runs against pnpm's .pnpm
-# layout rather than mocks (issue 4488). Only the package.json manifest is
-# needed: the package's code stays out of the repository.
+# The pnpm metadata fixture ships the virtual-store manifest of left-pad 1.3.0
+# in pnpm's .pnpm layout. Only the package.json is committed.
 !test/data/js-pnpm-metadata-repotest/node_modules/
 test/data/js-pnpm-metadata-repotest/node_modules/**
 !test/data/js-pnpm-metadata-repotest/node_modules/**/
