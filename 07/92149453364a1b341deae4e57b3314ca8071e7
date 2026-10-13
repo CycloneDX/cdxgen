@@ -1,0 +1,40 @@
+.github/workflows/build-images.yml
+  h_6a4cc5cdf68def 82-83,93-96
+ci/images/README.md
+  h_6a4cc5cdf68def 86,125,243-254
+ci/images/alpine/Dockerfile.dotnet11
+  h_6a4cc5cdf68def 1-56
+ci/images/ubuntu/Dockerfile.dotnet11
+  h_6a4cc5cdf68def 1-156
+data/crypto-oid.json
+  h_6a4cc5cdf68def 1997-2040
+docs/ADVANCED.md
+  h_6a4cc5cdf68def 1283
+docs/EVINSE.md
+  h_6a4cc5cdf68def 138-143
+docs/PROJECT_TYPES.md
+  h_6a4cc5cdf68def 40
+lib/core/env.js
+  h_6a4cc5cdf68def 427
+lib/core/env.poku.js
+  h_6a4cc5cdf68def 497
+lib/evinser/evinser.js
+  h_6a4cc5cdf68def 627-629,631-633
+lib/inventory/cbomutils.poku.js
+  h_6a4cc5cdf68def 361-455
+lib/inventory/dosai.js
+  h_6a4cc5cdf68def 29-37
+lib/inventory/dosai.poku.js
+  h_6a4cc5cdf68def 33-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0792149453364a1b341deae4e57b3314ca8071e7",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
