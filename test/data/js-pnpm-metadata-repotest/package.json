@@ -1,0 +1,9 @@
+{
+  "name": "js-pnpm-metadata-repotest",
+  "version": "1.0.0",
+  "private": true,
+  "description": "pnpm project with an install tree but no JS or TS imports",
+  "dependencies": {
+    "left-pad": "1.3.0"
+  }
+}

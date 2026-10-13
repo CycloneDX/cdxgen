@@ -193,6 +193,14 @@ test/data/mcp-repotest/js-openapi.json
 test/data/package-json/legacy-licenses/node_modules/**
 !test/data/package-json/legacy-licenses/node_modules/*/
 !test/data/package-json/legacy-licenses/node_modules/*/package.json
+# The pnpm metadata fixture ships the virtual-store manifests of a real pnpm
+# install of left-pad 1.3.0, so metadata parsing runs against pnpm's .pnpm
+# layout rather than mocks (issue 4488). Only the package.json manifest is
+# needed: the package's code stays out of the repository.
+!test/data/js-pnpm-metadata-repotest/node_modules/
+test/data/js-pnpm-metadata-repotest/node_modules/**
+!test/data/js-pnpm-metadata-repotest/node_modules/**/
+!test/data/js-pnpm-metadata-repotest/node_modules/**/package.json
 test/data/rust-dataflow-repotest/target
 package-lock.json
 # Negated after the blanket rule above: gitignore takes the last match, and
