@@ -199,3 +199,4 @@ package-lock.json
 # this fixture lockfile is committed test input.
 !test/data/package-json/legacy-licenses/package-lock.json
 !test/data/angular-app-config-repotest/package-lock.json
+!test/data/js-deep-metadata-repotest/package-lock.json
