@@ -1,0 +1,16 @@
+.github/workflows/wslc-test.yml
+  h_6a4cc5cdf68def 77-79
+docs/BOM_PIPELINE.md
+  h_6a4cc5cdf68def 96-97
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9ad180f89bf8284e93476b39ed318eed92f0d8d3",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
