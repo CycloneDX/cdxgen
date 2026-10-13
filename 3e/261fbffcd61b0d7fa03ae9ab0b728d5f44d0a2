@@ -1,0 +1,28 @@
+.gitignore
+  h_6a4cc5cdf68def 196-203
+lib/cli/jsBom.js
+  h_6a4cc5cdf68def 1026-1033,1062-1069,1506-1517
+lib/cli/jsBomPnpmMetadata.poku.js
+  h_6a4cc5cdf68def 1-62
+lib/stages/postgen/postgen.js
+  h_6a4cc5cdf68def 759-765
+lib/stages/postgen/postgen.poku.js
+  h_6a4cc5cdf68def 2085-2152
+test/data/js-pnpm-metadata-repotest/node_modules/.pnpm/left-pad@1.3.0/node_modules/left-pad/package.json
+  h_6a4cc5cdf68def 1-36
+test/data/js-pnpm-metadata-repotest/package.json
+  h_6a4cc5cdf68def 1-9
+test/data/js-pnpm-metadata-repotest/pnpm-lock.yaml
+  h_6a4cc5cdf68def 1-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3e261fbffcd61b0d7fa03ae9ab0b728d5f44d0a2",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
