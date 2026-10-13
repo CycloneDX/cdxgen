@@ -1,0 +1,22 @@
+ci/images/ubuntu/Dockerfile.dotnet11
+  h_6a4cc5cdf68def 101
+data/crypto-oid.json
+  h_6a4cc5cdf68def 43,47,236,240,935-936,1415-1416,1995,1999,2003,2022-2072
+docs/EVINSE.md
+  h_6a4cc5cdf68def 141-145
+lib/inventory/cbomutils.js
+  h_6a4cc5cdf68def 348-375
+lib/inventory/cbomutils.poku.js
+  h_6a4cc5cdf68def 396-397,401-414,428-430,433-439,441-442,444,449-452,454-457
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9f4a3d9433a77df1d78b2de10ff7a576a32edfdf",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
