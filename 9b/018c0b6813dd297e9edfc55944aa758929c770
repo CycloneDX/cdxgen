@@ -1,0 +1,46 @@
+.gitignore
+  h_6a4cc5cdf68def 190-191,193-195
+docs/SCALA_EVINSE.md
+  h_6a4cc5cdf68def 156-157
+lib/ecosystems/asarutils.js
+  h_6a4cc5cdf68def 33,1044-1046
+lib/ecosystems/asarutils.poku.js
+  h_6a4cc5cdf68def 199-225
+lib/ecosystems/denoutils.js
+  h_6a4cc5cdf68def 26,318-322
+lib/ecosystems/denoutils.poku.js
+  h_6a4cc5cdf68def 334,337-347,362-368,406-410
+lib/ecosystems/ecosystems.js
+  h_6a4cc5cdf68def 95,216-231,235-238,268-272,301-302
+lib/ecosystems/ecosystems.poku.js
+  h_6a4cc5cdf68def 1320-1403
+lib/ecosystems/gradleutils.js
+  h_6a4cc5cdf68def 282-304,308-318,326,328-329,331-335,343,345-346,348-353,355-357,359-360
+lib/ecosystems/gradleutils.poku.js
+  h_6a4cc5cdf68def 219-333
+lib/ecosystems/npmutils.js
+  h_6a4cc5cdf68def 9,317-330,334-340,343,346,349-350,352-354,356,358-374
+lib/ecosystems/npmutils.poku.js
+  h_6a4cc5cdf68def 311-325,345,347-353,355-364,366-370,372-373,375-376,385-389,391,397
+lib/ecosystems/parsers-js.js
+  h_6a4cc5cdf68def 908-910,1112-1113,1117-1119,1219-1229,1285-1286
+lib/ecosystems/parsers-js.poku.js
+  h_6a4cc5cdf68def 2,706-726,728-771
+lib/ecosystems/scalasem.js
+  h_6a4cc5cdf68def 11,13,336-343,370-371,405,442-457,459
+lib/ecosystems/scalasem.poku.js
+  h_6a4cc5cdf68def 177-239,1713
+lib/inventory/spdx.poku.js
+  h_6a4cc5cdf68def 223-224,226-228,230,239-242,244
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9b018c0b6813dd297e9edfc55944aa758929c770",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
