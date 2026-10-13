@@ -1,0 +1,22 @@
+lib/evinser/evinser.js
+  h_6a4cc5cdf68def 53,847-850
+lib/inventory/dosai.js
+  h_6a4cc5cdf68def 441-506
+lib/inventory/dosai.poku.js
+  h_6a4cc5cdf68def 16,230-305
+lib/inventory/evidenceUtils.js
+  h_6a4cc5cdf68def 9,260,345-347,464-471
+lib/inventory/evidenceUtils.poku.js
+  h_6a4cc5cdf68def 221-279
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1f85a54ece52255865d0e8f3f4bda30fee8b006a",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
