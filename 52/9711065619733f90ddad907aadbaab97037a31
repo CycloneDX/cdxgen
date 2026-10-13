@@ -1,0 +1,20 @@
+lib/ecosystems/parsers-dotnet.js
+  h_6a4cc5cdf68def 1367-1401,1551-1552
+lib/ecosystems/parsers-dotnet.poku.js
+  h_6a4cc5cdf68def 15,24,1518-1625
+lib/inventory/evidenceUtils.js
+  h_6a4cc5cdf68def 247-256,332-341,452-459,461
+lib/inventory/evidenceUtils.poku.js
+  h_6a4cc5cdf68def 814-820,832-836,843-847,850,853-856,864-865,869,876-881,883-884
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "529711065619733f90ddad907aadbaab97037a31",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
