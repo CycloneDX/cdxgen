@@ -1,0 +1,20 @@
+.github/scripts/build-standalone.sh
+  h_6a4cc5cdf68def 105-107,139-153,191-219,418-442,608,612-616,620-626,775-780,784-788,807-813
+bin/tracebom.poku.js
+  h_6a4cc5cdf68def 37-39
+lib/inventory/traceRunner.js
+  h_6a4cc5cdf68def 23-33,119-122,174-176,193-195
+lib/inventory/traceRunner.poku.js
+  h_6a4cc5cdf68def 3-8,47-91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "39b96627c995bb2ec1e149723978b5fe7bca8a9b",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
