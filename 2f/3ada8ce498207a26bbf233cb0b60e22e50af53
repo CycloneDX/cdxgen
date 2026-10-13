@@ -1,0 +1,74 @@
+docs/CUSTOM_PROPERTIES.md
+  h_6a4cc5cdf68def 146,438
+lib/cli/jsBom.poku.js
+  h_6a4cc5cdf68def 513,516,522-524,537-539
+lib/ecosystems/bunutils.js
+  h_6a4cc5cdf68def 103-124,128-136,184-186,188,191,197-226,230,237,245-246,252-253,302-310,314-319,323,329,336-338,342-381,384,409-418,433,465-467,476-478,480-482,488,524-529,532
+lib/ecosystems/bunutils.poku.js
+  h_6a4cc5cdf68def 9-13,24,27,53-56,58-60,65-73,75,79,82-98,100-104,116-117,159-164,166,170-172,231-234,243,249-258,261-262,271,274-284,286-288,291-292,297-409,411-494,496-530
+test/data/bun/aliases/bun.lock
+  h_6a4cc5cdf68def 1-64
+test/data/bun/aliases/package.json
+  h_6a4cc5cdf68def 1-10
+test/data/bun/bun.lock
+  h_6a4cc5cdf68def 7,11,19,21,23,25,27-43
+test/data/bun/catalog/bun.lock
+  h_6a4cc5cdf68def 1-27
+test/data/bun/catalog/package.json
+  h_6a4cc5cdf68def 1-11
+test/data/bun/catalog/pkgs/tooling/package.json
+  h_6a4cc5cdf68def 1-7
+test/data/bun/gitdeps-v1/bun.lock
+  h_6a4cc5cdf68def 1-22
+test/data/bun/gitdeps-v1/local-pkg/package.json
+  h_6a4cc5cdf68def 2,5
+test/data/bun/gitdeps-v1/package.json
+  h_6a4cc5cdf68def 1-9
+test/data/bun/gitdeps/bun.lock
+  h_6a4cc5cdf68def 1-23
+test/data/bun/gitdeps/local-pkg/package.json
+  h_6a4cc5cdf68def 1-7
+test/data/bun/gitdeps/package.json
+  h_6a4cc5cdf68def 1-9
+test/data/bun/nesting-v1/bun.lock
+  h_6a4cc5cdf68def 1-55
+test/data/bun/nesting-v1/package.json
+  h_6a4cc5cdf68def 1-10
+test/data/bun/package.json
+  h_6a4cc5cdf68def 6,9
+test/data/bun/peers-v1/bun.lock
+  h_6a4cc5cdf68def 1-14
+test/data/bun/peers-v1/package.json
+  h_6a4cc5cdf68def 1-7
+test/data/bun/peers/bun.lock
+  h_6a4cc5cdf68def 1-15
+test/data/bun/peers/package.json
+  h_6a4cc5cdf68def 1-7
+test/data/bun/workspace-v1/bun.lock
+  h_6a4cc5cdf68def 1-72
+test/data/bun/workspace-v1/package.json
+  h_6a4cc5cdf68def 1-17
+test/data/bun/workspace-v1/packages/backend/package.json
+  h_6a4cc5cdf68def 1-10
+test/data/bun/workspace-v1/packages/util/package.json
+  h_6a4cc5cdf68def 1-8
+test/data/bun/workspace/bun.lock
+  h_6a4cc5cdf68def 8,10-16,19-30,33-34,39-40,43-53,57-69,71
+test/data/bun/workspace/package.json
+  h_6a4cc5cdf68def 3,7-15
+test/data/bun/workspace/packages/backend/package.json
+  h_6a4cc5cdf68def 1-10
+test/data/bun/workspace/packages/util/package.json
+  h_6a4cc5cdf68def 1-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2f3ada8ce498207a26bbf233cb0b60e22e50af53",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
