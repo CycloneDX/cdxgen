@@ -1,0 +1,16 @@
+lib/inventory/evidenceUtils.js
+  h_6a4cc5cdf68def 325-339,450-457,459
+lib/inventory/evidenceUtils.poku.js
+  h_6a4cc5cdf68def 813-884
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "20bb87a0979247bbf9c4256f0587d34e23ffd919",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
