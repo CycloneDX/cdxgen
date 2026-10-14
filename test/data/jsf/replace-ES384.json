@@ -1,0 +1,88 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:7b5a3e9c-1d2f-4a6b-8c9d-0e1f2a3b4c5d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-14T00:00:00Z",
+    "component": {
+      "type": "application",
+      "name": "app",
+      "version": "1.0.0",
+      "bom-ref": "app"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "left-pad",
+      "version": "1.3.0",
+      "purl": "pkg:npm/left-pad@1.3.0",
+      "bom-ref": "pkg:npm/left-pad@1.3.0",
+      "signature": {
+        "algorithm": "ES384",
+        "keyId": "p384-key",
+        "value": "a27ZRymYj3YXQn6bodLt_RfQmWZw3UAAuLk-ANMQIZZBlXqdpuY0kS_NB42NZ8aRGoVRDN7Llf6buihy-1QUg57ui6Ny2LZ2hUDbeTr0hmuRCj-SJY-c9xMt12LqLK_g"
+      }
+    },
+    {
+      "type": "library",
+      "group": "org.example",
+      "name": "café-ünïcode",
+      "version": "2.0.0",
+      "bom-ref": "pkg:maven/org.example/caf%C3%A9@2.0.0",
+      "description": "astral 𝔘 and escapes \" \\ \u0007",
+      "signature": {
+        "algorithm": "ES384",
+        "keyId": "p384-key",
+        "value": "4eZG8schpIOwYcqCNa8DPRx03QqINVqVGobQwCycQKIPugv5v6Sxlfq6oGXSfNJ_fwrUUMAEFv57J9lcTk4lgowlz9JyP_l1CrZjD85CtF7LesNnwDTVvdcwhltgtITH"
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "api",
+      "bom-ref": "svc-api",
+      "endpoints": [
+        "https://api.example.com/v1"
+      ],
+      "signature": {
+        "algorithm": "ES384",
+        "keyId": "p384-key",
+        "value": "meNUHrhR2LFw8OajoU3EsSpmKq0b73EZw0fjZGUmk_pq-Ies5E-dQGEsGTFrdot0FnNVUpEZOIMhSfqBsPGQGCTZIvIeWboJtnLL-q851vAM4zG9J5Fp8G7jg-xZC3d9"
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "subjects": [
+        "pkg:npm/left-pad@1.3.0"
+      ],
+      "annotator": {
+        "organization": {
+          "name": "Example"
+        }
+      },
+      "timestamp": "2026-10-14T00:00:00Z",
+      "text": "reviewed",
+      "signature": {
+        "algorithm": "ES384",
+        "keyId": "p384-key",
+        "value": "N_HuYimM7T7cyhiXOgesZtiVQJwgYVjjqLjXwkBFzqrCokYzkIAfYf1V7mrBR4ium_r_HW8ry68gVFEra5xoy4lkPHL2_AHGueXsEL15-KgPLS24h6ToKBOP1Akx2aK3"
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app",
+      "dependsOn": [
+        "pkg:npm/left-pad@1.3.0"
+      ]
+    }
+  ],
+  "signature": {
+    "algorithm": "ES384",
+    "keyId": "p384-key",
+    "value": "cdhCyh--5wiBQAi8QVXccotxP6SVUaReb8O-a2VO5DcFoUsjH9yxf_DTqBfv_OalGdwbiyEwopDbon9TG4c7UTGw3ENbPLH88J-MJztXZuhm8Cej_8WYPwUsnRAD3Zf_"
+  }
+}

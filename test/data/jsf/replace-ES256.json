@@ -1,0 +1,88 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:7b5a3e9c-1d2f-4a6b-8c9d-0e1f2a3b4c5d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-14T00:00:00Z",
+    "component": {
+      "type": "application",
+      "name": "app",
+      "version": "1.0.0",
+      "bom-ref": "app"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "left-pad",
+      "version": "1.3.0",
+      "purl": "pkg:npm/left-pad@1.3.0",
+      "bom-ref": "pkg:npm/left-pad@1.3.0",
+      "signature": {
+        "algorithm": "ES256",
+        "keyId": "p256-key",
+        "value": "608FP0fNTkMCFE8G6QBXXpLTVWPJKRI9viH4OM2R3W0hZ_FB_BrWgE_rfhGK3pkAGyMWLoJJkzPxZXtdpkqzcg"
+      }
+    },
+    {
+      "type": "library",
+      "group": "org.example",
+      "name": "café-ünïcode",
+      "version": "2.0.0",
+      "bom-ref": "pkg:maven/org.example/caf%C3%A9@2.0.0",
+      "description": "astral 𝔘 and escapes \" \\ \u0007",
+      "signature": {
+        "algorithm": "ES256",
+        "keyId": "p256-key",
+        "value": "krMTEuF4wf_Cyf7mmLgpjr6xOIizikjVXrO9_mJueU7dPm1oWvs9t1qSKRDOBcMnJmSseX3O-T35lBd4LZPpTA"
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "api",
+      "bom-ref": "svc-api",
+      "endpoints": [
+        "https://api.example.com/v1"
+      ],
+      "signature": {
+        "algorithm": "ES256",
+        "keyId": "p256-key",
+        "value": "22XGuieHedNlyGd2-97dahoM7rScI8LKc2OuSFdrIvcR8hf2qYYgiHwTDn4n1s-n5hTYAZrY_Ylr9JAGiYbKCg"
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "subjects": [
+        "pkg:npm/left-pad@1.3.0"
+      ],
+      "annotator": {
+        "organization": {
+          "name": "Example"
+        }
+      },
+      "timestamp": "2026-10-14T00:00:00Z",
+      "text": "reviewed",
+      "signature": {
+        "algorithm": "ES256",
+        "keyId": "p256-key",
+        "value": "oL_gTC6K6a8WQFLrPOGy2Z0m7vLF7RenyPqE7NLga6mAtPRFwBrmo8za-Iw9eYeU6_H5RWq0rfFSi6cFBDJ5Sg"
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app",
+      "dependsOn": [
+        "pkg:npm/left-pad@1.3.0"
+      ]
+    }
+  ],
+  "signature": {
+    "algorithm": "ES256",
+    "keyId": "p256-key",
+    "value": "1lgTq6FGeF8Tc4J7RSBMQ81w3VP15SVqcBvbvO4TLWjNYvesKXHURaUnzNHQ43wbgHA7fHDMeQatFuwlP5CX4Q"
+  }
+}

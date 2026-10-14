@@ -1,0 +1,88 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:7b5a3e9c-1d2f-4a6b-8c9d-0e1f2a3b4c5d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-14T00:00:00Z",
+    "component": {
+      "type": "application",
+      "name": "app",
+      "version": "1.0.0",
+      "bom-ref": "app"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "left-pad",
+      "version": "1.3.0",
+      "purl": "pkg:npm/left-pad@1.3.0",
+      "bom-ref": "pkg:npm/left-pad@1.3.0",
+      "signature": {
+        "algorithm": "ES512",
+        "keyId": "p521-key",
+        "value": "Aeyc5K6nHjc2nZ5QiT05z_scq9ZdE2-DuZwC6o7OqAUQOuAvRpU3YQNwJDfYkKOHYcXQkK5HOtD95jlMn5U6TLhZANDyO_t2Ac5PyJa8dA3FQ6QI7eVU_f1ciFEEFVEfr5u4V7ubJlyQwC-u_Mw6vOLh_HP2afpgQRdFYxvZkjdtz9-1"
+      }
+    },
+    {
+      "type": "library",
+      "group": "org.example",
+      "name": "café-ünïcode",
+      "version": "2.0.0",
+      "bom-ref": "pkg:maven/org.example/caf%C3%A9@2.0.0",
+      "description": "astral 𝔘 and escapes \" \\ \u0007",
+      "signature": {
+        "algorithm": "ES512",
+        "keyId": "p521-key",
+        "value": "AVLjXcduXmVXOK2aUjHrMyH9f85Uhql8OdiEu7jR6cYKlbP7b13DiA6zdlEalI_s3tY1RJVKAzC4DOgelSaSgcmOAJKVZ-qKoyX9p3Ce_TwXsKvDHlIpqmp81RKjf30SOPoqrSb-EjJ7DfA22lU6fiu1LEh9Vo4NuqjU6f45XGKarbsf"
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "api",
+      "bom-ref": "svc-api",
+      "endpoints": [
+        "https://api.example.com/v1"
+      ],
+      "signature": {
+        "algorithm": "ES512",
+        "keyId": "p521-key",
+        "value": "ARLQJaxGAE_aTjWMKbE7PtO7D-8dVz4Ewpv6PQ3czuK9DZc2wR00TqlA-MGDKXuEEqyueQyE6rkYpjUWdpkqcQKUAf5dpT3q0sjLucXhU0Z_iROvShX50ZbTAhO398WDo-OSadurk7E0Uo1GDc3wDMX8Pb8Y4m4rlvb41Ou14uJUnri4"
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "subjects": [
+        "pkg:npm/left-pad@1.3.0"
+      ],
+      "annotator": {
+        "organization": {
+          "name": "Example"
+        }
+      },
+      "timestamp": "2026-10-14T00:00:00Z",
+      "text": "reviewed",
+      "signature": {
+        "algorithm": "ES512",
+        "keyId": "p521-key",
+        "value": "AWpCUippyXb2yL4QGD7bu84UwfqpWN1r_Dm-qVPgbQ8Lt1AjLjgElx0ed1g4AzB0Vtmcr5teus4cRFRMI5GG9zIUAXBNyug4f3nyS3EkzvY1sTPwFj9hrNCAqTkw8T84hy_ZwgdnNnoKk7Ve5Ih8q2jElEe9-pXMmldM00rEHcT2xv0E"
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app",
+      "dependsOn": [
+        "pkg:npm/left-pad@1.3.0"
+      ]
+    }
+  ],
+  "signature": {
+    "algorithm": "ES512",
+    "keyId": "p521-key",
+    "value": "ASZtgQIEMEDG3f4ontamoB-s7BlNGq3ICKmOAWFsYeRKd_-x4HuXF-qAcOHjj20H9baftqFPLpDmIA3I7ILRDcgOAH1RnQ3s3QhI90kxOCgubohkIJO0SUrDfh1NTXdijxcq2KivW3qZ-gMSxjTr29AafkULDHmz06DXUhDPu3IIOP3J"
+  }
+}

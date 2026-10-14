@@ -1,0 +1,97 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:7b5a3e9c-1d2f-4a6b-8c9d-0e1f2a3b4c5d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-14T00:00:00Z",
+    "component": {
+      "type": "application",
+      "name": "app",
+      "version": "1.0.0",
+      "bom-ref": "app"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "left-pad",
+      "version": "1.3.0",
+      "purl": "pkg:npm/left-pad@1.3.0",
+      "bom-ref": "pkg:npm/left-pad@1.3.0",
+      "signature": {
+        "algorithm": "RS512",
+        "keyId": "builder",
+        "value": "JwTB-YWq-JnHDucvp-tAy3XoTqrOkNzZF_264LXCkfyjMDxZ6pKhDUGV74o04deWTQ9bwIye-JKFBB-nNDlbDUCyDFnvXNNpmAEixhyeeXkiy67uGy8VEnGxKXf7UtWnqujCgLamgWQD117LkRZ9bIhsF_5jhZEbzwutvC1xvGjp_de-UqF_fnjUrKm1YNDchtl3DO2X8m9iNepD-M7--bNWW1XBQlSqkO69WYNzEIY6QFWTpgPo6n842Uq8zeIcC1nDkRM1dp6Cb-1vePBBVgCKK_6D0gEDK2W5muW9KjqfjH5rb3e9q_Ia6C0Q4baA97T55MN8H3tGA9VTzoQdpA"
+      }
+    },
+    {
+      "type": "library",
+      "group": "org.example",
+      "name": "café-ünïcode",
+      "version": "2.0.0",
+      "bom-ref": "pkg:maven/org.example/caf%C3%A9@2.0.0",
+      "description": "astral 𝔘 and escapes \" \\ \u0007",
+      "signature": {
+        "algorithm": "RS512",
+        "keyId": "builder",
+        "value": "fn2vjo1z5Uo5NXm4k4QEAAXkVKP8Fa6S7CR_sbEEn0DHYWXGBG1DLV0WlKv0bvRB16KozpMIdLBEuHddO6yAYajKxW1FL456u9QJuCvNQgI8O4foiBZY7NyCw7RVCfdYLwkDCC02Bn_NGwX-VOAx-A4ruML-CbsjxbeaDgKhwJOlndeu7JdGU8-DyqmCOZSEQ2oK77s0SJ12-XhUZyNSngk0aXlhyF8PidhZWWIMggy8jCxj4OEVpGXmRWIKLs5kfmb0ZJ6ypHc9GQFl6Xul8g8K9sg65vbuKo62ApK2q4JTjbTDT5oR7J_qxWHYZuRJDtSFq5Cj6mm8LCjkbHYklg"
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "api",
+      "bom-ref": "svc-api",
+      "endpoints": [
+        "https://api.example.com/v1"
+      ],
+      "signature": {
+        "algorithm": "RS512",
+        "keyId": "builder",
+        "value": "rfvx6kB6BTn_8g1v41MvDqCpOGYEvPmEEShtg321wwqEIap1A_xhtjhRQ7gp3w6v1hLSGYN_KfScBYF97hhjASrwLG7c-NYnJq9LmOF52VebtjQ4-AxZt9KM2jS84Uo-Uotxshh1oCqUAAJJ8JLX3HaiSiKDq_jXW_U6CVzRBcwmpOIJiytqfl6RxdW1HQqgPJEARoY5aDlZxHc9MwB6MVVGJrXzNfrzQcq-YffUNbnS5Bs-im4_9jSPpnNZnodzP2c0iDpRCC92NcOlmn_UKK2fOYEqHRwh8YXMYt34vR08-i13_CFuCJWmEadZidZF8zZbLZX57MuCuXfXTP_sqA"
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "subjects": [
+        "pkg:npm/left-pad@1.3.0"
+      ],
+      "annotator": {
+        "organization": {
+          "name": "Example"
+        }
+      },
+      "timestamp": "2026-10-14T00:00:00Z",
+      "text": "reviewed",
+      "signature": {
+        "algorithm": "RS512",
+        "keyId": "builder",
+        "value": "uhK3GEmy58nxGgaaKte6BVrH514j4Mc2GYOkidudh2uFVUIIyiYu8EJ-bhvCRk-sH_EbDpEcaIKPVqr0PKyKI1vXPH-3H5n-WPL_dxZHmOZl3jl0LPZNdoC1YsaHW-8F4Y0Pl-HnmZa0087dekGxpsg1hrFwR4GwF_12OsvOIc6YZwJlhwJDhOIIkypz9LYEgcU5Iz0P3zYHKHzq8eN03btcJ7dCCHSXTcehmaygzkt4EbUPsxUH86rz014inIkJ8fsNbY0OxaA98xQYEucb2Qsz_VKeOFz78LgQ3guR4KWGP2toVEeZ3jpRHnyPHXLTxhgI-MSHQhdC26GiJvzVJg"
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app",
+      "dependsOn": [
+        "pkg:npm/left-pad@1.3.0"
+      ]
+    }
+  ],
+  "signature": {
+    "signers": [
+      {
+        "algorithm": "RS512",
+        "keyId": "builder",
+        "value": "A0S2A0IpeXDfbM6Iqrh5XyCIEvdJ6wDEjTUV9bqhe43eM_MCjIbli-85VE6Eo1AwH4cAZS0xn9UFBjq8b8U9LFJm9B816nVJowPQ1NVD4HD_bzRHi40fPwyMGIlyR-75RAf9RUhN42IgVqKyX5seb6eVRSVFD4Og-ukwoP-6OcKZ6uCQj69OvpbFiMVkZUCfn4DEwTMPzTX_7AfIrrewGIPrutY_lu4780jb_i3PCFkN-33vJJylIb-94-p-Cj7eyfLHWYCGQH2VxH6dryuEcClCjAV4L9PV9ziT6VfuwwehF93sKKOJdi7WU8UQrUQpa5x8qfc1FSs_Rpqi3ODu5Q"
+      },
+      {
+        "algorithm": "Ed25519",
+        "keyId": "auditor",
+        "value": "1B2c51z000IWmKLWksd0sv_1zAVO6S1CPdSyeA9PcKXcDDT6P4nVz3MFKhrG2XFp3rviKwPjMxqpWpBhOAPkBA"
+      }
+    ]
+  }
+}
