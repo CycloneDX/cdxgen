@@ -73,6 +73,12 @@ RUN set -e; \
       sed -i "s|$SUSE_MICROSOFT_REPO|https://packages.microsoft.com|g" /etc/zypp/repos.d/*; \
     fi
 
+# dosai for .NET evidence. The framework-dependent dosai in cdxgen-plugins-bin
+# needs a .NET 11 runtime, so this image runs the self-contained -full build.
+ENV DOSAI_CMD=/opt/dosai/dosai
+COPY ci/images/common/install-dosai.sh /tmp/install-dosai.sh
+RUN sh /tmp/install-dosai.sh && rm /tmp/install-dosai.sh
+
 CMD ["/bin/bash"]
 
 
@@ -81,7 +87,6 @@ CMD ["/bin/bash"]
 FROM base AS cdxgen
 
 ENV CDXGEN_IN_CONTAINER=true \
-    DOSAI_CMD=/usr/local/bin/dosai \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     PATH=${PATH}:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin
 
@@ -105,27 +110,10 @@ RUN set -e; \
       sed -i "s|https://packages.microsoft.com|$SUSE_MICROSOFT_REPO|g" /etc/zypp/repos.d/*; \
       zypper --no-gpg-checks refresh; \
     fi; \
-    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
-    case "${ARCH_NAME##*-}" in \
-      'amd64' | 'x86_64') \
-        DOSAI_ARCH_SUFFIX='-full'; \
-        ;; \
-      'aarch64' | 'arm64') \
-        DOSAI_ARCH_SUFFIX='-linux-arm64-full'; \
-        ;; \
-      *) \
-        echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; \
-        exit 1 \
-        ;; \
-    esac \
- && cd /opt/cdxgen \
+    cd /opt/cdxgen \
  && corepack enable \
  && corepack pnpm install:prod \
  && corepack pnpm cache delete && rm -f /opt/cdxgen/pnpm-workspace.yaml \
- && curl -L $GITHUB_URL/owasp-dep-scan/dosai/releases/latest/download/Dosai${DOSAI_ARCH_SUFFIX} \
-      -o /usr/local/bin/dosai \
- && chmod +x /usr/local/bin/dosai \
- && dosai --help \
  && mkdir -p ${NODE_COMPILE_CACHE} \
  && node /opt/cdxgen/bin/cdxgen.js --help \
  && rm -rf $HOME/.npmrc $HOME/.pip /root/.cache/node \

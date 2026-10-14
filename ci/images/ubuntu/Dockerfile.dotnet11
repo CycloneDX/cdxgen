@@ -1,5 +1,5 @@
 # Base-image
-FROM mcr.microsoft.com/dotnet/sdk:11.0-resolute@sha256:d0a39ca4acefe992f26030f8fb8c60e1b14ac088822cb3fdfbe536ecf843a675 AS base
+FROM mcr.microsoft.com/dotnet/sdk:11.0.100-rc.2-resolute@sha256:bfabf51e74c5a7cf2fc4eac852145db86f4867d475257d809518d6a2b0fe71e1 AS base
 
 ARG GITHUB_RAW_URL=https://raw.githubusercontent.com
 ARG GITHUB_URL=https://github.com
@@ -109,6 +109,11 @@ RUN set -e; \
     if [ -n "$UBUNTU_REPO" ]; then \
       sed -i "s|$UBUNTU_REPO|http://ports.ubuntu.com|g" /etc/apt/sources.list.d/ubuntu.sources; \
     fi
+
+# dosai for .NET evidence, as the .NET tool from NuGet on this image's runtime
+ENV DOSAI_CMD=/opt/dosai/dosai
+COPY ci/images/common/install-dosai.sh /tmp/install-dosai.sh
+RUN sh /tmp/install-dosai.sh tool && rm /tmp/install-dosai.sh
 
 CMD ["/bin/bash"]
 

@@ -1,5 +1,5 @@
 # Base-image
-FROM mcr.microsoft.com/dotnet/sdk:11.0-alpine@sha256:a7738e8663d6b128c08df945169d9072a9ea49f8b97de76befe0388741287925 AS base
+FROM mcr.microsoft.com/dotnet/sdk:11.0.100-rc.2-alpine3.24@sha256:6bd5660fc4e5a9d1992eec9f3705346e866c609c2decc02d786feb073e582cb1 AS base
 
 ARG ALPINE_REPO
 ARG NODEJS_DIST_URL
@@ -22,6 +22,11 @@ RUN set -e; \
  && npm -v \
  && rm -rf /var/cache/apk/* /tmp/common \
     && mirrors_off
+
+# dosai for .NET evidence, as the .NET tool from NuGet on this image's runtime
+ENV DOSAI_CMD=/opt/dosai/dosai
+COPY ci/images/common/install-dosai.sh /tmp/install-dosai.sh
+RUN sh /tmp/install-dosai.sh tool && rm /tmp/install-dosai.sh
 
 
 # cdxgen-builder-image

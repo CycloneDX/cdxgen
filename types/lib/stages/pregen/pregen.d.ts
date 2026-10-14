@@ -6,6 +6,18 @@
  */
 export declare function prepareEnv(filePath: string, options: Object): void;
 /**
+ * Check that dosai, which deep runs use for .NET evidence, can start. The
+ * dosai bundled with cdxgen-plugins-bin is framework-dependent, so it needs a
+ * .NET runtime at least as new as the one it targets (.NET 11 from dosai
+ * 5.0.0). Running it lets the .NET host apply its own version rules. Skipped
+ * in the container images, which ship a dosai that works with their SDK, and
+ * when DOSAI_CMD names another build, such as the self-contained -full one.
+ *
+ * @param {String} filePath Project path
+ * @param {Object} options CLI options
+ */
+export declare function prepareDotnetEnv(filePath: string, options: Object): void;
+/**
  * Method to prepare sdkman build environment for BOM generation purposes.
  *
  * @param {String} projectType Project type
