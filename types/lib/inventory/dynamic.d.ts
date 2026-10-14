@@ -1,4 +1,14 @@
 /**
+ * Converts a traced library path into a purl subpath. Windows paths
+ * ("C:\Windows\System32\bcrypt.dll", "\\server\share\x.dll") use forward
+ * slashes and drop the drive or UNC prefix, which a purl subpath cannot carry;
+ * the full path stays in the cdx:dynamic:filePath property.
+ *
+ * @param {string} libPath - Absolute path of the loaded library
+ * @returns {string|null} Subpath without leading separators, or null
+ */
+export declare function librarySubpath(libPath: string): string | null;
+/**
  * Builds a flat list of CycloneDX component objects and services by executing
  * the given command and inspecting which shared libraries it loads at runtime
  * and which HTTP URLs it accesses.

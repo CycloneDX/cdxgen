@@ -181,33 +181,33 @@ export declare function parseSbtProjects(stdout: string): {
     root: string | undefined;
 };
 /**
+ * Whether an sbt version is sbt 2 or later, the release candidates of sbt 2
+ * included: `2.0.0-RC12` is below `2.0.0` in semver order.
+ *
+ * @param {string|null|undefined} sbtVersion Version from project/build.properties
+ * @returns {boolean} True for sbt 2.x and later
+ */
+export declare function isSbt2Version(sbtVersion: string | null | undefined): boolean;
+/**
  * Build the single command line an sbt 2 dependency tree session runs.
  *
  * sbt 2 joins separate command-line arguments into one command line, so the
- * commands are joined with `;` and passed as one argument. Each tree is
- * printed to stdout because `dependencyTree / toFile` no longer exists.
- * Each tree is scoped to its project, so one unresolvable subproject cannot
- * fail the others.
+ * commands are joined with `;` and passed as one argument. sbt 2 ships the
+ * dependency tree tasks itself, and `dependencyTree / toFile` became
+ * `dependencyTree --out`, so every tree is written to its own file, the
+ * extra roots a tree may list included. The trees are not aggregated: the
+ * tree of an aggregating root would otherwise be overwritten by the trees of
+ * the projects it aggregates. Each tree is scoped to its project, so one
+ * unresolvable subproject cannot fail the others.
  *
- * @param {string[]} subprojects Project ids, or an empty list for the root
+ * @param {{project?: string, file: string}[]} trees The project id of each
+ *   tree, none for the current project, and the file it is written to
  * @returns {string} The `;`-joined command line
  */
-export declare function sbt2DependencyTreeCommand(subprojects: string[]): string;
-/**
- * Split the captured stdout of an sbt dependency tree session into one chunk
- * per project tree.
- *
- * sbt 2 joins separate command-line arguments into a single command line and
- * no longer offers `dependencyTree / toFile`, so the trees of all subprojects
- * are captured from stdout in one session. Every tree starts with the root
- * coordinate at the start of a line; log lines carry an `[info]`-style prefix
- * or a shell prompt marker and never look like a root coordinate.
- *
- * @param {string} stdout Raw stdout of the sbt session
- * @returns {string[]} One chunk of output per dependency tree, empty when
- *   nothing parsed as a tree
- */
-export declare function splitSbtDependencyTrees(stdout: string): string[];
+export declare function sbt2DependencyTreeCommand(trees: {
+    project?: string;
+    file: string;
+}[]): string;
 /**
  * Parse plugins.sbt files to extract sbt plugins as development dependencies.
  *
