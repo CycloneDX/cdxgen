@@ -103,6 +103,12 @@ RUN set -e; \
  && rm -rf /var/lib/apt/lists/* /tmp/common \
     && mirrors_off
 
+# dosai for .NET evidence. The framework-dependent dosai in cdxgen-plugins-bin
+# needs a .NET 11 runtime, so this image runs the self-contained -full build.
+ENV DOSAI_CMD=/opt/dosai/dosai
+COPY ci/images/common/install-dosai.sh /tmp/install-dosai.sh
+RUN sh /tmp/install-dosai.sh && rm /tmp/install-dosai.sh
+
 CMD ["/bin/bash"]
 
 
@@ -125,40 +131,11 @@ RUN sh /tmp/common/cdxgen-build.sh
 FROM base AS cdxgen
 
 ENV CDXGEN_IN_CONTAINER=true \
-    DOSAI_CMD=/usr/local/bin/dosai \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     PATH=${PATH}:${PYTHONPATH}/bin:/opt/cdxgen/node_modules/.bin
 
 COPY --from=cdxgen-builder /opt/cdxgen /opt/cdxgen
 COPY --from=cdxgen-builder /opt/cdxgen-node-cache /opt/cdxgen-node-cache
-
-ARG DEBIAN_REPO
-ARG GITHUB_URL=https://github.com
-
-COPY ci/images/common/mirrors.sh /tmp/common/mirrors.sh
-
-RUN set -e; \
-    . /tmp/common/mirrors.sh; \
-    mirrors_on; \
-    ARCH_NAME="$(dpkg --print-architecture)"; \
-    case "${ARCH_NAME##*-}" in \
-      'amd64' | 'x86_64') \
-         DOSAI_ARCH_SUFFIX='-full'; \
-         ;; \
-      'aarch64' | 'arm64') \
-         DOSAI_ARCH_SUFFIX='-linux-arm64-full'; \
-         ;; \
-      *) \
-         echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; \
-         exit 1 \
-         ;; \
-    esac \
- && curl -L ${GITHUB_URL}/owasp-dep-scan/dosai/releases/latest/download/Dosai${DOSAI_ARCH_SUFFIX} \
-      -o /usr/local/bin/dosai \
- && chmod +x /usr/local/bin/dosai \
- && dosai --help \
- && rm -rf /tmp/common \
- && mirrors_off
 
 WORKDIR /app
 

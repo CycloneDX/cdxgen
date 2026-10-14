@@ -110,6 +110,12 @@ RUN set -e; \
       sed -i "s|$UBUNTU_REPO|http://ports.ubuntu.com|g" /etc/apt/sources.list.d/ubuntu.sources; \
     fi
 
+# dosai for .NET evidence. The framework-dependent dosai in cdxgen-plugins-bin
+# needs a .NET 11 runtime, so this image runs the self-contained -full build.
+ENV DOSAI_CMD=/opt/dosai/dosai
+COPY ci/images/common/install-dosai.sh /tmp/install-dosai.sh
+RUN sh /tmp/install-dosai.sh && rm /tmp/install-dosai.sh
+
 CMD ["/bin/bash"]
 
 
