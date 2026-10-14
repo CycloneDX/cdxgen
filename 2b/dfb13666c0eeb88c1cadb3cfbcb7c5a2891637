@@ -1,0 +1,24 @@
+types/lib/stages/pregen/pregen.d.ts
+  s_5bad3094f7bc65::t_9b20614272931f 9-19
+  s_5bad3094f7bc65::t_f883a38820ec8d 8
+lib/stages/pregen/pregen.js
+  s_5bad3094f7bc65::t_6da49e1b4f2692 63,78,84-91,116-199
+lib/stages/pregen/pregen.poku.js
+  s_5bad3094f7bc65::t_d6f5c49ad1ac77 1095-1226
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2bdfb13666c0eeb88c1cadb3cfbcb7c5a2891637",
+  "prompts": {},
+  "sessions": {
+    "s_5bad3094f7bc65": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c8058ad5-2c38-4556-995e-6d27935e4326",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}

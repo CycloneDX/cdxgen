@@ -1,0 +1,38 @@
+ci/images/common/install-dosai.sh
+  s_5bad3094f7bc65::t_2bbd28d8110c5c 1-81
+  s_5bad3094f7bc65::t_ff2327bcbae4a9 82-87
+ci/images/Dockerfile.dotnet8
+  s_5bad3094f7bc65::t_d8de1a0bcecbe5 76-81,113
+ci/images/Dockerfile.dotnet9
+  s_5bad3094f7bc65::t_0b9a9fdcdfbe38 75-81
+ci/images/alpine/Dockerfile.dotnet10
+  s_5bad3094f7bc65::t_85ebffbf871423 26-32
+ci/images/alpine/Dockerfile.dotnet11
+  s_5bad3094f7bc65::t_d1153b5a8a5da2 2,26-30
+ci/images/alpine/Dockerfile.dotnet9
+  s_5bad3094f7bc65::t_3b945b1d31734e 26-32
+ci/images/debian/Dockerfile.dotnet8
+  s_5bad3094f7bc65::t_8831375809bf31 106-111
+ci/images/debian/Dockerfile.dotnet9
+  s_5bad3094f7bc65::t_e444ee69011324 104-109
+ci/images/ubuntu/Dockerfile.dotnet10
+  s_5bad3094f7bc65::t_9bf1607b090f3b 113-118
+ci/images/ubuntu/Dockerfile.dotnet11
+  s_5bad3094f7bc65::t_5e5225f3041fd7 2,113-117
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ade3a79390e5d2da3e9553b996f0106e048f7fb9",
+  "prompts": {},
+  "sessions": {
+    "s_5bad3094f7bc65": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c8058ad5-2c38-4556-995e-6d27935e4326",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
