@@ -1,0 +1,19 @@
+ci/maven-central-mirror.js
+  s_5bad3094f7bc65::t_f65824903a62f5 12-15,44-48,99,103,105-106,109,116-117,121,142
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2e6b32ac2dbb7441cce9943e0a6a72828c3e4059",
+  "prompts": {},
+  "sessions": {
+    "s_5bad3094f7bc65": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c8058ad5-2c38-4556-995e-6d27935e4326",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
