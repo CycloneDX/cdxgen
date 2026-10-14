@@ -1,0 +1,30 @@
+types/lib/helpers/bomSigner.d.ts
+  h_0926447d100ad2 2-13,64-68,74-75,87-88,104-106,116-167,170-171,183-184
+types/lib/helpers/bomSigner.d.ts.map
+  h_0926447d100ad2 1
+types/lib/managers/oci.d.ts
+  h_0926447d100ad2 7-8,11
+types/lib/managers/oci.d.ts.map
+  h_0926447d100ad2 1
+types/lib/parsers/strictJson.d.ts
+  h_0926447d100ad2 1-46
+types/lib/parsers/strictJson.d.ts.map
+  h_0926447d100ad2 1
+types/lib/validator/index.d.ts
+  h_0926447d100ad2 35,41,64-69
+types/lib/validator/index.d.ts.map
+  h_0926447d100ad2 1
+types/lib/validator/reporters/json.d.ts.map
+  h_0926447d100ad2 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4a95bc86e69b2f6b378fe45db6762ab25256b82d",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}

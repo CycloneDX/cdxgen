@@ -1,0 +1,61 @@
+.github/workflows/binary-builds.yml
+  s_44a14d2470128d::t_68d5e3f7137337 137,354
+.github/workflows/bun.yml
+  s_44a14d2470128d::t_c0ece89bca89ac 50
+.github/workflows/check-renovate-dependency.yml
+  s_44a14d2470128d::t_9b285f12cdb8cc 24
+.github/workflows/codeql.yml
+  s_44a14d2470128d::t_60eca098f1c63f 43,58
+.github/workflows/copilot-setup-steps.yml
+  s_44a14d2470128d::t_17fe0c3a57ee14 28
+.github/workflows/deno.yml
+  s_44a14d2470128d::t_a0279dc57a9514 54
+.github/workflows/dockertests.yml
+  s_44a14d2470128d::t_52de8e400554c7 40,111,134,158,186,199,214,228
+.github/workflows/fix-renovate-pnpm-checksum.yml
+  s_44a14d2470128d::t_063900f135bcbe 26
+.github/workflows/image-build.yml
+  s_44a14d2470128d::t_0d45f0558a4a6a 691,737,783,825,871,913,979,1089
+.github/workflows/java-reachables-test.yml
+  s_44a14d2470128d::t_fe79f86738b914 44,79
+.github/workflows/license-policy.yml
+  s_44a14d2470128d::t_9cd490f6c4e6ed 32
+.github/workflows/lint.yml
+  s_44a14d2470128d::t_d102e2527b2560 39
+.github/workflows/nodejs.yml
+  s_44a14d2470128d::t_33274d44fd175d 75,191
+.github/workflows/npm-release.yml
+  s_44a14d2470128d::t_92d97d31741f44 51,178,305,337,512,544,704,736,790,953,985
+.github/workflows/nydus-demo.yml
+  s_44a14d2470128d::t_bc808617a55bd9 32
+.github/workflows/obom-artifacts.yml
+  s_44a14d2470128d::t_1f256179be0f19 32,65
+.github/workflows/python-atom-tests.yml
+  s_44a14d2470128d::t_09dab6963b7494 41
+.github/workflows/renovate.yml
+  s_44a14d2470128d::t_44d9e0d7ce7b80 31
+.github/workflows/repotests.yml
+  s_44a14d2470128d::t_e019e492ad50b4 66,397,469,484,536,1351-1352,1568,1586,1749,1901,1943-1944,1953,1962,1995
+.github/workflows/test-nodejs-nightly.yml
+  s_44a14d2470128d::t_2d0697037cbac5 27
+docs/CDX_VERIFY.md
+  s_44a14d2470128d::t_eb7fe73466631b 40-43,45-49
+docs/PROJECT_TYPES.md
+  s_44a14d2470128d::t_d9638fd82f99ba 14-37,39-46,48-58,60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3242c99636f766740acd7346df857f74f7239dd4",
+  "prompts": {},
+  "sessions": {
+    "s_44a14d2470128d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "feb7d11a-3362-4661-8cf7-d6fc317c8261",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
