@@ -688,9 +688,9 @@ BOMs signed with cdxgen 12.8.4, 13.2.0, or an earlier release must be re-signed 
 For complex supply chain orchestration, use the bundled `cdx-sign` CLI. This tool allows multiple entities (e.g., a Builder and an Auditor) to co-sign an existing BOM without modifying its original data.
 
 ```shell
-# Append a parallel multi-signature (Auditor co-signing)
+# Append a parallel multi-signature (Auditor co-signing) after checking the Builder's signature
 # Note: Granular component signing is disabled to preserve the Builder's original signature payload.
-cdx-sign -i bom.json -k auditor_private.pem -a ES256 --key-id "auditor-qa" --mode signers --no-sign-components
+cdx-sign -i bom.json -k auditor_private.pem -a ES256 --key-id "auditor-qa" --mode signers --no-sign-components --verify-existing-with builder_public.pem
 ```
 
 ### Validating CycloneDX BOMs
@@ -709,6 +709,9 @@ cdx-verify -i bom.json --public-key public.key
 
 # Verify ONLY the top-level root signature (useful for verifying a multi-signer who didn't sign nested components)
 cdx-verify -i bom.json --public-key auditor_public.key --no-deep
+
+# Require every co-signer
+cdx-verify -i bom.json --public-key builder_public.key --public-key auditor_public.key --require-all
 ```
 
 ### Verifying the signature (pnpm)

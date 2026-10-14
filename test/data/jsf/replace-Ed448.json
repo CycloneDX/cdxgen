@@ -1,0 +1,88 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:7b5a3e9c-1d2f-4a6b-8c9d-0e1f2a3b4c5d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-14T00:00:00Z",
+    "component": {
+      "type": "application",
+      "name": "app",
+      "version": "1.0.0",
+      "bom-ref": "app"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "left-pad",
+      "version": "1.3.0",
+      "purl": "pkg:npm/left-pad@1.3.0",
+      "bom-ref": "pkg:npm/left-pad@1.3.0",
+      "signature": {
+        "algorithm": "Ed448",
+        "keyId": "ed448-key",
+        "value": "-hqW2c2YBaTznpDQdzdHuuHgegTxkJ5T2bo38Cgo80YXlScSVHA-J7zRi9Xgv9liaHhqhMQmCkUA0cl_w_bRV55exeCPJBfEUgGy9ZmWrwJYsifTE8C5Oq2eY78R3tjEERWw40qbNNokGwe_UcK8ZyEA"
+      }
+    },
+    {
+      "type": "library",
+      "group": "org.example",
+      "name": "café-ünïcode",
+      "version": "2.0.0",
+      "bom-ref": "pkg:maven/org.example/caf%C3%A9@2.0.0",
+      "description": "astral 𝔘 and escapes \" \\ \u0007",
+      "signature": {
+        "algorithm": "Ed448",
+        "keyId": "ed448-key",
+        "value": "l5B-y1BIcbSXJYPfWth2zMYtr_OLig87hITOHjeE1XpxP87qBmr-KgC8JslIx_ithlDq1f9NRLeA2QnVjGavtlxyDqVKsrLtr9mcfSghQAIPVhi-0NDvNSu1BfM5Od_CEF-sdtmpfMjVCuqzOwtVWBoA"
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "api",
+      "bom-ref": "svc-api",
+      "endpoints": [
+        "https://api.example.com/v1"
+      ],
+      "signature": {
+        "algorithm": "Ed448",
+        "keyId": "ed448-key",
+        "value": "UlWGDWaWfDH_P8l5B4pX0e5mIUzCfrT7mxQ2oxmQIlbxr1e5s-gNDnNypftkql6YSfhmyhkQ3kgAW2j3he2KziTjvqOoSyvMrQ3s6v-uWsUYO3r4Bd1w4wvnL4HFG9ZBViy6UU6TD8s9F7KyMnpwnxMA"
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "subjects": [
+        "pkg:npm/left-pad@1.3.0"
+      ],
+      "annotator": {
+        "organization": {
+          "name": "Example"
+        }
+      },
+      "timestamp": "2026-10-14T00:00:00Z",
+      "text": "reviewed",
+      "signature": {
+        "algorithm": "Ed448",
+        "keyId": "ed448-key",
+        "value": "mpaGLQM3wYL08ZwL4kpGew4SoeTyBrdgJ6o32xfcXLcrdlK5wacXXJcMmngP8RfoVdpre2Om4rqAj-ccM3L0kQ6Wf9xcmrpC3JPRrlt7XWMcAUvYcpQcfl-q1q8sU9jOyaN7aUdcI9-V66uPg21LkxkA"
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app",
+      "dependsOn": [
+        "pkg:npm/left-pad@1.3.0"
+      ]
+    }
+  ],
+  "signature": {
+    "algorithm": "Ed448",
+    "keyId": "ed448-key",
+    "value": "-lTulX65yTRRr9Xjy4jQLrp6rC-FfiIXcigLHbSi2ZXiNXjuWv09tnsyckNErA8Q3FwvhWX8jMmATkrVajxFgOVZcKDNzDzD-WcMsDVSFlIx5LP7swl7IvZBRJElP_ZCg9Sjfi9cpN3k5kIAOgYXJwUA"
+  }
+}

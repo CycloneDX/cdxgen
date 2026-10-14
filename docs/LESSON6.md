@@ -64,7 +64,7 @@ cdx-verify -i bom.json --public-key builder_public.pem
 
 The **Auditor** receives the SBOM, verifies it, and wants to co-sign it.
 
-To append a signature to an _existing_ BOM without wiping out the Builder's signature, the Auditor uses `cdx-sign` with the `--mode signers` flag.
+To append a signature to an _existing_ BOM without wiping out the Builder's signature, the Auditor uses `cdx-sign` with the `--mode signers` flag. `cdx-sign` first checks the Builder's signature with the Builder's public key (`--verify-existing-with`), and refuses to co-sign content that no longer matches it.
 
 > **Crucial Concept:** When appending, `cdx-sign` signs only the root BOM. If the Auditor re-signed the inner components, it would alter the cryptographic payload of the document, instantly invalidating the Builder's original signature, so `cdx-sign` skips nested elements by default and refuses `--sign-components` in this situation.
 
@@ -74,7 +74,8 @@ cdx-sign -i bom.json \
   -k auditor_private.pem \
   -a ES256 \
   --key-id "auditor-system" \
-  --mode signers
+  --mode signers \
+  --verify-existing-with builder_public.pem
 
 # Successfully signed BOM and saved to 'bom.json'
 # Mode: signers | Algorithm: ES256 | KeyId: auditor-system
@@ -88,14 +89,22 @@ Each signature also covers its own `algorithm` and `keyId`, and the algorithm mu
 
 ### Step 4: Verify the Multi-Signed SBOM
 
-Each entry in a JSF multi-signature is verified on its own, so `cdx-verify` can independently verify either party's signature without them interfering with one another.
+Each entry in a JSF multi-signature is verified on its own, so `cdx-verify` can independently verify either party's signature without them interfering with one another. It lists the entries that the given key did not verify, so a signature that nobody can verify never passes unnoticed; pass every expected signer's key with `--require-all` to require all of them.
 
 ```shell
 # Verify Builder's signature
 cdx-verify -i bom.json --public-key builder_public.pem
 # ✓ Signature is valid! (Matched KeyId: 'builder-system')
+# Warning: 1 of 2 signers entries did not verify with the given key(s). Pass --require-all to fail in that case.
+#   - signers[1] (ES256, keyId 'auditor-system'): Algorithm ES256 requires an ec (prime256v1) key, but the key is rsa.
 
 # Verify Auditor's signature
 cdx-verify -i bom.json --public-key auditor_public.pem --no-deep
 # ✓ Signature is valid! (Matched KeyId: 'auditor-system')
+# Warning: 1 of 2 signers entries did not verify with the given key(s). Pass --require-all to fail in that case.
+#   - signers[0] (RS512, keyId 'builder-system'): Algorithm RS512 requires an rsa key, but the key is ec (prime256v1).
+
+# Require both signatures
+cdx-verify -i bom.json --public-key builder_public.pem --public-key auditor_public.pem --require-all
+# ✓ Signature is valid! (Matched KeyId: 'builder-system')
 ```

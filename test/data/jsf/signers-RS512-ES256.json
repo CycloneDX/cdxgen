@@ -1,0 +1,113 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:7b5a3e9c-1d2f-4a6b-8c9d-0e1f2a3b4c5d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-14T00:00:00Z",
+    "component": {
+      "type": "application",
+      "name": "app",
+      "version": "1.0.0",
+      "bom-ref": "app"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "left-pad",
+      "version": "1.3.0",
+      "purl": "pkg:npm/left-pad@1.3.0",
+      "bom-ref": "pkg:npm/left-pad@1.3.0",
+      "signature": {
+        "signers": [
+          {
+            "algorithm": "RS512",
+            "keyId": "builder",
+            "value": "CECq60yNTdN7BBpZ-064Z9Vc4UAhj6k5QuNaWRAlvkHfGPeIaqzzy9kDOwYy7IzAOULSlsT1zOsz-XvyIaa_IkF2TUITBwd6fQp4NAOjpumWGGwMNSubI62G178h_pfHb4An0vgQEmeiqc08JKvou7lXFrekpIeh08CCgJwiHahUR4HI53PRNPsaRiaf4GRr-WyamquiP0EnYvasLFO033b0r0EHy9FVQ6_apo3vR7dc02c7nCe_dPD3kvYYkzi3StSz0iEAje_lT4cK144n2kAIbgBsXFr4NEQl04VyfpyZTpqjkTAiKaC-UGmfJFtsbkJSupGi3YPB4yVv0lgXqA"
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "group": "org.example",
+      "name": "café-ünïcode",
+      "version": "2.0.0",
+      "bom-ref": "pkg:maven/org.example/caf%C3%A9@2.0.0",
+      "description": "astral 𝔘 and escapes \" \\ \u0007",
+      "signature": {
+        "signers": [
+          {
+            "algorithm": "RS512",
+            "keyId": "builder",
+            "value": "S2aPE-s7WHd4V-sxT5aGe8qMCUtBafUmt0ISCJM5do1VtJ3zfZ3lGHf4s_jj40YB9jQIzBhRtks-SYtDBy5TMMy9r4fIwkSOmFBFBxGQQCMzQLPm1G4isrRrUdi024EQ6hUWm8PRF-JtvH8D4NBQua3mEuR2PRfunniYeR8OUuIJlCQRmHuYWpCS_BFKT7uqmkZvGBvuRTntVltKdqqDdUkeLNw8YPRvnyPPCLZkphwdE-6qHaK5s_iVmzsGrPFojjVR24BoDS3nm6uN1ktXDhxnLP8TtxoSXj458w13q6nViwdJTvo_wuod_AU1GKuUjD8c1c8o-USPMeigtmjsXw"
+          }
+        ]
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "api",
+      "bom-ref": "svc-api",
+      "endpoints": [
+        "https://api.example.com/v1"
+      ],
+      "signature": {
+        "signers": [
+          {
+            "algorithm": "RS512",
+            "keyId": "builder",
+            "value": "V9qG6JRCu8FyEtSnLUiJCJWIhsqPUceg-EJq7IuB93bbY_hzHjC5mbKdb7nEMCW3zv1SY2Z35gBPx6WL668aUdyQ30gL8KoU3OFpv0LhqTbRGHMcbhsQCnZ-p_MdrI6dGL_ANeAQRRBArtoNaJ_o-qVh2z8igPwFMCJ7-E0XmNkG320v4Wa_BXYlDMmXmRbYly1kofJPWZHUmnVl9CMnJAc4XI2HoRZxzPZHaVLiDnba5EEXFi_LcCf8lgWN-jPl2vgDAdhN5jezSdYa7UoEPDgIR7GnkqG_NRjgaaQ7IbYCh1eCOglAHeNrLVWFUECKZeHYg8cYPoJFPgLjyDh13w"
+          }
+        ]
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "subjects": [
+        "pkg:npm/left-pad@1.3.0"
+      ],
+      "annotator": {
+        "organization": {
+          "name": "Example"
+        }
+      },
+      "timestamp": "2026-10-14T00:00:00Z",
+      "text": "reviewed",
+      "signature": {
+        "signers": [
+          {
+            "algorithm": "RS512",
+            "keyId": "builder",
+            "value": "xK-sZkr0e_b1TAx9QOkG7ROiZopb2QMOfgMZwmksPz0wzlWspC5VkKUSay6lycFmaVM5-tEZ1RUABdXqbvCYAg6RqW4_oiJdDmF8O_YVV2BTm6d1M4ngC1RTtVORk4uq5J_OrNzuBwAmcwDLgHw2zRLqHT9Ojp0RlQoR2agH4LB5dcdOZd1ntFBEYvzfn6jAJiMPFwNbhQRoGFO0r492O4nf8uOdXVHdG2lhm1QMvpeReOyW4P5FB8WVXUX0zS8wBqAMl_bt_xliG2QgEZnzFMsHtueb692ekYfNW07Y61XqHhkj9SB28MKbsaZzvpJ42V8WpjFrl4W8O97yw7e9gA"
+          }
+        ]
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app",
+      "dependsOn": [
+        "pkg:npm/left-pad@1.3.0"
+      ]
+    }
+  ],
+  "signature": {
+    "signers": [
+      {
+        "algorithm": "RS512",
+        "keyId": "builder",
+        "value": "MCM1tKGU5-FUvbT43uSMCSZV1uflsVRnJvPt87zV6cDtCw7R5vEReiBZMWRFuNSBf2tMg_Y9_vbN2jUKObChVZHuIR3cv2ScqeIT5HJDqUSnJhHNFK-HEIFrczuxesfUQd1BysFVju2lSrL3mPtsRlPBslSlpC7e1Th3POs6eaIwt9kNEIJ2aALGc7aYMKJt2cnJUuYrBMvJnhwv4dwe6cdgKbolOV4BQbvmaoS23-MjCcwLRaCiX6s4gEwvPvSlk3Wiq8ALATIRDnTIUFHwOaBjHG0c8I4odlIQ2vNYrltYOTcQJdpWUU8Q76MiqmgRnjL3MMmiZ8JPT0EugHhYCQ"
+      },
+      {
+        "algorithm": "ES256",
+        "keyId": "auditor",
+        "value": "uGowlFfTtdGWG6oDKq2rkw-ypRpFraBe_qCpoci7mlUG9C82V4saSynsBBhrG6DZrJ-D9XgoP4jSORwDy4ae1Q"
+      }
+    ]
+  }
+}

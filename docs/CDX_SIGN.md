@@ -19,8 +19,8 @@ cdx-sign -i bom.json -k builder_private.pem
 # Write a signed copy to a new file
 cdx-sign -i bom.json -o bom.signed.json -k builder_private.pem -a RS512
 
-# Append a second signature without replacing the existing one
-cdx-sign -i bom.json -k auditor_private.pem -a ES256 --mode signers
+# Append a second signature after checking the builder's signature
+cdx-sign -i bom.json -k auditor_private.pem -a ES256 --mode signers --verify-existing-with builder_public.pem
 
 # Create a chained signature history after checking the builder's signature
 cdx-sign -i bom.json -k approver_private.pem -a Ed25519 --mode chain --verify-existing-with builder_public.pem
@@ -36,8 +36,9 @@ cdx-sign -i bom.json -k approver_private.pem -a Ed25519 --mode chain --verify-ex
 | `-a, --algorithm`                              | `RS512`         | JSF signature algorithm. It must match the key type. Defaults to `SBOM_SIGN_ALGORITHM` if set                  |
 | `-m, --mode`                                   | `replace`       | Signature mode: `replace`, `signers`, or `chain`. Defaults to `SBOM_SIGN_MODE` if set                          |
 | `--key-id`                                     | —               | Optional `keyId` embedded in the signature                                                                     |
-| `--verify-existing-with`                       | —               | Earlier signer's public key (PEM), repeatable. Chain appends need every entry to verify                        |
-| `--allow-unverified-history`                   | off             | With `--mode chain`, append even when existing entries cannot be verified                                      |
+| `--verify-existing-with`                       | —               | Earlier signer's public key (PEM), repeatable. Chain appends need every entry to verify, signers appends one   |
+| `--allow-unverified-history`                   | off             | With `--mode chain` or `signers`, append even when existing entries cannot be verified                         |
+| `--embed-public-key` / `--no-embed-public-key` | on              | Embed the signer's public key (JWK) in the root signature. Not used for `HS*` algorithms                       |
 | `--sign-components` / `--no-sign-components`   | see below       | Sign nested components                                                                                         |
 | `--sign-services` / `--no-sign-services`       | see below       | Sign nested services                                                                                           |
 | `--sign-annotations` / `--no-sign-annotations` | see below       | Sign nested annotations                                                                                        |
@@ -46,6 +47,13 @@ cdx-sign -i bom.json -k approver_private.pem -a Ed25519 --mode chain --verify-ex
 Nested components, services, and annotations are signed by default. When `--mode signers` or `--mode chain` appends a signature to a BOM that already has a root signature, they are skipped by default, because re-signing them would change content covered by the existing root signature. Passing `--sign-components`, `--sign-services`, or `--sign-annotations` in that case is refused.
 
 Note: A private key is not required if the input BOM is already signed and you only use the `--attach` feature to upload it to an OCI registry.
+
+`cdx-sign` refuses input that `cdx-verify` would reject:
+
+- Bytes that are not UTF-8, JSON that repeats a member name within one object, a number an IEEE 754 double cannot represent exactly, or an unpaired UTF-16 surrogate escape.
+- A BOM whose root lacks `bomFormat` (or `specFormat`) `"CycloneDX"` and `specVersion`, or holds members that CycloneDX does not define at the root of a BOM.
+- A component, service, or annotation that carries `bomFormat`, `specFormat`, or `specVersion`, when nested elements are signed. Such an element signed on its own would carry a signature over exactly the bytes a BOM signature covers.
+- A signature that already holds 32 `signers` or `chain` entries.
 
 ## Environment variables
 
@@ -77,7 +85,11 @@ Algorithms without a JSF identifier, such as ML-DSA, are refused.
 
 Following JSF, every signature covers the signed object (the whole BOM for the root signature) together with its own signature metadata, such as `algorithm`, `keyId`, and `publicKey`. Only the `value` is excluded. Changing any of them after signing invalidates the signature.
 
-When `--key-id` is used, the key ID is part of the signed data. When a public key is embedded (for example through `SBOM_SIGN_PUBLIC_KEY`), it must belong to the signing key, and `cdx-verify` rejects a signature whose embedded key differs from the verification key.
+When `--key-id` is used, the key ID is part of the signed data. `cdx-sign` embeds the signer's public key in the root signature by default. Because the embedded key is part of the signed data, the signature then names the key that made it: RSA and ECDSA signatures do not do that by themselves, and a different key can sometimes be constructed under which an existing RSA signature verifies. `cdxgen` embeds the key when `SBOM_SIGN_PUBLIC_KEY` is set. An embedded key must belong to the signing key, and `cdx-verify` rejects a signature whose embedded key differs from the verification key.
+
+Keys without a JWK form, such as `rsa-pss` keys, cannot be embedded; `cdx-sign` signs without the embedded key and prints a warning.
+
+ECDSA (`ES*`) signatures are written in their low-`s` form, so `cdx-sign` never produces two encodings of the same signature. Verification still accepts both forms, which other JSF implementations produce.
 
 ## Signature modes
 
@@ -89,13 +101,15 @@ Use when the BOM should have a single authoritative root signature. Existing roo
 
 Use when multiple parties sign the same BOM independently. This is the best fit for builder + reviewer or builder + security-team workflows. Each entry in `signers` covers the BOM and its own metadata only, so every signer verifies independently of the others.
 
+Before appending, `cdx-sign --mode signers` checks the existing entries against the public keys given with `--verify-existing-with` and refuses to append unless at least one of them verifies. That shows the content is still what an earlier signer signed, so a co-signer never adds a signature next to entries that the content no longer matches. Pass `--allow-unverified-history` only when you deliberately co-sign content you cannot check.
+
 ### `chain`
 
 Use when each signer is expected to sign the result of the previous signer, creating an ordered approval trail. Each entry in `chain` also covers every earlier entry, including its value, so reordering the chain or removing or replacing an earlier entry is detected.
 
 Because a new chain entry vouches for every entry before it, `cdx-sign --mode chain` first checks the existing entries against the public keys given with `--verify-existing-with` (one per earlier signer) and refuses to append when any entry does not verify. Pass `--allow-unverified-history` only when you deliberately countersign history you cannot check.
 
-Removing the last entries of a chain leaves the earlier entries valid, so a chain proves who signed up to a point, not that nobody signed later or that an approval was not stripped. To confirm an approval, verify with that approver's public key; `cdx-verify` reports the entry that key matched, wherever it is in the chain.
+Removing the last entries of a chain leaves the earlier entries valid, so a chain proves who signed up to a point, not that nobody signed later. To confirm an approval, verify with `cdx-verify --require-all` and the public key of every expected signer: it fails when any of those keys verifies no entry, so a stripped approval is detected.
 
 When a `signers` or `chain` entry is appended to a BOM that has a single `replace` signature, that signature becomes the first entry of the new array. It keeps verifying at any position of a `signers` list, and at the first position of a `chain`. To keep a document strictly JSF-conformant from the start, use the same `--mode` for the first signature too.
 
@@ -104,6 +118,7 @@ When a `signers` or `chain` entry is appended to a BOM that has a single `replac
 - Use **separate keys per trust domain** such as build, release, and audit.
 - Prefer writing to a **new output file** when you need to preserve the unsigned original.
 - When appending a `signers` or `chain` entry, only the root is signed. Nested signatures stay with the party that created them.
+- Verify a multi-signed BOM with `cdx-verify --require-all` and one `--public-key` per expected signer.
 - Keep shared secrets for `HS*` algorithms out of the trust stores used for public keys. They are verified with `cdx-verify --secret-key`, never with `--public-key`.
 - Pair `cdx-sign` with [`cdx-verify`](CDX_VERIFY.md) in CI so signing failures or mismatched public keys are caught immediately.
 
@@ -113,7 +128,7 @@ cdxgen 12.8.4, 13.2.0, and earlier releases left the signature metadata out of t
 
 ```shell
 cdx-sign -i bom.json -k builder_private.pem -a RS512 --key-id builder-ci
-cdx-sign -i bom.json -k auditor_private.pem -a ES256 --key-id auditor --mode signers
+cdx-sign -i bom.json -k auditor_private.pem -a ES256 --key-id auditor --mode signers --verify-existing-with builder_public.pem
 ```
 
 ## Examples

@@ -19,6 +19,7 @@ import process from "node:process";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
+import { displayValue } from "../lib/helpers/bomSigner.js";
 import {
   getNonCycloneDxErrorMessage,
   isCycloneDxBom,
@@ -35,6 +36,7 @@ import {
   safeWriteSync,
 } from "../lib/helpers/utils.js";
 import { getBomWithOras } from "../lib/managers/oci.js";
+import { parseStrictJson } from "../lib/parsers/strictJson.js";
 import { shouldFail, validateBomAdvanced } from "../lib/validator/index.js";
 import { render as renderReport } from "../lib/validator/reporters/index.js";
 
@@ -126,9 +128,8 @@ const args = _yargs
   })
   .option("require-signature", {
     type: "boolean",
-    default: false,
     description:
-      "Exit non-zero (4) when --public-key or --secret-key is provided but signature verification fails.",
+      "Exit non-zero (4) when signature verification fails. On by default when --public-key or --secret-key is given; pass --no-require-signature to only report the result.",
   })
   .option("strict", {
     type: "boolean",
@@ -143,7 +144,11 @@ const args = _yargs
   .help()
   .wrap(Math.min(120, yargs().terminalWidth())).argv;
 
-async function loadBom(input, platform) {
+/**
+ * Loads the BOM. When signatures are verified, the text must also pass
+ * parseStrictJson(), and `strictError` explains why it did not.
+ */
+async function loadBom(input, platform, strict, requireSignature) {
   if (safeExistsSync(input)) {
     try {
       if (isProtoBomPath(input)) {
@@ -151,9 +156,18 @@ async function loadBom(input, platform) {
           "cdx-validate",
           "protobuf BOM input",
         );
-        return readBinary(input, true);
+        return { bomJson: readBinary(input, true) };
       }
-      return JSON.parse(fs.readFileSync(input, "utf8"));
+      const bytes = fs.readFileSync(input);
+      const bomJson = JSON.parse(bytes.toString("utf8"));
+      if (strict) {
+        try {
+          parseStrictJson(bytes);
+        } catch (err) {
+          return { bomJson, strictError: err.message };
+        }
+      }
+      return { bomJson };
     } catch (err) {
       console.error(`Failed to parse ${input}: ${err.message}`);
       process.exit(1);
@@ -164,8 +178,27 @@ async function loadBom(input, platform) {
     input.includes("docker") ||
     input.includes("ghcr")
   ) {
-    const bom = await getBomWithOras(input, platform);
-    if (bom) return bom;
+    let strictError;
+    try {
+      const bom = await getBomWithOras(
+        input,
+        platform,
+        strict ? { checkBytes: parseStrictJson } : {},
+      );
+      if (bom) return { bomJson: bom };
+    } catch (err) {
+      if (requireSignature) {
+        console.error(
+          `cdx-validate: signature verification failed — the attached BOM cannot be verified: ${err.message}`,
+        );
+        process.exit(4);
+      }
+      strictError = err.message;
+    }
+    if (strictError) {
+      const bom = await getBomWithOras(input, platform);
+      if (bom) return { bomJson: bom, strictError };
+    }
   }
   console.error(`Input '${input}' is not a readable SBOM.`);
   process.exit(1);
@@ -173,12 +206,21 @@ async function loadBom(input, platform) {
 }
 
 function loadKeyFile(path, label, encoding) {
-  if (!path) return null;
+  if (path === undefined) return null;
+  if (typeof path !== "string" || !path.trim()) {
+    console.error(`cdx-validate: ${label} needs exactly one file path.`);
+    process.exit(1);
+  }
   if (!safeExistsSync(path)) {
     console.error(`${label} '${path}' not found.`);
     process.exit(1);
   }
-  return fs.readFileSync(path, encoding);
+  const content = fs.readFileSync(path, encoding);
+  if (!content.toString().trim()) {
+    console.error(`${label} '${path}' is empty.`);
+    process.exit(1);
+  }
+  return content;
 }
 
 function splitCsv(value) {
@@ -208,14 +250,21 @@ function isLocalProtoBomInput(input) {
   return isProtoBomPath(input);
 }
 
-const bomJson = await loadBom(args.input, args.platform);
-if (args.publicKey && args.secretKey) {
+const keyGiven = args.publicKey !== undefined || args.secretKey !== undefined;
+const requireSignature = args.requireSignature ?? keyGiven;
+const { bomJson, strictError } = await loadBom(
+  args.input,
+  args.platform,
+  keyGiven,
+  requireSignature,
+);
+if (args.publicKey !== undefined && args.secretKey !== undefined) {
   console.error("cdx-validate: use either --public-key or --secret-key.");
   process.exit(1);
 }
 const publicKeyStr = loadKeyFile(args.publicKey, "Public key", "utf8");
 const secretKey = loadKeyFile(args.secretKey, "Shared secret");
-const verificationRequested = Boolean(publicKeyStr || secretKey);
+const verificationRequested = keyGiven;
 const inputIsLocalProtoBom = isLocalProtoBomInput(args.input);
 if (!isCycloneDxBom(bomJson)) {
   console.error(getNonCycloneDxErrorMessage(bomJson, "cdx-validate"));
@@ -226,7 +275,7 @@ if (inputIsLocalProtoBom && verificationRequested) {
   console.error(
     "cdx-validate: protobuf BOM input does not currently preserve JSF signature blocks. Verify signatures against the source JSON BOM instead.",
   );
-  process.exit(args.requireSignature ? 4 : 1);
+  process.exit(requireSignature ? 4 : 1);
 }
 
 const report = validateBomAdvanced(bomJson, {
@@ -237,10 +286,17 @@ const report = validateBomAdvanced(bomJson, {
   minSeverity: args.minSeverity,
   includeManual: args.includeManual,
   includePass: args.includePass,
-  publicKey: publicKeyStr || undefined,
-  secretKey: secretKey || undefined,
+  publicKey: publicKeyStr ?? undefined,
+  secretKey: secretKey ?? undefined,
   nestedSignatures: args.nestedSignatures,
 });
+if (strictError && verificationRequested) {
+  report.signatureVerified = false;
+  report.signatureEntries = null;
+  report.signatureDetails = {
+    error: `the BOM cannot be verified: ${strictError}`,
+  };
+}
 
 let output;
 try {
@@ -263,14 +319,24 @@ writeOrPrint(output, args.reportFile);
 const { shouldFail: fail, reason } = shouldFail(report, {
   failSeverity: args.failSeverity,
   strict: args.strict,
-  requireSignature: Boolean(args.requireSignature && verificationRequested),
+  requireSignature: Boolean(requireSignature && verificationRequested),
 });
 
-if (report.signatureVerified === false && args.requireSignature) {
+if (report.signatureVerified === false && verificationRequested) {
   console.error(
     `cdx-validate: signature verification failed — ${report.signatureDetails?.error || "no matching key"}.`,
   );
-  process.exit(4);
+  if (requireSignature) {
+    process.exit(4);
+  }
+}
+const unverifiedEntries = (report.signatureEntries || []).filter(
+  (entry) => !entry.verified,
+);
+if (report.signatureVerified && unverifiedEntries.length) {
+  console.error(
+    `cdx-validate: warning — ${unverifiedEntries.length} of ${report.signatureEntries.length} signature entries did not verify with the given key: ${unverifiedEntries.map((entry) => `entry ${entry.index}${entry.keyId === undefined ? "" : ` (keyId '${displayValue(entry.keyId)}')`}`).join(", ")}.`,
+  );
 }
 
 if (args.strict && report.schemaValid === false) {

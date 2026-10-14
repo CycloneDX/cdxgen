@@ -37,7 +37,7 @@ cdx-validate -i bom.cdx
 cdx-validate -i bom.json --benchmark scvs-l2 -r sarif -o results.sarif
 
 # Verify the signature and the structure in one go (JSON input only)
-cdx-validate -i bom.json --public-key builder_public.pem --require-signature
+cdx-validate -i bom.json --public-key builder_public.pem
 
 # Machine-readable output for a CI system
 cdx-validate -i bom.json -r json --fail-severity medium
@@ -64,7 +64,7 @@ cdx-validate -i bom.json -r json --fail-severity medium
 | `--public-key`                             | —          | PEM file. When set, verify the BOM signature for JSON or OCI BOM input. Local protobuf input is not signature-verifiable yet. |
 | `--secret-key`                             | —          | Shared secret file for `HS256`, `HS384`, and `HS512` signatures. HMAC signatures are only accepted with this option.          |
 | `--no-nested-signatures`                   | off        | Verify only the root signature, for a co-signer's key. By default nested signatures are verified too.                         |
-| `--require-signature`                      | off        | Exit 4 if `--public-key` or `--secret-key` is supplied but verification fails.                                                |
+| `--require-signature`                      | with a key | Exit 4 if verification fails. On whenever `--public-key` or `--secret-key` is given; `--no-require-signature` only reports.   |
 | `--strict`                                 | off        | Exit 2 when schema / deep validation fails.                                                                                   |
 
 ### Exit codes
@@ -78,6 +78,8 @@ cdx-validate -i bom.json -r json --fail-severity medium
 | `4`  | Signature verification was required and failed.                  |
 
 > **Note:** Local protobuf BOM input (`.cdx`, `.cdx.bin`, `.proto`) is supported for structure, deep, and compliance validation. JSF signature verification still requires the source JSON BOM because `cdx-proto` does not currently preserve signature blocks in protobuf form.
+
+Signature verification follows [`cdx-verify`](CDX_VERIFY.md#verification-behavior): the BOM needs a root signature, its root must be a CycloneDX BOM root, and the BOM must be UTF-8 and must not repeat a member name, hold a number an IEEE 754 double cannot represent exactly, or hold an unpaired surrogate escape. An empty `--public-key` or `--secret-key` path, or an empty key file, is a configuration error (exit 1). When the root signature verifies but some of its `signers` or `chain` entries do not, `cdx-validate` prints a warning naming them, and the `json` report lists every entry under `signatureEntries`.
 
 ---
 
@@ -100,6 +102,7 @@ A stable, documented JSON schema:
   "schemaValid": true,
   "deepValid": true,
   "signatureVerified": null,
+  "signatureEntries": null,
   "summary": { "total": 95, "pass": 28, "fail": 2, "manual": 65, "errors": 1 },
   "benchmarks": [ { "id": "scvs-l2", "name": "OWASP SCVS Level 2", "pass": 15, "fail": 1, "manual": 46, "scorePct": 94, "controls": [ … ] } ],
   "findings": [

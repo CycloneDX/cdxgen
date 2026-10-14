@@ -1,0 +1,88 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:7b5a3e9c-1d2f-4a6b-8c9d-0e1f2a3b4c5d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-14T00:00:00Z",
+    "component": {
+      "type": "application",
+      "name": "app",
+      "version": "1.0.0",
+      "bom-ref": "app"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "left-pad",
+      "version": "1.3.0",
+      "purl": "pkg:npm/left-pad@1.3.0",
+      "bom-ref": "pkg:npm/left-pad@1.3.0",
+      "signature": {
+        "algorithm": "PS384",
+        "keyId": "rsapss-key",
+        "value": "TrM13h0YWnDYjm4bFuzJtcYwNvtGAN0szuPo7putm9gtoFzo6wysr4W5J047EU7XN2nzVwV-JUIkFK2b06hw1P2i8MCLnD_hjQfO5S8Eiu4DqhYTx9zKwKcA_LtjynTkEbrX5lFBB7g_2pY4IIeGhLkqki8LtW-Nefj7YJR0tckibzNlto8fKAYdnJ05S6C9mUSkvNOgzFcs7aWPhXyryPQWlRNgHJTA2V126Y_TBlgZN50Rbs0rSj9gAl1EevYTG162d0J9LgiZyGI48IZGtRyUoKKVnZ7UAk9_Q_d0I9Ie6a1d8SOkh1WQ8xFaUYnfPDTjn7PE7yLS4AGtDXirYA"
+      }
+    },
+    {
+      "type": "library",
+      "group": "org.example",
+      "name": "café-ünïcode",
+      "version": "2.0.0",
+      "bom-ref": "pkg:maven/org.example/caf%C3%A9@2.0.0",
+      "description": "astral 𝔘 and escapes \" \\ \u0007",
+      "signature": {
+        "algorithm": "PS384",
+        "keyId": "rsapss-key",
+        "value": "x-pnQEPXVYWcwR2bCIcKLN6K7J6V7t7nZl51iznKqmrtL7d4-pgOMbKZulRLGgnW8lnZEZWjmDRRf3YUUhgfMlELNu_CTCqWqxE3tYZXFqQA-DeqP0ylrbr5ozrvfrW24nSs1pEfI1LVw596WklYDNsT_OcGEiYzrMhbAOAToHAoptulKnn3Klv5uxC09b3MfaXrCP1UER3hol2gGvi6B1FggzykOKDNMTMNJyJh3WYtPYWnwj1ZVcTRC1AKusvEePibdT1-UvAuRl-Nhqt6dv6crcekvyswpAwUrNADrwlMn1nZbZkzksvA0JeHiN9I9EqPyshizxnGD_0hs2FAnA"
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "api",
+      "bom-ref": "svc-api",
+      "endpoints": [
+        "https://api.example.com/v1"
+      ],
+      "signature": {
+        "algorithm": "PS384",
+        "keyId": "rsapss-key",
+        "value": "IMdZWp4tqYwBMjacKGqAina_tm_0yQdn8BzNw8-4366RvF1lFuHKIj6hJT7S4iIGYeToM6muk-2RcriNJy_2w7IZn0YKhB3BWHu-WRyxCHRVPbwagpiqvh5WVrwXZBkfcZIFgD6qALtxpXA7bZY9G0Il_avFpiRwhr_XI1rXUIKookV8OSJxePlSnuGi2LJhe3Onz6sxrqzpDCmgY1BEz4ehNCH6biuXsH6vSmUoIz_R9efzasbjGl_gNypl1YumbBEWk849e8mOEvdS-cKKIEPpHWZ1N3-YpxEE9k7Y_w0dmcERUP3wzpG94GvxOH3WaqKWLEad5kc0Tyd0GgNbcw"
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "subjects": [
+        "pkg:npm/left-pad@1.3.0"
+      ],
+      "annotator": {
+        "organization": {
+          "name": "Example"
+        }
+      },
+      "timestamp": "2026-10-14T00:00:00Z",
+      "text": "reviewed",
+      "signature": {
+        "algorithm": "PS384",
+        "keyId": "rsapss-key",
+        "value": "eEzegRh2jnowZG-G6I0fCt7zKJ8B-wXIEconVzB5GD0c4JQitNk3JiaHh2gh_T8JxJNbsifFKBKTUGr0UBXKoLIPIyLuCQbqWtjpa-ADWTAqZyiZ5Erem6661ZNWMkmdoWn2n3tH3i4PskboOqFUExWXwdzgw1HtLu4AqvJSNJReBVJy1PsTasHb0uVo3MqrFjFKi2fLuoZzP-ubGMaV4HAK0mt630e-GFi5LdParW7ghnpLIy3Bpgo7KN-Wtp8ct11cj55EGHNM5zfAPjO8Y4pR3UNbjc1vfepfDqi5xipkm5a9goo9DWpflperv4R3kDCMuCywXXo_AKMrxxYP8w"
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app",
+      "dependsOn": [
+        "pkg:npm/left-pad@1.3.0"
+      ]
+    }
+  ],
+  "signature": {
+    "algorithm": "PS384",
+    "keyId": "rsapss-key",
+    "value": "gB_QHcnavQBGHxoooGzzwse0JW69a9hl_KTf3youGTWNPtotLvm82dxTL9ZgB-Wu6yD-dLSPXXNho69bdBtk9YBHkwDKyHoCJqrzeb9SnRV2DBA4ksYazZ-_L51_m2LVRcGSdS0KxDTsMpFT-B8-nvFaF22voQ-JWgdsiIDTUGNAp5L9H9PGu1lJSqTsk1yHQpDM4K9iDjRs45wsyAXjPaYKUgpbXkwAn8DZbRMAK3Ij619OGgbN6uWp5dpaMUSyq1gfZiWtKdw1HI-zeWAgFxKG1BVJfjtdK4f_Bzeez-ORKgrbTPksp2zE86mUf2Iz51VEQ4_BnoHe_1e6NDZqAw"
+  }
+}
