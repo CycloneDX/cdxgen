@@ -20,6 +20,7 @@ import {
   retrieveCdxgenVersion,
   safeExistsSync,
 } from "../lib/helpers/utils.js";
+import { parseStrictJson } from "../lib/parsers/strictJson.js";
 
 const _yargs = yargs(hideBin(process.argv));
 
@@ -55,13 +56,19 @@ const args = _yargs
     type: "array",
     string: true,
     description:
-      "Public key (PEM) of an earlier signer. With --mode chain, every existing chain entry must verify with one of these keys before a new entry is appended.",
+      "Public key (PEM) of an earlier signer. Before a new entry is appended, every existing chain entry (--mode chain), or at least one existing entry (--mode signers), must verify with one of these keys.",
   })
   .option("allow-unverified-history", {
     type: "boolean",
     default: false,
     description:
-      "With --mode chain, append even when existing chain entries cannot be verified with --verify-existing-with.",
+      "With --mode chain or signers, append even when the existing signature entries cannot be verified with --verify-existing-with.",
+  })
+  .option("embed-public-key", {
+    type: "boolean",
+    default: true,
+    description:
+      "Embed the signer's public key in the root signature, which binds the signature to that key. Not used for HMAC (HS*) algorithms. Pass --no-embed-public-key to leave it out.",
   })
   .option("key-id", {
     description:
@@ -173,16 +180,19 @@ function describeEntry(result) {
     : `entry ${result.index}`;
 }
 
-// A new chain entry covers every earlier entry, so the signer vouches for
-// that history. Check it with the earlier signers' keys before appending.
-function checkChainHistory(bomJson) {
+// A new chain entry covers every earlier entry, so the signer vouches for that
+// history, and every entry must verify. A new signers entry covers the same
+// content as the existing entries, so at least one must verify to show the
+// content is still what an earlier signer signed.
+function checkExistingSignatures(bomJson) {
   const existing = bomJson.signature;
+  const otherForm = args.mode === "chain" ? "signers" : "chain";
   if (
-    args.mode !== "chain" ||
+    args.mode === "replace" ||
     existing === undefined ||
     (existing !== null &&
       typeof existing === "object" &&
-      Object.hasOwn(existing, "signers"))
+      Object.hasOwn(existing, otherForm))
   ) {
     return;
   }
@@ -192,10 +202,10 @@ function checkChainHistory(bomJson) {
     }
     return fs.readFileSync(keyFile, "utf8");
   });
-  const unverified = checkSignatureEntries(bomJson, keys).filter(
-    (result) => !result.verified,
-  );
-  if (!unverified.length) {
+  const results = checkSignatureEntries(bomJson, keys);
+  const unverified = results.filter((result) => !result.verified);
+  const chain = args.mode === "chain";
+  if (chain ? !unverified.length : unverified.length < results.length) {
     return;
   }
   const details = unverified.map(
@@ -205,7 +215,9 @@ function checkChainHistory(bomJson) {
   if (args.allowUnverifiedHistory) {
     console.warn(
       [
-        `Warning: appending to a chain with ${unverified.length} unverified entry(s):`,
+        chain
+          ? `Warning: appending to a chain with ${unverified.length} unverified entry(s):`
+          : `Warning: appending a signers entry although none of the ${unverified.length} existing entry(s) verified:`,
         ...details,
       ].join("\n"),
     );
@@ -213,7 +225,9 @@ function checkChainHistory(bomJson) {
   }
   throw new Error(
     [
-      `the new chain entry would vouch for ${unverified.length} existing entry(s) that could not be verified:`,
+      chain
+        ? `the new chain entry would vouch for ${unverified.length} existing entry(s) that could not be verified:`
+        : `none of the ${unverified.length} existing signature entry(s) could be verified, so the content may have changed since it was signed:`,
       ...details,
       "Pass --verify-existing-with <public key> for each earlier signer, or --allow-unverified-history to sign anyway.",
     ].join("\n"),
@@ -221,7 +235,7 @@ function checkChainHistory(bomJson) {
 }
 
 try {
-  const bomJson = JSON.parse(fs.readFileSync(args.input, "utf8"));
+  const bomJson = parseStrictJson(fs.readFileSync(args.input));
   if (!isCycloneDxBom(bomJson)) {
     console.error(getNonCycloneDxErrorMessage(bomJson, "cdx-sign"));
     process.exit(1);
@@ -229,10 +243,12 @@ try {
 
   let signedBom = bomJson;
   if (hasPrivateKey && privateKeyContent) {
-    checkChainHistory(bomJson);
+    checkExistingSignatures(bomJson);
     signedBom = signBom(bomJson, {
       privateKey: privateKeyContent,
       algorithm: args.algorithm,
+      embedPublicKey: args.embedPublicKey,
+      embedPublicKeyNested: false,
       keyId: args.keyId,
       mode: args.mode,
       signComponents: args.signComponents,
@@ -247,6 +263,20 @@ try {
     console.log(
       `Mode: ${args.mode} | Algorithm: ${args.algorithm}${args.keyId ? ` | KeyId: ${args.keyId}` : ""}`,
     );
+    const rootSignature = signedBom.signature;
+    const newEntry =
+      rootSignature?.signers?.at(-1) ??
+      rootSignature?.chain?.at(-1) ??
+      rootSignature;
+    if (
+      args.embedPublicKey &&
+      !String(args.algorithm).startsWith("HS") &&
+      newEntry?.publicKey === undefined
+    ) {
+      console.warn(
+        "Warning: this key type has no JWK form, so the public key was not embedded in the signature.",
+      );
+    }
   } else {
     if (!hasAnySignature(bomJson)) {
       console.error(

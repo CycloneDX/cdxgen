@@ -1,0 +1,88 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:7b5a3e9c-1d2f-4a6b-8c9d-0e1f2a3b4c5d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-14T00:00:00Z",
+    "component": {
+      "type": "application",
+      "name": "app",
+      "version": "1.0.0",
+      "bom-ref": "app"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "left-pad",
+      "version": "1.3.0",
+      "purl": "pkg:npm/left-pad@1.3.0",
+      "bom-ref": "pkg:npm/left-pad@1.3.0",
+      "signature": {
+        "algorithm": "RS512",
+        "keyId": "rsa-key",
+        "value": "wDkSrTqxV3J28qRXJuBakb5JCCq9CxOKfs1EEV_GKL5U9ydYaQtpDDA1OuHzn8i457c8JO4I7zjbmLCvU9o8VpGozEhY2XCosGqvfUDh2U9NCKbVDrMSqrODFECX7it2BYKDyGI6-ViEsPWqJ9yXLFiHAXJi2K8N8UbBb_w5W1kSXp3UlriDk0UShXqlIMel7le1vpUxpxn868VAK9Kr5711g-9r96Sg6ZXwaZjHliErCFXYilYXsFFReYloJynf-rvmBOM2cm1YN5P9L6ndSXOfJfJvZ5pKTVYnk81wud5ZVAXLcZYIDXmOo3MYacq1l2QgTdDAbDO6V_PJcx9hBw"
+      }
+    },
+    {
+      "type": "library",
+      "group": "org.example",
+      "name": "café-ünïcode",
+      "version": "2.0.0",
+      "bom-ref": "pkg:maven/org.example/caf%C3%A9@2.0.0",
+      "description": "astral 𝔘 and escapes \" \\ \u0007",
+      "signature": {
+        "algorithm": "RS512",
+        "keyId": "rsa-key",
+        "value": "tBPyqJB2LzWJtSoDFxvgql2IMGb_hauXcGRL2c7zb3sPArpzT4MpxUBniAfmOueNaqjyG1ejpkpSGHFFDStjwp08_4fd7nieQXX7XPDk6QB5gjyHeo5KZ5P4phJ_-FAC4PM5PdRCGq_jsu65n_MfmrNXIFXKF_I8Geyn8DvYq04XyeuUnZhM9IybxekpqW0X8i23KREJahdikM9gto-pRmer4T4oJ99MfDJFQ8mkHIK4qyBcpgCV08p3dhDc_hI82bnIvJ_geinePy6blBqKNbgW_JwxDHEWdO0RRl4XcqKzXr02IAaXolftvh5T2PaG3twg4Mn4VXBo2FqiGNejxg"
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "api",
+      "bom-ref": "svc-api",
+      "endpoints": [
+        "https://api.example.com/v1"
+      ],
+      "signature": {
+        "algorithm": "RS512",
+        "keyId": "rsa-key",
+        "value": "tDfiMUz8_oU1ZiBxBtSVfSSPujmgEODq-ctsSKGg6qqQxTVmg8vyRywqAq2eveCYB-foI2g41fu-tH99XnHt-WPa2vagfkTJ3pesGukzTBvt0dRHMQhOgdWmIG2IvG-8xPJmgeGeKvXrT0VCKGdE5HClmoKFwtEE2A7qUoSGJiGXOuhXEfl90CBSg3b-AayRNpT2MITcK1vOeNviNZPwKmVGlOx6ckVYrpozW1TsBOcm2SRDo0CBI8QArCCJn2LLP-qhGfpZrtU71N3y_YC0ZLveA5BuQnaSvH68EvcVnsXoZRjyf0gyA_iLf6ozKCKNYGxOZxU2mnCMQVJrHShYkA"
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "subjects": [
+        "pkg:npm/left-pad@1.3.0"
+      ],
+      "annotator": {
+        "organization": {
+          "name": "Example"
+        }
+      },
+      "timestamp": "2026-10-14T00:00:00Z",
+      "text": "reviewed",
+      "signature": {
+        "algorithm": "RS512",
+        "keyId": "rsa-key",
+        "value": "wRhzdEIeTT3-iyF1BuJTyd0sceOxWcZmH0hs922Hofxl1CKtg7nJ2-5o7iA0h1HB3Xyd52C1bNxNO_NpSL8nHGcN5NkICP8gDmG08y3qkissNyjL3KB1ctGX57u848jGWQQHrFF5M9U82C0YAUX5CpfQamI1WRU00BusEeY_z0w2gBRCsTMLJAllCYaTBVXHkxJyrYilUwWO-8Nu4N3V42HHwsYVEQiUClbH6D0J6liy9PBW8PA0hAzPaz8OJA7N5IRatNu17xRsx0xJq-9VKunnV1-NmUsiMgd9edjq8xV4EDkZf4-4JXL3vexORcPukKpS45e5_Tyg0nr-h3iOjA"
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app",
+      "dependsOn": [
+        "pkg:npm/left-pad@1.3.0"
+      ]
+    }
+  ],
+  "signature": {
+    "algorithm": "RS512",
+    "keyId": "rsa-key",
+    "value": "oF2s-2Vr4eEq99Vd1dFl6R27eey2PSLxyzoIhLTZk9tglmAysNE_VKysbOqD0X0euCI8ABgb7LQUTxpUhjE0waZNXsOLSRs9mf_ig8KJ-CJzQKYLN78GXXb029VqfxYHiY9Sht_8GhRjj-8WF7n1wE2Ad_GtwrtM2FITi7yfgLRnsY0bkufxvaCBxp3EobVhfggZBVy4VhQ2mY0PuPbPxTiObUx81Hz3JYMWfrcVHtiSMJyUQukLNqoLCIAno30ZzFgU8_DPPMvSrIwT83zTd_amagqx8Zng__acrRSfWSXElbtsipdnErG0uBZlC6aYy61fcAhAeovUcXBpA1nbtg"
+  }
+}
