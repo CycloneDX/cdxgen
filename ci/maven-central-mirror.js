@@ -9,8 +9,10 @@
  * artifacts. Only Central-bound traffic moves; other repositories are left
  * alone.
  *
- * - Maven: a settings profile in ~/.m2/settings.xml that redefines the
- *   `central` repository. Keeping the id keeps a warm local repository valid.
+ * - Maven: a mirror of `central` in ~/.m2/settings.xml. A profile that
+ *   redefines `central` is not enough: a BOM imported by another BOM is read
+ *   with the super POM's `central`, so it would still go to Central. The
+ *   mirror keeps the id `central`, which keeps a warm local repository valid.
  * - Maven wrapper: MVNW_REPOURL, for the Maven distribution it downloads.
  * - Gradle: an init script that rewrites Central and puts the mirror in front
  *   of the plugin portal, which redirects plain dependencies to Central.
@@ -39,17 +41,11 @@ const CENTRAL_URLS = [
   "https://repo1.maven.org/maven2",
   "https://repo.maven.apache.org/maven2",
 ];
-const PROFILE_ID = "ci-maven-central-mirror";
-
-const MAVEN_PROFILE = `<profile>
-      <id>${PROFILE_ID}</id>
-      <repositories>
-        <repository><id>central</id><url>${MIRROR}</url><snapshots><enabled>false</enabled></snapshots></repository>
-      </repositories>
-      <pluginRepositories>
-        <pluginRepository><id>central</id><url>${MIRROR}</url><snapshots><enabled>false</enabled></snapshots></pluginRepository>
-      </pluginRepositories>
-    </profile>`;
+const MAVEN_MIRROR = `<mirror>
+      <id>central</id>
+      <mirrorOf>central</mirrorOf>
+      <url>${MIRROR}</url>
+    </mirror>`;
 
 const GRADLE_INIT_SCRIPT = `// Written by cdxgen's ci/maven-central-mirror.js for this CI job.
 def mirror = "${MIRROR}"
@@ -100,39 +96,30 @@ allprojects { p ->
 `;
 
 /**
- * Insert the mirror profile into a Maven settings document, keeping what is
+ * Insert the Central mirror into a Maven settings document, keeping what is
  * there (setup-java writes its server entries into the same file).
  *
  * @param {string} xml Existing settings.xml content, or an empty string.
- * @returns {string} Settings with the profile defined and active.
+ * @returns {string} Settings with Central mirrored.
  */
-export function withMirrorProfile(xml) {
-  let settings = xml?.includes("</settings>")
+export function withCentralMirror(xml) {
+  const settings = xml?.includes("</settings>")
     ? xml
     : '<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0">\n</settings>\n';
-  if (settings.includes(`<id>${PROFILE_ID}</id>`)) {
+  if (settings.includes(`<url>${MIRROR}</url>`)) {
     return settings;
   }
   const insertBefore = (text, marker, addition) => {
     const at = text.lastIndexOf(marker);
     return `${text.slice(0, at)}${addition}${text.slice(at)}`;
   };
-  settings = settings.includes("</profiles>")
-    ? insertBefore(settings, "</profiles>", `  ${MAVEN_PROFILE}\n  `)
+  return settings.includes("</mirrors>")
+    ? insertBefore(settings, "</mirrors>", `  ${MAVEN_MIRROR}\n  `)
     : insertBefore(
         settings,
         "</settings>",
-        `  <profiles>\n    ${MAVEN_PROFILE}\n  </profiles>\n`,
+        `  <mirrors>\n    ${MAVEN_MIRROR}\n  </mirrors>\n`,
       );
-  const active = `<activeProfile>${PROFILE_ID}</activeProfile>`;
-  settings = settings.includes("</activeProfiles>")
-    ? insertBefore(settings, "</activeProfiles>", `  ${active}\n  `)
-    : insertBefore(
-        settings,
-        "</settings>",
-        `  <activeProfiles>\n    ${active}\n  </activeProfiles>\n`,
-      );
-  return settings;
 }
 
 function main() {
@@ -152,7 +139,7 @@ function main() {
   } catch {
     // no settings yet
   }
-  writeFileSync(settingsFile, withMirrorProfile(existing));
+  writeFileSync(settingsFile, withCentralMirror(existing));
 
   const initDir = join(home, ".gradle", "init.d");
   mkdirSync(initDir, { recursive: true });
