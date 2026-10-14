@@ -40,18 +40,21 @@ cdx-sign -i /absolute/path/to/bom.json -o /absolute/path/to/bom.signed.json \
   -k /absolute/path/to/builder_private.pem -a RS512
 ```
 
-| Flag                  | Purpose                                                        |
-| --------------------- | -------------------------------------------------------------- |
-| `-i, --input`         | BOM to sign                                                    |
-| `-o, --output`        | Signed copy; omit to sign in place                             |
-| `-k, --private-key`   | Private key, PEM format                                        |
-| `-a, --algorithm`     | JSF algorithm; default `RS512`. Also `ES256`, `Ed25519`        |
-| `-m, --mode`          | `replace` (default), `signers`, `chain`                        |
-| `--key-id`            | Key identifier recorded in the signature                       |
-| `--sign-components`   | Sign individual components                                     |
-| `--sign-services`     | Sign individual services                                       |
-| `--sign-annotations`  | Sign annotations                                               |
-| `--attach`            | Attach the signature rather than replacing                     |
+| Flag                         | Purpose                                                 |
+| ---------------------------- | ------------------------------------------------------- |
+| `-i, --input`                | BOM to sign                                             |
+| `-o, --output`               | Signed copy; omit to sign in place                      |
+| `-k, --private-key`          | Private key, PEM format                                 |
+| `-a, --algorithm`            | JSF algorithm; default `RS512`. Also `ES256`, `Ed25519` |
+| `-m, --mode`                 | `replace` (default), `signers`, `chain`                 |
+| `--key-id`                   | Key identifier recorded in the signature                |
+| `--sign-components`          | Sign individual components                              |
+| `--sign-services`            | Sign individual services                                |
+| `--sign-annotations`         | Sign annotations                                        |
+| `--verify-existing-with`     | Earlier signer's public key, checked before appending   |
+| `--allow-unverified-history` | Append even when existing entries do not verify         |
+| `--no-embed-public-key`      | Leave the signer's public key out of the root signature |
+| `--attach`                   | Attach the signed BOM to an OCI image reference         |
 
 Defaults can come from `SBOM_SIGN_ALGORITHM` and `SBOM_SIGN_MODE`.
 
@@ -67,8 +70,13 @@ Append a security review signature without destroying the builder's:
 
 ```bash
 cdx-sign -i /absolute/path/to/bom.json -k /absolute/path/to/auditor_private.pem \
-  --mode signers --no-sign-components --no-sign-services --no-sign-annotations
+  --mode signers --no-sign-components --no-sign-services --no-sign-annotations \
+  --verify-existing-with /absolute/path/to/builder_public.pem
 ```
+
+`cdx-sign` refuses to append a `signers` entry unless at least one existing entry
+verifies with a `--verify-existing-with` key, and a `chain` entry unless every
+existing entry does.
 
 Note the `--no-` prefixes: the reviewer signs the document, not every component,
 which keeps the second signature cheap and its scope clear.
@@ -76,7 +84,8 @@ which keeps the second signature cheap and its scope clear.
 Build a chained history:
 
 ```bash
-cdx-sign -i /absolute/path/to/bom.json -k /absolute/path/to/approver_private.pem --mode chain
+cdx-sign -i /absolute/path/to/bom.json -k /absolute/path/to/approver_private.pem --mode chain \
+  --verify-existing-with /absolute/path/to/builder_public.pem
 ```
 
 Use `signers` when approvals are independent and order does not matter. Use
@@ -87,7 +96,19 @@ Use `signers` when approvals are independent and order does not matter. Use
 ```bash
 cdx-verify -i /absolute/path/to/bom.json --public-key /absolute/path/to/public.pem
 cdx-verify -i /absolute/path/to/bom.json --public-key /absolute/path/to/public.pem --deep
+cdx-verify -i /absolute/path/to/bom.json --public-key /absolute/path/to/builder.pem \
+  --public-key /absolute/path/to/auditor.pem --require-all
 ```
+
+`--public-key` is required and repeatable; `cdx-verify` never reads a key from the
+working directory. A BOM without a root signature fails unless
+`--allow-nested-only` is passed and every component, service, and annotation is
+signed. For `signers` and `chain` signatures, one verified entry is enough by
+default and the others are listed as warnings. `--require-all` requires every entry
+to verify and every given key to verify an entry of the root signature, so a removed
+co-signature or truncated chain fails; pass one `--public-key` per expected signer.
+BOM bytes that are not UTF-8, repeat a member name, or hold a number an IEEE 754
+double cannot represent exactly are refused.
 
 `--deep` verifies granular component, service, and annotation signatures rather
 than only the document signature. Use it whenever the BOM was signed with
@@ -106,8 +127,9 @@ cdx-validate -i /absolute/path/to/bom.json \
   --public-key /absolute/path/to/public.pem --require-signature
 ```
 
-`--require-signature` makes an unsigned BOM a validation failure rather than a
-silent pass. Prefer this in release gates. See `bom-convert-validate`.
+Giving a key turns on `--require-signature`, which makes an unsigned or
+unverifiable BOM a validation failure (exit 4) rather than a silent pass. Pass
+`--no-require-signature` only to report the result. See `bom-convert-validate`.
 
 ## Reporting verification results
 

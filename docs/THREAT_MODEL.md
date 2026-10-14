@@ -444,7 +444,7 @@ Trust boundary 5: cdxgen container ←→ container host
 
 #### T6.3 — Forged or altered signatures accepted by `cdx-verify`
 
-**Threat:** An attacker who can modify a signed BOM (for example in a registry or in transit) crafts a signature that `cdx-verify`, `cdx-validate --require-signature`, or `verifyBom()` accepts without the signer's private key, or rewrites signature metadata so that the BOM appears to come from another key, algorithm, or approval order. The attacker controls every field of the signature block, including `algorithm`, `keyId`, `publicKey`, and the order of `signers` and `chain` entries.
+**Threat:** An attacker who can modify a signed BOM (for example in a registry, in transit, or in a pull request that CI verifies) crafts a document that `cdx-verify`, `cdx-validate`, or `verifyBom()` accepts without the signer's private key, or rewrites signature metadata so that the BOM appears to come from another key, algorithm, or approval order. The attacker controls every field of the signature block, including `algorithm`, `keyId`, `publicKey`, and the order of `signers` and `chain` entries, and every byte of the BOM text: they can remove signatures, repeat member names, reuse signatures taken from other BOMs, add entries, and supply files next to the BOM.
 
 **Mitigations:**
 
@@ -453,10 +453,17 @@ Trust boundary 5: cdxgen container ←→ container host
 - Following JSF, each signature covers the signature metadata as well as the content; only `value` is excluded, and it must be canonical base64url. A `chain` entry also covers every earlier entry
 - An embedded `publicKey` must match the verification key, and `excludes` is rejected, so no part of a signed object can be left unsigned
 - Malformed signature blocks and entries with other key types are reported as non-matching instead of throwing, so a hostile entry cannot stop later entries from being checked
-- `cdx-sign --mode chain` checks the existing chain entries against the earlier signers' public keys (`--verify-existing-with`) and refuses to countersign history it cannot verify, unless `--allow-unverified-history` is passed
-- `cdx-validate` verifies nested signatures by default, matching `cdx-verify`
+- `cdx-sign --mode chain` checks the existing chain entries against the earlier signers' public keys (`--verify-existing-with`) and refuses to countersign history it cannot verify, unless `--allow-unverified-history` is passed. `--mode signers` requires at least one existing entry to verify, so a co-signature is never added to content that no longer matches the earlier signatures
+- `cdx-validate` verifies nested signatures by default, matching `cdx-verify`, and fails with exit code 4 whenever a key is given and verification fails
+- The trusted key must be named with `--public-key` or `--secret-key`; `cdx-verify` never reads a key from the working directory or from the document
+- A root signature is required. A BOM whose root signature was removed fails, and `--allow-nested-only` accepts one only when every component, service, and annotation carries a signature that verifies
+- The signed root must carry `bomFormat` (or `specFormat`) and `specVersion` and consist of CycloneDX root members, and signed nested elements must not carry `bomFormat`, `specFormat`, or `specVersion`, so a component, service, or annotation signature cannot be presented as a BOM signature. `cdx-sign` refuses to produce either shape
+- BOM bytes that are not UTF-8, or text that repeats a member name, holds a number an IEEE 754 double cannot represent exactly, or holds an unpaired surrogate escape, are refused before verification (`lib/parsers/strictJson.js`), so every JSON parser reads the values the signature covers
+- Every root and nested `signers` and `chain` entry is reported with its outcome. `--require-all` requires each entry to verify with one of the trusted keys and each trusted key to verify an entry of the root signature, so a removed co-signature or a truncated chain fails
+- A signature may hold at most 32 entries and no members beside its `signers` or `chain` array. Each signed object is canonicalized once, and the signed bytes of one entry are released before the next, so verification time and memory stay proportional to document size
+- `cdx-sign` embeds the signer's public key in the root signature by default, binding RSA and ECDSA signatures to their key, and writes ECDSA signatures in low-`s` form
 
-**Residual risk:** Low. Verification is only as trustworthy as the public key or shared secret the verifier supplies; distribute it out of band. Removing the last entries of a chain is not detectable, so approvals must be checked with the approver's own key.
+**Residual risk:** Low. Verification is only as trustworthy as the public key or shared secret the verifier supplies; distribute it out of band. Removing whole signature entries, such as the last entries of a chain, is only detected with `--require-all` and the key of every expected signer. A signature that an earlier `cdx-sign` made over an untrusted nested element carrying `bomFormat` and `specVersion` can still be presented as a BOM signature; re-sign BOMs whose nested elements came from untrusted input. With `--allow-nested-only`, nothing protects which signed elements a BOM lists. ECDSA signatures verify in both `s` forms, so a signature `value` is not a unique identifier.
 
 ### 7. Dynamic Process Tracing (`tracebom`, `lib/inventory/traceRunner.js`)
 

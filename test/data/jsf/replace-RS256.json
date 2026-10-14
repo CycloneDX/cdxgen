@@ -1,0 +1,88 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:7b5a3e9c-1d2f-4a6b-8c9d-0e1f2a3b4c5d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-14T00:00:00Z",
+    "component": {
+      "type": "application",
+      "name": "app",
+      "version": "1.0.0",
+      "bom-ref": "app"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "left-pad",
+      "version": "1.3.0",
+      "purl": "pkg:npm/left-pad@1.3.0",
+      "bom-ref": "pkg:npm/left-pad@1.3.0",
+      "signature": {
+        "algorithm": "RS256",
+        "keyId": "rsa-key",
+        "value": "dbIR_2OkDL1p5M3eX5Pvl_XgZ6mL3oZ8ibs_N5zr0Tup1OOAMOWAhyeyH_2Gfhl5yWVzl6E36c2ilnk0amY140d_WPeud1kXKMWv0i6gukYVzJ6NVJ8oelSqbiMgyW9lbjArj1hhXEOTaRZWphrKMziywAq9ZF5ExwBXCza1CESCs96cn8gJ7bzs3yodri2TaGwgkvasc9b3b1oL67rn1G8U0vyjDbpGgGKhxO9ZLFs2oSVclvjabdsvnoa0OHbgR_8DLbNdUWTGeqrZc-E9YC1tu7pPdcjdMEyEESJebXPoJVy5YUut3ru5zkwCO3_QtyEivl80T0x1RuKLsqWT3g"
+      }
+    },
+    {
+      "type": "library",
+      "group": "org.example",
+      "name": "café-ünïcode",
+      "version": "2.0.0",
+      "bom-ref": "pkg:maven/org.example/caf%C3%A9@2.0.0",
+      "description": "astral 𝔘 and escapes \" \\ \u0007",
+      "signature": {
+        "algorithm": "RS256",
+        "keyId": "rsa-key",
+        "value": "swEtiPkSqJegcERLrnEMGbni-TC21LUk27NCvdYe9s4C3GB9TFv70ho4lRzdcRH6cZLO3xhxU_hxdwWW9gmPO4bK_ZHS0vgWHjuK7tSKhtCBeLOn7KeP2Y2V4Z_a8PRmwiLAi4d4Mrtc_FopA0eXcHr_WjFh2TCqcfHAH0pigmGEN7DhZAuBdzQCsAef8Gn5tm2k-a0opFUbsIrRWZdXKASU2ldVB5ujAFe0TfOWSzn6GdatPo6dmxOauuNKrJJaulv60lOmiB5ZoN0ULPvnmfIcdaiYx74Mg2Xdp_vB3HiBpdl8fgO_XZ-4uzS5_EH2pewEC7e0P9XC850XBCu0Nw"
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "api",
+      "bom-ref": "svc-api",
+      "endpoints": [
+        "https://api.example.com/v1"
+      ],
+      "signature": {
+        "algorithm": "RS256",
+        "keyId": "rsa-key",
+        "value": "cFPDTN27dxfogO72f79VzoWxQfj36Bj7Nz4D4JXtWmX6RJH1pc1gwhvrbdMX76qE_yVBUtIVLp02kfhX2tVeFqfLm58hCGzPfOEXkeUk63hZRdZrlqVud51X_u2LpDbCo83MFW0QA9sH7XDZzL97xbVvwFYqXg4pTnhrNJvBO2odAHEyZKoXNj5pjgkDXIX6cxSRzVExexPl5hXeKeEkII7ZT59jMrzA7tSRxXOMWDL1R_cYeHi4NrXfiY6AYOxQXvguzzbQf06Rdfwu5meNDxe0n42LfEoM-d6wLPkkbqk6ctbWWr2UUs2tzQQXcEdYst6DXIOXgGrcaZGsKpW0Gg"
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "subjects": [
+        "pkg:npm/left-pad@1.3.0"
+      ],
+      "annotator": {
+        "organization": {
+          "name": "Example"
+        }
+      },
+      "timestamp": "2026-10-14T00:00:00Z",
+      "text": "reviewed",
+      "signature": {
+        "algorithm": "RS256",
+        "keyId": "rsa-key",
+        "value": "WsgFuo-etxZIvFJ59aSkDLjTcDDNYeIUs1NW1wtd5nDIVbUHhEVfzhJZvthN1U8AmxCV4nJgRrGzXRtW5wO3RC19ZmccoHQQZU7oLmjpN3cfxTSvsrNEgjmZPk6LfwKLM7wK1vi9hcZ98Lb1pq_2mSA99ZWJF8N9FyjODah6ffQRecux_30CL7uD62vm7uunwLqNQffUYPwfLYLYujDsPGxqWdLYjt6xtKDbxntSDQgI8gQa01D_GNmQdyJQk6n_aKpGYiL8KFRle11ZBPsZ6gXFuFgifpw4p7ydf9znvdJr0vdKTD6_DbTPDrAiTB6lzc5L-J18dGVl7WdB3kTwNw"
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app",
+      "dependsOn": [
+        "pkg:npm/left-pad@1.3.0"
+      ]
+    }
+  ],
+  "signature": {
+    "algorithm": "RS256",
+    "keyId": "rsa-key",
+    "value": "C6ftA_6q6NG8YmcrM2JwGGAjKSB9Ng7iwWhnePexKbImXFnRniPNUv3aMCgKgOi-SKo3OpbZgetcfsFi8Rg8Us6U25-V-zk_Jv62ZCKu-p0AXBFNwMwV9IlfXU4ruVGorGBFZijclj6-1Y9mS3i_MrxKEINAleLVRasWiVRtzC_cfUD-FpGwCqiB21Mbv3PWcyWrjZJEdpLb_hSB1sNjk9qLfyD8Pff-aALjF7TINpqkd5Cv1bXt80roFbX5rI69Ya6k8bjL517ASE86ZwfRCixBWeyO9K4hCbsvytnOMN1GLvNfpnPSaH4Mr9yb1nR_vJJNsamZT3QebpjuGWgotQ"
+  }
+}

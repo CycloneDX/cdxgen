@@ -98,6 +98,18 @@ export declare function executeAndTrace(commandStr: string, workingDir?: string,
     dryRunSummary?: Object;
 }>;
 /**
+ * Picks the safer-exec engine's own lines out of the stderr it shares with the
+ * traced command. Warnings start with "safer-exec: warning:"; when the engine
+ * stops a run, its error is the last other "safer-exec: " line it prints.
+ *
+ * @param {string} stderr Captured stderr of a safer-exec run
+ * @returns {{warnings: string[], error: string|undefined}} Unique engine warnings, and the engine's error if any
+ */
+export declare function engineMessages(stderr: string): {
+    warnings: string[];
+    error: string | undefined;
+};
+/**
  * Extracts the egress proxy's decisions from a safer-exec audit log.
  * "proxy-connect" targets are "host:port"; "proxy-violation" targets are
  * "CONNECT host:port" or "METHOD http://host[:port]/path". Only the authority

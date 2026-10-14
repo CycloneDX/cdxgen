@@ -1,0 +1,83 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7",
+  "serialNumber": "urn:uuid:7b5a3e9c-1d2f-4a6b-8c9d-0e1f2a3b4c5d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-14T00:00:00Z",
+    "component": {
+      "type": "application",
+      "name": "app",
+      "version": "1.0.0",
+      "bom-ref": "app"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "left-pad",
+      "version": "1.3.0",
+      "purl": "pkg:npm/left-pad@1.3.0",
+      "bom-ref": "pkg:npm/left-pad@1.3.0",
+      "signature": {
+        "algorithm": "ES256",
+        "value": "LYAffJHqXEc8psSPnm9xL_rf1JMciTQJWUV52YDeFtQw6meMAEaBVHNqpc5Rb6tvgE6ygo0n-vO8ce17fBUM5w"
+      }
+    },
+    {
+      "type": "library",
+      "group": "org.example",
+      "name": "café-ünïcode",
+      "version": "2.0.0",
+      "bom-ref": "pkg:maven/org.example/caf%C3%A9@2.0.0",
+      "description": "astral 𝔘 and escapes \" \\ \u0007",
+      "signature": {
+        "algorithm": "ES256",
+        "value": "VPRKxHT2HePC-joF8PXrMJdDPO3hSusqwaq5bOfactSyiMG5-MsPnsmWjwNghvC6OgTRZWl35oNTdQYHRG_Ivw"
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "api",
+      "bom-ref": "svc-api",
+      "endpoints": [
+        "https://api.example.com/v1"
+      ],
+      "signature": {
+        "algorithm": "ES256",
+        "value": "-NEbrit0F5w91IHMK2xqDYqvDVBVKN6w6lUMWrYHPPhcahO81Ca4e0z4qrmqNexNX6T0j6qdStRhHXR1H2YLFg"
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "subjects": [
+        "pkg:npm/left-pad@1.3.0"
+      ],
+      "annotator": {
+        "organization": {
+          "name": "Example"
+        }
+      },
+      "timestamp": "2026-10-14T00:00:00Z",
+      "text": "reviewed",
+      "signature": {
+        "algorithm": "ES256",
+        "value": "j6g4IrEMf2Jt5kEpvVAAnER_KpJCMpVjkW6fK8cEoE8149nvDKJlyaGk1RI0gJsASn24NjWjYqbu-3DdUd6YGg"
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app",
+      "dependsOn": [
+        "pkg:npm/left-pad@1.3.0"
+      ]
+    }
+  ],
+  "signature": {
+    "algorithm": "ES256",
+    "value": "XTNpJxPQJZAzmk4TeNTq94Tbvo9W384SGv3ZiG28lr-ZtxTu_myl-5YMtUieMbWQetULSC6gnicqHHgL2UDtyg"
+  }
+}

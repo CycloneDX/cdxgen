@@ -1,0 +1,83 @@
+{
+  "specFormat": "CycloneDX",
+  "specVersion": "2.0",
+  "serialNumber": "urn:uuid:7b5a3e9c-1d2f-4a6b-8c9d-0e1f2a3b4c5d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-14T00:00:00Z",
+    "component": {
+      "type": "application",
+      "name": "app",
+      "version": "1.0.0",
+      "bom-ref": "app"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "left-pad",
+      "version": "1.3.0",
+      "purl": "pkg:npm/left-pad@1.3.0",
+      "bom-ref": "pkg:npm/left-pad@1.3.0",
+      "signature": {
+        "algorithm": "Ed25519",
+        "value": "8b4L5uMMrRnc4HsfArt26hv0OfeCj1d1ZXtFyM84hLdL0Prmc1QzUWyUmrP1COXPgzhAdZsUD0DIsTgB10fyCg"
+      }
+    },
+    {
+      "type": "library",
+      "group": "org.example",
+      "name": "café-ünïcode",
+      "version": "2.0.0",
+      "bom-ref": "pkg:maven/org.example/caf%C3%A9@2.0.0",
+      "description": "astral 𝔘 and escapes \" \\ \u0007",
+      "signature": {
+        "algorithm": "Ed25519",
+        "value": "jgCR4L8MdE06gOzp7MqpcjPj0nLtjz5NsBnYZlmZmZpq1zlpyV4oVDDICOeG1fFPpgf61iifO3Ia1tSIsePRAQ"
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "api",
+      "bom-ref": "svc-api",
+      "endpoints": [
+        "https://api.example.com/v1"
+      ],
+      "signature": {
+        "algorithm": "Ed25519",
+        "value": "ovGV0LTwVr-why_ZNCJoQN5hw0HQS2Ll6N5yCD7LEao6JjEZ0d5vtpV6XQy5Ve3TU6C4tbvoHszWKCSaWPDhAg"
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "subjects": [
+        "pkg:npm/left-pad@1.3.0"
+      ],
+      "annotator": {
+        "organization": {
+          "name": "Example"
+        }
+      },
+      "timestamp": "2026-10-14T00:00:00Z",
+      "text": "reviewed",
+      "signature": {
+        "algorithm": "Ed25519",
+        "value": "wZd982b7NqTlrAF_Q2jC4jqmDTFxLBJOowpobfoyZ6vMxfYi7lgpKVlzaWROSeEfwEsple0hZWIxgmGFwoHkDA"
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app",
+      "dependsOn": [
+        "pkg:npm/left-pad@1.3.0"
+      ]
+    }
+  ],
+  "signature": {
+    "algorithm": "Ed25519",
+    "value": "Ls1ADAFr2_98Z-Ki4a1p0aSG8T28OPs5a449UJ288eb3spBl2Cwgp95df6wb1azbUXA1YTBtZ2rcQ77Ae_J0Dw"
+  }
+}

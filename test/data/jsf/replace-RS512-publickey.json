@@ -1,0 +1,108 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:7b5a3e9c-1d2f-4a6b-8c9d-0e1f2a3b4c5d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-14T00:00:00Z",
+    "component": {
+      "type": "application",
+      "name": "app",
+      "version": "1.0.0",
+      "bom-ref": "app"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "left-pad",
+      "version": "1.3.0",
+      "purl": "pkg:npm/left-pad@1.3.0",
+      "bom-ref": "pkg:npm/left-pad@1.3.0",
+      "signature": {
+        "algorithm": "RS512",
+        "publicKey": {
+          "kty": "RSA",
+          "n": "y7XvnIyXtKa1bLcqJCkk2BY9Qiw5QIBXzjrBeOkDLkK2sDZPuBa6OOqrUK7RhOVxW1xJcw0tuY8y7hJoc1u7RJfd-kAXLKgSCY9twZH9w0tvGeFyQSaDnqkSXP0yIPzaYov8-ylRjOSu0kHmBlrI2POzzKHNI4dBu48fZ_MN7GOmFVJHTX-9JLRqCy4h5rezoYsayQtCfhdMtsSeAeWPFp2HU7lgVdR4QAt7gnvTcIT3vVlpP0-RfRrEnvTbZ8XCjk2B7I10XOBNXhd2NgG71hUfADb2g9uUecHy8GD9nBtd4uIaoOCECE_K0hsHLfhCmH-9HMaENKHovPShERERIQ",
+          "e": "AQAB"
+        },
+        "value": "C-IWFeDbGIPrOs6NjYl-pUvvoL8sRwbCtr4G0cBiqAo5H2MOMSGcdNFAFBMKHfYCumGUJwpgay0kE58WF93SZJZYxATZgyaSHouHKgszR_X00IAFP4zpokXBw2Jxp4kEnyH8WbU3j7vtW4ZRdO2SmkX7DIdXnV366iOFDXy0mWVWoLoYJctz1Cn2_dtt2SP5wRBdzHkUxL4r8lc_UWgARVnBK60LaFaYvBfu51ueJpPew-sY61ONcErkzalWL2OcE2p-6NHT2KZFA1mDLqMyOSPxw4OwVwNqaLLw3d8viNwkB7Q0Ovj8KpfV1s_solmBrS94-qytQcI1TxElOgQLfQ"
+      }
+    },
+    {
+      "type": "library",
+      "group": "org.example",
+      "name": "café-ünïcode",
+      "version": "2.0.0",
+      "bom-ref": "pkg:maven/org.example/caf%C3%A9@2.0.0",
+      "description": "astral 𝔘 and escapes \" \\ \u0007",
+      "signature": {
+        "algorithm": "RS512",
+        "publicKey": {
+          "kty": "RSA",
+          "n": "y7XvnIyXtKa1bLcqJCkk2BY9Qiw5QIBXzjrBeOkDLkK2sDZPuBa6OOqrUK7RhOVxW1xJcw0tuY8y7hJoc1u7RJfd-kAXLKgSCY9twZH9w0tvGeFyQSaDnqkSXP0yIPzaYov8-ylRjOSu0kHmBlrI2POzzKHNI4dBu48fZ_MN7GOmFVJHTX-9JLRqCy4h5rezoYsayQtCfhdMtsSeAeWPFp2HU7lgVdR4QAt7gnvTcIT3vVlpP0-RfRrEnvTbZ8XCjk2B7I10XOBNXhd2NgG71hUfADb2g9uUecHy8GD9nBtd4uIaoOCECE_K0hsHLfhCmH-9HMaENKHovPShERERIQ",
+          "e": "AQAB"
+        },
+        "value": "DnZN1rrCeh2_9Lb7zzw7jzW151jdFqsr2WdSK5P4G2sj0vA0gwyd7Cy1GsaWAFCmTtP0kXI2P9mGrZlp6vSX667sJ6HhGQea1WPWT8BY1jWAtT2UFiMivHyHdtNlSF8m_QGeZgwrrXh3IMwBuWs9VJWLq5cZFBuvpxHYB-SuDj75iidM-L2_e60BJ9cxABj9OtEkdPfdk8371bsuVki15E4BdPRNXSk0T22bOu96drvg1NPyUA9M7h25WMVWjwRn20rtM_7eLhjA49qw0_Jba0sHayZB5OrMUOrIsZ7HJT4ITDFUzXEleh2LbaEI77y8ZxksboTklzymnUnbdeIRwA"
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "api",
+      "bom-ref": "svc-api",
+      "endpoints": [
+        "https://api.example.com/v1"
+      ],
+      "signature": {
+        "algorithm": "RS512",
+        "publicKey": {
+          "kty": "RSA",
+          "n": "y7XvnIyXtKa1bLcqJCkk2BY9Qiw5QIBXzjrBeOkDLkK2sDZPuBa6OOqrUK7RhOVxW1xJcw0tuY8y7hJoc1u7RJfd-kAXLKgSCY9twZH9w0tvGeFyQSaDnqkSXP0yIPzaYov8-ylRjOSu0kHmBlrI2POzzKHNI4dBu48fZ_MN7GOmFVJHTX-9JLRqCy4h5rezoYsayQtCfhdMtsSeAeWPFp2HU7lgVdR4QAt7gnvTcIT3vVlpP0-RfRrEnvTbZ8XCjk2B7I10XOBNXhd2NgG71hUfADb2g9uUecHy8GD9nBtd4uIaoOCECE_K0hsHLfhCmH-9HMaENKHovPShERERIQ",
+          "e": "AQAB"
+        },
+        "value": "VxiAsgky3BqfijwCnkuPNDAsKPUqQPihcVubSe4KZRZMQjGrsXZH_sSWZP2GtET8l2VoLJPIku7wbHo9VnT00tJCQuY3mBzZ-aKoWbB7X3SRl9auWCARBFvbeKe9F_PyEhHJN20EuDlnDpMvBP5fvpE1GhGc-GR4lQLYHKUe6-C1A3OxQiEc81kmDMCgnJLeWuNqhTnjtKQl6QGBbbX83LNQQ72Bc9s_qNgENNKt-zQxqCh6Mq_3C2oBpK6AnI_gFNf8swOyjs67axE-R6O3yPxbzs-00UY-m8Zm04FKdt-xAzU_xDyWNMyAvwgjq54xfwPn-bZqMsphcUGglxCk0g"
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "subjects": [
+        "pkg:npm/left-pad@1.3.0"
+      ],
+      "annotator": {
+        "organization": {
+          "name": "Example"
+        }
+      },
+      "timestamp": "2026-10-14T00:00:00Z",
+      "text": "reviewed",
+      "signature": {
+        "algorithm": "RS512",
+        "publicKey": {
+          "kty": "RSA",
+          "n": "y7XvnIyXtKa1bLcqJCkk2BY9Qiw5QIBXzjrBeOkDLkK2sDZPuBa6OOqrUK7RhOVxW1xJcw0tuY8y7hJoc1u7RJfd-kAXLKgSCY9twZH9w0tvGeFyQSaDnqkSXP0yIPzaYov8-ylRjOSu0kHmBlrI2POzzKHNI4dBu48fZ_MN7GOmFVJHTX-9JLRqCy4h5rezoYsayQtCfhdMtsSeAeWPFp2HU7lgVdR4QAt7gnvTcIT3vVlpP0-RfRrEnvTbZ8XCjk2B7I10XOBNXhd2NgG71hUfADb2g9uUecHy8GD9nBtd4uIaoOCECE_K0hsHLfhCmH-9HMaENKHovPShERERIQ",
+          "e": "AQAB"
+        },
+        "value": "FzXQyihpoiBSMxNUiNzzYABsQpQFyvQkWwJTKk-LEoeVsZwGpISNL67MpN2Yw9u5VPQ4gN0hnVCv8PDlWFy4hQ-WBYEeEMzkZJOwuIzrdFdK0X4gqtMm91sdWE9D3KCdO6JvtoIHXLE0ZyJUiHhFvD2a_OhdB49tQApC34Qonf_Yg1OLkU2DR7dwJptzy_rEEXyaG6u0KjFwZQm2nsOLBjeY1okzCqU8mZyJTtgXrkv4cjhpWfS2mTu7Y_Fx87kXXFTu_1_9GleZRIkRb7GLE6G1fOtLmxxh-sgmNTCfoK7C8Mt_r-jr1VBecfX8YvYi66QllpOAUwdKrYQUn0nbDA"
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app",
+      "dependsOn": [
+        "pkg:npm/left-pad@1.3.0"
+      ]
+    }
+  ],
+  "signature": {
+    "algorithm": "RS512",
+    "publicKey": {
+      "kty": "RSA",
+      "n": "y7XvnIyXtKa1bLcqJCkk2BY9Qiw5QIBXzjrBeOkDLkK2sDZPuBa6OOqrUK7RhOVxW1xJcw0tuY8y7hJoc1u7RJfd-kAXLKgSCY9twZH9w0tvGeFyQSaDnqkSXP0yIPzaYov8-ylRjOSu0kHmBlrI2POzzKHNI4dBu48fZ_MN7GOmFVJHTX-9JLRqCy4h5rezoYsayQtCfhdMtsSeAeWPFp2HU7lgVdR4QAt7gnvTcIT3vVlpP0-RfRrEnvTbZ8XCjk2B7I10XOBNXhd2NgG71hUfADb2g9uUecHy8GD9nBtd4uIaoOCECE_K0hsHLfhCmH-9HMaENKHovPShERERIQ",
+      "e": "AQAB"
+    },
+    "value": "jiGFoJYwcEOTVhHqjHsBYGkQgfEhc8J6VD_Eq_zVE8v5AfUgbvtALm-g-1cYYfLMhFMc2P9NcRP0DMlwsGiG-WXKATr3bqvfMIZFWVOo7ZhlhEMdlzNdpig_cjbgsGjbqukf7R9PL3NCZHoXF4J4o1Vjrx2fGwd9NDdKx5z5vGbzNnA2tteTHPHvumj2fM1jcm9QT3rFlta_T2kFxULMMz8_X2UrHNTJcpPchJ7EPjh6ekK7Q34rBFkUOyi76w-lKlzx2V7rYUjeDnicEm7K0AC382_5O7fLv9lzv6oc8Sler3JYCVtUKb4j148h0_-C4BIewsr7mUz9sX5jlxeasQ"
+  }
+}

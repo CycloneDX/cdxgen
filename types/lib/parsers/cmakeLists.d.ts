@@ -27,7 +27,8 @@ export declare function parseCmakeCommands(text: string): {
 /**
  * Replace `${VAR}` references with the values of simple `set()` calls. A
  * reference to an unknown variable is left in place, so callers can tell a
- * resolved value from an unresolved one.
+ * resolved value from an unresolved one. Expansion stops at the previous
+ * round once the text would exceed 64 KiB.
  *
  * @param {string} value Argument text
  * @param {Map<string,string>} variables Known variable values

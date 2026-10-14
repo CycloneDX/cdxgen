@@ -33,9 +33,9 @@ export declare function getCppModules(src: string, options: object, osPkgsList: 
         "bom-ref": string;
         group?: undefined;
     } | {
+        purl?: undefined;
         description?: undefined;
         license?: undefined;
-        purl?: undefined;
         "bom-ref"?: undefined;
         group: any;
         name: any;

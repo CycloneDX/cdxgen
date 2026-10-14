@@ -1,0 +1,113 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:7b5a3e9c-1d2f-4a6b-8c9d-0e1f2a3b4c5d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-14T00:00:00Z",
+    "component": {
+      "type": "application",
+      "name": "app",
+      "version": "1.0.0",
+      "bom-ref": "app"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "left-pad",
+      "version": "1.3.0",
+      "purl": "pkg:npm/left-pad@1.3.0",
+      "bom-ref": "pkg:npm/left-pad@1.3.0",
+      "signature": {
+        "chain": [
+          {
+            "algorithm": "Ed25519",
+            "keyId": "builder",
+            "value": "tbdKmE4XzswnmlqdppemRfGgK4BBWuV1IJg5x7fsFb9N6Z6krrqBEXm1nRPoFPUeo4avBL7LiBP4NLGRPZMgCQ"
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "group": "org.example",
+      "name": "café-ünïcode",
+      "version": "2.0.0",
+      "bom-ref": "pkg:maven/org.example/caf%C3%A9@2.0.0",
+      "description": "astral 𝔘 and escapes \" \\ \u0007",
+      "signature": {
+        "chain": [
+          {
+            "algorithm": "Ed25519",
+            "keyId": "builder",
+            "value": "iECp8bp57V4A0Q21Y6LRNZCpNr5KyCkr6_FAT0ALueDIW4xURxygk8ZMQSavVS13yNaLSsvtn8UBE42kUdurDw"
+          }
+        ]
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "api",
+      "bom-ref": "svc-api",
+      "endpoints": [
+        "https://api.example.com/v1"
+      ],
+      "signature": {
+        "chain": [
+          {
+            "algorithm": "Ed25519",
+            "keyId": "builder",
+            "value": "IywN3UFDNE-BaWobud86X-GOzlWyZdJQyIFLUcUg8_sKEoHVV_4edkK0hHQKXCFU_hdOM8uMSNZjzn02Fwi4DA"
+          }
+        ]
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "subjects": [
+        "pkg:npm/left-pad@1.3.0"
+      ],
+      "annotator": {
+        "organization": {
+          "name": "Example"
+        }
+      },
+      "timestamp": "2026-10-14T00:00:00Z",
+      "text": "reviewed",
+      "signature": {
+        "chain": [
+          {
+            "algorithm": "Ed25519",
+            "keyId": "builder",
+            "value": "WjoB8C_I_7-geU0_fiDpDvuggorfpRfXswAMiKxBggDNsgunjL2h9MMrlzD6wdF8vfEQipJK_AuXfHJQkdvkAQ"
+          }
+        ]
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app",
+      "dependsOn": [
+        "pkg:npm/left-pad@1.3.0"
+      ]
+    }
+  ],
+  "signature": {
+    "chain": [
+      {
+        "algorithm": "Ed25519",
+        "keyId": "builder",
+        "value": "mr37Xcw9Kj2DlVumcJ5dkPXVp_SXU8IBFboz-roN1hVKYVWoqUoYs1NVkURf9nCPlj_Eych1QYdwxs9MtbkjDA"
+      },
+      {
+        "algorithm": "PS512",
+        "keyId": "release",
+        "value": "bcx4UQoR3G6P6gBNaphhnLYk9ZTRaziwkmdizdBbV3suCDDpOqXw2EScgHBcQrxv7TktXH3Ri9fetTAYtIWxq8DXzdbsKYRKvozKGy-jObXZwQaipYxkX0h2xIoCoIPhzD-fdm7feX56Ax415LrPi9_ghBA5TpjWAIBmjzE4diD_H7Ay3q6DTZZvggTxAuHTYo-seY2kAKz7fT0RH8blHtxWl1Qsy3wuDD7X_ErDF4SaU6uNAPo2vQRlFaAmaJhNkKU8KFkbtBRAPzuezeZu7KlNkvqs_RF081Q5UvW57at-S_KDnhsVI-ZB9ue5aOiqr6DpPQFP00TYhNJaICdKxg"
+      }
+    ]
+  }
+}

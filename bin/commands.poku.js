@@ -445,6 +445,8 @@ describe("JSF signing and verification commands", () => {
       "Ed25519",
       "--mode",
       "signers",
+      "--verify-existing-with",
+      file("rsa-public.pem"),
       "--sign-components",
     ]);
     assert.notStrictEqual(status, 0);
@@ -596,6 +598,8 @@ describe("JSF signing and verification commands", () => {
       "Ed25519",
       "--mode",
       "signers",
+      "--verify-existing-with",
+      file("rsa-public.pem"),
     ]);
     assert.strictEqual(cosigned.status, 0, cosigned.stderr);
 
@@ -768,5 +772,675 @@ describe("JSF signing and verification commands", () => {
       const sent = JSON.parse(uploaded.slice(start, end + 1));
       assert.strictEqual(sent.signature.algorithm, "RS256");
     });
+  });
+});
+
+describe("JSF verification refuses ambiguous or partial signatures", () => {
+  const dir = mkdtempSync(join(tmpdir(), "cdxgen-jsf-hardening-"));
+  process.on("exit", () => rmSync(dir, { recursive: true, force: true }));
+  const file = (name) => join(dir, name);
+  const keyPair = (name, type, options = {}) => {
+    const pair = crypto.generateKeyPairSync(type, {
+      ...options,
+      publicKeyEncoding: { type: "spki", format: "pem" },
+      privateKeyEncoding: { type: "pkcs8", format: "pem" },
+    });
+    writeFileSync(file(`${name}-public.pem`), pair.publicKey);
+    writeFileSync(file(`${name}-private.pem`), pair.privateKey);
+    return pair;
+  };
+  const rsa = keyPair("rsa", "rsa", { modulusLength: 2048 });
+  keyPair("ed25519", "ed25519");
+  writeFileSync(file("hmac.secret"), crypto.randomBytes(48));
+  const bom = {
+    bomFormat: "CycloneDX",
+    specVersion: "1.6",
+    version: 1,
+    components: [
+      {
+        type: "library",
+        name: "left-pad",
+        version: "1.3.0",
+        purl: "pkg:npm/left-pad@1.3.0",
+      },
+    ],
+  };
+  writeFileSync(file("bom.json"), JSON.stringify(bom));
+  const sign = (input, output, ...args) =>
+    run([binFor("sign"), "-i", file(input), "-o", file(output), ...args]);
+  const verify = (input, ...args) =>
+    run([binFor("verify"), "-i", file(input), ...args]);
+  const validate = (input, ...args) =>
+    run([
+      binFor("validate"),
+      "-i",
+      file(input),
+      "--benchmark",
+      "none",
+      "--fail-severity",
+      "critical",
+      ...args,
+    ]);
+  const readJson = (name) => JSON.parse(readFileSync(file(name), "utf-8"));
+  const writeJson = (name, value) =>
+    writeFileSync(file(name), JSON.stringify(value));
+  const signedByRsa = async (name, ...args) => {
+    const { status, stderr } = await sign(
+      "bom.json",
+      name,
+      "-k",
+      file("rsa-private.pem"),
+      ...args,
+    );
+    assert.strictEqual(status, 0, stderr);
+    return readJson(name);
+  };
+
+  it("cdx-verify needs an explicit key and ignores public.key in the working directory", async () => {
+    const attacker = join(dir, "attacker");
+    mkdirSync(attacker);
+    const { publicKey, privateKey } = crypto.generateKeyPairSync("ed25519", {
+      publicKeyEncoding: { type: "spki", format: "pem" },
+      privateKeyEncoding: { type: "pkcs8", format: "pem" },
+    });
+    writeFileSync(join(attacker, "public.key"), publicKey);
+    writeFileSync(join(attacker, "attacker-private.pem"), privateKey);
+    const signed = await run([
+      binFor("sign"),
+      "-i",
+      file("bom.json"),
+      "-o",
+      join(attacker, "bom.json"),
+      "-k",
+      join(attacker, "attacker-private.pem"),
+      "-a",
+      "Ed25519",
+    ]);
+    assert.strictEqual(signed.status, 0, signed.stderr);
+    const { status, stdout } = await run([binFor("verify")], { cwd: attacker });
+    assert.strictEqual(status, 1);
+    assert.match(stdout, /Name the trusted key with --public-key <file>/);
+    assert.doesNotMatch(stdout, /valid!/);
+  });
+
+  it("cdx-verify rejects a BOM whose root signature was removed", async () => {
+    const stripped = await signedByRsa("strip.json");
+    delete stripped.signature;
+    writeJson("stripped-clean.json", stripped);
+    stripped.components.push({
+      type: "library",
+      name: "evil",
+      version: "6.6.6",
+    });
+    writeJson("stripped.json", stripped);
+
+    const plain = await verify(
+      "stripped.json",
+      "--public-key",
+      file("rsa-public.pem"),
+    );
+    assert.strictEqual(plain.status, 1);
+    assert.match(plain.stdout, /The BOM has no root signature/);
+    assert.match(plain.stdout, /Pass --allow-nested-only/);
+
+    const injected = await verify(
+      "stripped.json",
+      "--public-key",
+      file("rsa-public.pem"),
+      "--allow-nested-only",
+    );
+    assert.strictEqual(injected.status, 1);
+    assert.match(
+      injected.stdout,
+      /1 of 2 components are not signed, starting with components\[1\] 'evil'/,
+    );
+
+    const clean = await verify(
+      "stripped-clean.json",
+      "--public-key",
+      file("rsa-public.pem"),
+      "--allow-nested-only",
+    );
+    assert.strictEqual(clean.status, 0, clean.stdout);
+    assert.match(clean.stdout, /✓ 1 nested signature\(s\) are valid!/);
+    assert.match(
+      clean.stdout,
+      /Note: Without a root signature, no signature covers bomFormat, specVersion, version, or which components, services, and annotations the BOM lists and in what order\./,
+    );
+  });
+
+  it("cdx-verify rejects a component signature presented as a BOM", async () => {
+    const component = {
+      type: "library",
+      name: "innocent",
+      bomFormat: "CycloneDX",
+      specVersion: "1.6",
+      components: [{ type: "library", name: "backdoor" }],
+    };
+    const block = { algorithm: "RS512" };
+    const value = crypto
+      .sign(
+        "sha512",
+        Buffer.from(jcs({ ...component, signature: block })),
+        rsa.privateKey,
+      )
+      .toString("base64url");
+    writeJson("promoted.json", {
+      ...component,
+      signature: { ...block, value },
+    });
+    const { status, stdout } = await verify(
+      "promoted.json",
+      "--public-key",
+      file("rsa-public.pem"),
+    );
+    assert.strictEqual(status, 1);
+    assert.match(
+      stdout,
+      /members that CycloneDX does not define at the root of a BOM: type, name/,
+    );
+
+    writeJson("bom-shaped-component.json", {
+      ...bom,
+      components: [{ ...bom.components[0], specVersion: "1.6" }],
+    });
+    const refused = await sign(
+      "bom-shaped-component.json",
+      "bom-shaped-signed.json",
+      "-k",
+      file("rsa-private.pem"),
+    );
+    assert.notStrictEqual(refused.status, 0);
+    assert.match(
+      refused.stderr,
+      /Cannot sign components\[0\] 'left-pad': it carries specVersion, which only the root of a BOM may hold/,
+    );
+  });
+
+  it("cdx-verify, cdx-sign, and cdx-validate refuse repeated member names", async () => {
+    await signedByRsa("duplicate-source.json");
+    const signedText = readFileSync(file("duplicate-source.json"), "utf-8");
+    const duplicated = `{"components":[{"type":"library","name":"evil"}],${signedText.slice(1)}`;
+    writeFileSync(file("duplicated.json"), duplicated);
+    const verified = await verify(
+      "duplicated.json",
+      "--public-key",
+      file("rsa-public.pem"),
+    );
+    assert.strictEqual(verified.status, 1);
+    assert.match(verified.stdout, /Duplicate member name at \/components/);
+    assert.doesNotMatch(verified.stdout, /valid!/);
+
+    const signed = await sign(
+      "duplicated.json",
+      "duplicated-signed.json",
+      "-k",
+      file("rsa-private.pem"),
+    );
+    assert.notStrictEqual(signed.status, 0);
+    assert.match(signed.stderr, /Duplicate member name at \/components/);
+
+    const validated = await validate(
+      "duplicated.json",
+      "--public-key",
+      file("rsa-public.pem"),
+    );
+    assert.strictEqual(validated.status, 4);
+    assert.match(validated.stderr, /Duplicate member name at \/components/);
+  });
+
+  it("cdx-verify refuses numbers a double cannot hold exactly", async () => {
+    const signed = await signedByRsa("number.json");
+    signed.version = 1;
+    const text = JSON.stringify(signed).replace(
+      '"version":1',
+      '"version":1.0000000000000001',
+    );
+    writeFileSync(file("number-tampered.json"), text);
+    const { status, stdout } = await verify(
+      "number-tampered.json",
+      "--public-key",
+      file("rsa-public.pem"),
+    );
+    assert.strictEqual(status, 1);
+    assert.match(
+      stdout,
+      /The number 1\.0000000000000001 at \/version cannot be held exactly/,
+    );
+  });
+
+  it("cdx-verify refuses more than 32 signature entries", async () => {
+    const signed = await signedByRsa("many.json", "--mode", "signers");
+    signed.signature.signers.unshift(
+      ...Array.from({ length: 32 }, () => ({
+        algorithm: "RS512",
+        value: "AAAA",
+      })),
+    );
+    writeJson("many-entries.json", signed);
+    const { status, stdout } = await verify(
+      "many-entries.json",
+      "--public-key",
+      file("rsa-public.pem"),
+    );
+    assert.strictEqual(status, 1);
+    assert.match(
+      stdout,
+      /The signers array has 33 entries; at most 32 are supported/,
+    );
+  });
+
+  it("cdx-verify lists entries that did not verify, and --require-all fails on them", async () => {
+    await signedByRsa(
+      "cosign.json",
+      "--mode",
+      "signers",
+      "--key-id",
+      "builder",
+    );
+    const cosigned = await run([
+      binFor("sign"),
+      "-i",
+      file("cosign.json"),
+      "-k",
+      file("ed25519-private.pem"),
+      "-a",
+      "Ed25519",
+      "--mode",
+      "signers",
+      "--key-id",
+      "auditor",
+      "--verify-existing-with",
+      file("rsa-public.pem"),
+    ]);
+    assert.strictEqual(cosigned.status, 0, cosigned.stderr);
+    const both = await verify(
+      "cosign.json",
+      "--public-key",
+      file("rsa-public.pem"),
+      "--public-key",
+      file("ed25519-public.pem"),
+      "--require-all",
+    );
+    assert.strictEqual(both.status, 0, both.stdout);
+    assert.doesNotMatch(both.stdout, /Warning/);
+
+    const spoofed = readJson("cosign.json");
+    spoofed.signature.signers.push({
+      algorithm: "RS512",
+      keyId: "security-team",
+      value: "AAAA",
+    });
+    writeJson("spoofed.json", spoofed);
+    const lenient = await verify(
+      "spoofed.json",
+      "--public-key",
+      file("rsa-public.pem"),
+    );
+    assert.strictEqual(lenient.status, 0, lenient.stdout);
+    assert.match(lenient.stdout, /Matched KeyId: 'builder'/);
+    assert.match(
+      lenient.stdout,
+      /Warning: 2 of 3 signers entries did not verify with the given key\(s\)/,
+    );
+    assert.match(
+      lenient.stdout,
+      /signers\[2\] \(RS512, keyId 'security-team'\)/,
+    );
+    const strict = await verify(
+      "spoofed.json",
+      "--public-key",
+      file("rsa-public.pem"),
+      "--public-key",
+      file("ed25519-public.pem"),
+      "--require-all",
+    );
+    assert.strictEqual(strict.status, 1);
+    assert.match(strict.stdout, /BOM signature is invalid!/);
+    assert.match(
+      strict.stdout,
+      /signers\[2\]: The RS512 signature does not verify/,
+    );
+
+    const validated = await validate(
+      "cosign.json",
+      "--public-key",
+      file("rsa-public.pem"),
+    );
+    assert.strictEqual(validated.status, 0, validated.stderr);
+    assert.match(
+      validated.stderr,
+      /warning — 1 of 2 signature entries did not verify with the given key: entry 1 \(keyId 'auditor'\)/,
+    );
+  });
+
+  it("cdx-validate fails on a bad signature whenever a key is given", async () => {
+    const tampered = await signedByRsa("validate.json");
+    tampered.components[0].version = "1.3.1";
+    writeJson("validate-tampered.json", tampered);
+    const failed = await validate(
+      "validate-tampered.json",
+      "--public-key",
+      file("rsa-public.pem"),
+    );
+    assert.strictEqual(failed.status, 4);
+    assert.match(failed.stderr, /signature verification failed/);
+    const reportOnly = await validate(
+      "validate-tampered.json",
+      "--public-key",
+      file("rsa-public.pem"),
+      "--no-require-signature",
+    );
+    assert.strictEqual(reportOnly.status, 0, reportOnly.stderr);
+    assert.match(reportOnly.stderr, /signature verification failed/);
+    const untouched = await validate(
+      "validate.json",
+      "--public-key",
+      file("rsa-public.pem"),
+    );
+    assert.strictEqual(untouched.status, 0, untouched.stderr);
+  });
+
+  it("cdx-sign embeds the signer's public key in the root signature only", async () => {
+    const embedded = await signedByRsa("embedded.json");
+    assert.deepStrictEqual(
+      embedded.signature.publicKey,
+      crypto.createPublicKey(rsa.publicKey).export({ format: "jwk" }),
+    );
+    assert.strictEqual(embedded.components[0].signature.publicKey, undefined);
+    const otherKey = await verify(
+      "embedded.json",
+      "--public-key",
+      file("ed25519-public.pem"),
+      "--no-deep",
+    );
+    assert.strictEqual(otherKey.status, 1);
+    const plain = await signedByRsa("plain.json", "--no-embed-public-key");
+    assert.strictEqual(plain.signature.publicKey, undefined);
+    const hmac = await sign(
+      "bom.json",
+      "hmac.json",
+      "-k",
+      file("hmac.secret"),
+      "-a",
+      "HS256",
+    );
+    assert.strictEqual(hmac.status, 0, hmac.stderr);
+    assert.strictEqual(readJson("hmac.json").signature.publicKey, undefined);
+  });
+
+  it("cdx-sign checks the existing signers before co-signing", async () => {
+    await signedByRsa("cosign-check.json", "--mode", "signers");
+    const cosign = (input, ...args) =>
+      run([
+        binFor("sign"),
+        "-i",
+        file(input),
+        "-k",
+        file("ed25519-private.pem"),
+        "-a",
+        "Ed25519",
+        "--mode",
+        "signers",
+        ...args,
+      ]);
+    const tampered = readJson("cosign-check.json");
+    tampered.components[0].version = "9.9.9";
+    writeJson("cosign-tampered.json", tampered);
+    const before = readFileSync(file("cosign-tampered.json"), "utf-8");
+
+    const refused = await cosign(
+      "cosign-tampered.json",
+      "--verify-existing-with",
+      file("rsa-public.pem"),
+    );
+    assert.notStrictEqual(refused.status, 0);
+    assert.match(
+      refused.stderr,
+      /none of the 1 existing signature entry\(s\) could be verified, so the content may have changed since it was signed/,
+    );
+    assert.strictEqual(
+      readFileSync(file("cosign-tampered.json"), "utf-8"),
+      before,
+    );
+
+    const noKey = await cosign("cosign-check.json");
+    assert.notStrictEqual(noKey.status, 0);
+    assert.match(noKey.stderr, /no --verify-existing-with key was given/);
+
+    const allowed = await cosign(
+      "cosign-tampered.json",
+      "--allow-unverified-history",
+    );
+    assert.strictEqual(allowed.status, 0, allowed.stderr);
+    assert.match(
+      allowed.stderr,
+      /Warning: appending a signers entry although none of the 1 existing entry\(s\) verified/,
+    );
+
+    const appended = await cosign(
+      "cosign-check.json",
+      "--verify-existing-with",
+      file("rsa-public.pem"),
+    );
+    assert.strictEqual(appended.status, 0, appended.stderr);
+    assert.strictEqual(
+      readJson("cosign-check.json").signature.signers.length,
+      2,
+    );
+  });
+
+  it("cdx-verify accepts the BOMs signed by cdxgen 13.3.0", async () => {
+    const fixtures = join(process.cwd(), "test", "data", "jsf");
+    const check = async (name, ...args) => {
+      const { status, stdout } = await run([
+        binFor("verify"),
+        "-i",
+        join(fixtures, name),
+        ...args,
+      ]);
+      assert.strictEqual(status, 0, `${name}: ${stdout}`);
+    };
+    await check(
+      "replace-RS512.json",
+      "--public-key",
+      join(fixtures, "rsa-public.pem"),
+    );
+    await check(
+      "replace-ES512.json",
+      "--public-key",
+      join(fixtures, "p521-public.pem"),
+    );
+    await check(
+      "replace-HS256.json",
+      "--secret-key",
+      join(fixtures, "hmac.secret"),
+    );
+    await check(
+      "signers-RS512-ES256.json",
+      "--public-key",
+      join(fixtures, "rsa-public.pem"),
+      "--public-key",
+      join(fixtures, "p256-public.pem"),
+      "--require-all",
+    );
+    await check(
+      "chain-Ed25519-PS512.json",
+      "--public-key",
+      join(fixtures, "ed25519-public.pem"),
+      "--public-key",
+      join(fixtures, "rsa-public.pem"),
+      "--require-all",
+    );
+  });
+
+  it("cdx-validate refuses an empty key path or key file", async () => {
+    const tampered = await signedByRsa("empty-key.json");
+    tampered.components[0].version = "6.6.6";
+    writeJson("empty-key-tampered.json", tampered);
+    writeFileSync(file("empty.pem"), "  \n");
+    for (const keyArgs of [
+      ["--public-key", ""],
+      ["--public-key", file("empty.pem")],
+      ["--secret-key", file("empty.pem")],
+    ]) {
+      const { status, stderr } = await validate(
+        "empty-key-tampered.json",
+        ...keyArgs,
+      );
+      assert.strictEqual(status, 1, `${keyArgs.join(" ")}: ${stderr}`);
+      assert.match(stderr, /needs exactly one file path|is empty/);
+    }
+  });
+
+  it("cdx-verify --require-all fails when an expected signer's entry was removed", async () => {
+    await signedByRsa("require-all.json", "--key-id", "builder");
+    const cosigned = await run([
+      binFor("sign"),
+      "-i",
+      file("require-all.json"),
+      "-k",
+      file("ed25519-private.pem"),
+      "-a",
+      "Ed25519",
+      "--mode",
+      "signers",
+      "--verify-existing-with",
+      file("rsa-public.pem"),
+    ]);
+    assert.strictEqual(cosigned.status, 0, cosigned.stderr);
+    const removed = readJson("require-all.json");
+    removed.signature = removed.signature.signers[0];
+    writeJson("require-all-removed.json", removed);
+    const lenient = await verify(
+      "require-all-removed.json",
+      "--public-key",
+      file("rsa-public.pem"),
+    );
+    assert.strictEqual(lenient.status, 0, lenient.stdout);
+    const strict = await verify(
+      "require-all-removed.json",
+      "--public-key",
+      file("rsa-public.pem"),
+      "--public-key",
+      file("ed25519-public.pem"),
+      "--require-all",
+    );
+    assert.strictEqual(strict.status, 1);
+    assert.match(
+      strict.stdout,
+      /No entry of the root signature verifies with key #2/,
+    );
+    assert.match(strict.stdout, /key #2: .*ed25519-public\.pem/);
+  });
+
+  it("cdx-verify warns about nested signature entries that did not verify", async () => {
+    const signed = await signedByRsa("nested-warn.json", "--mode", "signers");
+    delete signed.signature;
+    signed.components[0].signature.signers.push({
+      algorithm: "RS512",
+      keyId: "release-approver",
+      value: "AAAA",
+    });
+    writeJson("nested-warn-unsigned.json", signed);
+    const resigned = await sign(
+      "nested-warn-unsigned.json",
+      "nested-warn-signed.json",
+      "-k",
+      file("rsa-private.pem"),
+      "--no-sign-components",
+    );
+    assert.strictEqual(resigned.status, 0, resigned.stderr);
+    const { status, stdout } = await verify(
+      "nested-warn-signed.json",
+      "--public-key",
+      file("rsa-public.pem"),
+    );
+    assert.strictEqual(status, 0, stdout);
+    assert.match(
+      stdout,
+      /Warning: 1 nested signature entries did not verify with the given key\(s\)/,
+    );
+    assert.match(
+      stdout,
+      /components\[0\] 'left-pad' signers\[1\] \(RS512, keyId 'release-approver'\)/,
+    );
+    const strict = await verify(
+      "nested-warn-signed.json",
+      "--public-key",
+      file("rsa-public.pem"),
+      "--require-all",
+    );
+    assert.strictEqual(strict.status, 1);
+  });
+
+  it("cdx-verify refuses BOM bytes that are not UTF-8", async () => {
+    const withReplacement = {
+      ...bom,
+      components: [{ ...bom.components[0], description: "a�b" }],
+    };
+    writeJson("utf8-source.json", withReplacement);
+    const signed = await sign(
+      "utf8-source.json",
+      "utf8-signed.json",
+      "-k",
+      file("rsa-private.pem"),
+    );
+    assert.strictEqual(signed.status, 0, signed.stderr);
+    const bytes = readFileSync(file("utf8-signed.json"));
+    const marker = Buffer.from("�", "utf8");
+    const at = bytes.indexOf(marker);
+    assert.ok(at > 0);
+    const swapped = Buffer.concat([
+      bytes.subarray(0, at),
+      Buffer.from([0xff]),
+      bytes.subarray(at + marker.length),
+    ]);
+    writeFileSync(file("utf8-swapped.json"), swapped);
+    const intact = await verify(
+      "utf8-signed.json",
+      "--public-key",
+      file("rsa-public.pem"),
+    );
+    assert.strictEqual(intact.status, 0, intact.stdout);
+    const { status, stdout } = await verify(
+      "utf8-swapped.json",
+      "--public-key",
+      file("rsa-public.pem"),
+    );
+    assert.strictEqual(status, 1);
+    assert.match(stdout, /not valid UTF-8/);
+  });
+
+  it("cdx-sign signs with an rsa-pss key and says the key was not embedded", async () => {
+    let pair;
+    try {
+      pair = crypto.generateKeyPairSync("rsa-pss", {
+        modulusLength: 2048,
+        publicKeyEncoding: { type: "spki", format: "pem" },
+        privateKeyEncoding: { type: "pkcs8", format: "pem" },
+      });
+    } catch {
+      // Bun cannot create rsa-pss keys.
+      return;
+    }
+    writeFileSync(file("pss-private.pem"), pair.privateKey);
+    writeFileSync(file("pss-public.pem"), pair.publicKey);
+    const signed = await sign(
+      "bom.json",
+      "pss.json",
+      "-k",
+      file("pss-private.pem"),
+      "-a",
+      "PS384",
+    );
+    assert.strictEqual(signed.status, 0, signed.stderr);
+    assert.match(signed.stderr, /public key was not embedded/);
+    const verified = await verify(
+      "pss.json",
+      "--public-key",
+      file("pss-public.pem"),
+    );
+    assert.strictEqual(verified.status, 0, verified.stdout);
   });
 });

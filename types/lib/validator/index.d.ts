@@ -50,12 +50,14 @@ export declare function validateGeneratedBom(bomJson: object): Promise<{
  * @param {string} [options.publicKey]          If set, verify the BOM signature with this public key.
  * @param {string|Buffer} [options.secretKey]   If set, verify an HMAC (HS*) BOM signature with this shared secret.
  * @param {boolean} [options.nestedSignatures]  Also verify component, service, and annotation signatures (default true), as cdx-verify does.
+ *   Parse untrusted BOM text with `parseStrictJson()` from `lib/parsers/strictJson.js` when verifying signatures.
  * @returns {{
  *   schemaValid: boolean,
  *   deepValid: boolean,
  *   validationErrors: Array<{ stage: string, message: string }>,
  *   signatureVerified: boolean | null,
  *   signatureDetails: object | null,
+ *   signatureEntries: Array<{ index: number, algorithm: any, keyId: any, verified: boolean }> | null,
  *   findings: Array<object>,
  *   allFindings: Array<object>,
  *   benchmarks: Array<object>,
@@ -82,6 +84,12 @@ export declare function validateBomAdvanced(bomJson: object, options?: {
     }>;
     signatureVerified: boolean | null;
     signatureDetails: object | null;
+    signatureEntries: Array<{
+        index: number;
+        algorithm: any;
+        keyId: any;
+        verified: boolean;
+    }> | null;
     findings: Array<object>;
     allFindings: Array<object>;
     benchmarks: Array<object>;
