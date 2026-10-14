@@ -37,16 +37,16 @@ cdx-verify -i bom.json --public-key builder.pem --public-key auditor.pem --requi
 
 ## CLI reference
 
-| Flag                   | Default    | Description                                                                                                                                       |
-| ---------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `-i, --input`          | `bom.json` | Local BOM path or OCI reference                                                                                                                   |
-| `--platform`           | —          | OCI platform override when verifying an attached BOM                                                                                              |
+| Flag                   | Default    | Description                                                                                                                                      |
+| ---------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `-i, --input`          | `bom.json` | Local BOM path or OCI reference                                                                                                                  |
+| `--platform`           | —          | OCI platform override when verifying an attached BOM                                                                                             |
 | `--public-key`         | —          | Trusted PEM-encoded public key. Repeatable: a signature entry verifies when one of the keys verifies it. Required unless `--secret-key` is given |
-| `--secret-key`         | —          | Shared secret file for `HS256`, `HS384`, and `HS512` signatures. Cannot be combined with `--public-key`                                           |
-| `--deep` / `--no-deep` | on         | Verify nested component, service, and annotation signatures too                                                                                   |
-| `--require-all`        | off        | Require every signature entry to verify with one of the keys, and every key to verify an entry of the root signature                              |
-| `--allow-nested-only`  | off        | Accept a BOM without a root signature when every component, service, and annotation carries a signature that verifies                             |
-| `-h, --help`           | off        | Show help                                                                                                                                         |
+| `--secret-key`         | —          | Shared secret file for `HS256`, `HS384`, and `HS512` signatures. Cannot be combined with `--public-key`                                          |
+| `--deep` / `--no-deep` | on         | Verify nested component, service, and annotation signatures too                                                                                  |
+| `--require-all`        | off        | Require every signature entry to verify with one of the keys, and every key to verify an entry of the root signature                             |
+| `--allow-nested-only`  | off        | Accept a BOM without a root signature when every component, service, and annotation carries a signature that verifies                            |
+| `-h, --help`           | off        | Show help                                                                                                                                        |
 
 ## Verification behavior
 
