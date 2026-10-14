@@ -143,8 +143,8 @@
     "watch": "poku --watch"
   },
   "dependencies": {
-    "@babel/parser": "8.0.6",
-    "@babel/traverse": "8.0.6",
+    "@babel/parser": "8.0.7",
+    "@babel/traverse": "8.0.7",
     "@cdxgen/cdx-purl": "0.0.6",
     "@isaacs/string-locale-compare": "1.1.0",
     "@npmcli/fs": "6.0.0",
@@ -160,7 +160,7 @@
     "npm-package-arg": "14.0.0",
     "parse-conflict-json": "6.0.0",
     "semver": "7.8.5",
-    "smol-toml": "1.9.0",
+    "smol-toml": "1.9.1",
     "ssri": "14.0.0",
     "tar": "7.5.22",
     "treeverse": "3.0.0",
@@ -171,7 +171,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
-    "esmock": "2.7.6",
+    "esmock": "2.7.9",
     "poku": "4.5.0",
     "sinon": "22.1.0",
     "typescript": "^7.0.2"
