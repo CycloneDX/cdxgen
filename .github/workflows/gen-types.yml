@@ -1,0 +1,69 @@
+name: Gen types
+
+on:
+  schedule:
+    - cron: '23 2 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: gen-types
+  cancel-in-progress: false
+
+# https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token
+permissions: {}
+
+jobs:
+  gen-types:
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - name: Setup pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352d6458794dcd2491c4babbbce0c15c1  # v6.1.0
+      - name: Use Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1  # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - name: pnpm install
+        run: pnpm install:frozen
+      - name: Generate types
+        run: pnpm gen-types
+      - name: Check for changes
+        id: changes
+        run: |
+          git add types/
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Create pull request
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BRANCH="gen-types/automated"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git commit --signoff -m "chore: regenerate types ($(date -u +%F))"
+          git push --force origin "$BRANCH"
+          gh label create automated --color 0E8A16 --description 'Automated change' --force
+          gh label create gen-types --color 1D76DB --description 'Regenerated d.ts types' --force
+          PR_STATE=$(gh pr view "$BRANCH" --json state --jq .state 2>/dev/null || echo MISSING)
+          if [ "$PR_STATE" != "OPEN" ]; then
+            gh pr create \
+              --base master \
+              --head "$BRANCH" \
+              --title 'chore: regenerate types' \
+              --body 'Automated daily regeneration of the `types/` declarations via `pnpm gen-types`. This PR is labeled and auto-merge is enabled.' \
+              --label automated \
+              --label gen-types
+          fi
+          gh pr merge "$BRANCH" --auto --merge || \
+            echo '::warning::Could not enable auto-merge. Verify that repository settings allow auto-merge and merge commits.'
