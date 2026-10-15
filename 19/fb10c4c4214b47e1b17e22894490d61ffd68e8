@@ -1,0 +1,15 @@
+lib/core/ui.stream-contract.poku.js
+  h_6a4cc5cdf68def 116-120,122,129-133,139,163,178
+  h_6a4cc5cdf68def 121,123-126,134-138,140-146,157
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "19fb10c4c4214b47e1b17e22894490d61ffd68e8",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
