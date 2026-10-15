@@ -1,0 +1,18 @@
+docs/GO_EVINSE_GOLEM.md
+  h_6a4cc5cdf68def 107
+lib/ecosystems/golem.js
+  h_6a4cc5cdf68def 1857,1863-1864
+lib/ecosystems/golem.poku.js
+  h_6a4cc5cdf68def 1016-1017
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "78cbb53e6d6f9c8373ebbfc10c563197815c6959",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
