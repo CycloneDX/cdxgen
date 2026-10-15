@@ -1,0 +1,13 @@
+example.com/gotest github.com/fatih/color@v1.17.0
+example.com/gotest github.com/gorilla/mux@v1.8.1
+example.com/gotest github.com/mattn/go-colorable@v0.1.14
+example.com/gotest github.com/mattn/go-isatty@v0.0.20
+example.com/gotest go@1.24
+example.com/gotest golang.org/x/sys@v0.29.0
+github.com/fatih/color@v1.18.0 github.com/mattn/go-colorable@v0.1.13
+github.com/fatih/color@v1.18.0 github.com/mattn/go-isatty@v0.0.20
+github.com/fatih/color@v1.18.0 golang.org/x/sys@v0.25.0
+github.com/mattn/go-colorable@v0.1.14 github.com/mattn/go-isatty@v0.0.20
+github.com/mattn/go-colorable@v0.1.14 golang.org/x/sys@v0.29.0
+github.com/mattn/go-isatty@v0.0.20 golang.org/x/sys@v0.6.0
+go@1.24 toolchain@go1.24
