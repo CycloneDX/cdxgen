@@ -104,7 +104,7 @@ Golem rolls the routes it finds into a `services[]` section — one service per 
 
 Golem also rolls the outbound hosts the source calls into services of `kind: "external"`. Those are egress dependencies: they carry `x-trust-boundary: true`, the `cdx:golem:service:kind` property distinguishes them from servers, and their endpoints name full URLs.
 
-Route paths are normalised to the placeholder spelling OpenAPI uses: gin, echo, and iris `:id` and `*filepath`, chi and gorilla/mux `{id}` and `{id:[0-9]+}`, and Go 1.22 net/http `{id...}` all become `{id}`; a placeholder is only recognised at the start of a segment, so a literal colon such as `/time/09:30` is left alone. A listener address such as `:8080` is kept verbatim.
+Route paths are normalised to the placeholder spelling OpenAPI uses: gin and iris `:id` and `*filepath`, chi and gorilla/mux `{id}` and `{id:[0-9]+}`, and Go 1.22 net/http `{id...}` all become `{id}`. A placeholder is only recognised at the start of a segment, so a literal colon such as `/time/09:30` is left alone; echo's bare `*` catch-all has no placeholder name and is kept verbatim, as are listener addresses such as `:8080`.
 
 An OpenAPI document is merged over the golem services when present: the spec `--openapi-spec-file` names, or the `openapi.json` an earlier `atom-tools convert -t go -i <golem-report.json>` left in the repo. Both sources are kept, and they roll services up differently: golem lists one service per server, the OpenAPI flow one per path and method, so a route both name appears under both entries. Filter on `endpoints` when a single view is needed.
 
