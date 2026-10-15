@@ -102,9 +102,11 @@ Component-level properties explain how an individual Go module appears in the an
 
 Golem rolls the routes it finds into a `services[]` section — one service per server, such as a gin engine or a net/http listener, with each route's HTTP method, framework, and composed path. `evinse -l go`, `saasbom`, and `cdxgen -t go --profile research` map it into CycloneDX `services[]`, so a Go SaaSBOM lists its endpoints the way kosi (Kotlin) and dosai (.NET) already do.
 
-Route paths are normalised to the placeholder spelling OpenAPI uses: gin, echo, and iris `:id` and `*filepath`, chi and gorilla/mux `{id}` and `{id:[0-9]+}` all become `{id}`. A listener address such as `:8080` is kept verbatim.
+Golem also rolls the outbound hosts the source calls into services of `kind: "external"`. Those are egress dependencies: they carry `x-trust-boundary: true`, the `cdx:golem:service:kind` property distinguishes them from servers, and their endpoints name full URLs.
 
-An OpenAPI document is merged over the golem services when present: the spec `--openapi-spec-file` names, or the `openapi.json` an earlier `atom-tools convert -t go -i <golem-report.json>` left in the repo. Both sources name the same routes; a route both name is one service.
+Route paths are normalised to the placeholder spelling OpenAPI uses: gin, echo, and iris `:id` and `*filepath`, chi and gorilla/mux `{id}` and `{id:[0-9]+}`, and Go 1.22 net/http `{id...}` all become `{id}`; a placeholder is only recognised at the start of a segment, so a literal colon such as `/time/09:30` is left alone. A listener address such as `:8080` is kept verbatim.
+
+An OpenAPI document is merged over the golem services when present: the spec `--openapi-spec-file` names, or the `openapi.json` an earlier `atom-tools convert -t go -i <golem-report.json>` left in the repo. Both sources are kept, and they roll services up differently: golem lists one service per server, the OpenAPI flow one per path and method, so a route both name appears under both entries. Filter on `endpoints` when a single view is needed.
 
 ```shell
 # Optional: reuse a converted spec instead of relying on golem's own services
