@@ -1,0 +1,30 @@
+docs/CUSTOM_PROPERTIES.md
+  h_6a4cc5cdf68def 445
+docs/GO_EVINSE_GOLEM.md
+  h_6a4cc5cdf68def 105,107-109
+lib/ecosystems/golem.js
+  h_6a4cc5cdf68def 1858-1863,1873,1875-1876,1886-1894,1911-1913,1915-1920,1925
+lib/ecosystems/golem.poku.js
+  h_6a4cc5cdf68def 961,1001-1015,1020-1063
+lib/ecosystems/parsers-go.js
+  h_6a4cc5cdf68def 705-707,729-733,912-916,920-921
+lib/ecosystems/parsers-go.poku.js
+  h_6a4cc5cdf68def 704-731
+lib/evinser/evinser.js
+  h_6a4cc5cdf68def 1150-1153,1157-1158
+test/data/go-drift-untidy.mod
+  h_6a4cc5cdf68def 1-14
+test/data/gomod-drift-root-graph.txt
+  h_6a4cc5cdf68def 1-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cf56d47a57adb41e18844912221307c88923bad6",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
