@@ -65,7 +65,20 @@ export function currentRuntime() {
  */
 export function runtimeCommand(script, runtime) {
   if (runtime === "deno") {
-    return [resolveRuntimeBinary("deno"), "run", "-A", script];
+    // Without this, deno adopts the repo's deno.json (`nodeModulesDir:
+    // "auto"` with npm imports) when the script lives inside the repo,
+    // materializes its own npm graph into node_modules/.deno — diverging
+    // from the pnpm-managed install, since deno resolves versions itself
+    // (the repo sets `"lock": false`) — and rewires the root node_modules
+    // links under the running suite. Resolving from deno's own cache leaves
+    // the install alone.
+    return [
+      resolveRuntimeBinary("deno"),
+      "run",
+      "-A",
+      "--node-modules-dir=false",
+      script,
+    ];
   }
   return [resolveRuntimeBinary(runtime), script];
 }
