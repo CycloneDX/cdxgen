@@ -252,7 +252,10 @@ if [ "${1:-}" = "--with-runtimes" ]; then
       fi
       output="$TMP/${runtime}-${fixture}.bom.json"
       if [ "$runtime" = "deno" ]; then
-        runtime_cmd=("$runtime" run -A)
+        # Keep deno from materializing its own npm graph into
+        # node_modules/.deno and rewiring the pnpm-managed links mid-job
+        # (see the same flag in test/helpers/introspection-e2e.js).
+        runtime_cmd=("$runtime" run -A --node-modules-dir=false)
       else
         runtime_cmd=("$runtime")
       fi
