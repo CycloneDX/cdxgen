@@ -52,6 +52,7 @@ evinse -l go
    +--> metadata.component.properties: cdx:golem:*
    +--> cryptographic-asset components for golem.crypto evidence
    +--> crypto data-flow properties and call-stack frames when enabled
+   +--> services[] from golem.services (#4498)
 ```
 
 The integration keeps source evidence compact. It records file names, line numbers, categories, counts, symbol kinds, scopes, and module identity. It does not copy raw environment values, command output, generated file contents, or embedded secrets into the BOM.
@@ -96,6 +97,21 @@ Golem emits properties on two levels.
 Metadata-level properties summarize the whole Go project and the helper run. Examples include `cdx:golem:toolVersion`, `cdx:golem:callGraphMode`, `cdx:golem:dataFlowMode`, `cdx:golem:dataFlowCallGraphMode`, `cdx:golem:noRecurse`, `cdx:golem:includeAllFlows`, `cdx:golem:packageCount`, `cdx:golem:fileCount`, `cdx:golem:securitySignalCount`, `cdx:golem:nativeArtifactCount`, `cdx:golem:goDirectiveVersion`, and `cdx:golem:toolchainDirective`.
 
 Component-level properties explain how an individual Go module appears in the analyzed source. Examples include `cdx:golem:modulePath`, `cdx:golem:goVersion`, `cdx:golem:usageScopes`, `cdx:golem:occurrenceEvidenceKinds`, `cdx:golem:securitySignalCategory`, `cdx:golem:securitySignalSeverity`, `cdx:golem:vendored`, `cdx:golem:privateModuleCandidate`, `cdx:golem:licenseFileCount`, and `cdx:golem:localReplacement`.
+
+## Services and SaaSBOM
+
+Golem rolls the routes it finds into a `services[]` section — one service per server, such as a gin engine or a net/http listener, with each route's HTTP method, framework, and composed path. `evinse -l go`, `saasbom`, and `cdxgen -t go --profile research` map it into CycloneDX `services[]`, so a Go SaaSBOM lists its endpoints the way kosi (Kotlin) and dosai (.NET) already do.
+
+Route paths are normalised to the placeholder spelling OpenAPI uses: gin, echo, and iris `:id` and `*filepath`, chi and gorilla/mux `{id}` and `{id:[0-9]+}` all become `{id}`. A listener address such as `:8080` is kept verbatim.
+
+An OpenAPI document is merged over the golem services when present: the spec `--openapi-spec-file` names, or the `openapi.json` an earlier `atom-tools convert -t go -i <golem-report.json>` left in the repo. Both sources name the same routes; a route both name is one service.
+
+```shell
+# Optional: reuse a converted spec instead of relying on golem's own services
+golem analyze --dir . --format json --out golem-report.json
+atom-tools convert -t go -i golem-report.json -o openapi.json
+cdxgen -t go --profile research -o bom.json .
+```
 
 ## Crypto and CBOM evidence
 
