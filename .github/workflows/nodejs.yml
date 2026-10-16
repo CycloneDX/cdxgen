@@ -188,6 +188,8 @@ jobs:
           rm -rf /tmp/docker-images* /tmp/atom-* /tmp/mvn-deps*
 
   golden-tests:
+    needs: changes
+    if: needs.changes.outputs.code == 'true' && github.event_name != 'merge_group'
     runs-on: 'ubuntu-latest'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
@@ -221,6 +223,8 @@ jobs:
   # a failure, so this job cannot go green by skipping everything it is here to
   # check.
   rust-fetch-tests:
+    needs: changes
+    if: needs.changes.outputs.code == 'true' && github.event_name != 'merge_group'
     runs-on: 'ubuntu-latest'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
