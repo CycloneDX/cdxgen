@@ -1,0 +1,14 @@
+.github/workflows/gen-types.yml
+  h_6a4cc5cdf68def 25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "479a2dfe22258d7689ac3f47109f33068c0d660e",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
