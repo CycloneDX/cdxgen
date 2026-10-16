@@ -57,4 +57,41 @@ export declare function collectGolemEvidence(golemReport?: object, components?: 
     metadataProperties: Array<object>;
     purlLocationMap: Record<string, any[]>;
 };
+/**
+ * Normalise a Go route path to the placeholder spelling OpenAPI — and
+ * therefore the rest of the services a BOM carries — uses. Gin and iris
+ * write `:id` and `*filepath`, chi and gorilla/mux write `{id}` or
+ * `{id:[0-9]+}`, and Go 1.22's net/http patterns write `{id...}`; all become
+ * `{id}`. Placeholders are only recognised at the start of a segment, so a
+ * literal colon inside one — `/time/09:30` — is left alone. Values that are
+ * not route paths, such as the `:8080` a net/http listener reports or the
+ * full URL an external service call names, are returned as they are, and so
+ * is echo's catch-all, whose bare `*` names no placeholder to normalise.
+ *
+ * @param {string} routePath Path a golem endpoint reports
+ * @returns {string} The normalised path
+ */
+export declare function normalizeGolemRoutePath(routePath: string): string;
+/**
+ * Project the services and API endpoints of a golem report into evinse's
+ * service map, so a Go `evinse`/`saasbom` run lists its services the way the
+ * kosi (Kotlin) and dosai (.NET) collectors already do (#4498).
+ *
+ * golem rolls one service up per server it saw — a `gin` engine, a net/http
+ * listener on `:8080` — and lists the routes registered on it, each with its
+ * HTTP method and framework. It also rolls the outbound hosts the source
+ * calls into services of `kind: "external"`; those carry
+ * `x-trust-boundary: true`, since a host the application calls sits outside
+ * its own trust boundary. The map is keyed by the golem service id, which is
+ * unique per server, while `name` carries the display name.
+ *
+ * HTTP methods are lower-cased to match the property values the OpenAPI flow
+ * emits, so a consumer grouping by `cdx:service:httpMethod` sees one value
+ * per method.
+ *
+ * @param {object} [golemReport={}] Parsed golem analysis report.
+ * @param {Object} [servicesMap={}] Service map to populate.
+ * @returns {Object} The service map
+ */
+export declare function collectGolemServices(golemReport?: object, servicesMap?: Object): Object;
 //# sourceMappingURL=golem.d.ts.map
