@@ -1,8 +1,10 @@
 name: Gen types
 
+# Scheduled runs stay off until one manual run has been proven green end
+# to end; re-enable the cron by deleting the three schedule lines below.
 on:
-  schedule:
-    - cron: '23 2 * * *'
+  # schedule:
+  #   - cron: '23 2 * * *'
   workflow_dispatch:
 
 concurrency:
@@ -18,7 +20,6 @@ jobs:
       contents: write
       pull-requests: write
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       - name: Setup pnpm
@@ -32,6 +33,10 @@ jobs:
         run: pnpm install:frozen
       - name: Generate types
         run: pnpm gen-types
+        env:
+          # tsc is a node process, and a full pass over this repo's sources
+          # needs both time and heap; the runner has 16 GB.
+          NODE_OPTIONS: --max-old-space-size=8192
       - name: Check for changes
         id: changes
         run: |
