@@ -188,6 +188,31 @@ export declare function loadReusableSemanticsSlice(language: string, slicesFile:
  */
 export declare function mergeServiceDefinitions(target: Object, source: Object): Object;
 /**
+ * Collect the services of a Go project for the golem evidence path (#4498).
+ *
+ * Two sources are kept and merged by service name, the way the Scala path
+ * merges a user-provided spec into its report's services. They roll services
+ * up differently — golem per server, OpenAPI per path and method — so a
+ * route both name appears under both entries:
+ *
+ * - the golem report itself, whose `services[]` section rolls the registered
+ *   routes up per server (a gin engine, a net/http listener) with methods and
+ *   frameworks, and the outbound hosts it calls into `kind: "external"`
+ *   services flagged as trust-boundary crossings;
+ * - an OpenAPI document, either the one `--openapi-spec-file` names or the
+ *   `openapi.json` an earlier `atom-tools convert -t go` left in the repo,
+ *   which is reused when present so `golem`/`atom-tools` and `cdxgen` can be
+ *   run as separate steps.
+ *
+ * @param {object|undefined} golemReport Parsed golem analysis report, when one
+ *   was produced.
+ * @param {string} dirPath Project directory the report was produced from.
+ * @param {Object} options Command line options.
+ * @param {Object} [servicesMap={}] Service map to populate.
+ * @returns {Object} The service map
+ */
+export declare function collectGoServices(golemReport: object | undefined, dirPath: string, options?: Object, servicesMap?: Object): Object;
+/**
  * Function to analyze the project
  *
  * @param {Object} dbObjMap DB and model instances
