@@ -1,0 +1,26 @@
+types/lib/ecosystems/golem.d.ts
+  h_6a4cc5cdf68def 60-96
+types/lib/ecosystems/golem.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/ecosystems/parsers-go.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/evinser/evinser.d.ts
+  h_6a4cc5cdf68def 190-214
+types/lib/evinser/evinser.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/managers/binary.d.ts.map
+  h_6a4cc5cdf68def 1
+types/lib/stages/pregen/pregen.d.ts.map
+  h_6a4cc5cdf68def 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3f47a705ca1084eac181dfcfd3fa3418dcc6fb38",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
