@@ -165,6 +165,17 @@ For .NET projects, `evinse` uses the bundled `dosai` helper from `@cdxgen/cdxgen
   different `--exclude` patterns or an older cdxgen release, so a stale cache
   can ignore your current excludes; delete the file to force a fresh analysis.
   Pass `--usages-slices-file` to prefer your own slice.
+- A `--deep` run that does not run evidence or crypto analysis writes a trimmed
+  methods report: dosai is invoked with `--sections` naming the sections cdxgen
+  reads, and `Metadata.OmittedSections` in the file names what was left out.
+  An evidence run (`--evidence` or `--include-crypto`, including
+  `--profile research`) regenerates such a trimmed file in full before evinse
+  uses it, so dosai still runs once per scan. evinse never reuses a trimmed
+  file on its own: it runs dosai again for the full report. To get the full
+  report on disk, run with `--evidence`, or run dosai methods directly without
+  `--sections`. `--usages-slices-file` is the user's choice and is used as
+  given; the ledger records a degradation when it leaves out a section cdxgen
+  reads, and another when the persisted semantics report is partial.
 - dosai's package URLs are matched to the BOM by version. When the BOM holds
   a package in several versions (two projects restoring different versions),
   a record whose purl names no version the BOM has is given to the version of
