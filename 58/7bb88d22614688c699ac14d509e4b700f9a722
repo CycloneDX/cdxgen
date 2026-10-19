@@ -1,0 +1,19 @@
+lib/ecosystems/goLocalLicenses.poku.js
+  s_2b0a1b4fa60f34::t_39bd7d0b3d3253 239,242-244
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "587bb88d22614688c699ac14d509e4b700f9a722",
+  "prompts": {},
+  "sessions": {
+    "s_2b0a1b4fa60f34": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5eb76170-601f-48a2-af27-6bb93ff9af29",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
