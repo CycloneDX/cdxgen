@@ -1,0 +1,90 @@
+lib/inventory/dosai.poku.js
+  s_2a9ecad3a75870::t_4b8ddbb7acf5b4 1469-1470,1521-1524,1526-1527,1529-1530,1532-1541,1543-1549,1552,1722-1726
+  s_2a9ecad3a75870::t_39461c53d15272 1471-1519
+  s_2a9ecad3a75870::t_d58b1db104f6f8 1520
+types/lib/ecosystems/golem.d.ts
+  s_2a9ecad3a75870::t_bb51c0d1d329fd 13,62-69,74,82-83,85-86,92,96
+types/lib/inventory/cacheDir.d.ts
+  s_2a9ecad3a75870::t_bb51c0d1d329fd 26,28-30
+types/lib/ecosystems/parsers-misc.d.ts
+  s_2a9ecad3a75870::t_bb51c0d1d329fd 184-190,203,212,233,242
+lib/cli/managedBom.js
+  s_2a9ecad3a75870::t_88e1e7ed33f236 117,2183
+docs/EVINSE.md
+  s_2a9ecad3a75870::t_c8cce9991fb687 177-178
+lib/parsers/largeJson.js
+  s_2a9ecad3a75870::t_30ddadcea0e17d 284-286
+  s_2a9ecad3a75870::t_6d3d538b72641c 420-446
+  s_2a9ecad3a75870::t_47943f63af6ab8 259-261
+  s_2a9ecad3a75870::t_a7677c38cc4158 419
+lib/evinser/evinser.js
+  s_2a9ecad3a75870::t_39461c53d15272 83,85
+  s_2a9ecad3a75870::t_290400a2d1e57d 1400
+  s_2a9ecad3a75870::t_46433359441aa5 1389-1396,1402
+  s_2a9ecad3a75870::t_88e1e7ed33f236 1412-1413
+types/lib/inventory/dosai.d.ts
+  s_2a9ecad3a75870::t_bb51c0d1d329fd 115,124
+claude-plugin/skills/sbom-fidelity-loop/SKILL.md
+  s_2a9ecad3a75870::t_232b8d993a2991 27
+lib/inventory/dosai.js
+  s_2a9ecad3a75870::t_290400a2d1e57d 1174
+  s_2a9ecad3a75870::t_4f9a095943b4c0 613-650
+  s_2a9ecad3a75870::t_c3fedd840dc97b 30
+lib/evinser/evinseOptions.poku.js
+  s_2a9ecad3a75870::t_ad08613800106f 313,315-354
+types/lib/ecosystems/parsers-go.d.ts
+  s_2a9ecad3a75870::t_bb51c0d1d329fd 2-5,9,19-22,52,70,72,118
+types/lib/evinser/evinser.d.ts
+  s_2a9ecad3a75870::t_bb51c0d1d329fd 207-208,214
+lib/parsers/largeJson.poku.js
+  s_2a9ecad3a75870::t_75e99164f9cb61 240-250,252-269
+  s_2a9ecad3a75870::t_60aee34f1b76b5 12
+  s_2a9ecad3a75870::t_5d2ffd256f9ee2 251
+.agents/skills/sbom-fidelity-loop/SKILL.md
+  s_2a9ecad3a75870::t_232b8d993a2991 27
+data/remediations.json
+  s_2a9ecad3a75870::t_232b8d993a2991 779,800
+  s_2a9ecad3a75870::t_c8cce9991fb687 801,806
+types/lib/cli/managedBom.d.ts.map
+  s_2a9ecad3a75870::t_3d45329ca09b8c 1
+types/lib/cli/nativeBom.d.ts.map
+  s_2a9ecad3a75870::t_7b5d7818abb4e0 1
+types/lib/core/propertySanitizer.d.ts.map
+  s_2a9ecad3a75870::t_45153bca970773 1
+types/lib/ecosystems/golem.d.ts.map
+  s_2a9ecad3a75870::t_93dddedae8038c 1
+types/lib/ecosystems/parsers-go.d.ts.map
+  s_2a9ecad3a75870::t_da6d1674a81317 1
+types/lib/ecosystems/parsers-misc.d.ts.map
+  s_2a9ecad3a75870::t_5c6e71525499df 1
+types/lib/ecosystems/rubyutils.d.ts.map
+  s_2a9ecad3a75870::t_fe2caea39feee4 1
+types/lib/evinser/evinser.d.ts.map
+  s_2a9ecad3a75870::t_532a828b6200c9 1
+types/lib/inventory/cacheDir.d.ts.map
+  s_2a9ecad3a75870::t_bccc2d93080104 1
+types/lib/inventory/dosai.d.ts.map
+  s_2a9ecad3a75870::t_ed2dec1ccedb79 1
+types/lib/inventory/spdx.d.ts.map
+  s_2a9ecad3a75870::t_604627a1a164e4 1
+types/lib/managers/binary.d.ts.map
+  s_2a9ecad3a75870::t_fee3fc507e736a 1
+types/lib/validator/bomValidator.d.ts.map
+  s_2a9ecad3a75870::t_0bc639aa597f9b 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1b6cfd9019ace04631baf36e549e56a306a96a71",
+  "prompts": {},
+  "sessions": {
+    "s_2a9ecad3a75870": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c6b2208a-f0eb-4017-9266-9174359dc585",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
