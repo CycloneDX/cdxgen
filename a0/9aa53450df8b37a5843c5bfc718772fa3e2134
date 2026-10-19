@@ -1,0 +1,47 @@
+lib/ecosystems/golem.js
+  s_906c4a191d83b3::t_9105c92526bb88 1843-1886,1894,1897,1907-2028,2031-2041,2044,2047,2051-2264,2274-2277,2279-2282,2288,2293-2299,2302-2304,2308-2309,2312-2326,2330-2331,2335-2336,2352
+  s_906c4a191d83b3::t_cae88a16b9ae04 18-21
+  s_906c4a191d83b3::t_ab998a25769978 1620-1621,1628-1631
+docs/CUSTOM_PROPERTIES.md
+  s_906c4a191d83b3::t_fdbb21d6c17021 986
+lib/evinser/evinser.poku.js
+  s_906c4a191d83b3::t_ab0ac188d55cea 560
+  s_906c4a191d83b3::t_ffad9f3195ae21 601-720
+docs/GO_EVINSE_GOLEM.md
+  s_906c4a191d83b3::t_b381960686de4e 107-120
+lib/core/propertySanitizer.js
+  s_906c4a191d83b3::t_90aa36461f2966 150-165
+  s_906c4a191d83b3::t_13f9f1ed853dda 149
+lib/core/propertySanitizer.poku.js
+  s_906c4a191d83b3::t_05edcd7d6e714a 4
+  s_906c4a191d83b3::t_5cf90b265667e2 47-61
+lib/ecosystems/golem.poku.js
+  s_906c4a191d83b3::t_6b2d960bae9fb3 1133-1134,1136
+  s_906c4a191d83b3::t_4b7b7d162d91c9 972,975
+  s_906c4a191d83b3::t_1df3959a233080 1534-1606,1616-1637,1641-1666
+  s_906c4a191d83b3::t_c7eabc4d818447 989-990,992
+  s_906c4a191d83b3::t_80de0a788e138c 14,24,27,30-39,42-46
+  s_906c4a191d83b3::t_c1c0963fafb4fa 40-41,1258-1261,1304-1307,1346,1607-1615,1638-1640
+  s_906c4a191d83b3::t_562d129186c95d 1046-1132,1135,1137-1257,1262-1303,1308-1345,1347-1490
+  s_906c4a191d83b3::t_b0a7fbe351a205 47
+docs/GO_EVINSE_GOLEM_THREAT_MODEL.md
+  s_906c4a191d83b3::t_255c75b2b6bfc8 58
+lib/evinser/evinser.js
+  s_906c4a191d83b3::t_ec640d6f497725 1164-1165
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a09aa53450df8b37a5843c5bfc718772fa3e2134",
+  "prompts": {},
+  "sessions": {
+    "s_906c4a191d83b3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c1f39ad4-cbf7-4234-a9c3-e1a047005510",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
