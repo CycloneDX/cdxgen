@@ -1,0 +1,152 @@
+lib/cli/nativeBom.poku.js
+  s_2b0a1b4fa60f34::t_51b4aec9480056 7,12
+  s_2b0a1b4fa60f34::t_bdb226bca416dd 187
+  s_2b0a1b4fa60f34::t_7d6e19dfce17c0 226,228,239,243,265-268,289-292,294
+  s_2b0a1b4fa60f34::t_cf62f68134655f 153-186,188-225,227,229-238,240-242,244-264,269-288,293,295-307
+docs/ENV.md
+  s_2b0a1b4fa60f34::t_fede09ad455d4a 162
+test/data/go-replace/README.md
+  s_2b0a1b4fa60f34::t_962a4bf3d0df81 1-27
+lib/ecosystems/parsers-go.js
+  s_2b0a1b4fa60f34::t_318b9e7bc78d9a 551-553,559,594,636,991,1120,1692,1826
+  s_2b0a1b4fa60f34::t_7c7e254d6614bc 666
+  s_2b0a1b4fa60f34::t_93f9d53724843f 538-539,554,556-558
+  s_2b0a1b4fa60f34::t_d250a2f85495df 494-511
+  s_2b0a1b4fa60f34::t_b4f52b7dcbc8f7 354,356,491,493,1015,1228-1252,1256-1260,1286,1295-1298,1300-1302,1304-1317,1331,1344-1383,1390,1399-1402,1410-1416,1419-1420,1424,1431-1434,1440-1441,1443-1454,1466,1483,1485-1494,1524,1536,1545,1548-1550,1555
+  s_2b0a1b4fa60f34::t_edc59656d2080e 53-57,59-60,62,64,74-139,141-241,247,251-255,259-262,269-273,275,277,284-292,294-299,313,317-321,323-353,391-410,413-415,417-418,421-430,434-439,441-449,451-465,469,471-473,475-490,512-519
+  s_2b0a1b4fa60f34::t_4451e86af59729 357-390
+  s_2b0a1b4fa60f34::t_540c4f8014d156 1472-1478
+  s_2b0a1b4fa60f34::t_42d3bef93e80c0 882-925,931-936,947-977,979-981,983-984,986-987,989-990,993-995,1003
+  s_2b0a1b4fa60f34::t_2e4e30c99832f7 795
+  s_2b0a1b4fa60f34::t_b8e4fd4261f390 679-681,686
+  s_2b0a1b4fa60f34::t_1db5e1fea71b91 1630-1631,1636-1638
+  s_2b0a1b4fa60f34::t_ef071326d93474 7
+  s_2b0a1b4fa60f34::t_ae43fc3a2fd3ee 303-306,985,1001,1668-1670,1809,1830-1836
+  s_2b0a1b4fa60f34::t_c8ad96f0204dcc 758-761,764,767-775
+  s_2b0a1b4fa60f34::t_8bd08f7a903369 620-621,630-633
+  s_2b0a1b4fa60f34::t_cede8a5d9596ee 1016-1037,1041-1051,1054-1058,1060,1063,1065-1067,1069,1072,1074,1077-1101,1103-1109,1112-1116,1121-1168,1181
+  s_2b0a1b4fa60f34::t_ffc5c64cc415f5 1644-1650,1653-1654,1657,1659,1662-1667,1671-1676,1679
+  s_2b0a1b4fa60f34::t_e0463af3110d6f 2,4,17
+  s_2b0a1b4fa60f34::t_c905ca542e69eb 1782-1787,1797,1799-1808,1810-1811,1814-1815,1818,1820-1824,1829,1837-1838
+  s_2b0a1b4fa60f34::t_f5e79b64fef097 355
+  s_2b0a1b4fa60f34::t_1b11e1dac3352e 492
+test/data/go-replace/workspace/a-go-list-deps.txt
+  s_2b0a1b4fa60f34::t_7893c095110e92 1-80
+lib/ecosystems/goLocalLicenses.poku.js
+  s_2b0a1b4fa60f34::t_bdb226bca416dd 259-263
+  s_2b0a1b4fa60f34::t_0fdf40494fb729 167-168,172
+  s_2b0a1b4fa60f34::t_ed08d865d17934 1-7,185-258,264-305
+  s_2b0a1b4fa60f34::t_95cc2104c62e08 306-316
+docs/CUSTOM_PROPERTIES.md
+  s_2b0a1b4fa60f34::t_1874411ff64207 444,481,636,813,2142
+test/data/go-local-first/modulecache/github.com/spdx/tools-golang@v0.5.5/LICENSE.code
+  s_2b0a1b4fa60f34::t_dab4e8092a0fc9 1-550
+lib/inventory/spdx.js
+  s_2b0a1b4fa60f34::t_2a422df4a5088b 443-518,520-521,529-530,532-535,541-550,564-586
+  s_2b0a1b4fa60f34::t_cf89d8f3ca423e 519,522-528,531,536-540
+  s_2b0a1b4fa60f34::t_8892584bf9b99d 551-563
+test/data/go-replace/untidy/go.mod
+  s_2b0a1b4fa60f34::t_7893c095110e92 1-8
+test/data/go-replace/workspace/a-go-mod-graph.txt
+  s_2b0a1b4fa60f34::t_7893c095110e92 1-4
+test/data/go-replace/untidy/go-mod-graph.txt
+  s_2b0a1b4fa60f34::t_7893c095110e92 1-8
+test/data/go-replace/workspace/go.work
+  s_2b0a1b4fa60f34::t_7893c095110e92 1-6
+test/data/go-local-first/modulecache/github.com/spdx/tools-golang@v0.5.5/LICENSE.docs
+  s_2b0a1b4fa60f34::t_dab4e8092a0fc9 1-399
+test/data/go-local-first/modulecache/go.bytecodealliance.org/cm@v0.3.0/LICENSE
+  s_2b0a1b4fa60f34::t_dab4e8092a0fc9 1-220
+lib/ecosystems/parsers-go.poku.js
+  s_2b0a1b4fa60f34::t_d22d1d1e2dfa6e 195,204,213,222
+  s_2b0a1b4fa60f34::t_1870e00190b3cf 1059-1181,1186-1207,1211-1345,1366-1367
+  s_2b0a1b4fa60f34::t_bdb226bca416dd 1182-1185,1208-1210
+  s_2b0a1b4fa60f34::t_86218a95018c03 400-404
+  s_2b0a1b4fa60f34::t_4e063efe157926 188-189
+  s_2b0a1b4fa60f34::t_4097135c05af93 1-9,14
+  s_2b0a1b4fa60f34::t_9260e8a9d7554e 1346-1365
+test/data/go-local-first/modulecache/github.com/nats-io/nats-server/v2@v2.10.17-!r!c.1/LICENSE
+  s_2b0a1b4fa60f34::t_dab4e8092a0fc9 1-201
+lib/ecosystems/golem.poku.js
+  s_2b0a1b4fa60f34::t_3837e7fcb554dc 325-371
+lib/ecosystems/golem.js
+  s_2b0a1b4fa60f34::t_0787b463eaec78 111-114
+lib/cli/nativeBom.js
+  s_2b0a1b4fa60f34::t_7cc5f7750c5a43 203-225
+  s_2b0a1b4fa60f34::t_d53f65fd2f3d5a 450-451,458
+  s_2b0a1b4fa60f34::t_616c61c31ee4c3 428-430
+  s_2b0a1b4fa60f34::t_875cfd3d4603cd 341-354,363-365
+  s_2b0a1b4fa60f34::t_e3656f6cd2c57a 502-504,513,521-525,528-531
+  s_2b0a1b4fa60f34::t_90b2d1438479cc 654
+  s_2b0a1b4fa60f34::t_6cbc92509c2931 58
+  s_2b0a1b4fa60f34::t_baea6e7711e3c6 599,628-632
+  s_2b0a1b4fa60f34::t_f45be759f278b9 582-586
+  s_2b0a1b4fa60f34::t_c865d56ede3764 202
+  s_2b0a1b4fa60f34::t_ed66eb383a2a77 532
+test/data/go-replace/go-list-deps-vendor.txt
+  s_2b0a1b4fa60f34::t_7893c095110e92 1-239
+test/data/go-replace/go-mod-graph.txt
+  s_2b0a1b4fa60f34::t_7893c095110e92 1-37
+test/data/go-replace/go-version-m.txt
+  s_2b0a1b4fa60f34::t_7893c095110e92 1-33
+test/data/go-replace/go.mod
+  s_2b0a1b4fa60f34::t_7893c095110e92 1-34
+test/data/go-local-first/modulecache/gopkg.in/yaml.v3@v3.0.1/LICENSE
+  s_2b0a1b4fa60f34::t_dab4e8092a0fc9 1-50
+test/data/go-replace/go-list-deps.txt
+  s_2b0a1b4fa60f34::t_7893c095110e92 1-239
+test/data/go-nodeps/go-list-deps.txt
+  s_2b0a1b4fa60f34::t_253f347db3d08f 1-29
+test/data/go-nodeps/go-mod-graph.txt
+  s_2b0a1b4fa60f34::t_8c8d73c6456109 1-2
+test/data/go-nodeps/go.mod
+  s_2b0a1b4fa60f34::t_d5d62da1728998 1-3
+test/data/go-nodeps/main.go
+  s_2b0a1b4fa60f34::t_78bda768c1f76f 1-3
+test/data/go-replace/go-mod-why.txt
+  s_2b0a1b4fa60f34::t_a032566f18004e 1-80
+test/data/go-replace/go.sum
+  s_2b0a1b4fa60f34::t_e60d5672f7fb0b 1-37
+test/data/go-replace/local/go.mod
+  s_2b0a1b4fa60f34::t_374f8b904f65d8 1-3
+test/data/go-replace/local/local.go
+  s_2b0a1b4fa60f34::t_04456617c8ff73 1-3
+test/data/go-replace/main.go
+  s_2b0a1b4fa60f34::t_000d815e6cf7f0 1-19
+test/data/go-replace/untidy/main.go
+  s_2b0a1b4fa60f34::t_2a343924add54d 1-11
+test/data/go-replace/unused/go.mod
+  s_2b0a1b4fa60f34::t_3150e7662c5411 1-3
+test/data/go-replace/unused/unused.go
+  s_2b0a1b4fa60f34::t_d1b52c38045023 1
+test/data/go-replace/vendor/modules.txt
+  s_2b0a1b4fa60f34::t_7bcbb85043e471 1-73
+test/data/go-replace/workspace/a/go.mod
+  s_2b0a1b4fa60f34::t_2742360d55aa7f 1-3
+test/data/go-replace/workspace/a/main.go
+  s_2b0a1b4fa60f34::t_bdf405ac0b7f9d 1-8
+test/data/go-replace/workspace/a/util/util.go
+  s_2b0a1b4fa60f34::t_1416493696fd74 1-3
+test/data/go-replace/workspace/b/b.go
+  s_2b0a1b4fa60f34::t_13d2640e82db41 1-9
+test/data/go-replace/workspace/b/go.mod
+  s_2b0a1b4fa60f34::t_26040d880d5e15 1-5
+test/data/go-replace/workspace/b/go.sum
+  s_2b0a1b4fa60f34::t_1b8d59da2154de 1-2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8d324faaaadee51451019a8d7442507827b522cd",
+  "prompts": {},
+  "sessions": {
+    "s_2b0a1b4fa60f34": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5eb76170-601f-48a2-af27-6bb93ff9af29",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
