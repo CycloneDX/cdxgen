@@ -1,0 +1,24 @@
+lib/inventory/cacheDir.js
+  s_eb3fa0a873dcb2::t_21bc971b97b3a7 88-91
+  s_eb3fa0a873dcb2::t_061ebc25b5d68f 32
+  s_eb3fa0a873dcb2::t_babd535744dbd7 31,33-36,39-40,42-45,59,62,67-69,71,74-87,92-104
+  s_eb3fa0a873dcb2::t_330d6f7b893435 105-107
+lib/inventory/cacheDir.poku.js
+  s_eb3fa0a873dcb2::t_330d6f7b893435 129-190
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1455184931a57ea5580de82041c4edeb452eb1b6",
+  "prompts": {},
+  "sessions": {
+    "s_eb3fa0a873dcb2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "14a505c7-bd8c-4d25-b29c-3e3b8733af79",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
