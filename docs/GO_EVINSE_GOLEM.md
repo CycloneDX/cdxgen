@@ -117,7 +117,7 @@ Go 1.22 net/http ServeMux patterns have the form `[METHOD ][HOST]/PATH`. golem r
 
 Only routes become endpoints. The listener entry golem adds for an address a server binds, such as `:8080`, is kept as the service's `cdx:golem:service:host` property instead. Entries left behind by chained gorilla/mux calls such as `.Methods("GET")`, and the bare `/PATCH` golem reports for gin's `Handle("PATCH", path)`, are skipped. `cdx:service:httpMethod` only takes real HTTP methods, plus `any` for gin's and echo's `Any`.
 
-CycloneDX types `services[].endpoints[]` as an IRI reference, which cannot hold braces, spaces, or `<>`. Every endpoint is therefore percent-encoded the way dosai encodes .NET route templates, so `/users/{id}` is written as `/users/%7Bid%7D`.
+CycloneDX types `services[].endpoints[]` as an IRI reference, which cannot hold braces, spaces, or `<>`. Every endpoint is therefore percent-encoded, as it is for every other evinse language, so `/users/{id}` is written as `/users/%7Bid%7D`. Endpoints from a merged OpenAPI document are encoded the same way, so a route both sources name has one spelling.
 
 An OpenAPI document is merged over the golem services when present: the spec `--openapi-spec-file` names, or the `openapi.json` an earlier `atom-tools convert -t go -i <golem-report.json>` left in the repo. Both sources are kept, and they roll services up differently: golem lists one service per server, the OpenAPI flow one per path and method, so a route both name appears under both entries. Filter on `endpoints` when a single view is needed.
 
