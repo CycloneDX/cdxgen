@@ -1,0 +1,49 @@
+lib/validator/precompiled-parity.poku.js
+  s_eb3fa0a873dcb2::t_c2f9f006bf78e9 21,93,123,270-277,286-289
+lib/validator/generated/runtime.mjs
+  s_eb3fa0a873dcb2::t_32151961fe9581 6-18
+lib/validator/generated/validate-2.0.mjs
+  s_eb3fa0a873dcb2::t_32151961fe9581 5,13,16,401,464-470,2658-2664,2746-2752,21344,21424,21635,21658,21681
+contrib/gen-validators.mjs
+  s_eb3fa0a873dcb2::t_32151961fe9581 11-17,39-40,119-129,139-151,178,187,195,220
+lib/validator/generated/validate-1.7.mjs
+  s_eb3fa0a873dcb2::t_32151961fe9581 5,20,160,216-222,2567-2573,2655-2661,10237,10684,21456,21529,21732,21755,21778
+lib/parsers/email.js
+  s_eb3fa0a873dcb2::t_e535cd8aaecf42 161
+  s_eb3fa0a873dcb2::t_6a4cc7fe1772fe 337,339-345
+  s_eb3fa0a873dcb2::t_d782cd11a6e27e 374-376
+  s_eb3fa0a873dcb2::t_7ff5834eb38861 446
+  s_eb3fa0a873dcb2::t_17e03c66c45c97 448-451
+  s_eb3fa0a873dcb2::t_1c027a2f771239 190,192-194,200
+  s_eb3fa0a873dcb2::t_719914e092fe6c 100
+  s_eb3fa0a873dcb2::t_74b4d1e49460ef 422-424
+  s_eb3fa0a873dcb2::t_a0aa46a733eb6c 1-7,16-21,25,58-65,79-99,101-150,301-303,306-324,327-329,335,347-352,355-359,378-379,381-396,413-417,419,428-434,456,458
+  s_eb3fa0a873dcb2::t_40d0110ba0d12d 8-11,22-24,26-57,66-78,151-160,162-189,191,195-199,201-215,219-300,304-305,325-326,330-334,336,338,346,353-354,360-373,377,380,397-412,418,420-421,425-427,435-445,447,452-455,457
+  s_eb3fa0a873dcb2::t_8479faad6bc2a3 12-15
+  s_eb3fa0a873dcb2::t_29cf2163bb143a 216-218
+lib/validator/generated/validate-1.6.mjs
+  s_eb3fa0a873dcb2::t_32151961fe9581 5,19,158,214-220,1969-1975,2057-2063,8037,8484
+lib/parsers/email.poku.js
+  s_eb3fa0a873dcb2::t_a49877da0b3566 1-70,72-119
+  s_eb3fa0a873dcb2::t_df715b95a01340 71
+lib/validator/bomValidator.poku.js
+  s_eb3fa0a873dcb2::t_4b2b7c1772294b 163-200
+lib/validator/bomValidator.js
+  s_eb3fa0a873dcb2::t_7061da8a0b6f13 19,57,88,208-222
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b713a22c0ec5df768efc02e37ab8f4161ef85235",
+  "prompts": {},
+  "sessions": {
+    "s_eb3fa0a873dcb2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "14a505c7-bd8c-4d25-b29c-3e3b8733af79",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
