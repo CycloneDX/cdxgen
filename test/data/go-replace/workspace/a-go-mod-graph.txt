@@ -1,0 +1,4 @@
+example.com/a go@1.22
+example.com/b github.com/BurntSushi/toml@v1.3.2
+example.com/b go@1.22
+go@1.22 toolchain@go1.22

@@ -1,0 +1,80 @@
+=== github.com/Azure/go-ansiterm
+# github.com/Azure/go-ansiterm
+example.com/app
+github.com/Azure/go-ansiterm
+=== github.com/BurntSushi/toml
+# github.com/BurntSushi/toml
+example.com/app
+github.com/BurntSushi/toml
+=== github.com/anchore/archiver/v3
+# github.com/anchore/archiver/v3
+(main module does not need to vendor module github.com/anchore/archiver/v3)
+=== github.com/andybalholm/brotli
+# github.com/andybalholm/brotli
+example.com/app
+github.com/mholt/archiver/v3
+github.com/andybalholm/brotli
+=== github.com/creack/pty
+# github.com/creack/pty
+(main module does not need to vendor module github.com/creack/pty)
+=== github.com/dsnet/compress
+# github.com/dsnet/compress
+example.com/app
+github.com/mholt/archiver/v3
+github.com/dsnet/compress/bzip2
+=== github.com/dsnet/golib
+# github.com/dsnet/golib
+(main module does not need to vendor module github.com/dsnet/golib)
+=== github.com/golang/snappy
+# github.com/golang/snappy
+example.com/app
+github.com/mholt/archiver/v3
+github.com/golang/snappy
+=== github.com/google/go-cmp
+# github.com/google/go-cmp
+(main module does not need to vendor module github.com/google/go-cmp)
+=== github.com/klauspost/compress
+# github.com/klauspost/compress
+example.com/app
+github.com/mholt/archiver/v3
+github.com/klauspost/compress/gzip
+=== github.com/klauspost/cpuid
+# github.com/klauspost/cpuid
+(main module does not need to vendor module github.com/klauspost/cpuid)
+=== github.com/klauspost/pgzip
+# github.com/klauspost/pgzip
+example.com/app
+github.com/mholt/archiver/v3
+github.com/klauspost/pgzip
+=== github.com/moby/term
+# github.com/moby/term
+example.com/app
+github.com/moby/term
+=== github.com/nwaples/rardecode
+# github.com/nwaples/rardecode
+example.com/app
+github.com/mholt/archiver/v3
+github.com/nwaples/rardecode
+=== github.com/pierrec/lz4/v4
+# github.com/pierrec/lz4/v4
+example.com/app
+github.com/mholt/archiver/v3
+github.com/pierrec/lz4/v4
+=== github.com/ulikunitz/xz
+# github.com/ulikunitz/xz
+example.com/app
+github.com/mholt/archiver/v3
+github.com/ulikunitz/xz
+=== github.com/xi2/xz
+# github.com/xi2/xz
+example.com/app
+github.com/mholt/archiver/v3
+github.com/xi2/xz
+=== golang.org/x/sys
+# golang.org/x/sys
+example.com/app
+github.com/moby/term
+golang.org/x/sys/unix
+=== golang.org/x/xerrors
+# golang.org/x/xerrors
+(main module does not need to vendor module golang.org/x/xerrors)

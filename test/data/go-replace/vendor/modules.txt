@@ -1,0 +1,73 @@
+# example.com/local v0.0.0 => ./local
+## explicit; go 1.22
+example.com/local
+# github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161
+## explicit; go 1.16
+github.com/Azure/go-ansiterm
+github.com/Azure/go-ansiterm/winterm
+# github.com/BurntSushi/toml v1.3.2
+## explicit; go 1.16
+github.com/BurntSushi/toml
+github.com/BurntSushi/toml/internal
+# github.com/andybalholm/brotli v1.0.1
+## explicit; go 1.12
+github.com/andybalholm/brotli
+# github.com/dsnet/compress v0.0.2-0.20210315054119-f66993602bf5
+## explicit; go 1.9
+github.com/dsnet/compress
+github.com/dsnet/compress/bzip2
+github.com/dsnet/compress/bzip2/internal/sais
+github.com/dsnet/compress/internal
+github.com/dsnet/compress/internal/errors
+github.com/dsnet/compress/internal/prefix
+# github.com/golang/snappy v0.0.2
+## explicit
+github.com/golang/snappy
+# github.com/klauspost/compress v1.11.4
+## explicit; go 1.13
+github.com/klauspost/compress/flate
+github.com/klauspost/compress/fse
+github.com/klauspost/compress/gzip
+github.com/klauspost/compress/huff0
+github.com/klauspost/compress/snappy
+github.com/klauspost/compress/zip
+github.com/klauspost/compress/zstd
+github.com/klauspost/compress/zstd/internal/xxhash
+# github.com/klauspost/pgzip v1.2.5
+## explicit
+github.com/klauspost/pgzip
+# github.com/mholt/archiver/v3 v3.5.1 => github.com/anchore/archiver/v3 v3.5.2
+## explicit; go 1.13
+github.com/mholt/archiver/v3
+# github.com/moby/term v0.5.0
+## explicit; go 1.18
+github.com/moby/term
+github.com/moby/term/windows
+# github.com/nwaples/rardecode v1.1.0
+## explicit
+github.com/nwaples/rardecode
+# github.com/pierrec/lz4/v4 v4.1.2
+## explicit; go 1.14
+github.com/pierrec/lz4/v4
+github.com/pierrec/lz4/v4/internal/lz4block
+github.com/pierrec/lz4/v4/internal/lz4errors
+github.com/pierrec/lz4/v4/internal/lz4stream
+github.com/pierrec/lz4/v4/internal/xxh32
+# github.com/ulikunitz/xz v0.5.9
+## explicit; go 1.12
+github.com/ulikunitz/xz
+github.com/ulikunitz/xz/internal/hash
+github.com/ulikunitz/xz/internal/xlog
+github.com/ulikunitz/xz/lzma
+# github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8
+## explicit
+github.com/xi2/xz
+# golang.org/x/sys v0.1.0
+## explicit; go 1.17
+golang.org/x/sys/internal/unsafeheader
+golang.org/x/sys/unix
+golang.org/x/sys/windows
+# example.com/local => ./local
+# example.com/unused => ./unused
+# github.com/kr/pretty => github.com/kr/pretty v0.3.1
+# github.com/pkg/errors v0.8.0 => github.com/pkg/errors v0.9.1
