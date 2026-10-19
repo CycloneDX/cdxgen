@@ -221,6 +221,7 @@ Scala projects carry their dependencies through the JVM BOM path (`-t sbt`, `-t 
 - For Java and Python, deeper evidence quality usually improves when the input BOM was created with `--deep`.
 - Reuse slice files in CI to reduce repeat analysis time.
 - Import the enriched BOM into [`cdxi`](REPL.md) and use `.occurrences`, `.callstack`, `.services`, `.formulation`, or the Go-specific `.golemsummary`, `.golemhotspots`, and `.golemcoverage` commands for interactive review.
+- Service endpoints are percent-encoded for every language, because CycloneDX types `services[].endpoints[]` as an IRI reference, which cannot hold braces, spaces, or `<>`. A route template such as `/users/{id}`, whether it comes from an OpenAPI document, kosi, scalasem, dosai, golem, or a usages slice, is written as `/users/%7Bid%7D`. Service names keep the readable template (`service-users{id}-get`), so match routes by name or decode the endpoint.
 
 ## Example workflow
 
