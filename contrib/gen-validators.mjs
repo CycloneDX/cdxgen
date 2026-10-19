@@ -8,10 +8,13 @@
  * This script generates the same validator functions at build time so the
  * runtime pays only the cost of a dynamic `import()` (~1 ms).
  *
- * The generated modules are ESM (`.mjs`) and use `export default`. Three small
- * ajv/ajv-formats helper functions (`equal`, `ucs2length`, format validators)
- * are loaded at runtime via `createRequire`, so ajv and ajv-formats remain
- * runtime dependencies.
+ * The generated modules are ESM (`.mjs`) and use `export default`. Two small
+ * ajv helper functions (`equal`, `ucs2length`) are loaded at runtime via
+ * `createRequire`, so ajv remains a runtime dependency. Format validators are
+ * looked up in the `cdxgenFormats` map that `runtime.mjs` exports: ajv-formats'
+ * full set (still a runtime dependency) plus cdxgen's own `idn-email`, which
+ * ajv-formats lacks. ajv/standalone emits every format reference through one
+ * `code.formats` expression, so the extra format has to live in that same map.
  *
  * The custom linear-time `uniqueItems` keyword is inlined into the generated
  * code via the keyword's `code` (codegen) interface, so the O(n²) stock
@@ -32,6 +35,8 @@ import { writeFileSync, readFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
+
+import { isValidIdnEmail } from "../lib/parsers/email.js";
 
 const require = createRequire(import.meta.url);
 const Ajv = require("ajv");
@@ -111,6 +116,17 @@ for (var __item of ${data}) {
   });
 }
 
+/**
+ * Register the formats the CycloneDX schemas assert, as `bomValidator.js`
+ * does at runtime, and point the generated code at `runtime.mjs`'s
+ * `cdxgenFormats` map for all of them.
+ */
+function addCycloneDxFormats(ajv) {
+  addFormats(ajv);
+  ajv.addFormat("idn-email", isValidIdnEmail);
+  ajv.opts.code.formats = _`cdxgenFormats`;
+}
+
 const readJson = (fileName) =>
   JSON.parse(readFileSync(join(dataDir, fileName), "utf-8"));
 
@@ -119,6 +135,19 @@ function generateRuntimeModule() {
 // Shared runtime helper for the pre-compiled CycloneDX schema validators.
 // The linear-time uniqueItems keyword calls this instead of ajv's pairwise
 // deep-equal, so the generated validators retain O(n) uniqueness checking.
+
+import { createRequire } from "node:module";
+
+import { isValidIdnEmail } from "../../parsers/email.js";
+
+const require = createRequire(import.meta.url);
+
+// Every format the generated validators check: ajv-formats' full set plus
+// idn-email, which ajv-formats lacks (see contrib/gen-validators.mjs).
+export const cdxgenFormats = {
+  ...require("ajv-formats/dist/formats").fullFormats,
+  "idn-email": isValidIdnEmail,
+};
 
 export function canonicalize(value) {
   if (value === null || typeof value !== "object") {
@@ -146,7 +175,7 @@ function generateLegacyValidator(specVersion) {
   }
   const ajv = new Ajv({ ...AJV_OPTIONS, schemas });
   useLinearUniqueItems(ajv);
-  addFormats(ajv);
+  addCycloneDxFormats(ajv);
   const validate = ajv.getSchema(
     `http://cyclonedx.org/schema/bom-${specVersion}.schema.json`,
   );
@@ -155,7 +184,7 @@ function generateLegacyValidator(specVersion) {
 // CycloneDX ${specVersion} schema validator (pre-compiled with ajv/standalone).
 import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
-import { canonicalize } from "./runtime.mjs";
+import { canonicalize, cdxgenFormats } from "./runtime.mjs";
 ${code}
 `;
 }
@@ -163,7 +192,7 @@ ${code}
 function generateDraft2020Validator() {
   const ajv = new Ajv2020(AJV_OPTIONS);
   useLinearUniqueItems(ajv);
-  addFormats(ajv);
+  addCycloneDxFormats(ajv);
   const addBundled = (schema, schemaId) => {
     const bundled = { ...schema };
     delete bundled.$schema;
@@ -188,7 +217,7 @@ function generateDraft2020Validator() {
 // CycloneDX 2.0 schema validator (pre-compiled with ajv/standalone).
 import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
-import { canonicalize } from "./runtime.mjs";
+import { canonicalize, cdxgenFormats } from "./runtime.mjs";
 ${code}
 `;
 }
