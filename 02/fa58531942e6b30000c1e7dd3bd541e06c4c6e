@@ -1,0 +1,80 @@
+bin/cdxgen.js
+  h_0926447d100ad2 106,2132,2155-2158
+data/remediations.json
+  h_0926447d100ad2 776-817
+docs/EVINSE.md
+  h_0926447d100ad2 168-177
+docs/LESSON26.md
+  h_0926447d100ad2 86-88,90-92
+lib/cli/managedBom.js
+  h_0926447d100ad2 116-117,122,2172-2194,2196,2203-2208
+lib/cli/managedBom.poku.js
+  h_0926447d100ad2 32,2044-2213
+lib/evinser/evinseOptions.poku.js
+  h_0926447d100ad2 262-354
+lib/evinser/evinser.js
+  h_0926447d100ad2 8,82,1379,1386-1399,1403-1426,1428-1429
+lib/inventory/dosai.js
+  h_0926447d100ad2 209-212,499-510,512-517,558-561,574-614,805-811,815,847-887,889,893,897-936,988,1101-1106,1128-1140
+lib/inventory/dosai.poku.js
+  h_0926447d100ad2 1266-1544,1646-1687
+types/lib/cli/managedBom.d.ts.map
+  h_0926447d100ad2 1
+types/lib/cli/nativeBom.d.ts.map
+  h_0926447d100ad2 1
+types/lib/core/propertySanitizer.d.ts
+  h_0926447d100ad2 15-40
+types/lib/core/propertySanitizer.d.ts.map
+  h_0926447d100ad2 1
+types/lib/ecosystems/golem.d.ts
+  h_0926447d100ad2 13-14,63-73,76,79-113,121-124,126-129,135,139
+types/lib/ecosystems/golem.d.ts.map
+  h_0926447d100ad2 1
+types/lib/ecosystems/parsers-go.d.ts
+  h_0926447d100ad2 2-6,10-13,20-24,26,29-54,71-72,79,87-88,96-101,110-120,123-127,129-131,134,139-143,183-184,206-211
+types/lib/ecosystems/parsers-go.d.ts.map
+  h_0926447d100ad2 1
+types/lib/ecosystems/parsers-misc.d.ts
+  h_0926447d100ad2 184,197,206,227,236
+types/lib/ecosystems/parsers-misc.d.ts.map
+  h_0926447d100ad2 1
+types/lib/ecosystems/rubyutils.d.ts.map
+  h_0926447d100ad2 1
+types/lib/evinser/evinser.d.ts
+  h_0926447d100ad2 207-208,214
+types/lib/evinser/evinser.d.ts.map
+  h_0926447d100ad2 1
+types/lib/inventory/cacheDir.d.ts
+  h_0926447d100ad2 24-29,32-33,35-38
+types/lib/inventory/cacheDir.d.ts.map
+  h_0926447d100ad2 1
+types/lib/inventory/dosai.d.ts
+  h_0926447d100ad2 44-74,143-149,153,162,319-324
+types/lib/inventory/dosai.d.ts.map
+  h_0926447d100ad2 1
+types/lib/inventory/spdx.d.ts
+  h_0926447d100ad2 69-83
+types/lib/inventory/spdx.d.ts.map
+  h_0926447d100ad2 1
+types/lib/managers/binary.d.ts
+  h_0926447d100ad2 118-127
+types/lib/managers/binary.d.ts.map
+  h_0926447d100ad2 1
+types/lib/parsers/email.d.ts
+  h_0926447d100ad2 1-19
+types/lib/parsers/email.d.ts.map
+  h_0926447d100ad2 1
+types/lib/validator/bomValidator.d.ts.map
+  h_0926447d100ad2 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "02fa58531942e6b30000c1e7dd3bd541e06c4c6e",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
