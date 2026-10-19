@@ -1,0 +1,70 @@
+lib/parsers/largeJson.js
+  s_2a9ecad3a75870::t_47943f63af6ab8 259-261
+  s_2a9ecad3a75870::t_a7677c38cc4158 419
+  s_2a9ecad3a75870::t_6d3d538b72641c 420-446
+  s_2a9ecad3a75870::t_30ddadcea0e17d 284-286
+data/remediations.json
+  s_2a9ecad3a75870::t_c8cce9991fb687 801,806
+  s_2a9ecad3a75870::t_232b8d993a2991 779,800
+  h_0926447d100ad2 776-778,780-799,802-805,807-817
+claude-plugin/skills/sbom-fidelity-loop/SKILL.md
+  s_2a9ecad3a75870::t_232b8d993a2991 27
+.agents/skills/sbom-fidelity-loop/SKILL.md
+  s_2a9ecad3a75870::t_232b8d993a2991 27
+lib/cli/managedBom.js
+  h_0926447d100ad2 116,122,2172-2182,2184-2192,2194,2201-2206
+  s_2a9ecad3a75870::t_88e1e7ed33f236 117,2183
+lib/inventory/dosai.poku.js
+  s_2a9ecad3a75870::t_39461c53d15272 1471-1519
+  h_0926447d100ad2 1266-1468,1525,1528,1531,1542,1550-1551,1553-1584,1686-1721,1727-1731
+  s_2a9ecad3a75870::t_4b8ddbb7acf5b4 1469-1470,1521-1524,1526-1527,1529-1530,1532-1541,1543-1549,1552,1722-1726
+  s_2a9ecad3a75870::t_d58b1db104f6f8 1520
+lib/evinser/evinseOptions.poku.js
+  s_2a9ecad3a75870::t_ad08613800106f 313,315-354
+  h_0926447d100ad2 262-312,314,355
+lib/cli/managedBom.poku.js
+  h_0926447d100ad2 32,2044-2213
+lib/evinser/evinser.js
+  s_2a9ecad3a75870::t_46433359441aa5 1389-1396,1402
+  h_0926447d100ad2 8,82,1381,1388,1397-1399,1401,1403-1404,1408-1411,1414-1429,1431-1432
+  s_2a9ecad3a75870::t_39461c53d15272 83,85
+  s_2a9ecad3a75870::t_290400a2d1e57d 1400
+  s_2a9ecad3a75870::t_88e1e7ed33f236 1412-1413
+lib/inventory/dosai.js
+  s_2a9ecad3a75870::t_4f9a095943b4c0 613-650
+  s_2a9ecad3a75870::t_290400a2d1e57d 1174
+  h_0926447d100ad2 210-213,500-511,513-518,559-562,575-612,651-652,843-849,853,885-925,927,931,935-974,1026,1139-1144,1166-1173,1175-1178
+  s_2a9ecad3a75870::t_c3fedd840dc97b 30
+lib/parsers/largeJson.poku.js
+  s_2a9ecad3a75870::t_5d2ffd256f9ee2 251
+  s_2a9ecad3a75870::t_60aee34f1b76b5 12
+  s_2a9ecad3a75870::t_75e99164f9cb61 240-250,252-269
+bin/cdxgen.js
+  h_0926447d100ad2 106,2132,2155-2158
+docs/EVINSE.md
+  h_0926447d100ad2 168-176
+  s_2a9ecad3a75870::t_c8cce9991fb687 177-178
+docs/LESSON26.md
+  h_0926447d100ad2 86-88,90-92
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d29aab7cd2668ee774db08155980c791a09c1e48",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  },
+  "sessions": {
+    "s_2a9ecad3a75870": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c6b2208a-f0eb-4017-9266-9174359dc585",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
