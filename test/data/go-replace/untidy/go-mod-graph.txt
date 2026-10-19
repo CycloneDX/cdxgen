@@ -1,0 +1,8 @@
+example.com/untidy github.com/Azure/go-ansiterm@v0.0.0-20250102033503-faa5f7b0171c
+example.com/untidy github.com/moby/term@v0.5.2
+example.com/untidy go@1.22
+github.com/Azure/go-ansiterm@v0.0.0-20250102033503-faa5f7b0171c golang.org/x/sys@v0.0.0-20210616094352-59db8d763f22
+github.com/moby/term@v0.5.2 github.com/Azure/go-ansiterm@v0.0.0-20250102033503-faa5f7b0171c
+github.com/moby/term@v0.5.2 github.com/creack/pty@v1.1.18
+github.com/moby/term@v0.5.2 golang.org/x/sys@v0.1.0
+go@1.22 toolchain@go1.22
