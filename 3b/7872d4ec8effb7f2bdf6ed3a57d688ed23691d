@@ -1,0 +1,51 @@
+lib/inventory/dosai.js
+  s_906c4a191d83b3::t_23d1e420d610f7 1779-1784,1792-1797,1803
+  s_906c4a191d83b3::t_ce7f5665b8ede0 158
+  s_906c4a191d83b3::t_a2abb284821561 26
+lib/ecosystems/scalasem-hygiene.poku.js
+  s_906c4a191d83b3::t_29853d34d11c96 223-225
+  s_906c4a191d83b3::t_e522da96ed835a 75-76
+  s_906c4a191d83b3::t_2b2fea22fc24ff 233
+lib/ecosystems/kosi.poku.js
+  s_906c4a191d83b3::t_4ee9c9f96e12ce 12,17
+  s_906c4a191d83b3::t_2c6accdd15a61f 587-597
+lib/ecosystems/golem.js
+  s_906c4a191d83b3::t_e168d4c5354318 19,2154,2212
+lib/evinser/evinser.poku.js
+  s_906c4a191d83b3::t_ecb2d98eb9dcb8 12,15
+  s_906c4a191d83b3::t_84eaa7b4a1eb7b 19
+  s_906c4a191d83b3::t_4b1e10f1c20a54 44-47,50-51,53-62,67-81
+  s_906c4a191d83b3::t_05332aef55d53c 48-49,52,63-66
+docs/GO_EVINSE_GOLEM.md
+  s_906c4a191d83b3::t_49e744acff31db 120
+lib/inventory/dosai.poku.js
+  s_906c4a191d83b3::t_d5b5b97ea28a8c 13
+  s_906c4a191d83b3::t_d3a68c537381fd 362-413
+lib/core/propertySanitizer.js
+  s_906c4a191d83b3::t_6c4d413209330a 29-37
+  s_906c4a191d83b3::t_180f3dd9ec5daa 158-203
+docs/EVINSE.md
+  s_906c4a191d83b3::t_184d0da26cc9b1 224
+lib/ecosystems/scalasem.poku.js
+  s_906c4a191d83b3::t_a1ccdd1704274b 1537-1545
+  s_906c4a191d83b3::t_eab056cacfcb31 18
+lib/core/propertySanitizer.poku.js
+  s_906c4a191d83b3::t_52432a1c5a8961 49-86
+  s_906c4a191d83b3::t_ba5d14fc212fd9 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3b7872d4ec8effb7f2bdf6ed3a57d688ed23691d",
+  "prompts": {},
+  "sessions": {
+    "s_906c4a191d83b3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c1f39ad4-cbf7-4234-a9c3-e1a047005510",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
