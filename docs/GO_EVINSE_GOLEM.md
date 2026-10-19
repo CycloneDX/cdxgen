@@ -104,7 +104,20 @@ Golem rolls the routes it finds into a `services[]` section — one service per 
 
 Golem also rolls the outbound hosts the source calls into services of `kind: "external"`. Those are egress dependencies: they carry `x-trust-boundary: true`, the `cdx:golem:service:kind` property distinguishes them from servers, and their endpoints name full URLs.
 
-Route paths are normalised to the placeholder spelling OpenAPI uses: gin and iris `:id` and `*filepath`, chi and gorilla/mux `{id}` and `{id:[0-9]+}`, and Go 1.22 net/http `{id...}` all become `{id}`. A placeholder is only recognised at the start of a segment, so a literal colon such as `/time/09:30` is left alone; echo's bare `*` catch-all has no placeholder name and is kept verbatim, as are listener addresses such as `:8080`.
+Outbound URLs are treated as untrusted before they become endpoints. cdxgen keeps the scheme, host, and path, and drops userinfo, the query string, the fragment, and `;name=value` path parameters such as `;jsessionid=` or `;token=`. Webhook and bot URLs that authenticate by their path alone keep only their route: a Slack webhook becomes `https://hooks.slack.com/services`, and Discord, Microsoft Teams, Zapier, IFTTT, and Telegram bot URLs are cut the same way. A path segment that holds a recognisable token, such as a `ghp_` GitHub token, ends the path there.
+
+Route paths are normalised to the placeholder spelling OpenAPI uses:
+
+- gin, echo, and fiber `:id`, gin `*filepath`, chi and gorilla/mux `{id}` and `{id:[0-9]+}`, and Go 1.22 net/http `{id...}` all become `{id}`. gin and echo names run to the next `/`, so `:user-id` becomes `{user-id}`.
+- Braces are matched by depth, the way gorilla/mux matches them, so a pattern with its own braces or slashes stays one variable: `{code:[0-9]{3}}` and `{rest:[a-z/]+}` become `{code}` and `{rest}`.
+- fiber's optional marker and constraint are dropped (`:name?` and `:id<int>` become `{name}` and `{id}`), and fiber's `-` and `.` separate two parameters in one segment (`:from-:to`).
+- A `:` or `*` placeholder is only recognised at the start of a segment, so a literal colon such as `/time/09:30` is left alone. echo's bare `*` catch-all and fiber's `+` have no placeholder name and are kept as written.
+
+Go 1.22 net/http ServeMux patterns have the form `[METHOD ][HOST]/PATH`. golem reports them as written, with a `/` in front (`/GET /items/{id}`), so cdxgen splits the method into `cdx:service:httpMethod`, the host into `cdx:golem:service:host`, and keeps the path. `{$}`, which matches only a trailing slash, is removed: `GET /exact/{$}` becomes `/exact/`. A host pattern registered without a method reaches golem's report as a plain path (`/example.com/hosted`) and is kept as one.
+
+Only routes become endpoints. The listener entry golem adds for an address a server binds, such as `:8080`, is kept as the service's `cdx:golem:service:host` property instead. Entries left behind by chained gorilla/mux calls such as `.Methods("GET")`, and the bare `/PATCH` golem reports for gin's `Handle("PATCH", path)`, are skipped. `cdx:service:httpMethod` only takes real HTTP methods, plus `any` for gin's and echo's `Any`.
+
+CycloneDX types `services[].endpoints[]` as an IRI reference, which cannot hold braces, spaces, or `<>`. Every endpoint is therefore percent-encoded the way dosai encodes .NET route templates, so `/users/{id}` is written as `/users/%7Bid%7D`.
 
 An OpenAPI document is merged over the golem services when present: the spec `--openapi-spec-file` names, or the `openapi.json` an earlier `atom-tools convert -t go -i <golem-report.json>` left in the repo. Both sources are kept, and they roll services up differently: golem lists one service per server, the OpenAPI flow one per path and method, so a route both name appears under both entries. Filter on `endpoints` when a single view is needed.
 
