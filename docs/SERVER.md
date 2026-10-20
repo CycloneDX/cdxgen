@@ -142,6 +142,8 @@ cdxgen --server
 
 _(Note: SCP-style SSH URLs like `git@github.com:repo.git` are fully supported, automatically normalized, and validated securely)._
 
+cdxgen checks a Git URL against the host that git itself will connect to, not only the host that the JavaScript URL parser reports. URLs that the two read differently are rejected with `400 Invalid URL Format`. This covers backslashes (`https://allowed.com\@other.com/repo`), whitespace and control characters, a `?` or `#` before the first slash (`ssh://allowed.com#@other.com/repo`), more than one `@` in the authority, percent-encoded or numeric hosts, and `git@host/path` forms that git treats as local paths.
+
 ### 2. Restricting Allowed Hosts
 
 To prevent SSRF and ensure the server only clones repositories from trusted sources, configure an allowlist of hostnames using `CDXGEN_GIT_ALLOWED_HOSTS` (preferred) or `CDXGEN_SERVER_ALLOWED_HOSTS` (server-mode alias).
@@ -161,6 +163,19 @@ export CDXGEN_ALLOWED_PATHS="/mnt/work,/mnt/work2"
 cdxgen --server
 curl "http://127.0.0.1:9090/sbom?path=/mnt/work/vulnerable-aws-koa-app&multiProject=true&type=js"
 ```
+
+### 4. Request options cannot widen the operator's settings
+
+Some options make a scan install packages or run the scanned project's own build, which executes code from the scanned repository. For example, `deep=true` makes Rust scans run `cargo check`, which runs the project's `build.rs`. When the server runs in secure mode, or was started with `--no-install-deps`, a request can turn `installDeps` and `deep` off but cannot turn them on. Only a literal `false` from the request changes them. Profiles that imply `deep`, such as `appsec` and `research`, are limited the same way. Start the server with `--deep` or `--install-deps` if every request should be allowed to use them.
+
+The server also refuses the following requests, whatever mode it runs in:
+
+- Project types that inventory the server host rather than the scan path, such as `os`, `hbom`, `vscode-extension`, `chrome-extension`, `agentic`, and the Maven, Gradle, sbt, Cargo and Helm cache types. Start the server with `-t <type>` to allow one of them.
+- `exclude` patterns that use braces or are longer than 512 characters, since brace expansion can keep the server busy for minutes.
+- A `serverUrl` on another origin than the one the server was started with, when the request reuses the operator's API key. In secure mode such a `serverUrl` also needs `CDXGEN_ALLOWED_HOSTS`, which every redirect hop is checked against as well.
+- A `path` whose real location, after following symlinks, is outside `CDXGEN_ALLOWED_PATHS`.
+
+`failOnError` never applies to server requests, so a failing scan returns an error to its client instead of stopping the server. Repositories are cloned with `core.symlinks=false`, so a link in a cloned repository is checked out as a plain file and cannot point the scan at files on the server.
 
 ## Health endpoint
 
