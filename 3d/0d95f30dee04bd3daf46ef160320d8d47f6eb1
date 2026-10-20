@@ -1,0 +1,50 @@
+.github/workflows/java-reachables-test.yml
+  h_0926447d100ad2 37
+.github/workflows/nodejs.yml
+  h_0926447d100ad2 106
+.github/workflows/nydus-demo.yml
+  h_0926447d100ad2 27
+.github/workflows/python-atom-tests.yml
+  h_0926447d100ad2 37,46
+.github/workflows/repotests.yml
+  h_0926447d100ad2 459,536,1347,1894,1939,1995
+types/lib/audit/index.d.ts.map
+  h_0926447d100ad2 1
+types/lib/cli/index.d.ts.map
+  h_0926447d100ad2 1
+types/lib/helpers/envcontext.d.ts.map
+  h_0926447d100ad2 1
+types/lib/helpers/httpClient.d.ts.map
+  h_0926447d100ad2 1
+types/lib/helpers/source.d.ts
+  h_0926447d100ad2 9-11,16,53-63,85-97
+types/lib/helpers/source.d.ts.map
+  h_0926447d100ad2 1
+types/lib/helpers/utils.d.ts
+  h_0926447d100ad2 809,811-812,814
+types/lib/helpers/utils.d.ts.map
+  h_0926447d100ad2 1
+types/lib/managers/docker.d.ts
+  h_0926447d100ad2 49-60
+types/lib/managers/docker.d.ts.map
+  h_0926447d100ad2 1
+types/lib/server/server.d.ts
+  h_0926447d100ad2 23-30
+types/lib/server/server.d.ts.map
+  h_0926447d100ad2 1
+types/lib/stages/pregen/pregen.d.ts
+  h_0926447d100ad2 43,45
+types/lib/stages/pregen/pregen.d.ts.map
+  h_0926447d100ad2 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3d0d95f30dee04bd3daf46ef160320d8d47f6eb1",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
