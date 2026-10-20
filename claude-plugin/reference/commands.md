@@ -47,7 +47,7 @@ from `--install-deps`.
 | Package                      | Adds                                                                                              |
 | ---------------------------- | ------------------------------------------------------------------------------------------------- |
 | `@cdxgen/cdxgen-plugins-bin` | Trivy and osquery helpers, `golem` for Go Evinse evidence, `trustinspector` for host trust posture |
-| `@cdxgen/cdx-hbom`           | Hardware collection on `darwin/arm64`, `linux/amd64`, `linux/arm64`                                |
+| `@cdxgen/cdx-hbom`           | Hardware collection on `darwin/arm64`, `linux/amd64`, `linux/arm64`, `windows/amd64`, `windows/arm64` |
 
 These are optional. When absent, cdxgen still produces a valid BOM with less
 enrichment; say so rather than reporting a failure.
