@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+    <Version>5.0.0</Version>
+  </PropertyGroup>
+</Project>
