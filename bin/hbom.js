@@ -226,6 +226,9 @@ const options = {
   arch: args.arch,
   command: selectedCommand,
   commandName: hbomCommandName,
+  // yargs turns `--no-command-enrichment` into `commandEnrichment: false` and
+  // leaves `noCommandEnrichment` at its default, so forward both spellings.
+  commandEnrichment: args.commandEnrichment,
   dryRun: args.dryRun,
   input: args.input ? resolve(args.input) : undefined,
   noCommandEnrichment: args.noCommandEnrichment,
