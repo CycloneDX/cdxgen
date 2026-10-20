@@ -1,0 +1,62 @@
+docs/PROJECT_TYPES.md
+  h_6a4cc5cdf68def 116
+lib/cli/managedBom.js
+  h_6a4cc5cdf68def 39,1946-1986,2000-2003,2006,2155
+lib/cli/managedBom.poku.js
+  h_6a4cc5cdf68def 1742-1968
+lib/ecosystems/parsers-dotnet.js
+  h_6a4cc5cdf68def 2-10,193-196,206-254,916-918,931,1418-1426,1493-1496,1724-1727
+lib/ecosystems/parsers-dotnet.poku.js
+  h_6a4cc5cdf68def 9,22,1253-1261,1267-1503
+test/data/csharp-restored-identity/ArtifactsLayout/Directory.Build.props
+  h_6a4cc5cdf68def 1-7
+test/data/csharp-restored-identity/ArtifactsLayout/artifacts/obj/App/project.assets.json
+  h_6a4cc5cdf68def 1-129
+test/data/csharp-restored-identity/ArtifactsLayout/src/App/App.csproj
+  h_6a4cc5cdf68def 1-13
+test/data/csharp-restored-identity/ArtifactsLayout/src/App/packages.lock.json
+  h_6a4cc5cdf68def 1-13
+test/data/csharp-restored-identity/CaseMismatch/App/App.csproj
+  h_6a4cc5cdf68def 1-9
+test/data/csharp-restored-identity/CaseMismatch/App/obj/project.assets.json
+  h_6a4cc5cdf68def 1-73
+test/data/csharp-restored-identity/CaseMismatch/Directory.Build.props
+  h_6a4cc5cdf68def 1-5
+test/data/csharp-restored-identity/StaleObj/App/App.csproj
+  h_6a4cc5cdf68def 1-9
+test/data/csharp-restored-identity/StaleObj/App/obj/project.assets.json
+  h_6a4cc5cdf68def 1-73
+test/data/csharp-restored-identity/StaleObj/Directory.Build.props
+  h_6a4cc5cdf68def 1-6
+test/data/csharp-restored-identity/StaleObj/artifacts/obj/App/project.assets.json
+  h_6a4cc5cdf68def 1-73
+test/data/csharp-restored-identity/VersionFromProps/Directory.Build.props
+  h_6a4cc5cdf68def 1-5
+test/data/csharp-restored-identity/VersionFromProps/Lib.Model/Lib.Model.csproj
+  h_6a4cc5cdf68def 1-13
+test/data/csharp-restored-identity/VersionFromProps/Lib.Model/obj/project.assets.json
+  h_6a4cc5cdf68def 1-126
+test/data/csharp-restored-identity/VersionFromProps/Lib.Util/Lib.Util.csproj
+  h_6a4cc5cdf68def 1-13
+test/data/csharp-restored-identity/VersionFromProps/Lib.Util/obj/project.assets.json
+  h_6a4cc5cdf68def 1-142
+test/data/csharp-restored-identity/WindowsAgent/src/Api/Api.csproj
+  h_6a4cc5cdf68def 1-14
+test/data/csharp-restored-identity/WindowsAgent/src/Api/obj/project.assets.json
+  h_6a4cc5cdf68def 1-126
+test/data/csharp-restored-identity/WindowsAgent/src/Worker/Worker.csproj
+  h_6a4cc5cdf68def 1-13
+test/data/csharp-restored-identity/WindowsAgent/src/Worker/obj/project.assets.json
+  h_6a4cc5cdf68def 1-126
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c0bd4f566f0d1ddd00d816f68531ce244bfb5996",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
