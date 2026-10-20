@@ -103,6 +103,7 @@ import {
   printSummary,
   printTable,
 } from "../lib/inventory/display.js";
+import { runsEvidenceAnalysis } from "../lib/inventory/dosai.js";
 import {
   ensureNoMixedHbomProjectTypes,
   ensureSupportedHbomSpecVersion,
@@ -2128,7 +2129,7 @@ const writeCycloneDxOutput = (jsonFile, bomJson, options) => {
     }
   }
   let internalCycloneDxInputPath = outputPlan.outputs.cyclonedx;
-  if ((options.evidence || options.includeCrypto) && bomNSData?.bomJson) {
+  if (runsEvidenceAnalysis(options) && bomNSData?.bomJson) {
     if (!internalCycloneDxInputPath) {
       internalCycloneDxInputPath = join(
         getTmpDir(),
@@ -2151,7 +2152,10 @@ const writeCycloneDxOutput = (jsonFile, bomJson, options) => {
     }
   }
   // Evidence generation
-  if (options.evidence || options.includeCrypto) {
+  // The same helper decides in createCsharpBom whether the dosai methods
+  // report may be trimmed: --include-crypto alone runs evinse too, so testing
+  // options.evidence alone here would trim a report this scan needs full.
+  if (runsEvidenceAnalysis(options)) {
     if (isDryRun) {
       recordActivity({
         kind: "write",

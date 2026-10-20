@@ -83,9 +83,13 @@ land in 1.7.
 `evinse` is the enrichment command. For .NET it calls dosai behind the scenes
 through the helpers in `lib/inventory/dosai.js`:
 
-- `createDosaiMethodsSlice` runs `dosai methods`,
+- `createDosaiMethodsSlice` runs `dosai methods`, naming the sections cdxgen
+  reads with `--sections` unless the scan will run evidence analysis (evinse
+  reuses and persists the full report),
 - `createDosaiDataFlowSlice` runs `dosai dataflows`,
-- `createDosaiCryptoAnalysis` runs `dosai crypto`.
+- `createDosaiCryptoAnalysis` runs `dosai crypto` with
+  `--crypto-dataflows none` (cdxgen reads only the assets, operations, and
+  materials).
 
 The default invocation attaches occurrence evidence from the methods slice:
 

@@ -773,6 +773,48 @@
     },
     "docs": "https://cyclonedx.github.io/cdxgen/#/EVINSE"
   },
+  "dosai.semantics.trimmed-report": {
+    "ecosystem": "csharp",
+    "kind": "evidence.degraded",
+    "impact": "none",
+    "title": "The persisted dosai report is partial: its methods half was written with --sections",
+    "targetTier": "resolved",
+    "actions": [
+      {
+        "kind": "config",
+        "detail": "Run dosai methods without --sections, or run cdxgen with --evidence, so the persisted report holds every section."
+      }
+    ],
+    "verify": {
+      "rules": [],
+      "expectTier": "resolved",
+      "eventsCleared": [
+        "dosai.semantics.trimmed-report"
+      ]
+    },
+    "docs": "https://cyclonedx.github.io/cdxgen/#/EVINSE"
+  },
+  "dosai.usages.trimmed-report": {
+    "ecosystem": "csharp",
+    "kind": "evidence.degraded",
+    "impact": "components",
+    "title": "The supplied dosai usages slice was written without sections cdxgen reads",
+    "targetTier": "resolved",
+    "actions": [
+      {
+        "kind": "config",
+        "detail": "Run dosai methods without --sections, or with every section cdxgen reads, for the report passed with --usages-slices-file."
+      }
+    ],
+    "verify": {
+      "rules": [],
+      "expectTier": "resolved",
+      "eventsCleared": [
+        "dosai.usages.trimmed-report"
+      ]
+    },
+    "docs": "https://cyclonedx.github.io/cdxgen/#/EVINSE"
+  },
   "cocoa.pods.missing": {
     "ecosystem": "cocoa",
     "kind": "fallback.engaged",
