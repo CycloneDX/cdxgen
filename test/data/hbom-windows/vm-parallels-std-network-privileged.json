@@ -1,0 +1,264 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7",
+  "serialNumber": "urn:uuid:6e4c45bd-c121-4260-8de2-1585bb6bb88d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-20T16:19:26.291Z",
+    "lifecycles": [
+      {
+        "phase": "operations"
+      }
+    ],
+    "component": {
+      "type": "device",
+      "name": "Windows Device",
+      "version": "amd64",
+      "manufacturer": {
+        "name": "Windows"
+      },
+      "description": "Apple Silicon",
+      "properties": [
+        {
+          "name": "cdx:hbom:platform",
+          "value": "windows"
+        },
+        {
+          "name": "cdx:hbom:architecture",
+          "value": "amd64"
+        },
+        {
+          "name": "cdx:hbom:chip",
+          "value": "Apple Silicon"
+        },
+        {
+          "name": "cdx:hbom:memory",
+          "value": "16 GB"
+        },
+        {
+          "name": "cdx:hbom:identifierPolicy",
+          "value": "redacted-by-default"
+        },
+        {
+          "name": "cdx:hostview:mode",
+          "value": "hbom-topology"
+        },
+        {
+          "name": "cdx:hostview:hardwareComponentCount",
+          "value": "2"
+        },
+        {
+          "name": "cdx:hostview:runtimeComponentCount",
+          "value": "0"
+        },
+        {
+          "name": "cdx:hostview:runtimeAnchorCount",
+          "value": "0"
+        },
+        {
+          "name": "cdx:hostview:linkedHardwareComponentCount",
+          "value": "0"
+        },
+        {
+          "name": "cdx:hostview:topologyLinkCount",
+          "value": "0"
+        }
+      ],
+      "bom-ref": "urn:cdxgen:host:device:Windows-Device:windows"
+    },
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "cdx-hbom"
+        }
+      ]
+    },
+    "properties": []
+  },
+  "components": [
+    {
+      "name": "Apple Silicon",
+      "version": "amd64",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "processor"
+        },
+        {
+          "name": "cdx:hbom:architecture",
+          "value": "amd64"
+        },
+        {
+          "name": "cdx:hbom:logicalCpuCount",
+          "value": "4"
+        }
+      ],
+      "type": "device",
+      "bom-ref": "urn:cdxgen:component:device:processor:Apple-Silicon:amd64"
+    },
+    {
+      "name": "System Memory",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "memory"
+        },
+        {
+          "name": "cdx:hbom:size",
+          "value": "16 GB"
+        },
+        {
+          "name": "cdx:hbom:sizeBytes",
+          "value": "17173250048"
+        }
+      ],
+      "type": "device",
+      "bom-ref": "urn:cdxgen:component:device:memory:System-Memory:unknown"
+    }
+  ],
+  "properties": [
+    {
+      "name": "cdx:hbom:targetPlatform",
+      "value": "windows"
+    },
+    {
+      "name": "cdx:hbom:targetArchitecture",
+      "value": "amd64"
+    },
+    {
+      "name": "cdx:hbom:identifierPolicy",
+      "value": "redacted-by-default"
+    },
+    {
+      "name": "cdx:hbom:collectorProfile",
+      "value": "windows-amd64-v1"
+    },
+    {
+      "name": "cdx:hbom:osName",
+      "value": "Windows 11 Pro"
+    },
+    {
+      "name": "cdx:hbom:osVersion",
+      "value": "10.0.26200"
+    },
+    {
+      "name": "cdx:hbom:architectureSource",
+      "value": "process"
+    },
+    {
+      "name": "cdx:hbom:evidence:powershellVersion",
+      "value": "5.1.26100.9457"
+    },
+    {
+      "name": "cdx:hbom:evidence:languageMode",
+      "value": "FullLanguage"
+    },
+    {
+      "name": "cdx:hbom:evidence:elevated",
+      "value": "false"
+    },
+    {
+      "name": "cdx:hbom:evidence:commandCount",
+      "value": "1"
+    },
+    {
+      "name": "cdx:hbom:evidence:command",
+      "value": "windows-cim-platform|platform|C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command windows-cim-platform script sha256:fcaf5d4c02fb"
+    },
+    {
+      "name": "cdx:hbom:evidence:commandDiagnosticCount",
+      "value": "1"
+    },
+    {
+      "name": "cdx:hbom:evidence:commandDiagnostic",
+      "value": "{\"id\":\"windows-cim-platform:network-logon\",\"issue\":\"permission-denied\",\"code\":\"AccessDenied\",\"message\":\"every WMI query was denied by the namespace\",\"privilegeHint\":\"WMI denied for a network logon (SSH/WinRM) without administrator rights; run cdx-hbom from a local session or elevated\"}"
+    },
+    {
+      "name": "cdx:hbom:analysis:commandDiagnosticCount",
+      "value": "1"
+    },
+    {
+      "name": "cdx:hbom:analysis:actionableDiagnosticCount",
+      "value": "1"
+    },
+    {
+      "name": "cdx:hbom:analysis:missingCommandCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hbom:analysis:installHintCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hbom:analysis:permissionDeniedCount",
+      "value": "1"
+    },
+    {
+      "name": "cdx:hbom:analysis:privilegeHintCount",
+      "value": "1"
+    },
+    {
+      "name": "cdx:hbom:analysis:partialSupportCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hbom:analysis:timeoutCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hbom:analysis:commandErrorCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hbom:analysis:diagnosticIssues",
+      "value": "permission-denied"
+    },
+    {
+      "name": "cdx:hbom:analysis:permissionDeniedCommands",
+      "value": "windows-cim-platform:network-logon"
+    },
+    {
+      "name": "cdx:hbom:analysis:permissionDeniedIds",
+      "value": "windows-cim-platform:network-logon"
+    },
+    {
+      "name": "cdx:hbom:analysis:requiresPrivileged",
+      "value": "true"
+    },
+    {
+      "name": "cdx:hostview:mode",
+      "value": "hbom-topology"
+    },
+    {
+      "name": "cdx:hostview:hardwareComponentCount",
+      "value": "2"
+    },
+    {
+      "name": "cdx:hostview:runtimeComponentCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hostview:runtimeAnchorCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hostview:linkedHardwareComponentCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hostview:topologyLinkCount",
+      "value": "0"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "urn:cdxgen:host:device:Windows-Device:windows",
+      "dependsOn": [
+        "urn:cdxgen:component:device:memory:System-Memory:unknown",
+        "urn:cdxgen:component:device:processor:Apple-Silicon:amd64"
+      ]
+    }
+  ]
+}
