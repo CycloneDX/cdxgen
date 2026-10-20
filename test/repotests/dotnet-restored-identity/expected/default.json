@@ -2,38 +2,6 @@
   "bomFormat": "CycloneDX",
   "components": [
     {
-      "bom-ref": "pkg:nuget/Lib.Model@3.1.0",
-      "evidence": {
-        "identity": [
-          {
-            "concludedValue": "$ROOT/Lib.Util/obj/project.assets.json",
-            "confidence": 1,
-            "field": "purl",
-            "methods": [
-              {
-                "confidence": 1,
-                "technique": "manifest-analysis",
-                "value": "$ROOT/Lib.Util/obj/project.assets.json"
-              }
-            ]
-          }
-        ]
-      },
-      "group": "",
-      "name": "Lib.Model",
-      "purl": "pkg:nuget/Lib.Model@3.1.0",
-      "type": "library",
-      "version": "3.1.0"
-    },
-    {
-      "bom-ref": "pkg:nuget/Lib.Util@3.1.0#1",
-      "group": "",
-      "name": "Lib.Util",
-      "purl": "pkg:nuget/Lib.Util@3.1.0",
-      "type": "application",
-      "version": "3.1.0"
-    },
-    {
       "bom-ref": "pkg:nuget/Newtonsoft.Json@13.0.3",
       "evidence": {
         "identity": [
@@ -102,20 +70,27 @@
       "dependsOn": [
         "pkg:nuget/Lib.Model@3.1.0"
       ],
-      "ref": "pkg:nuget/Lib.Util@3.1.0#1"
+      "ref": "pkg:nuget/Lib.Util@3.1.0"
     },
     {
       "dependsOn": [],
       "ref": "pkg:nuget/Newtonsoft.Json@13.0.3"
+    },
+    {
+      "dependsOn": [
+        "pkg:nuget/Lib.Model@3.1.0",
+        "pkg:nuget/Lib.Util@3.1.0"
+      ],
+      "ref": "pkg:nuget/VersionFromProps"
     }
   ],
   "metadata": {
     "authors": [],
     "component": {
-      "bom-ref": "pkg:nuget/VersionFromProps@latest",
+      "bom-ref": "pkg:nuget/VersionFromProps",
       "components": [
         {
-          "bom-ref": "pkg:nuget/Lib.Model@3.1.0#1",
+          "bom-ref": "pkg:nuget/Lib.Model@3.1.0",
           "group": "",
           "name": "Lib.Model",
           "properties": [
@@ -145,9 +120,8 @@
       ],
       "group": "",
       "name": "VersionFromProps",
-      "purl": "pkg:nuget/VersionFromProps@latest",
-      "type": "application",
-      "version": "latest"
+      "purl": "pkg:nuget/VersionFromProps",
+      "type": "application"
     },
     "lifecycles": [
       {
