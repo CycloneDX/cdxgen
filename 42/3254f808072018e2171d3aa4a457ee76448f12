@@ -1,0 +1,70 @@
+lib/server/server.poku.js
+  s_71f301a0b01dc6::t_1dba6b889644ed 170-171
+  s_71f301a0b01dc6::t_f37170acf7489a 192-195,280-283,300-303
+  s_71f301a0b01dc6::t_4680fdff2c846b 1,4,11,23,148-169,172-191,196-279,284-299,304-305,801-805,822-930
+  s_71f301a0b01dc6::t_2328cee4f6f710 931
+lib/stages/pregen/pregen.poku.js
+  s_71f301a0b01dc6::t_6f7648d57e3676 1,3-28
+  s_71f301a0b01dc6::t_ce01549cc5e095 2
+lib/stages/pregen/pregen.js
+  s_71f301a0b01dc6::t_b76d648f22e7c9 171,193,232,234,239-241
+  s_71f301a0b01dc6::t_66675872149150 242-243
+lib/helpers/httpClient.js
+  s_71f301a0b01dc6::t_5e22fca06b7270 5,337-338,341-343,382-384,389-390,396-421,423,425-429,435-436,439-445,466-473,530,533-544,552
+lib/helpers/httpClient.poku.js
+  s_71f301a0b01dc6::t_c3400ec9afaa65 77-89,213-274
+  s_71f301a0b01dc6::t_adc9e95e07a09b 275
+lib/stages/postgen/postgen.js
+  s_71f301a0b01dc6::t_1faf77e46ffd82 2,1234-1237
+lib/audit/index.js
+  s_71f301a0b01dc6::t_fd44ccc9a0b975 30,1222-1232,1242-1243
+lib/helpers/utils.js
+  s_71f301a0b01dc6::t_d10d4f9ffafb05 1156-1162,1360-1380
+  s_71f301a0b01dc6::t_61527b0f77faca 10510,10512-10513,10515-10516,10519-10520,10527,10530,10532-10533
+lib/cli/index.js
+  s_71f301a0b01dc6::t_61527b0f77faca 5005-5012,5567-5568,5571
+  s_71f301a0b01dc6::t_649f55c0b49a3f 311,7743-7746
+lib/managers/docker.js
+  s_71f301a0b01dc6::t_a07865c5869e13 21,885-1042
+  s_71f301a0b01dc6::t_21419083d0a6e8 1043
+lib/server/server.js
+  s_71f301a0b01dc6::t_44ed46fd83c5db 1,35,80-84,159,167,175-178,182-222,226-337,514-525,622-629,632
+  s_71f301a0b01dc6::t_7fa55747b29343 223-225
+docs/SERVER.md
+  s_71f301a0b01dc6::t_b5a30120de2c8d 145-146,167-178
+  s_71f301a0b01dc6::t_c3346618e48256 179
+lib/helpers/source.poku.js
+  s_71f301a0b01dc6::t_19e2e0f500b7a9 656-745
+lib/managers/docker.poku.js
+  s_71f301a0b01dc6::t_bada17ce3cd34b 16,125-133,146-162
+  s_71f301a0b01dc6::t_3a235a4017c7a9 139
+  s_71f301a0b01dc6::t_6ca9b2cc3e1143 134-138,140-145
+  s_71f301a0b01dc6::t_29d993a55267f7 163-164
+test/data/git-remote-differentials.json
+  s_71f301a0b01dc6::t_0e4eba90f14db3 1-134
+lib/stages/postgen/postgen.poku.js
+  s_71f301a0b01dc6::t_c5e5c9f82b6aaa 23,1493-1513
+  s_71f301a0b01dc6::t_aed8eaa106545e 1514
+lib/helpers/source.js
+  s_71f301a0b01dc6::t_ce892a6a068c0d 4,101-103,115,118-122,274-276,281,301,589-631,644-731,740-744,774-775,876
+lib/helpers/envcontext.js
+  s_71f301a0b01dc6::t_2df7592d6d0f57 38-40,53-58,69-77,495-501
+test/data/standards-escape/escape.cdx.json
+  s_71f301a0b01dc6::t_7b2b0380e23330 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "423254f808072018e2171d3aa4a457ee76448f12",
+  "prompts": {},
+  "sessions": {
+    "s_71f301a0b01dc6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ee53f96-6c40-480c-9a0d-102759731f8d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
