@@ -1,0 +1,42 @@
+data/rules/cbom-security.yaml
+  h_0926447d100ad2 152,177,266,316
+data/rules/go-binaries.yaml
+  h_0926447d100ad2 21,23
+docs/BOM_AUDIT.md
+  h_0926447d100ad2 87
+docs/CBOM_CERTIFICATES.md
+  h_0926447d100ad2 58-62
+lib/cli/index.js
+  h_0926447d100ad2 1765-1767
+lib/cli/managedBom.js
+  h_0926447d100ad2 2411-2421,2426-2429,2433,2524-2527,2545-2548,2570
+lib/inventory/certificates.js
+  h_0926447d100ad2 105-106,109-118,139-145,473,501,626-654,802-821,885-887,892,897-900,902-904,909,976-979,1065-1067,1115,1122-1124,1127-1128,1303-1307,1320-1324,1336-1342,1344-1345,1436-1443,1576-1580,1739-1741,1765-1771,1829-1830,1832-1839,1850-1856,1900-1904,1906-1912,1915,2021-2023,2140-2142
+lib/inventory/certificates.poku.js
+  h_0926447d100ad2 316-317,533-812
+lib/inventory/display.js
+  h_0926447d100ad2 2149-2151,2154-2165
+lib/inventory/display.poku.js
+  h_0926447d100ad2 967-975
+lib/inventory/goBuildInfo.js
+  h_0926447d100ad2 38-39,64,98-109,114-118,123-127
+lib/inventory/goBuildInfo.poku.js
+  h_0926447d100ad2 162-218
+lib/managers/binary.js
+  h_0926447d100ad2 42-45,3417-3420,3422-3425,3429-3431,3433,3657-3661
+lib/managers/docker.js
+  h_0926447d100ad2 1668-1672,1677-1678
+lib/stages/postgen/auditBom.poku.js
+  h_0926447d100ad2 6093-6173
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "69109c9aaa28c5ba8ad63996e0b47accbd805746",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
