@@ -231,7 +231,7 @@
     {
       "bomRef": $firstNonEmpty($."bom-ref", bom.serialNumber)
     }
-  message: "HBOM for '{{ name }}' hit permission-denied enrichments that likely require a rerun with --privileged"
+  message: "HBOM for '{{ name }}' hit permission-denied enrichments that likely require {{ $safeStr($prop($, 'cdx:hbom:platform')) = 'windows' ? 'a rerun from a local or elevated session' : 'a rerun with --privileged' }}"
   mitigation: "Where policy allows, rerun HBOM collection with --privileged. On Linux, cdx-hbom then uses the documented non-interactive sudo path for permission-sensitive enrichments. On Windows it never elevates or prompts: run it from a local session (a non-administrator over SSH or WinRM is denied every WMI query) and, for the TPM, BitLocker and storage-reliability batch, from an elevated (Run as administrator) prompt."
   evidence: |
     {
