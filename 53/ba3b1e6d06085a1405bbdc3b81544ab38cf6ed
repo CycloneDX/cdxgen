@@ -1,0 +1,36 @@
+README.md
+  h_6a4cc5cdf68def 19,190
+SECURITY.md
+  h_6a4cc5cdf68def 55,78,93
+SKILL.md
+  h_6a4cc5cdf68def 5
+docs/ALLOWED_HOSTS_AND_COMMANDS.md
+  h_6a4cc5cdf68def 55-57
+docs/BOM_AUDIT.md
+  h_6a4cc5cdf68def 591-599
+docs/CLI.md
+  h_6a4cc5cdf68def 49,54,66
+docs/HBOM.md
+  h_6a4cc5cdf68def 18-20,55-72,113-119,156-167,190,200,209-210,226-235,240,264-265,279-280
+docs/LESSON13.md
+  h_6a4cc5cdf68def 61,67,73,75-76,102,133-147,195,205,254
+docs/PERMISSIONS.md
+  h_6a4cc5cdf68def 80-127,142-150,156-158
+docs/PROJECT_TYPES.md
+  h_6a4cc5cdf68def 62
+docs/README.md
+  h_6a4cc5cdf68def 245
+docs/THREAT_MODEL.md
+  h_6a4cc5cdf68def 198,208-210,212,557
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "53ba3b1e6d06085a1405bbdc3b81544ab38cf6ed",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
