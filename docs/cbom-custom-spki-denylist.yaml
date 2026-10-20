@@ -1,0 +1,86 @@
+# Example custom SPKI deny-list for `--bom-audit-rules-dir`.
+#
+# This file is documentation: it is NOT loaded by default. Copy it to a
+# directory, replace the placeholder hashes with the SPKI SHA-256 digests you
+# want to deny (lowercase hex, one per line), and run:
+#
+#   cdxgen --include-crypto --bom-audit \
+#     --bom-audit-rules-dir <directory holding your copy> -o bom.json <path>
+#
+# The rules below extend the two CBC rules that match SPKI digests:
+# CBC-003 fires on any certificate or key carrying a denied digest, CBC-004
+# on any certificate issued under one. Renaming the ids (the -CUSTOM suffix)
+# keeps the shipped rules running alongside yours.
+#
+# Where do SPKI SHA-256 digests come from?
+# - Go's CVE-2026-111943 list (already shipped in the built-in rules),
+# - a vendor revocation notice,
+# - your own CA rotation: `openssl x509 -in ca.pem -noout -pubkey |
+#   openssl pkey -pubin -outform DER | openssl dgst -sha256`.
+
+- id: CBC-003-CUSTOM
+  name: "Certificate or key on this estate's deny list"
+  description: "A certificate or public key whose SPKI SHA-256 appears on the deny list maintained for this estate."
+  severity: high
+  category: cbom-security
+  dry-run-support: full
+  condition: |
+    (
+      $deny := [
+        "0000000000000000000000000000000000000000000000000000000000000000"
+      ];
+      components[
+        (
+          cryptoProperties.assetType = 'certificate'
+          or cryptoProperties.assetType = 'related-crypto-material'
+        )
+        and $prop($, 'cdx:crypto:spkiSha256') in $deny
+      ]
+    )
+  location: |
+    {
+      "bomRef": $firstNonEmpty($."bom-ref", bom.serialNumber)
+    }
+  message: "Certificate or key '{{ name }}' carries a denied public key"
+  mitigation: "Replace the certificate chain and remove the key from every trust store, bundle and pin."
+  evidence: |
+    {
+      "spkiSha256": $prop($, 'cdx:crypto:spkiSha256')
+    }
+
+- id: CBC-004-CUSTOM
+  name: "Certificate issued under a key on this estate's deny list"
+  description: "The certificate was issued by a key whose SPKI SHA-256 appears on the deny list maintained for this estate."
+  severity: high
+  category: cbom-security
+  dry-run-support: full
+  condition: |
+    (
+      $deny := [
+        "0000000000000000000000000000000000000000000000000000000000000000"
+      ];
+      $badSkis := components[
+        cryptoProperties.assetType = 'certificate'
+        and $prop($, 'cdx:crypto:spkiSha256') in $deny
+      ].properties[name = 'cdx:crypto:subjectKeyId'].value[$ != null];
+      components[
+        cryptoProperties.assetType = 'certificate'
+        and (
+          $count(properties[name = 'cdx:crypto:issuerSpkiSha256'].value[$ in $deny]) > 0
+          or (
+            $prop($, 'cdx:crypto:authorityKeyId') != null
+            and $prop($, 'cdx:crypto:authorityKeyId') in $badSkis
+          )
+        )
+      ]
+    )
+  location: |
+    {
+      "bomRef": $firstNonEmpty($."bom-ref", bom.serialNumber)
+    }
+  message: "Certificate '{{ name }}' was issued under a denied public key"
+  mitigation: "Re-issue the certificate under an approved CA and update the server chain."
+  evidence: |
+    {
+      "authorityKeyId": $prop($, 'cdx:crypto:authorityKeyId')
+    }

@@ -81,5 +81,6 @@
 - [Tutorials - Sandboxed dynamic analysis with tracebom](LESSON34.md)
 - [Tutorials - Generating OBOM](OBOM_LESSONS.md)
 - [Trust enrichment BOM diff examples](TRUST_ENRICHMENT_DIFF.md)
+- [Certificates in the CBOM](CBOM_CERTIFICATES.md)
 - [macOS OBOM troubleshooting](OBOM_MACOS_TROUBLESHOOTING.md)
 - [Support (Enterprise & Community)](SUPPORT.md)

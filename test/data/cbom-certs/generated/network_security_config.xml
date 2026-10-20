@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+  <domain-config>
+    <domain includeSubdomains="true">api.example.test</domain>
+    <pin-set>
+      <pin digest="SHA-256">sf8flBwXVeErHyKWvHzNwJVxV6NukK0OPp9k2lny+is=</pin>
+    </pin-set>
+  </domain-config>
+</network-security-config>

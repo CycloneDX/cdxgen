@@ -227,3 +227,83 @@
       "goModExcludeCount": $prop($, 'cdx:golem:goModExcludeCount'),
       "excludeModule": $prop($, 'cdx:golem:excludeModule')
     }
+
+- id: GOLEM-SEC-008
+  name: "Go component configures a custom TLS root pool"
+  description: "Golem reported a tls.Config RootCAs or x509.VerifyOptions Roots override, so the module validates certificates against a pool it supplies instead of the system roots"
+  severity: low
+  category: golem-security
+  dry-run-support: full
+  condition: |
+    components[
+      $prop($, 'cdx:golem:cryptoFinding') = 'GOLEM-CRYPTO-TLS-CUSTOM-ROOTS'
+    ]
+  location: |
+    { "bomRef": $."bom-ref", "purl": purl }
+  message: "Go component '{{ name }}' sets a custom TLS root CA pool"
+  mitigation: "Review where the custom pool comes from and refresh it from a trusted source; a stale pool keeps trusting revoked or distrusted intermediates"
+  evidence: |
+    {
+      "finding": $prop($, 'cdx:golem:cryptoFinding'),
+      "severity": $prop($, 'cdx:golem:cryptoFindingSeverity')
+    }
+
+- id: GOLEM-SEC-009
+  name: "Go component replaces certificate verification"
+  description: "Golem reported a VerifyPeerCertificate or VerifyConnection callback, so the module performs its own certificate validation instead of (part of) the standard chain verification"
+  severity: medium
+  category: golem-security
+  dry-run-support: full
+  condition: |
+    components[
+      $prop($, 'cdx:golem:cryptoFinding') = 'GOLEM-CRYPTO-TLS-CUSTOM-VERIFY'
+    ]
+  location: |
+    { "bomRef": $."bom-ref", "purl": purl }
+  message: "Go component '{{ name }}' installs a custom certificate verification callback"
+  mitigation: "Check that the callback still calls Certificate.Verify, or that its custom checks are at least as strict; hand-rolled verification can miss revoked or distrusted intermediates"
+  evidence: |
+    {
+      "finding": $prop($, 'cdx:golem:cryptoFinding'),
+      "severity": $prop($, 'cdx:golem:cryptoFindingSeverity')
+    }
+
+- id: GOLEM-SEC-010
+  name: "Go component disables TLS verification while customising it"
+  description: "Golem reported an InsecureSkipVerify setting on a tls.Config that also customises verification, the pattern where Go's own distrust list no longer applies"
+  severity: high
+  category: golem-security
+  dry-run-support: full
+  condition: |
+    components[
+      $prop($, 'cdx:golem:cryptoFinding') = 'GOLEM-CRYPTO-TLS-VERIFY-REPLACED'
+    ]
+  location: |
+    { "bomRef": $."bom-ref", "purl": purl }
+  message: "Go component '{{ name }}' sets InsecureSkipVerify together with custom verification"
+  mitigation: "Remove InsecureSkipVerify and implement the required checks inside VerifyPeerCertificate on top of the standard chain verification"
+  evidence: |
+    {
+      "finding": $prop($, 'cdx:golem:cryptoFinding'),
+      "severity": $prop($, 'cdx:golem:cryptoFindingSeverity')
+    }
+
+- id: GOLEM-SEC-011
+  name: "Go component embeds a certificate pool"
+  description: "Golem reported a package-level //go:embed variable fed to x509.CertPool.AppendCertsFromPEM, so a private trust anchor travels inside the binary"
+  severity: low
+  category: golem-security
+  dry-run-support: full
+  condition: |
+    components[
+      $prop($, 'cdx:golem:cryptoFinding') = 'GOLEM-CRYPTO-X509-EMBEDDED-POOL'
+    ]
+  location: |
+    { "bomRef": $."bom-ref", "purl": purl }
+  message: "Go component '{{ name }}' appends an embedded PEM bundle to an x509 pool"
+  mitigation: "Track the embedded bundle like any other trust store: refresh it when CAs change and confirm it contains none of the distrusted keys"
+  evidence: |
+    {
+      "finding": $prop($, 'cdx:golem:cryptoFinding'),
+      "severity": $prop($, 'cdx:golem:cryptoFindingSeverity')
+    }
