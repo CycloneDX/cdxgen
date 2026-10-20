@@ -149,7 +149,7 @@
   condition: |
     components[
       cryptoProperties.assetType = 'certificate'
-      and $match($safeStr(cryptoProperties.certificateProperties.notValidAfter), /^\d{4}-\d{2}-\d{2}T/)
+      and $match($safeStr(cryptoProperties.certificateProperties.notValidAfter), /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):[0-5]\d:[0-5]\d(\.\d+)?(Z|[+-]([01]\d|2[0-3]):[0-5]\d)$/)
       and $toMillis($safeStr(cryptoProperties.certificateProperties.notValidAfter)) < $toMillis($now())
     ]
   location: |
@@ -174,7 +174,7 @@
   condition: |
     components[
       cryptoProperties.assetType = 'certificate'
-      and $match($safeStr(cryptoProperties.certificateProperties.notValidAfter), /^\d{4}-\d{2}-\d{2}T/)
+      and $match($safeStr(cryptoProperties.certificateProperties.notValidAfter), /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):[0-5]\d:[0-5]\d(\.\d+)?(Z|[+-]([01]\d|2[0-3]):[0-5]\d)$/)
       and $toMillis($safeStr(cryptoProperties.certificateProperties.notValidAfter)) >= $toMillis($now())
       and $toMillis($safeStr(cryptoProperties.certificateProperties.notValidAfter)) < ($toMillis($now()) + 2592000000)
     ]
@@ -263,6 +263,7 @@
       ].properties[name = 'cdx:crypto:subjectKeyId'].value[$ != null];
       components[
         cryptoProperties.assetType = 'certificate'
+        and $not($prop($, 'cdx:crypto:spkiSha256') in $deny)
         and (
           $count(properties[name = 'cdx:crypto:issuerSpkiSha256'].value[$ in $deny]) > 0
           or (
@@ -312,7 +313,7 @@
         and $prop($, 'cdx:crypto:signatureAlgorithmOid') != null
         and $not($prop($, 'cdx:crypto:publicKeyAlgorithmOid') in $pq)
         and $not($prop($, 'cdx:crypto:signatureAlgorithmOid') in $pq)
-        and $match($safeStr(cryptoProperties.certificateProperties.notValidAfter), /^\d{4}-\d{2}-\d{2}T/)
+        and $match($safeStr(cryptoProperties.certificateProperties.notValidAfter), /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):[0-5]\d:[0-5]\d(\.\d+)?(Z|[+-]([01]\d|2[0-3]):[0-5]\d)$/)
         and $toMillis($safeStr(cryptoProperties.certificateProperties.notValidAfter)) > $toMillis($cutoff)
       ]
     )

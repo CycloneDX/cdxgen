@@ -55,10 +55,11 @@ jq -r '[.components[] | select(.cryptoProperties.assetType=="certificate")
   | {spki: ([.properties[] | select(.name=="cdx:crypto:spkiSha256")][0].value // ""), ref: ."bom-ref"}]
   | group_by(.spki) | .[] | select(length > 1)' bom.json
 
-# leaves chaining to a given SPKI (verified issuer edges)
-jq -r --arg spki "<spki-hex>" '.dependencies[]
-  | select((.dependsOn // []) | length > 0) as $d
-  | select([$d.dependsOn[] | IN(.components[]."bom-ref")])' bom.json
+# certificates issued under a given SPKI (one hop over the verified edges;
+# .certchain <spki-prefix> walks the whole chain interactively)
+jq -r --arg spki "<spki-hex>" '.components[]
+  | select((.properties // [])[] | select(.name=="cdx:crypto:issuerSpkiSha256" and .value==$spki))
+  | ."bom-ref"' bom.json
 ```
 
 Simpler with cdxi: `.certs` lists every certificate with its role, issuer,

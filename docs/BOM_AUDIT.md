@@ -84,6 +84,7 @@ The categories that work best in dry-run mode are the formulation-centric ones:
 - `cbom` (alias for `cbom-security,cbom-compliance`)
 - `cbom-compliance`
 - `cbom-security`
+- `go-security`
 - `chrome-extension`
 - `ci-permission`
 - `container-risk`

@@ -18,9 +18,9 @@
         or (
           $m := $match($prop($, 'cdx:go:buildVersion'), /^go(\d+)\.(\d+)(?:\.(\d+))?/);
           $m != null
+          and $number($m.groups[0]) = 1
           and (
-            $number($m.groups[0]) < 1
-            or $number($m.groups[1]) < 26
+            $number($m.groups[1]) < 26
             or (
               $number($m.groups[1]) = 26
               and ($m.groups[2] != null ? $number($m.groups[2]) : 0) < 10
