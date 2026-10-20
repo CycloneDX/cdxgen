@@ -1,0 +1,180 @@
+{
+  "bomFormat": "CycloneDX",
+  "components": [
+    {
+      "bom-ref": "pkg:nuget/Lib.Model@3.1.0",
+      "evidence": {
+        "identity": [
+          {
+            "concludedValue": "$ROOT/Lib.Util/obj/project.assets.json",
+            "confidence": 1,
+            "field": "purl",
+            "methods": [
+              {
+                "confidence": 1,
+                "technique": "manifest-analysis",
+                "value": "$ROOT/Lib.Util/obj/project.assets.json"
+              }
+            ]
+          }
+        ]
+      },
+      "group": "",
+      "name": "Lib.Model",
+      "purl": "pkg:nuget/Lib.Model@3.1.0",
+      "type": "library",
+      "version": "3.1.0"
+    },
+    {
+      "bom-ref": "pkg:nuget/Lib.Util@3.1.0#1",
+      "group": "",
+      "name": "Lib.Util",
+      "purl": "pkg:nuget/Lib.Util@3.1.0",
+      "type": "application",
+      "version": "3.1.0"
+    },
+    {
+      "bom-ref": "pkg:nuget/Newtonsoft.Json@13.0.3",
+      "evidence": {
+        "identity": [
+          {
+            "confidence": 1,
+            "field": "purl",
+            "methods": [
+              {
+                "confidence": 1,
+                "technique": "manifest-analysis",
+                "value": "$ROOT/Lib.Util/obj/project.assets.json"
+              },
+              {
+                "confidence": 1,
+                "technique": "manifest-analysis",
+                "value": "$ROOT/Lib.Model/obj/project.assets.json"
+              },
+              {
+                "confidence": 0.7,
+                "technique": "manifest-analysis",
+                "value": "$ROOT/Lib.Model/Lib.Model.csproj"
+              }
+            ]
+          }
+        ]
+      },
+      "group": "",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "1eb0b9057765d3420ff73795fb467ce3c4163c0a02afd3f76c311982e23e8242dc04a00ec62c7fb4b1000070be52f0cd3efe1ad9dd7c94e45e1cc39a80f6becd"
+        }
+      ],
+      "name": "Newtonsoft.Json",
+      "properties": [
+        {
+          "name": "internal:PackageFiles",
+          "value": "Newtonsoft.Json.dll"
+        },
+        {
+          "name": "internal:SrcFile",
+          "value": "$ROOT/Lib.Model/Lib.Model.csproj"
+        },
+        {
+          "name": "internal:SrcFile",
+          "value": "$ROOT/Lib.Model/obj/project.assets.json"
+        },
+        {
+          "name": "internal:SrcFile",
+          "value": "$ROOT/Lib.Util/obj/project.assets.json"
+        }
+      ],
+      "purl": "pkg:nuget/Newtonsoft.Json@13.0.3",
+      "type": "library",
+      "version": "13.0.3"
+    }
+  ],
+  "dependencies": [
+    {
+      "dependsOn": [
+        "pkg:nuget/Newtonsoft.Json@13.0.3"
+      ],
+      "ref": "pkg:nuget/Lib.Model@3.1.0"
+    },
+    {
+      "dependsOn": [
+        "pkg:nuget/Lib.Model@3.1.0"
+      ],
+      "ref": "pkg:nuget/Lib.Util@3.1.0#1"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pkg:nuget/Newtonsoft.Json@13.0.3"
+    }
+  ],
+  "metadata": {
+    "authors": [],
+    "component": {
+      "bom-ref": "pkg:nuget/VersionFromProps@latest",
+      "components": [
+        {
+          "bom-ref": "pkg:nuget/Lib.Model@3.1.0#1",
+          "group": "",
+          "name": "Lib.Model",
+          "properties": [
+            {
+              "name": "cdx:dotnet:target_framework",
+              "value": "net10.0"
+            }
+          ],
+          "purl": "pkg:nuget/Lib.Model@3.1.0",
+          "type": "application",
+          "version": "3.1.0"
+        },
+        {
+          "bom-ref": "pkg:nuget/Lib.Util@3.1.0",
+          "group": "",
+          "name": "Lib.Util",
+          "properties": [
+            {
+              "name": "cdx:dotnet:target_framework",
+              "value": "net10.0"
+            }
+          ],
+          "purl": "pkg:nuget/Lib.Util@3.1.0",
+          "type": "application",
+          "version": "3.1.0"
+        }
+      ],
+      "group": "",
+      "name": "VersionFromProps",
+      "purl": "pkg:nuget/VersionFromProps@latest",
+      "type": "application",
+      "version": "latest"
+    },
+    "lifecycles": [
+      {
+        "phase": "pre-build"
+      }
+    ],
+    "timestamp": "1970-01-01T00:00:00.000Z",
+    "tools": {
+      "components": [
+        {
+          "authors": [
+            {
+              "name": "OWASP Foundation"
+            }
+          ],
+          "bom-ref": "pkg:npm/%40cdxgen/cdxgen@0.0.0-normalized",
+          "group": "@cdxgen",
+          "name": "cdxgen",
+          "publisher": "OWASP Foundation",
+          "purl": "pkg:npm/%40cdxgen/cdxgen@0.0.0-normalized",
+          "type": "application",
+          "version": "0.0.0-normalized"
+        }
+      ]
+    }
+  },
+  "serialNumber": "urn:uuid:00000000-0000-0000-0000-000000000000",
+  "specVersion": "1.7",
+  "version": 1
+}
