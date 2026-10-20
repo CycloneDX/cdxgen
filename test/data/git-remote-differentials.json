@@ -1,0 +1,134 @@
+{
+  "allowedHosts": "company-private-git.com",
+  "rejected": [
+    {
+      "remote": "https://company-private-git.com\\@attacker.example/x.git",
+      "reason": "new URL() ends the host at the backslash, libcurl reads company-private-git.com\\ as the user name and connects to attacker.example"
+    },
+    {
+      "remote": "https://company-private-git.com\\@127.0.0.1:9/x.git",
+      "reason": "backslash host split used to reach an internal address"
+    },
+    {
+      "remote": "http://company-private-git.com\\@attacker.example/x.git",
+      "reason": "backslash host split over plain http"
+    },
+    {
+      "remote": "https://company-private-git.com\\\\@attacker.example/x.git",
+      "reason": "doubled backslash"
+    },
+    {
+      "remote": "ssh://company-private-git.com#@attacker.example/x.git",
+      "reason": "new URL() ends the authority at #, git passes company-private-git.com#@attacker.example to ssh and OpenSSH connects to attacker.example"
+    },
+    {
+      "remote": "ssh://company-private-git.com?@attacker.example/x.git",
+      "reason": "same as the # case with ?"
+    },
+    {
+      "remote": "git+ssh://git@company-private-git.com#@attacker.example/x.git",
+      "reason": "git+ssh alias with a user name"
+    },
+    {
+      "remote": "ssh://company-private-git.com#@attacker.example:2222/x.git",
+      "reason": "git reads the port after the last colon, so this also picks the port"
+    },
+    {
+      "remote": "git://company-private-git.com#@attacker.example/x.git",
+      "reason": "git:// also ends the authority only at the first slash"
+    },
+    {
+      "remote": "ssh://attacker.example%2F@company-private-git.com/x.git",
+      "reason": "git percent-decodes ssh:// URLs before splitting off the host, so this becomes ssh://attacker.example/@company-private-git.com"
+    },
+    {
+      "remote": "git+ssh://attacker.example%2F@company-private-git.com/x.git",
+      "reason": "same decoding on the git+ssh alias"
+    },
+    {
+      "remote": "git://127.0.0.1:9%2F@company-private-git.com/x.git",
+      "reason": "same decoding on git://, which reaches an internal port"
+    },
+    {
+      "remote": "ssh://[attacker.example]:@company-private-git.com/x.git",
+      "reason": "git reads a leading [...] in the authority as the host"
+    },
+    {
+      "remote": "ssh://%5Battacker.example%5D@company-private-git.com/x.git",
+      "reason": "percent-encoded brackets, decoded by git"
+    },
+    {
+      "remote": "git://[127.0.0.1]:@company-private-git.com/x.git",
+      "reason": "bracketed host in the user name on git://"
+    },
+    {
+      "remote": "file://company-private-git.com/etc/passwd",
+      "reason": "git reads file:// URLs from the local disk whatever host they name"
+    },
+    {
+      "remote": "https://a@attacker.example@company-private-git.com/x.git",
+      "reason": "new URL() takes the host after the last @, git and libcurl split on the first"
+    },
+    {
+      "remote": "https://company-private-git.com\t@attacker.example/x.git",
+      "reason": "new URL() silently drops tabs"
+    },
+    {
+      "remote": "https://company-private-git.com\n@attacker.example/x.git",
+      "reason": "new URL() silently drops newlines"
+    },
+    {
+      "remote": "https://company-private-git.com /x.git",
+      "reason": "whitespace"
+    },
+    {
+      "remote": "https://company-private-git.com\u0000@attacker.example/x.git",
+      "reason": "NUL byte"
+    },
+    {
+      "remote": "https://%63ompany-private-git.com/x.git",
+      "reason": "new URL() percent-decodes the host, git does not"
+    },
+    {
+      "remote": "https://2130706433/x.git",
+      "reason": "new URL() rewrites a numeric IPv4 host"
+    },
+    {
+      "remote": "https://ｃompany-private-git.com/x.git",
+      "reason": "new URL() maps fullwidth letters to ASCII, git does not"
+    },
+    {
+      "remote": "git@company-private-git.com/org/repo.git",
+      "reason": "git treats user@host/path without a colon before the first slash as a local path"
+    },
+    {
+      "remote": "git@company-private-git.com#@attacker.example:org/repo.git",
+      "reason": "SCP-like address with a second @, OpenSSH connects to attacker.example"
+    },
+    {
+      "remote": "git@-oProxyCommand=id:org/repo.git",
+      "reason": "host that ssh would read as an option"
+    },
+    {
+      "remote": "https://attacker.example/x.git",
+      "reason": "host not in the allowlist"
+    },
+    {
+      "remote": "git@attacker.example:org/repo.git",
+      "reason": "SCP-like host not in the allowlist"
+    }
+  ],
+  "accepted": [
+    "https://company-private-git.com/org/repo.git",
+    "https://Company-Private-Git.com/org/repo.git",
+    "https://company-private-git.com:8443/org/repo.git",
+    "https://user:token@company-private-git.com/org/repo.git",
+    "https://user:p%40ss@company-private-git.com/org/repo.git",
+    "ssh://git@company-private-git.com/org/repo.git",
+    "ssh://git@company-private-git.com:2222/org/repo.git",
+    "git+ssh://git@company-private-git.com/org/repo.git",
+    "git://company-private-git.com/org/repo.git",
+    "git@company-private-git.com:org/repo.git",
+    "git@company-private-git.com:org/repo:name.git"
+  ]
+}
