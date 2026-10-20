@@ -1,0 +1,24 @@
+docs/PROJECT_TYPES.md
+  h_6a4cc5cdf68def 116
+lib/cli/index.js
+  h_6a4cc5cdf68def 1239-1244
+lib/cli/managedBom.js
+  h_6a4cc5cdf68def 38,1663-1668,2208-2218
+lib/cli/managedBom.poku.js
+  h_6a4cc5cdf68def 1777-1904,2024-2025
+test/repotests/dotnet-assembly-refs/expected/default.json
+  h_6a4cc5cdf68def 212-218,224,261-262
+test/repotests/dotnet-restored-identity/expected/default.json
+  h_6a4cc5cdf68def 73,78-84,90,93,123-124
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1704bedce1950f16889e6c7a3ad88650c68f8c82",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
