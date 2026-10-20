@@ -1,0 +1,20 @@
+bin/hbom.js
+  h_6a4cc5cdf68def 229-231
+lib/cli/cliOptions.poku.js
+  h_6a4cc5cdf68def 3,795-826
+lib/inventory/hbom.js
+  h_6a4cc5cdf68def 401-402,404-405
+lib/inventory/hbom.poku.js
+  h_6a4cc5cdf68def 68-83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9f3a2e66d5387497f1eb25acad461fe9be9297cd",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
