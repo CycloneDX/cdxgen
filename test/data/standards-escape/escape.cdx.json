@@ -1,0 +1,15 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "metadata": {
+    "licenses": [{ "license": { "name": "read-outside-templates" } }]
+  },
+  "definitions": {
+    "standards": [
+      {
+        "bom-ref": "read-outside-templates",
+        "name": "This file sits outside data/templates and must never be applied"
+      }
+    ]
+  }
+}
