@@ -6,10 +6,14 @@ export declare const SUPPORTED_PURL_SOURCE_TYPES: string[];
  * @param {string[]} args git arguments
  * @param {Object} options command options
  * @param {string|undefined} options.cwd working directory
+ * @param {boolean|undefined} options.noRepository run outside any repository,
+ *   so the config of a repository in the working directory, such as url.*.insteadOf
+ *   or core.sshCommand, cannot change where a remote command connects
  * @returns {Object} spawn result
  */
 export declare function hardenedGitCommand(args: string[], options?: {
     cwd: string | undefined;
+    noRepository: boolean | undefined;
 }): Object;
 /**
  * Build CycloneDX release notes from git tags and commits.
@@ -47,6 +51,17 @@ export declare function isAllowedWinPath(p: string): boolean;
  */
 export declare function isAllowedPath(p: string): boolean;
 /**
+ * Checks where the given path really points, after following symlinks, against
+ * where the allowed paths really point. Both sides are resolved, so an allowed
+ * directory that is itself reached through a link (such as /tmp on macOS) still
+ * matches, while a link inside an allowed directory that leads outside it does
+ * not.
+ *
+ * @param {string} p Path string to check
+ * @returns {boolean} true if the real path is inside a real allowed path
+ */
+export declare function isAllowedRealPath(p: string): boolean;
+/**
  * Determine if the path could be a package URL.
  *
  * @param {string} filePath Path or URL
@@ -67,6 +82,19 @@ export declare function maybeRemotePath(filePath: string): boolean;
  * @returns {Object|null} Error object if invalid, or null if valid
  */
 export declare function validateAndRejectGitSource(filePath: string): Object | null;
+/**
+ * Return the host a git client connects to for a remote, read the way git,
+ * libcurl and OpenSSH read it rather than the way new URL() does. git ends the
+ * authority of ssh:// and git:// URLs only at the first slash, percent-decodes
+ * it before splitting off the host, and reads a leading "[...]" as the host.
+ * OpenSSH takes the host after the last "@". So a "?" or "#" before the first
+ * slash, a second "@", brackets in the user name, or a percent sign in an
+ * ssh:// or git:// authority make the host ambiguous.
+ *
+ * @param {string} remote Git URL or SCP-like address
+ * @returns {string|undefined} lower-cased host, or undefined when it is ambiguous
+ */
+export declare function getGitRemoteHost(remote: string): string | undefined;
 /**
  * Clone a git repository into a temporary directory.
  *

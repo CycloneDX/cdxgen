@@ -806,11 +806,12 @@ export declare function parsePixiTomlFile(pixiToml: string): {};
  */
 export declare function repoMetadataToGitHubApiUrl(repoMetadata: Object): string | undefined;
 /**
- * Method to run cli command `pixi install`
+ * Method to run cli command `pixi install` in the project directory.
  *
- *
+ * @param {string} projectPath Directory containing pixi.toml
+ * @returns {boolean} true when pixi install succeeded
  */
-export declare function generatePixiLockFile(_path: any): void;
+export declare function generatePixiLockFile(projectPath: string): boolean;
 /**
  * Method to split GitHub url into its parts
  * @param {String} repoUrl Repository url
