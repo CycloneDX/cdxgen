@@ -1,0 +1,18 @@
+deno.json
+  h_6a4cc5cdf68def 86
+package.json
+  h_6a4cc5cdf68def 183
+pnpm-lock.yaml
+  h_6a4cc5cdf68def 279-280,495-496,1495
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0cc4651f1e75aec5c0b53cc6931d4e69a94f6af7",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
