@@ -1,0 +1,22 @@
+docs/CUSTOM_PROPERTIES.md
+  h_6a4cc5cdf68def 869
+docs/PROJECT_TYPES.md
+  h_6a4cc5cdf68def 116
+lib/ecosystems/parsers-dotnet.js
+  h_6a4cc5cdf68def 1418-1426,1436-1443
+lib/ecosystems/parsers-dotnet.poku.js
+  h_6a4cc5cdf68def 1457-1458,1471-1476,1511-1565
+test/data/csharp-restored-identity/WindowsAgent/src/Api/Api.csproj
+  h_6a4cc5cdf68def 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1c755c251c3f3a35a976b24e979189d7676b8582",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
