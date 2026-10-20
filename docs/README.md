@@ -242,7 +242,7 @@ For practical SOC/IR and compliance playbooks, see [OBOM lessons](./OBOM_LESSONS
 
 ## Generate BOM for hardware (HBOM)
 
-Use the `hbom` command to generate a dedicated hardware inventory for the current host. Current collectors support Apple Silicon macOS, Linux amd64, and Linux arm64.
+Use the `hbom` command to generate a dedicated hardware inventory for the current host. Current collectors support Apple Silicon macOS, Linux amd64, Linux arm64, and Windows amd64 and arm64 (the Windows collector uses the PowerShell that ships with Windows).
 
 ```shell
 hbom -o hbom.json

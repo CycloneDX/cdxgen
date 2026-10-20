@@ -1,0 +1,91 @@
+name: HBOM artifact capture
+
+# Captures a real HBOM on each hosted Windows runner, with the HBOM audit, and a
+# merged HBOM + OBOM host view that exercises the drive-letter topology join.
+# The hosted runners are administrator sessions, so --privileged also returns
+# the TPM, BitLocker and storage-reliability batch.
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  generate-hbom:
+    name: Generate HBOM (${{ matrix.runner }})
+    permissions: {}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner:
+          - windows-latest
+          - windows-11-arm
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Setup pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413  # v6.1.0
+      - name: Use Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1  # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - name: Install dependencies
+        shell: bash
+        run: pnpm install:frozen
+      - name: Generate HBOM, HBOM audit and merged host view
+        id: generate
+        shell: bash
+        env:
+          RUNNER_LABEL: ${{ matrix.runner }}
+          GITHUB_REPOSITORY_NAME: ${{ github.repository }}
+          GITHUB_COMMIT_SHA: ${{ github.sha }}
+        run: |
+          set +e
+          report_dir="reports/${RUNNER_LABEL}"
+          mkdir -p "$report_dir"
+          {
+            echo "runner=${RUNNER_LABEL}"
+            echo "runner_os=${RUNNER_OS}"
+            echo "runner_arch=${RUNNER_ARCH}"
+            echo "repository=${GITHUB_REPOSITORY_NAME}"
+            echo "ref=${GITHUB_REF}"
+            echo "sha=${GITHUB_COMMIT_SHA}"
+          } > "$report_dir/run-info.txt"
+          node bin/cdxgen.js \
+            -t hbom \
+            --privileged \
+            --bom-audit \
+            -o "$report_dir/hbom.json" \
+            . > "$report_dir/hbom-out.txt" 2>&1
+          hbom_exit_code=$?
+          node bin/hbom.js \
+            --include-runtime \
+            --privileged \
+            --pretty \
+            -o "$report_dir/host-view.json" > "$report_dir/host-view-out.txt" 2>&1
+          host_view_exit_code=$?
+          exit_code=$hbom_exit_code
+          if [ "$exit_code" -eq 0 ]; then
+            exit_code=$host_view_exit_code
+          fi
+          echo "exit_code=$exit_code" >> "$GITHUB_OUTPUT"
+          echo "$exit_code" > "$report_dir/exit-code.txt"
+          exit 0
+      - name: Upload HBOM artifacts
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
+        with:
+          name: hbom-${{ matrix.runner }}
+          if-no-files-found: error
+          path: reports/${{ matrix.runner }}/
+      - name: Fail workflow when HBOM generation fails
+        if: steps.generate.outputs.exit_code != '0'
+        shell: bash
+        run: |
+          echo "HBOM generation failed on ${RUNNER_LABEL} with exit code ${STEPS_GENERATE_OUTPUTS_EXIT_CODE}"
+          exit 1
+        env:
+          RUNNER_LABEL: ${{ matrix.runner }}
+          STEPS_GENERATE_OUTPUTS_EXIT_CODE: ${{ steps.generate.outputs.exit_code }}

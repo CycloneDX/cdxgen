@@ -52,6 +52,9 @@ HBOM is special because the optional `@cdxgen/cdx-hbom` collector can declare it
 - On Linux hosts, `CDXGEN_ALLOWED_PATHS` often needs explicit inventory roots such as `/proc`, `/sys`, and `/etc` in addition to the command allowlist.
 - On Linux `hbom --privileged` runs with `@cdxgen/cdx-hbom`, also allowlist `sudo` when you want the collector's explicit `sudo -n` retry path for permission-sensitive commands.
 - On Apple Silicon macOS, command allowlists are usually the main control unless plist-backed enrichment is enabled.
+- On Windows, the allowlist entry is `powershell.exe`: every collector batch is one PowerShell process, the collector reads no files, and so no `CDXGEN_ALLOWED_PATHS` entries are needed. `hbom --dry-run` lists the batches by command id and script digest; the full scripts are in `getCommandPlan({ platform: "win32" })` from `@cdxgen/cdx-hbom`.
+- Allowlist entries match the exact command or its file name, case-sensitively, because `@cdxgen/cdx-hbom` applies `CDXGEN_ALLOWED_COMMANDS` again when it starts a process: use `powershell.exe`, or the full path exactly as the preflight message prints it. An allowlist without it blocks collection even outside secure mode, with a `command-error` diagnostic per batch and only the Node baseline in the BOM.
+- `--no-command-enrichment` does not remove the check on Windows and macOS. Windows always runs `windows-cim-platform` and the Darwin collector ignores the option; only a Linux run without `--privileged` runs no command.
 
 ## Common Commands (All Platforms)
 

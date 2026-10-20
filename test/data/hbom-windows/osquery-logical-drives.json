@@ -1,0 +1,111 @@
+{
+  "components": [
+    {
+      "group": "",
+      "name": "C-",
+      "description": "Local Fixed Disk",
+      "type": "device",
+      "bom-ref": "osquery:logical_drives:device:C-@unknown[device_id=C-]",
+      "properties": [
+        {
+          "name": "cdx:osquery:category",
+          "value": "logical_drives"
+        },
+        {
+          "name": "boot_partition",
+          "value": "1"
+        },
+        {
+          "name": "device_id",
+          "value": "C:"
+        },
+        {
+          "name": "file_system",
+          "value": "NTFS"
+        },
+        {
+          "name": "free_space",
+          "value": "109551960064"
+        },
+        {
+          "name": "size",
+          "value": "273260998656"
+        },
+        {
+          "name": "type",
+          "value": "Unknown"
+        }
+      ]
+    },
+    {
+      "group": "",
+      "name": "D-",
+      "description": "CD-ROM Disc",
+      "type": "device",
+      "bom-ref": "osquery:logical_drives:device:D-@unknown[device_id=D-]",
+      "properties": [
+        {
+          "name": "cdx:osquery:category",
+          "value": "logical_drives"
+        },
+        {
+          "name": "boot_partition",
+          "value": "0"
+        },
+        {
+          "name": "device_id",
+          "value": "D:"
+        },
+        {
+          "name": "free_space",
+          "value": "-1"
+        },
+        {
+          "name": "size",
+          "value": "-1"
+        },
+        {
+          "name": "type",
+          "value": "Unknown"
+        }
+      ]
+    },
+    {
+      "group": "",
+      "name": "Z-",
+      "description": "Network Connection",
+      "type": "device",
+      "bom-ref": "osquery:logical_drives:device:Z-@unknown[device_id=Z-]",
+      "properties": [
+        {
+          "name": "cdx:osquery:category",
+          "value": "logical_drives"
+        },
+        {
+          "name": "boot_partition",
+          "value": "0"
+        },
+        {
+          "name": "device_id",
+          "value": "Z:"
+        },
+        {
+          "name": "file_system",
+          "value": "PrlSF"
+        },
+        {
+          "name": "free_space",
+          "value": "252599971840"
+        },
+        {
+          "name": "size",
+          "value": "994662584320"
+        },
+        {
+          "name": "type",
+          "value": "Unknown"
+        }
+      ]
+    }
+  ]
+}

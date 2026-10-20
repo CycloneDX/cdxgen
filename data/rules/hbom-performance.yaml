@@ -32,7 +32,7 @@
 
 - id: HBP-002
   name: "Storage health is degraded or wear is near exhaustion"
-  description: "Degraded SMART state or high wear percentage is a strong leading indicator of latency, failure, or replacement pressure."
+  description: "Degraded SMART state, a Warning or Unhealthy Windows storage health status, or high wear percentage is a strong leading indicator of latency, failure, or replacement pressure."
   severity: high
   category: hbom-performance
   dry-run-support: full
@@ -51,6 +51,10 @@
           and $lowercase($safeStr($prop($, 'cdx:hbom:smartStatus'))) != 'passed'
         )
         or (
+          $lowercase($safeStr($prop($, 'cdx:hbom:healthStatus'))) = 'warning'
+          or $lowercase($safeStr($prop($, 'cdx:hbom:healthStatus'))) = 'unhealthy'
+        )
+        or (
           $hasProp($, 'cdx:hbom:wearPercentageUsed')
           and $number($prop($, 'cdx:hbom:wearPercentageUsed')) >= 80
         )
@@ -65,6 +69,8 @@
   evidence: |
     {
       "smartStatus": $prop($, 'cdx:hbom:smartStatus'),
+      "healthStatus": $prop($, 'cdx:hbom:healthStatus'),
+      "operationalStatus": $prop($, 'cdx:hbom:operationalStatus'),
       "wearPercentageUsed": $prop($, 'cdx:hbom:wearPercentageUsed'),
       "revision": $prop($, 'cdx:hbom:revision'),
       "deviceSerial": $prop($, 'cdx:hbom:deviceSerial')

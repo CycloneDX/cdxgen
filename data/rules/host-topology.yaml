@@ -90,7 +90,7 @@
       "bomRef": $firstNonEmpty($."bom-ref", bom.serialNumber)
     }
   message: "Merged host inventory for '{{ name }}' contains no strict HBOM-to-OBOM topology links"
-  mitigation: "Review collector coverage, ensure runtime categories such as interface_addresses or kernel_modules are available, and prefer exact identifier-bearing probes over heuristic joins."
+  mitigation: "Review collector coverage, ensure runtime categories such as interface_addresses or kernel_modules (logical_drives on Windows) are available, and prefer exact identifier-bearing probes over heuristic joins."
   evidence: |
     {
       "hostViewMode": $prop($, 'cdx:hostview:mode'),

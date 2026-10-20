@@ -195,7 +195,7 @@ Trust boundary 5: cdxgen container ←→ container host
 
 #### T1.10 — Over-privileged HBOM live collection on managed hosts
 
-**Threat:** An operator grants broader privileges than necessary to collect HBOM data on Linux, or assumes that every partial HBOM requires root access, increasing the blast radius of the scanning process on production hosts.
+**Threat:** An operator grants broader privileges than necessary to collect HBOM data on Linux or Windows, or assumes that every partial HBOM requires root or administrator access, increasing the blast radius of the scanning process on production hosts.
 
 **Mitigations:**
 
@@ -205,8 +205,11 @@ Trust boundary 5: cdxgen container ←→ container host
 - cdxgen derives compact `cdx:hbom:analysis:*` summary properties and exposes `hbom diagnostics` so operators can distinguish "install a package" from "rerun with --privileged" without guessing
 - In secure mode, cdxgen reuses the HBOM dry-run declaration as a preflight plan and aborts live HBOM collection when the declared commands fall outside `CDXGEN_ALLOWED_COMMANDS` or the declared local paths fall outside `CDXGEN_ALLOWED_PATHS`; for `@cdxgen/cdx-hbom` this also covers explicit `sudo -n` retry paths declared for permission-sensitive commands
 - The Linux privileged path uses non-interactive `sudo -n`, avoiding interactive password prompts that would otherwise encourage ad hoc operator workarounds
+- On Windows, `--privileged` only adds the `windows-cim-privileged` batch (TPM, BitLocker, storage reliability, Secure Boot). `@cdxgen/cdx-hbom` never elevates, never prompts for UAC and never starts `sudo.exe`, so an unelevated run records `permission-denied` diagnostics and still returns the rest of the inventory; the normal local-session inventory needs no administrator rights
+- Windows collection runs fixed, read-only PowerShell scripts through the absolute `%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe` with `-NoLogo -NoProfile -NonInteractive -Command`, no encoded payload and no execution-policy override. The scripts are static and readable, the BOM records only their digests, and `getCommandPlan` returns them for audit. Allowlisting `powershell.exe` is coarse because it admits any PowerShell invocation, and `SystemRoot` is a trust input in the same way as `PATH`
+- The preflight compares allowlist entries exactly and case-sensitively, as `@cdxgen/cdx-hbom` does when it starts a process, and it keeps checking the Windows and Darwin plans under `--no-command-enrichment`, which those collectors do not honour
 
-**Residual risk:** Medium — HBOM still runs on the target host and may require elevated access for richer firmware or graphics detail. Users remain responsible for applying least privilege and deciding whether the additional evidence is worth the extra permissions.
+**Residual risk:** Medium — HBOM still runs on the target host and may require elevated access for richer firmware or graphics detail (on Windows, for TPM, BitLocker and reliability data, which only an already-elevated session can read). Users remain responsible for applying least privilege and deciding whether the additional evidence is worth the extra permissions.
 
 #### T1.11 — Untrusted AI metadata from remote model registries and local model artifacts
 
@@ -551,7 +554,7 @@ _TB = Trust Boundary (see Trust Boundaries section above)_
 ## Recommendations for Deployers
 
 1. **Use secure mode** — Set `CDXGEN_SECURE_MODE=true` and configure `NODE_OPTIONS` with the Node.js permission model, or use the `ghcr.io/cdxgen/cdxgen-secure` container image.
-2. **Configure allowlists** — Set `CDXGEN_ALLOWED_HOSTS` and `CDXGEN_ALLOWED_COMMANDS` based on your project types. For HBOM in secure mode, run `hbom --dry-run` first and use the declared command set as the review baseline before enabling live collection.
+2. **Configure allowlists** — Set `CDXGEN_ALLOWED_HOSTS` and `CDXGEN_ALLOWED_COMMANDS` based on your project types. For HBOM in secure mode, run `hbom --dry-run` first and use the declared command set as the review baseline before enabling live collection (on Windows the declared set is `powershell.exe`).
 3. **Restrict paths deliberately** — When running HBOM in secure mode, set `CDXGEN_ALLOWED_PATHS` to the approved local inventory roots for that host profile (for example `/proc,/sys,/etc` on Linux where appropriate). In server mode, also set `CDXGEN_SERVER_ALLOWED_PATHS` and `CDXGEN_GIT_ALLOWED_HOSTS` (or `CDXGEN_SERVER_ALLOWED_HOSTS`).
 4. **Deploy server behind a proxy** — The cdxgen server has no built-in authentication. Use a reverse proxy (nginx, Envoy, etc.) with authentication and rate limiting.
 5. **Sandbox untrusted projects** — Scan untrusted code in containers or ephemeral CI environments, not on developer machines.

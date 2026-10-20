@@ -16,26 +16,38 @@
       - "1.1 Establish and Maintain Detailed Enterprise Asset Inventory"
   condition: |
     metadata.component[
-      $safeStr($prop($, 'cdx:hbom:platform')) = 'linux'
-      and $count(
-        $$.components[
-          $prop($, 'cdx:hbom:hardwareClass') = 'board'
-          and (
-            $hasProp($, 'cdx:hbom:boardVendor')
-            or $hasProp($, 'cdx:hbom:boardName')
-            or $hasProp($, 'cdx:hbom:biosVendor')
-            or $hasProp($, 'cdx:hbom:biosVersion')
-            or $hasProp($, 'cdx:hbom:firmwareDate')
-          )
-        ]
-      ) = 0
+      (
+        $safeStr($prop($, 'cdx:hbom:platform')) = 'linux'
+        and $count(
+          $$.components[
+            $prop($, 'cdx:hbom:hardwareClass') = 'board'
+            and (
+              $hasProp($, 'cdx:hbom:boardVendor')
+              or $hasProp($, 'cdx:hbom:boardName')
+              or $hasProp($, 'cdx:hbom:biosVendor')
+              or $hasProp($, 'cdx:hbom:biosVersion')
+              or $hasProp($, 'cdx:hbom:firmwareDate')
+            )
+          ]
+        ) = 0
+      )
+      or (
+        $safeStr($prop($, 'cdx:hbom:platform')) = 'windows'
+        and $not(
+          $hasProp($, 'cdx:hbom:boardVendor')
+          or $hasProp($, 'cdx:hbom:boardName')
+          or $hasProp($, 'cdx:hbom:biosVendor')
+          or $hasProp($, 'cdx:hbom:biosVersion')
+          or $hasProp($, 'cdx:hbom:firmwareDate')
+        )
+      )
     ]
   location: |
     {
       "bomRef": $firstNonEmpty($."bom-ref", bom.serialNumber)
     }
   message: "HBOM for '{{ name }}' lacks board or firmware provenance fields needed for governance review"
-  mitigation: "Enable richer firmware/board collection on supported Linux hosts, validate SMBIOS access, and ensure the inventory captures board vendor, board name, BIOS vendor, BIOS version, and firmware date where available."
+  mitigation: "Enable richer firmware/board collection on supported Linux hosts, validate SMBIOS access, and ensure the inventory captures board vendor, board name, BIOS vendor, BIOS version, and firmware date where available. On Windows these come from the windows-cim-platform batch, which a network logon (SSH, WinRM) as a non-administrator cannot run: collect from a local session or an elevated one."
   evidence: |
     {
       "platform": $prop($, 'cdx:hbom:platform'),
@@ -142,7 +154,7 @@
       "bomRef": $firstNonEmpty($."bom-ref", bom.serialNumber)
     }
   message: "HBOM for '{{ name }}' includes storage volumes but no explicit encryption posture evidence"
-  mitigation: "Enable volume-level enrichment on supported platforms or pair the HBOM with equivalent host controls evidence so encryption compliance can be verified."
+  mitigation: "Enable volume-level enrichment on supported platforms or pair the HBOM with equivalent host controls evidence so encryption compliance can be verified. On Windows, BitLocker status comes from the --privileged batch, so rerun from an elevated (Run as administrator) prompt with --privileged."
   evidence: |
     {
       "storageVolumeCount": $count($$.components[$prop($, 'cdx:hbom:hardwareClass') = 'storage-volume']),
@@ -219,8 +231,8 @@
     {
       "bomRef": $firstNonEmpty($."bom-ref", bom.serialNumber)
     }
-  message: "HBOM for '{{ name }}' hit permission-denied enrichments that likely require a rerun with --privileged"
-  mitigation: "Where policy allows, rerun HBOM collection with --privileged so cdx-hbom can use the documented non-interactive sudo path for permission-sensitive Linux enrichments."
+  message: "HBOM for '{{ name }}' hit permission-denied enrichments that likely require {{ $safeStr($prop($, 'cdx:hbom:platform')) = 'windows' ? 'a rerun from a local or elevated session' : 'a rerun with --privileged' }}"
+  mitigation: "Where policy allows, rerun HBOM collection with --privileged. On Linux, cdx-hbom then uses the documented non-interactive sudo path for permission-sensitive enrichments. On Windows it never elevates or prompts: run it from a local session (a non-administrator over SSH or WinRM is denied every WMI query) and, for the TPM, BitLocker and storage-reliability batch, from an elevated (Run as administrator) prompt."
   evidence: |
     {
       "collectorProfile": $prop(bom, 'cdx:hbom:collectorProfile'),
@@ -260,7 +272,7 @@
 
 - id: HBC-009
   name: "HBOM board and BIOS provenance was blocked by permissions"
-  description: "When dmidecode-backed firmware and board enrichment is blocked, the HBOM may miss board-vendor, board-name, BIOS-version, and related governance evidence."
+  description: "When dmidecode-backed firmware and board enrichment is blocked on Linux, or Windows denies WMI to the whole session (a network logon), the HBOM may miss board-vendor, board-name, BIOS-version, and related governance evidence."
   severity: medium
   category: hbom-compliance
   dry-run-support: full
@@ -270,15 +282,21 @@
       - "SI-7 Software, Firmware, and Information Integrity"
   condition: |
     metadata.component[
-      $safeStr($prop($, 'cdx:hbom:platform')) = 'linux'
-      and $listContains($propList($$, 'cdx:hbom:analysis:permissionDeniedIds'), 'dmidecode-firmware-board')
+      (
+        $safeStr($prop($, 'cdx:hbom:platform')) = 'linux'
+        and $listContains($propList($$, 'cdx:hbom:analysis:permissionDeniedIds'), 'dmidecode-firmware-board')
+      )
+      or (
+        $safeStr($prop($, 'cdx:hbom:platform')) = 'windows'
+        and $listContains($propList($$, 'cdx:hbom:analysis:permissionDeniedIds'), 'windows-cim-platform:network-logon')
+      )
     ]
   location: |
     {
       "bomRef": $firstNonEmpty($."bom-ref", bom.serialNumber)
     }
-  message: "HBOM for '{{ name }}' could not capture full board and BIOS provenance because dmidecode enrichment was blocked"
-  mitigation: "Where policy allows, rerun with --privileged or equivalent access so the collector can gather firmware vendor, BIOS version, board vendor, and board name data."
+  message: "HBOM for '{{ name }}' could not capture full board and BIOS provenance because {{ $safeStr($prop($, 'cdx:hbom:platform')) = 'windows' ? 'WMI was denied to this network logon' : 'dmidecode enrichment was blocked' }}"
+  mitigation: "Where policy allows, rerun with --privileged or equivalent access so the collector can gather firmware vendor, BIOS version, board vendor, and board name data. On Windows, run HBOM from a local session or an elevated one instead of over SSH or WinRM as a non-administrator."
   evidence: |
     {
       "collectorProfile": $prop(bom, 'cdx:hbom:collectorProfile'),

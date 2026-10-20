@@ -1,0 +1,1910 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7",
+  "serialNumber": "urn:uuid:75e46b48-353d-4a15-b262-af2fab4bebd5",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-20T16:18:24.679Z",
+    "lifecycles": [
+      {
+        "phase": "operations"
+      }
+    ],
+    "component": {
+      "type": "device",
+      "name": "Parallels ARM Virtual Machine",
+      "version": "0.1",
+      "manufacturer": {
+        "name": "Parallels International GmbH."
+      },
+      "description": "Apple Silicon",
+      "properties": [
+        {
+          "name": "cdx:hbom:platform",
+          "value": "windows"
+        },
+        {
+          "name": "cdx:hbom:architecture",
+          "value": "arm64"
+        },
+        {
+          "name": "cdx:hbom:chip",
+          "value": "Apple Silicon"
+        },
+        {
+          "name": "cdx:hbom:memory",
+          "value": "16 GB"
+        },
+        {
+          "name": "cdx:hbom:serialNumber",
+          "value": "redacted:3 5C"
+        },
+        {
+          "name": "cdx:hbom:platformUuid",
+          "value": "redacted:C35C"
+        },
+        {
+          "name": "cdx:hbom:modelNumber",
+          "value": "Parallels_ARM_VM"
+        },
+        {
+          "name": "cdx:hbom:boardVendor",
+          "value": "Parallels ARM Virtual Machine"
+        },
+        {
+          "name": "cdx:hbom:boardName",
+          "value": "Parallels ARM Virtual Platform"
+        },
+        {
+          "name": "cdx:hbom:biosVendor",
+          "value": "Parallels International GmbH."
+        },
+        {
+          "name": "cdx:hbom:biosVersion",
+          "value": "27.0.0 (58628)"
+        },
+        {
+          "name": "cdx:hbom:firmwareDate",
+          "value": "2026-08-11"
+        },
+        {
+          "name": "cdx:hbom:systemFamily",
+          "value": "Parallels VM"
+        },
+        {
+          "name": "cdx:hbom:pcSystemType",
+          "value": "slate"
+        },
+        {
+          "name": "cdx:hbom:hypervisorPresent",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:smbiosVersion",
+          "value": "3.6"
+        },
+        {
+          "name": "cdx:hbom:vbsStatus",
+          "value": "off"
+        },
+        {
+          "name": "cdx:hbom:securityServicesConfigured",
+          "value": "none"
+        },
+        {
+          "name": "cdx:hbom:securityServicesRunning",
+          "value": "none"
+        },
+        {
+          "name": "cdx:hbom:codeIntegrityPolicyEnforcement",
+          "value": "enforced"
+        },
+        {
+          "name": "cdx:hbom:usermodeCodeIntegrityPolicyEnforcement",
+          "value": "off"
+        },
+        {
+          "name": "cdx:hbom:availableSecurityProperties",
+          "value": "secure-boot, nx-protections, mbec-gmet"
+        },
+        {
+          "name": "cdx:hbom:requiredSecurityProperties",
+          "value": "none"
+        },
+        {
+          "name": "cdx:hbom:secureBootEnabled",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:secureBootSource",
+          "value": "registry"
+        },
+        {
+          "name": "cdx:hbom:firmwareType",
+          "value": "UEFI"
+        },
+        {
+          "name": "cdx:hbom:identifierPolicy",
+          "value": "redacted-by-default"
+        },
+        {
+          "name": "cdx:hostview:mode",
+          "value": "hbom-topology"
+        },
+        {
+          "name": "cdx:hostview:hardwareComponentCount",
+          "value": "25"
+        },
+        {
+          "name": "cdx:hostview:runtimeComponentCount",
+          "value": "0"
+        },
+        {
+          "name": "cdx:hostview:runtimeAnchorCount",
+          "value": "0"
+        },
+        {
+          "name": "cdx:hostview:linkedHardwareComponentCount",
+          "value": "0"
+        },
+        {
+          "name": "cdx:hostview:topologyLinkCount",
+          "value": "0"
+        }
+      ],
+      "bom-ref": "urn:cdxgen:host:device:Parallels-ARM-Virtual-Machine:windows"
+    },
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "cdx-hbom"
+        }
+      ]
+    },
+    "properties": []
+  },
+  "components": [
+    {
+      "name": "Apple Silicon",
+      "version": "arm64",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "processor"
+        },
+        {
+          "name": "cdx:hbom:architecture",
+          "value": "arm64"
+        },
+        {
+          "name": "cdx:hbom:coreCount",
+          "value": "4"
+        },
+        {
+          "name": "cdx:hbom:logicalCpuCount",
+          "value": "4"
+        },
+        {
+          "name": "cdx:hbom:socketCount",
+          "value": "4"
+        },
+        {
+          "name": "cdx:hbom:cpuFamily",
+          "value": "257"
+        },
+        {
+          "name": "cdx:hbom:stepping",
+          "value": "0"
+        },
+        {
+          "name": "cdx:hbom:maxClockMHz",
+          "value": "3072"
+        },
+        {
+          "name": "cdx:hbom:currentClockMHz",
+          "value": "3072"
+        },
+        {
+          "name": "cdx:hbom:l2CacheKiB",
+          "value": "16384"
+        },
+        {
+          "name": "cdx:hbom:virtualizationFirmwareEnabled",
+          "value": "false"
+        },
+        {
+          "name": "cdx:hbom:slatSupported",
+          "value": "false"
+        },
+        {
+          "name": "cdx:hbom:vmMonitorModeExtensions",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:socketDesignation",
+          "value": "CPU"
+        }
+      ],
+      "type": "device",
+      "bom-ref": "urn:cdxgen:component:device:processor:Apple-Silicon:arm64"
+    },
+    {
+      "name": "System Memory",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "memory"
+        },
+        {
+          "name": "cdx:hbom:size",
+          "value": "16 GB"
+        },
+        {
+          "name": "cdx:hbom:sizeBytes",
+          "value": "17179869184"
+        },
+        {
+          "name": "cdx:hbom:visibleMemoryBytes",
+          "value": "17173250048"
+        },
+        {
+          "name": "cdx:hbom:memoryModuleCount",
+          "value": "1"
+        },
+        {
+          "name": "cdx:hbom:maxCapacityBytes",
+          "value": "17179869184"
+        },
+        {
+          "name": "cdx:hbom:memoryErrorCorrection",
+          "value": "None"
+        }
+      ],
+      "type": "device",
+      "bom-ref": "urn:cdxgen:component:device:memory:System-Memory:unknown"
+    },
+    {
+      "name": "Physical Memory 0",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "memory-module"
+        },
+        {
+          "name": "cdx:hbom:capacityBytes",
+          "value": "17179869184"
+        },
+        {
+          "name": "cdx:hbom:capacity",
+          "value": "16 GB"
+        },
+        {
+          "name": "cdx:hbom:memoryType",
+          "value": "DRAM"
+        },
+        {
+          "name": "cdx:hbom:formFactor",
+          "value": "DIMM"
+        }
+      ],
+      "type": "device",
+      "bom-ref": "urn:cdxgen:component:device:memory-module:Physical-Memory-0:unknown"
+    },
+    {
+      "name": "Parallels ARM Virtual Platform",
+      "version": "0.1",
+      "manufacturer": {
+        "name": "Parallels ARM Virtual Machine"
+      },
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "board"
+        }
+      ],
+      "type": "device",
+      "bom-ref": "urn:cdxgen:component:device:board:Parallels-ARM-Virtual-Platform:0.1"
+    },
+    {
+      "type": "firmware",
+      "name": "27.0.0 (58628)",
+      "version": "27.0.0 (58628)",
+      "manufacturer": {
+        "name": "Parallels International GmbH."
+      },
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "firmware"
+        },
+        {
+          "name": "cdx:hbom:firmwareVersion",
+          "value": "27.0.0 (58628)"
+        },
+        {
+          "name": "cdx:hbom:firmwareDate",
+          "value": "2026-08-11"
+        },
+        {
+          "name": "cdx:hbom:biosRevision",
+          "value": "0.1"
+        },
+        {
+          "name": "cdx:hbom:smbiosVersion",
+          "value": "3.6"
+        }
+      ],
+      "bom-ref": "urn:cdxgen:component:firmware:firmware:27.0.0-58628:27.0.0-58628"
+    },
+    {
+      "name": "harddisk SSD",
+      "version": "disk0",
+      "bom-ref": "windows-pnp:scsi:disk&ven_&prod_harddisk_ssd:1",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "storage"
+        },
+        {
+          "name": "cdx:hbom:diskNumber",
+          "value": "0"
+        },
+        {
+          "name": "cdx:hbom:capacityBytes",
+          "value": "274877906944"
+        },
+        {
+          "name": "cdx:hbom:capacity",
+          "value": "256 GB"
+        },
+        {
+          "name": "cdx:hbom:deviceSerial",
+          "value": "redacted:7H65"
+        },
+        {
+          "name": "cdx:hbom:firmwareVersion",
+          "value": "F.E0EA0C"
+        },
+        {
+          "name": "cdx:hbom:transport",
+          "value": "SATA"
+        },
+        {
+          "name": "cdx:hbom:mediaType",
+          "value": "SSD"
+        },
+        {
+          "name": "cdx:hbom:isRotational",
+          "value": "false"
+        },
+        {
+          "name": "cdx:hbom:blockSize",
+          "value": "512"
+        },
+        {
+          "name": "cdx:hbom:physicalBlockSize",
+          "value": "4096"
+        },
+        {
+          "name": "cdx:hbom:healthStatus",
+          "value": "Healthy"
+        },
+        {
+          "name": "cdx:hbom:operationalStatus",
+          "value": "OK"
+        },
+        {
+          "name": "cdx:hbom:driver",
+          "value": "disk"
+        },
+        {
+          "name": "cdx:hbom:driverVersion",
+          "value": "10.0.26100.8972"
+        },
+        {
+          "name": "cdx:hbom:driverProvider",
+          "value": "Microsoft"
+        },
+        {
+          "name": "cdx:hbom:driverDate",
+          "value": "2006-06-21"
+        },
+        {
+          "name": "cdx:hbom:driverSigned",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:driverSigner",
+          "value": "Microsoft Windows"
+        },
+        {
+          "name": "cdx:hbom:infName",
+          "value": "disk.inf"
+        },
+        {
+          "name": "cdx:hbom:present",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:hardwareIds",
+          "value": "SCSI\\Disk____________harddisk_SSDF.E0, SCSI\\Disk____________harddisk_SSD, SCSI\\Disk________, SCSI\\____________harddisk_SSDF, ____________harddisk_SSDF, GenDisk"
+        },
+        {
+          "name": "cdx:hbom:compatibleIds",
+          "value": "SCSI\\Disk, SCSI\\RAW"
+        },
+        {
+          "name": "cdx:hbom:pnpInstanceId",
+          "value": "SCSI\\DISK&VEN_&PROD_HARDDISK_SSD\\redacted:0000"
+        }
+      ],
+      "type": "device"
+    },
+    {
+      "name": "Volume",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "storage-volume"
+        },
+        {
+          "name": "cdx:hbom:capacityBytes",
+          "value": "314568704"
+        },
+        {
+          "name": "cdx:hbom:capacity",
+          "value": "300 MB"
+        },
+        {
+          "name": "cdx:hbom:freeBytes",
+          "value": "301146112"
+        },
+        {
+          "name": "cdx:hbom:fileSystem",
+          "value": "NTFS"
+        },
+        {
+          "name": "cdx:hbom:volumeUuid",
+          "value": "redacted:d70c"
+        },
+        {
+          "name": "cdx:hbom:isBootVolume",
+          "value": "false"
+        },
+        {
+          "name": "cdx:hbom:isSystemVolume",
+          "value": "false"
+        }
+      ],
+      "type": "device",
+      "bom-ref": "urn:cdxgen:component:device:storage-volume:Volume:unknown"
+    },
+    {
+      "name": "C:",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "storage-volume"
+        },
+        {
+          "name": "cdx:hbom:capacityBytes",
+          "value": "273260998656"
+        },
+        {
+          "name": "cdx:hbom:capacity",
+          "value": "254 GB"
+        },
+        {
+          "name": "cdx:hbom:freeBytes",
+          "value": "109681176576"
+        },
+        {
+          "name": "cdx:hbom:fileSystem",
+          "value": "NTFS"
+        },
+        {
+          "name": "cdx:hbom:mountPoint",
+          "value": "C:"
+        },
+        {
+          "name": "cdx:hbom:volumeUuid",
+          "value": "redacted:cfaa"
+        },
+        {
+          "name": "cdx:hbom:isBootVolume",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:isSystemVolume",
+          "value": "false"
+        }
+      ],
+      "type": "device",
+      "bom-ref": "urn:cdxgen:component:device:storage-volume:C:unknown"
+    },
+    {
+      "name": "Volume",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "storage-volume"
+        },
+        {
+          "name": "cdx:hbom:capacityBytes",
+          "value": "850391040"
+        },
+        {
+          "name": "cdx:hbom:capacity",
+          "value": "811 MB"
+        },
+        {
+          "name": "cdx:hbom:freeBytes",
+          "value": "81125376"
+        },
+        {
+          "name": "cdx:hbom:fileSystem",
+          "value": "NTFS"
+        },
+        {
+          "name": "cdx:hbom:volumeUuid",
+          "value": "redacted:0016"
+        },
+        {
+          "name": "cdx:hbom:isBootVolume",
+          "value": "false"
+        },
+        {
+          "name": "cdx:hbom:isSystemVolume",
+          "value": "false"
+        }
+      ],
+      "type": "device",
+      "bom-ref": "urn:cdxgen:component:device:storage-volume:Volume:unknown:2"
+    },
+    {
+      "name": "Volume",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "storage-volume"
+        },
+        {
+          "name": "cdx:hbom:capacityBytes",
+          "value": "310378496"
+        },
+        {
+          "name": "cdx:hbom:capacity",
+          "value": "296 MB"
+        },
+        {
+          "name": "cdx:hbom:freeBytes",
+          "value": "279228416"
+        },
+        {
+          "name": "cdx:hbom:fileSystem",
+          "value": "FAT32"
+        },
+        {
+          "name": "cdx:hbom:volumeUuid",
+          "value": "redacted:515f"
+        },
+        {
+          "name": "cdx:hbom:isBootVolume",
+          "value": "false"
+        },
+        {
+          "name": "cdx:hbom:isSystemVolume",
+          "value": "true"
+        }
+      ],
+      "type": "device",
+      "bom-ref": "urn:cdxgen:component:device:storage-volume:Volume:unknown:3"
+    },
+    {
+      "name": "D:",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "storage-volume"
+        },
+        {
+          "name": "cdx:hbom:mountPoint",
+          "value": "D:"
+        },
+        {
+          "name": "cdx:hbom:volumeUuid",
+          "value": "redacted:6963"
+        }
+      ],
+      "type": "device",
+      "bom-ref": "urn:cdxgen:component:device:storage-volume:D:unknown"
+    },
+    {
+      "name": "Parallels VirtIO Ethernet Adapter",
+      "version": "Ethernet",
+      "manufacturer": {
+        "name": "Parallels International GmbH"
+      },
+      "bom-ref": "windows-pnp:pci:ven_1af4&dev_1000&subsys_00011ab8&rev_00:1",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "network-interface"
+        },
+        {
+          "name": "cdx:hbom:interfaceName",
+          "value": "Ethernet"
+        },
+        {
+          "name": "cdx:hbom:driver",
+          "value": "netkvm"
+        },
+        {
+          "name": "cdx:hbom:driverVersion",
+          "value": "100.2.0.0"
+        },
+        {
+          "name": "cdx:hbom:driverProvider",
+          "value": "Parallels International GmbH"
+        },
+        {
+          "name": "cdx:hbom:driverDate",
+          "value": "2025-11-25"
+        },
+        {
+          "name": "cdx:hbom:macAddress",
+          "value": "redacted:3:64"
+        },
+        {
+          "name": "cdx:hbom:mtu",
+          "value": "1500"
+        },
+        {
+          "name": "cdx:hbom:speedMbps",
+          "value": "10000"
+        },
+        {
+          "name": "cdx:hbom:duplex",
+          "value": "full"
+        },
+        {
+          "name": "cdx:hbom:operState",
+          "value": "up"
+        },
+        {
+          "name": "cdx:hbom:ifindex",
+          "value": "9"
+        },
+        {
+          "name": "cdx:hbom:physicalMedium",
+          "value": "Unspecified"
+        },
+        {
+          "name": "cdx:hbom:vendorId",
+          "value": "1af4"
+        },
+        {
+          "name": "cdx:hbom:productId",
+          "value": "1000"
+        },
+        {
+          "name": "cdx:hbom:subsystemDeviceId",
+          "value": "0001"
+        },
+        {
+          "name": "cdx:hbom:subsystemVendorId",
+          "value": "1ab8"
+        },
+        {
+          "name": "cdx:hbom:pciAddress",
+          "value": "0000:00:05.0"
+        },
+        {
+          "name": "cdx:hbom:driverSigned",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:driverSigner",
+          "value": "Microsoft Windows Hardware Compatibility Publisher"
+        },
+        {
+          "name": "cdx:hbom:infName",
+          "value": "oem0.inf"
+        },
+        {
+          "name": "cdx:hbom:busReportedName",
+          "value": "Ethernet Controller"
+        },
+        {
+          "name": "cdx:hbom:locationPath",
+          "value": "PCIROOT(0)#PCI(0500)"
+        },
+        {
+          "name": "cdx:hbom:present",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:hardwareIds",
+          "value": "PCI\\VEN_1AF4&DEV_1000&SUBSYS_00011AB8&REV_00, PCI\\VEN_1AF4&DEV_1000&SUBSYS_00011AB8, PCI\\VEN_1AF4&DEV_1000&CC_020000, PCI\\VEN_1AF4&DEV_1000&CC_0200"
+        },
+        {
+          "name": "cdx:hbom:compatibleIds",
+          "value": "PCI\\VEN_1AF4&DEV_1000&REV_00, PCI\\VEN_1AF4&DEV_1000, PCI\\VEN_1AF4&CC_020000, PCI\\VEN_1AF4&CC_0200, PCI\\VEN_1AF4, PCI\\CC_020000, PCI\\CC_0200"
+        },
+        {
+          "name": "cdx:hbom:pnpInstanceId",
+          "value": "PCI\\VEN_1AF4&DEV_1000&SUBSYS_00011AB8&REV_00\\redacted:0&28"
+        }
+      ],
+      "type": "device"
+    },
+    {
+      "name": "Parallels Display Adapter (WDDM)",
+      "manufacturer": {
+        "name": "Parallels"
+      },
+      "description": "Virtual Adapter",
+      "bom-ref": "windows-pnp:acpi:prl4005:1",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "display-adapter"
+        },
+        {
+          "name": "cdx:hbom:driverVersion",
+          "value": "20.18.2700.58628"
+        },
+        {
+          "name": "cdx:hbom:driverDate",
+          "value": "2026-08-11"
+        },
+        {
+          "name": "cdx:hbom:resolution",
+          "value": "1920x1080"
+        },
+        {
+          "name": "cdx:hbom:refreshRateHz",
+          "value": "60"
+        },
+        {
+          "name": "cdx:hbom:bitsPerPixel",
+          "value": "32"
+        },
+        {
+          "name": "cdx:hbom:adapterRamBytes",
+          "value": "2147483648"
+        },
+        {
+          "name": "cdx:hbom:pnpInstanceId",
+          "value": "ACPI\\PRL4005\\redacted"
+        },
+        {
+          "name": "cdx:hbom:driver",
+          "value": "prl_dd"
+        },
+        {
+          "name": "cdx:hbom:driverProvider",
+          "value": "Parallels"
+        },
+        {
+          "name": "cdx:hbom:driverSigned",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:driverSigner",
+          "value": "Microsoft Windows Hardware Compatibility Publisher"
+        },
+        {
+          "name": "cdx:hbom:infName",
+          "value": "oem6.inf"
+        },
+        {
+          "name": "cdx:hbom:locationPath",
+          "value": "ACPI(_SB_)#ACPI(GPU0)"
+        },
+        {
+          "name": "cdx:hbom:present",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:hardwareIds",
+          "value": "ACPI\\VEN_PRL&DEV_4005, ACPI\\VEN_PRL&DEV_4005&CLS_0003&SUBCLS_0002&PI_00, ACPI\\VEN_PRL&DEV_4005&CLS_0003&SUBCLS_0002, ACPI\\PRL4005, *PRL4005"
+        },
+        {
+          "name": "cdx:hbom:compatibleIds",
+          "value": "ACPI\\VEN_PRL&CLS_0003&SUBCLS_0002&PI_00, ACPI\\VEN_PRL&CLS_0003&SUBCLS_0002, ACPI\\VEN_PRL, ACPI\\CLS_0003&SUBCLS_0002&PI_00, ACPI\\CLS_0003&SUBCLS_0002"
+        }
+      ],
+      "type": "device"
+    },
+    {
+      "name": "Parallels Vu",
+      "version": "5000",
+      "manufacturer": {
+        "name": "PRL"
+      },
+      "bom-ref": "windows-pnp:display:prl5000:1",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "display"
+        },
+        {
+          "name": "cdx:hbom:productId",
+          "value": "5000"
+        },
+        {
+          "name": "cdx:hbom:displaySerialNumber",
+          "value": "redacted"
+        },
+        {
+          "name": "cdx:hbom:manufactureYear",
+          "value": "2013"
+        },
+        {
+          "name": "cdx:hbom:manufactureWeek",
+          "value": "6"
+        },
+        {
+          "name": "cdx:hbom:physicalSize",
+          "value": "67 x 38 cm"
+        },
+        {
+          "name": "cdx:hbom:connectionType",
+          "value": "hd15"
+        },
+        {
+          "name": "cdx:hbom:isActive",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:pnpInstanceId",
+          "value": "DISPLAY\\PRL5000\\redacted:UID0"
+        },
+        {
+          "name": "cdx:hbom:driver",
+          "value": "monitor"
+        },
+        {
+          "name": "cdx:hbom:driverVersion",
+          "value": "10.0.26100.9278"
+        },
+        {
+          "name": "cdx:hbom:driverProvider",
+          "value": "Microsoft"
+        },
+        {
+          "name": "cdx:hbom:driverDate",
+          "value": "2006-06-21"
+        },
+        {
+          "name": "cdx:hbom:driverSigned",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:driverSigner",
+          "value": "Microsoft Windows"
+        },
+        {
+          "name": "cdx:hbom:infName",
+          "value": "monitor.inf"
+        },
+        {
+          "name": "cdx:hbom:present",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:hardwareIds",
+          "value": "MONITOR\\PRL5000"
+        },
+        {
+          "name": "cdx:hbom:compatibleIds",
+          "value": "*PNP09FF"
+        }
+      ],
+      "type": "device"
+    },
+    {
+      "name": "High Definition Audio Device",
+      "manufacturer": {
+        "name": "Microsoft"
+      },
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "audio-controller"
+        },
+        {
+          "name": "cdx:hbom:vendorId",
+          "value": "1ab8"
+        },
+        {
+          "name": "cdx:hbom:productId",
+          "value": "0001"
+        },
+        {
+          "name": "cdx:hbom:subsystemDeviceId",
+          "value": "1ab80101"
+        },
+        {
+          "name": "cdx:hbom:pnpInstanceId",
+          "value": "HDAUDIO\\FUNC_01&VEN_1AB8&DEV_0001&SUBSYS_1AB80101&REV_1001\\redacted:0001"
+        },
+        {
+          "name": "cdx:hbom:driver",
+          "value": "HdAudAddService"
+        },
+        {
+          "name": "cdx:hbom:driverVersion",
+          "value": "10.0.26100.9278"
+        },
+        {
+          "name": "cdx:hbom:driverProvider",
+          "value": "Microsoft"
+        },
+        {
+          "name": "cdx:hbom:driverDate",
+          "value": "2026-08-25"
+        },
+        {
+          "name": "cdx:hbom:driverSigned",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:driverSigner",
+          "value": "Microsoft Windows"
+        },
+        {
+          "name": "cdx:hbom:infName",
+          "value": "hdaudio.inf"
+        },
+        {
+          "name": "cdx:hbom:busReportedName",
+          "value": "Audio Device on High Definition Audio Bus"
+        },
+        {
+          "name": "cdx:hbom:present",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:hardwareIds",
+          "value": "HDAUDIO\\FUNC_01&VEN_1AB8&DEV_0001&SUBSYS_1AB80101&REV_1001, HDAUDIO\\FUNC_01&VEN_1AB8&DEV_0001&SUBSYS_1AB80101"
+        },
+        {
+          "name": "cdx:hbom:compatibleIds",
+          "value": "HDAUDIO\\FUNC_01&CTLR_VEN_8086&CTLR_DEV_293E&VEN_1AB8&DEV_0001&REV_1001, HDAUDIO\\FUNC_01&CTLR_VEN_8086&VEN_1AB8&DEV_0001&REV_1001, HDAUDIO\\FUNC_01&VEN_1AB8&DEV_0001&REV_1001, HDAUDIO\\FUNC_01&CTLR_VEN_8086&CTLR_DEV_293E&VEN_1AB8&DEV_0001, HDAUDIO\\FUNC_01&CTLR_VEN_8086&VEN_1AB8&DEV_0001, HDAUDIO\\FUNC_01&VEN_1AB8&DEV_0001, HDAUDIO\\FUNC_01&CTLR_VEN_8086&CTLR_DEV_293E&VEN_1AB8, HDAUDIO\\FUNC_01&CTLR_VEN_8086&VEN_1AB8, HDAUDIO\\FUNC_01&VEN_1AB8, HDAUDIO\\FUNC_01&CTLR_VEN_8086&CTLR_DEV_293E, HDAUDIO\\FUNC_01&CTLR_VEN_8086, HDAUDIO\\FUNC_01&GF&VEN_1AB8&DEV_0001&SUBSYS_1AB80101&REV_1001, HDAUDIO\\FUNC_01"
+        }
+      ],
+      "bom-ref": "windows-pnp:hdaudio:func_01&ven_1ab8&dev_0001&subsys_1ab80101&rev_1001:1",
+      "type": "device"
+    },
+    {
+      "name": "Speakers (High Definition Audio Device)",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "audio-device"
+        },
+        {
+          "name": "cdx:hbom:present",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:pnpInstanceId",
+          "value": "SWD\\MMDEVAPI\\redacted:E51}"
+        },
+        {
+          "name": "cdx:hbom:driverVersion",
+          "value": "10.0.26100.1"
+        },
+        {
+          "name": "cdx:hbom:driverProvider",
+          "value": "Microsoft"
+        },
+        {
+          "name": "cdx:hbom:driverDate",
+          "value": "2024-03-31"
+        },
+        {
+          "name": "cdx:hbom:driverSigned",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:driverSigner",
+          "value": "Microsoft Windows"
+        },
+        {
+          "name": "cdx:hbom:infName",
+          "value": "audioendpoint.inf"
+        },
+        {
+          "name": "cdx:hbom:hardwareIds",
+          "value": "MMDEVAPI\\AudioEndpoints"
+        },
+        {
+          "name": "cdx:hbom:compatibleIds",
+          "value": "GenericAudioEndpoint, SWD\\GenericRaw, SWD\\Generic"
+        }
+      ],
+      "bom-ref": "windows-pnp:swd:mmdevapi:2",
+      "type": "device"
+    },
+    {
+      "name": "Trusted Platform Module 2.0",
+      "bom-ref": "windows-pnp:acpi:prls0000:1",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "tpm"
+        },
+        {
+          "name": "cdx:hbom:driver",
+          "value": "TPM"
+        },
+        {
+          "name": "cdx:hbom:driverVersion",
+          "value": "10.0.26100.8972"
+        },
+        {
+          "name": "cdx:hbom:driverProvider",
+          "value": "Microsoft"
+        },
+        {
+          "name": "cdx:hbom:driverDate",
+          "value": "2006-06-21"
+        },
+        {
+          "name": "cdx:hbom:driverSigned",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:driverSigner",
+          "value": "Microsoft Windows"
+        },
+        {
+          "name": "cdx:hbom:infName",
+          "value": "tpm.inf"
+        },
+        {
+          "name": "cdx:hbom:locationPath",
+          "value": "ACPI(_SB_)#ACPI(TPM_)"
+        },
+        {
+          "name": "cdx:hbom:present",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:hardwareIds",
+          "value": "ACPI\\VEN_PRLS&DEV_0000, ACPI\\PRLS0000, *PRLS0000"
+        },
+        {
+          "name": "cdx:hbom:compatibleIds",
+          "value": "ACPI\\MSFT0101, MSFT0101"
+        },
+        {
+          "name": "cdx:hbom:pnpInstanceId",
+          "value": "ACPI\\PRLS0000\\redacted:FF&0"
+        }
+      ],
+      "type": "device"
+    },
+    {
+      "name": "System Firmware",
+      "version": "1",
+      "bom-ref": "windows-pnp:uefi:res_{43a56d5a-5d67-4896-ab2e-d71ed3698ba2}:1",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "firmware-device"
+        },
+        {
+          "name": "cdx:hbom:guids",
+          "value": "43a56d5a-5d67-4896-ab2e-d71ed3698ba2"
+        },
+        {
+          "name": "cdx:hbom:firmwareVersion",
+          "value": "1"
+        },
+        {
+          "name": "cdx:hbom:driverVersion",
+          "value": "10.0.26100.4768"
+        },
+        {
+          "name": "cdx:hbom:driverProvider",
+          "value": "Microsoft"
+        },
+        {
+          "name": "cdx:hbom:driverDate",
+          "value": "2006-06-21"
+        },
+        {
+          "name": "cdx:hbom:driverSigned",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:driverSigner",
+          "value": "Microsoft Windows"
+        },
+        {
+          "name": "cdx:hbom:infName",
+          "value": "c_firmware.inf"
+        },
+        {
+          "name": "cdx:hbom:present",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:hardwareIds",
+          "value": "UEFI\\RES_{43a56d5a-5d67-4896-ab2e-d71ed3698ba2}&REV_1, UEFI\\RES_{43a56d5a-5d67-4896-ab2e-d71ed3698ba2}"
+        },
+        {
+          "name": "cdx:hbom:compatibleIds",
+          "value": "UEFI\\CC_00010001, GenFirmwareResource"
+        },
+        {
+          "name": "cdx:hbom:pnpInstanceId",
+          "value": "UEFI\\RES_{43A56D5A-5D67-4896-AB2E-D71ED3698BA2}\\redacted"
+        }
+      ],
+      "type": "device"
+    },
+    {
+      "bom-ref": "windows-pnp:pci:ven_1033&dev_0194&subsys_04001ab8&rev_04:1",
+      "name": "Renesas USB 3.10 eXtensible Host Controller - 1.10 (Microsoft)",
+      "manufacturer": {
+        "name": "Generic USB xHCI Host Controller"
+      },
+      "description": "USB",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "usb-controller"
+        },
+        {
+          "name": "cdx:hbom:vendorId",
+          "value": "1033"
+        },
+        {
+          "name": "cdx:hbom:productId",
+          "value": "0194"
+        },
+        {
+          "name": "cdx:hbom:revision",
+          "value": "04"
+        },
+        {
+          "name": "cdx:hbom:subsystemVendorId",
+          "value": "1ab8"
+        },
+        {
+          "name": "cdx:hbom:subsystemDeviceId",
+          "value": "0400"
+        },
+        {
+          "name": "cdx:hbom:pciClassCode",
+          "value": "0c03"
+        },
+        {
+          "name": "cdx:hbom:driver",
+          "value": "USBXHCI"
+        },
+        {
+          "name": "cdx:hbom:driverVersion",
+          "value": "10.0.26100.9444"
+        },
+        {
+          "name": "cdx:hbom:driverProvider",
+          "value": "Microsoft"
+        },
+        {
+          "name": "cdx:hbom:driverDate",
+          "value": "2026-09-03"
+        },
+        {
+          "name": "cdx:hbom:driverSigned",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:driverSigner",
+          "value": "Microsoft Windows"
+        },
+        {
+          "name": "cdx:hbom:infName",
+          "value": "usbxhci.inf"
+        },
+        {
+          "name": "cdx:hbom:busReportedName",
+          "value": "Universal Serial Bus (USB) Controller"
+        },
+        {
+          "name": "cdx:hbom:locationPath",
+          "value": "PCIROOT(0)#PCI(0300)"
+        },
+        {
+          "name": "cdx:hbom:present",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:hardwareIds",
+          "value": "PCI\\VEN_1033&DEV_0194&SUBSYS_04001AB8&REV_04, PCI\\VEN_1033&DEV_0194&SUBSYS_04001AB8, PCI\\VEN_1033&DEV_0194&CC_0C0330, PCI\\VEN_1033&DEV_0194&CC_0C03"
+        },
+        {
+          "name": "cdx:hbom:compatibleIds",
+          "value": "PCI\\VEN_1033&DEV_0194&REV_04, PCI\\VEN_1033&DEV_0194, PCI\\VEN_1033&CC_0C0330, PCI\\VEN_1033&CC_0C03, PCI\\VEN_1033, PCI\\CC_0C0330, PCI\\CC_0C03"
+        },
+        {
+          "name": "cdx:hbom:pnpInstanceId",
+          "value": "PCI\\VEN_1033&DEV_0194&SUBSYS_04001AB8&REV_04\\redacted:0&18"
+        }
+      ],
+      "type": "device"
+    },
+    {
+      "bom-ref": "windows-pnp:pci:ven_8086&dev_265c&subsys_04001ab8&rev_02:1",
+      "name": "Intel(R) 82801FB/FBM USB2 Enhanced Host Controller - 265C",
+      "manufacturer": {
+        "name": "Intel"
+      },
+      "description": "USB",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "usb-controller"
+        },
+        {
+          "name": "cdx:hbom:vendorId",
+          "value": "8086"
+        },
+        {
+          "name": "cdx:hbom:productId",
+          "value": "265c"
+        },
+        {
+          "name": "cdx:hbom:revision",
+          "value": "02"
+        },
+        {
+          "name": "cdx:hbom:subsystemVendorId",
+          "value": "1ab8"
+        },
+        {
+          "name": "cdx:hbom:subsystemDeviceId",
+          "value": "0400"
+        },
+        {
+          "name": "cdx:hbom:pciClassCode",
+          "value": "0c03"
+        },
+        {
+          "name": "cdx:hbom:driver",
+          "value": "usbehci"
+        },
+        {
+          "name": "cdx:hbom:driverVersion",
+          "value": "10.0.26100.9278"
+        },
+        {
+          "name": "cdx:hbom:driverProvider",
+          "value": "Microsoft"
+        },
+        {
+          "name": "cdx:hbom:driverDate",
+          "value": "2006-06-21"
+        },
+        {
+          "name": "cdx:hbom:driverSigned",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:driverSigner",
+          "value": "Microsoft Windows"
+        },
+        {
+          "name": "cdx:hbom:infName",
+          "value": "usbport.inf"
+        },
+        {
+          "name": "cdx:hbom:busReportedName",
+          "value": "Universal Serial Bus (USB) Controller"
+        },
+        {
+          "name": "cdx:hbom:locationPath",
+          "value": "PCIROOT(0)#PCI(0200)"
+        },
+        {
+          "name": "cdx:hbom:present",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:hardwareIds",
+          "value": "PCI\\VEN_8086&DEV_265C&SUBSYS_04001AB8&REV_02, PCI\\VEN_8086&DEV_265C&SUBSYS_04001AB8, PCI\\VEN_8086&DEV_265C&CC_0C0320, PCI\\VEN_8086&DEV_265C&CC_0C03"
+        },
+        {
+          "name": "cdx:hbom:compatibleIds",
+          "value": "PCI\\VEN_8086&DEV_265C&REV_02, PCI\\VEN_8086&DEV_265C, PCI\\VEN_8086&CC_0C0320, PCI\\VEN_8086&CC_0C03, PCI\\VEN_8086, PCI\\CC_0C0320, PCI\\CC_0C03"
+        },
+        {
+          "name": "cdx:hbom:pnpInstanceId",
+          "value": "PCI\\VEN_8086&DEV_265C&SUBSYS_04001AB8&REV_02\\redacted:0&10"
+        }
+      ],
+      "type": "device"
+    },
+    {
+      "bom-ref": "windows-pnp:pci:ven_8086&dev_293e&subsys_04001ab8&rev_00:1",
+      "name": "High Definition Audio Controller",
+      "manufacturer": {
+        "name": "Microsoft"
+      },
+      "description": "System",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "pci-device"
+        },
+        {
+          "name": "cdx:hbom:vendorId",
+          "value": "8086"
+        },
+        {
+          "name": "cdx:hbom:productId",
+          "value": "293e"
+        },
+        {
+          "name": "cdx:hbom:revision",
+          "value": "00"
+        },
+        {
+          "name": "cdx:hbom:subsystemVendorId",
+          "value": "1ab8"
+        },
+        {
+          "name": "cdx:hbom:subsystemDeviceId",
+          "value": "0400"
+        },
+        {
+          "name": "cdx:hbom:pciClassCode",
+          "value": "0403"
+        },
+        {
+          "name": "cdx:hbom:driver",
+          "value": "HDAudBus"
+        },
+        {
+          "name": "cdx:hbom:driverVersion",
+          "value": "10.0.26100.9444"
+        },
+        {
+          "name": "cdx:hbom:driverProvider",
+          "value": "Microsoft"
+        },
+        {
+          "name": "cdx:hbom:driverDate",
+          "value": "2026-09-04"
+        },
+        {
+          "name": "cdx:hbom:driverSigned",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:driverSigner",
+          "value": "Microsoft Windows"
+        },
+        {
+          "name": "cdx:hbom:infName",
+          "value": "hdaudbus.inf"
+        },
+        {
+          "name": "cdx:hbom:busReportedName",
+          "value": "PCI Device"
+        },
+        {
+          "name": "cdx:hbom:locationPath",
+          "value": "PCIROOT(0)#PCI(0100)"
+        },
+        {
+          "name": "cdx:hbom:present",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:hardwareIds",
+          "value": "PCI\\VEN_8086&DEV_293E&SUBSYS_04001AB8&REV_00, PCI\\VEN_8086&DEV_293E&SUBSYS_04001AB8, PCI\\VEN_8086&DEV_293E&CC_040300, PCI\\VEN_8086&DEV_293E&CC_0403"
+        },
+        {
+          "name": "cdx:hbom:compatibleIds",
+          "value": "PCI\\VEN_8086&DEV_293E&REV_00, PCI\\VEN_8086&DEV_293E, PCI\\VEN_8086&CC_040300, PCI\\VEN_8086&CC_0403, PCI\\VEN_8086, PCI\\CC_040300, PCI\\CC_0403"
+        },
+        {
+          "name": "cdx:hbom:pnpInstanceId",
+          "value": "PCI\\VEN_8086&DEV_293E&SUBSYS_04001AB8&REV_00\\redacted:0&08"
+        }
+      ],
+      "type": "device"
+    },
+    {
+      "bom-ref": "windows-pnp:usb:root_hub20:1",
+      "name": "USB Root Hub",
+      "description": "USB",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "usb-device"
+        },
+        {
+          "name": "cdx:hbom:driver",
+          "value": "usbhub"
+        },
+        {
+          "name": "cdx:hbom:driverVersion",
+          "value": "10.0.26100.9278"
+        },
+        {
+          "name": "cdx:hbom:driverProvider",
+          "value": "Microsoft"
+        },
+        {
+          "name": "cdx:hbom:driverDate",
+          "value": "2006-06-21"
+        },
+        {
+          "name": "cdx:hbom:driverSigned",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:driverSigner",
+          "value": "Microsoft Windows"
+        },
+        {
+          "name": "cdx:hbom:infName",
+          "value": "usbport.inf"
+        },
+        {
+          "name": "cdx:hbom:locationPath",
+          "value": "PCIROOT(0)#PCI(0200)#USBROOT(0)"
+        },
+        {
+          "name": "cdx:hbom:present",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:hardwareIds",
+          "value": "USB\\ROOT_HUB20&VID8086&PID265C&REV0002, USB\\ROOT_HUB20&VID8086&PID265C, USB\\ROOT_HUB20"
+        },
+        {
+          "name": "cdx:hbom:pnpInstanceId",
+          "value": "USB\\ROOT_HUB20\\redacted:D6&0"
+        }
+      ],
+      "type": "device"
+    },
+    {
+      "bom-ref": "windows-pnp:usb:root_hub30:1",
+      "name": "USB Root Hub (USB 3.0)",
+      "description": "USB",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "usb-device"
+        },
+        {
+          "name": "cdx:hbom:driver",
+          "value": "USBHUB3"
+        },
+        {
+          "name": "cdx:hbom:driverVersion",
+          "value": "10.0.26100.9444"
+        },
+        {
+          "name": "cdx:hbom:driverProvider",
+          "value": "Microsoft"
+        },
+        {
+          "name": "cdx:hbom:driverDate",
+          "value": "2026-09-03"
+        },
+        {
+          "name": "cdx:hbom:driverSigned",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:driverSigner",
+          "value": "Microsoft Windows"
+        },
+        {
+          "name": "cdx:hbom:infName",
+          "value": "usbhub3.inf"
+        },
+        {
+          "name": "cdx:hbom:locationPath",
+          "value": "PCIROOT(0)#PCI(0300)#USBROOT(0)"
+        },
+        {
+          "name": "cdx:hbom:present",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:hardwareIds",
+          "value": "USB\\ROOT_HUB30&VID1033&PID0194&REV0004, USB\\ROOT_HUB30&VID1033&PID0194, USB\\ROOT_HUB30"
+        },
+        {
+          "name": "cdx:hbom:pnpInstanceId",
+          "value": "USB\\ROOT_HUB30\\redacted:&0&0"
+        }
+      ],
+      "type": "device"
+    },
+    {
+      "bom-ref": "windows-pnp:usb:vid_203a&pid_fffb:1",
+      "name": "USB Composite Device",
+      "description": "USB",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "usb-device"
+        },
+        {
+          "name": "cdx:hbom:vendorId",
+          "value": "203a"
+        },
+        {
+          "name": "cdx:hbom:productId",
+          "value": "fffb"
+        },
+        {
+          "name": "cdx:hbom:revision",
+          "value": "0110"
+        },
+        {
+          "name": "cdx:hbom:usbInterfaceCount",
+          "value": "2"
+        },
+        {
+          "name": "cdx:hbom:usbInterfaceDrivers",
+          "value": "0:HidUsb, 1:HidUsb"
+        },
+        {
+          "name": "cdx:hbom:driver",
+          "value": "usbccgp"
+        },
+        {
+          "name": "cdx:hbom:driverVersion",
+          "value": "10.0.26100.9444"
+        },
+        {
+          "name": "cdx:hbom:driverProvider",
+          "value": "Microsoft"
+        },
+        {
+          "name": "cdx:hbom:driverDate",
+          "value": "2006-06-21"
+        },
+        {
+          "name": "cdx:hbom:driverSigned",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:driverSigner",
+          "value": "Microsoft Windows"
+        },
+        {
+          "name": "cdx:hbom:infName",
+          "value": "usb.inf"
+        },
+        {
+          "name": "cdx:hbom:busReportedName",
+          "value": "Virtual Keyboard"
+        },
+        {
+          "name": "cdx:hbom:locationPath",
+          "value": "PCIROOT(0)#PCI(0300)#USBROOT(0)#USB(2)"
+        },
+        {
+          "name": "cdx:hbom:present",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:hardwareIds",
+          "value": "USB\\VID_203A&PID_FFFB&REV_0110, USB\\VID_203A&PID_FFFB"
+        },
+        {
+          "name": "cdx:hbom:compatibleIds",
+          "value": "USB\\COMPAT_VID_203A&DevClass_00&SubClass_00&Prot00, USB\\COMPAT_VID_203A&DevClass_00&SubClass_00, USB\\COMPAT_VID_203A&DevClass_00, USB\\DevClass_00&SubClass_00&Prot_00, USB\\DevClass_00&SubClass_00, USB\\DevClass_00, USB\\COMPOSITE"
+        },
+        {
+          "name": "cdx:hbom:pnpInstanceId",
+          "value": "USB\\VID_203A&PID_FFFB\\redacted:D1.1"
+        }
+      ],
+      "type": "device"
+    },
+    {
+      "bom-ref": "windows-pnp:usb:vid_203a&pid_fffc:1",
+      "name": "USB Composite Device",
+      "description": "USB",
+      "properties": [
+        {
+          "name": "cdx:hbom:hardwareClass",
+          "value": "usb-device"
+        },
+        {
+          "name": "cdx:hbom:vendorId",
+          "value": "203a"
+        },
+        {
+          "name": "cdx:hbom:productId",
+          "value": "fffc"
+        },
+        {
+          "name": "cdx:hbom:revision",
+          "value": "0100"
+        },
+        {
+          "name": "cdx:hbom:usbInterfaceCount",
+          "value": "3"
+        },
+        {
+          "name": "cdx:hbom:usbInterfaceDrivers",
+          "value": "0:HidUsb, 1:HidUsb, 2:HidUsb"
+        },
+        {
+          "name": "cdx:hbom:driver",
+          "value": "usbccgp"
+        },
+        {
+          "name": "cdx:hbom:driverVersion",
+          "value": "10.0.26100.9444"
+        },
+        {
+          "name": "cdx:hbom:driverProvider",
+          "value": "Microsoft"
+        },
+        {
+          "name": "cdx:hbom:driverDate",
+          "value": "2006-06-21"
+        },
+        {
+          "name": "cdx:hbom:driverSigned",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:driverSigner",
+          "value": "Microsoft Windows"
+        },
+        {
+          "name": "cdx:hbom:infName",
+          "value": "usb.inf"
+        },
+        {
+          "name": "cdx:hbom:busReportedName",
+          "value": "Virtual Mouse"
+        },
+        {
+          "name": "cdx:hbom:locationPath",
+          "value": "PCIROOT(0)#PCI(0300)#USBROOT(0)#USB(1)"
+        },
+        {
+          "name": "cdx:hbom:present",
+          "value": "true"
+        },
+        {
+          "name": "cdx:hbom:hardwareIds",
+          "value": "USB\\VID_203A&PID_FFFC&REV_0100, USB\\VID_203A&PID_FFFC"
+        },
+        {
+          "name": "cdx:hbom:compatibleIds",
+          "value": "USB\\COMPAT_VID_203A&DevClass_00&SubClass_00&Prot00, USB\\COMPAT_VID_203A&DevClass_00&SubClass_00, USB\\COMPAT_VID_203A&DevClass_00, USB\\DevClass_00&SubClass_00&Prot_00, USB\\DevClass_00&SubClass_00, USB\\DevClass_00, USB\\COMPOSITE"
+        },
+        {
+          "name": "cdx:hbom:pnpInstanceId",
+          "value": "USB\\VID_203A&PID_FFFC\\redacted:W3.0"
+        }
+      ],
+      "type": "device"
+    }
+  ],
+  "properties": [
+    {
+      "name": "cdx:hbom:targetPlatform",
+      "value": "windows"
+    },
+    {
+      "name": "cdx:hbom:targetArchitecture",
+      "value": "arm64"
+    },
+    {
+      "name": "cdx:hbom:identifierPolicy",
+      "value": "redacted-by-default"
+    },
+    {
+      "name": "cdx:hbom:collectorProfile",
+      "value": "windows-arm64-v1"
+    },
+    {
+      "name": "cdx:hbom:osName",
+      "value": "Microsoft Windows 11 Pro"
+    },
+    {
+      "name": "cdx:hbom:osVersion",
+      "value": "10.0.26200"
+    },
+    {
+      "name": "cdx:hbom:architectureSource",
+      "value": "Win32_Processor"
+    },
+    {
+      "name": "cdx:hbom:collectorProcessArchitecture",
+      "value": "amd64"
+    },
+    {
+      "name": "cdx:hbom:evidence:powershellVersion",
+      "value": "5.1.26100.9457"
+    },
+    {
+      "name": "cdx:hbom:evidence:languageMode",
+      "value": "FullLanguage"
+    },
+    {
+      "name": "cdx:hbom:evidence:elevated",
+      "value": "true"
+    },
+    {
+      "name": "cdx:hbom:evidence:commandCount",
+      "value": "5"
+    },
+    {
+      "name": "cdx:hbom:evidence:command",
+      "value": "windows-cim-platform|platform|C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command windows-cim-platform script sha256:fcaf5d4c02fb"
+    },
+    {
+      "name": "cdx:hbom:evidence:command",
+      "value": "windows-cim-storage-network|storage-network|C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command windows-cim-storage-network script sha256:adfabd472b32"
+    },
+    {
+      "name": "cdx:hbom:evidence:command",
+      "value": "windows-cim-display-media|display-media|C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command windows-cim-display-media script sha256:f693f90f679a"
+    },
+    {
+      "name": "cdx:hbom:evidence:command",
+      "value": "windows-pnp-devices|pnp-devices|C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command windows-pnp-devices script sha256:9440e304d8fc"
+    },
+    {
+      "name": "cdx:hbom:evidence:command",
+      "value": "windows-cim-trust|trust|C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command windows-cim-trust script sha256:1974e32666c7"
+    },
+    {
+      "name": "cdx:hbom:evidence:commandDiagnosticCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hbom:analysis:commandDiagnosticCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hbom:analysis:actionableDiagnosticCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hbom:analysis:missingCommandCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hbom:analysis:installHintCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hbom:analysis:permissionDeniedCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hbom:analysis:privilegeHintCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hbom:analysis:partialSupportCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hbom:analysis:timeoutCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hbom:analysis:commandErrorCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hostview:mode",
+      "value": "hbom-topology"
+    },
+    {
+      "name": "cdx:hostview:hardwareComponentCount",
+      "value": "25"
+    },
+    {
+      "name": "cdx:hostview:runtimeComponentCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hostview:runtimeAnchorCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hostview:linkedHardwareComponentCount",
+      "value": "0"
+    },
+    {
+      "name": "cdx:hostview:topologyLinkCount",
+      "value": "0"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "windows-pnp:hdaudio:func_01&ven_1ab8&dev_0001&subsys_1ab80101&rev_1001:1",
+      "dependsOn": [
+        "windows-pnp:swd:mmdevapi:2"
+      ]
+    },
+    {
+      "ref": "windows-pnp:usb:root_hub30:1",
+      "dependsOn": [
+        "windows-pnp:usb:vid_203a&pid_fffb:1",
+        "windows-pnp:usb:vid_203a&pid_fffc:1"
+      ]
+    },
+    {
+      "ref": "windows-pnp:pci:ven_8086&dev_265c&subsys_04001ab8&rev_02:1",
+      "dependsOn": [
+        "windows-pnp:usb:root_hub20:1"
+      ]
+    },
+    {
+      "ref": "windows-pnp:acpi:prl4005:1",
+      "dependsOn": [
+        "windows-pnp:display:prl5000:1"
+      ]
+    },
+    {
+      "ref": "windows-pnp:pci:ven_8086&dev_293e&subsys_04001ab8&rev_00:1",
+      "dependsOn": [
+        "windows-pnp:hdaudio:func_01&ven_1ab8&dev_0001&subsys_1ab80101&rev_1001:1"
+      ]
+    },
+    {
+      "ref": "windows-pnp:pci:ven_1033&dev_0194&subsys_04001ab8&rev_04:1",
+      "dependsOn": [
+        "windows-pnp:usb:root_hub30:1"
+      ]
+    },
+    {
+      "ref": "urn:cdxgen:host:device:Parallels-ARM-Virtual-Machine:windows",
+      "dependsOn": [
+        "urn:cdxgen:component:device:board:Parallels-ARM-Virtual-Platform:0.1",
+        "urn:cdxgen:component:device:memory-module:Physical-Memory-0:unknown",
+        "urn:cdxgen:component:device:memory:System-Memory:unknown",
+        "urn:cdxgen:component:device:processor:Apple-Silicon:arm64",
+        "urn:cdxgen:component:device:storage-volume:C:unknown",
+        "urn:cdxgen:component:device:storage-volume:D:unknown",
+        "urn:cdxgen:component:device:storage-volume:Volume:unknown",
+        "urn:cdxgen:component:device:storage-volume:Volume:unknown:2",
+        "urn:cdxgen:component:device:storage-volume:Volume:unknown:3",
+        "urn:cdxgen:component:firmware:firmware:27.0.0-58628:27.0.0-58628",
+        "windows-pnp:acpi:prl4005:1",
+        "windows-pnp:acpi:prls0000:1",
+        "windows-pnp:display:prl5000:1",
+        "windows-pnp:hdaudio:func_01&ven_1ab8&dev_0001&subsys_1ab80101&rev_1001:1",
+        "windows-pnp:pci:ven_1033&dev_0194&subsys_04001ab8&rev_04:1",
+        "windows-pnp:pci:ven_1af4&dev_1000&subsys_00011ab8&rev_00:1",
+        "windows-pnp:pci:ven_8086&dev_265c&subsys_04001ab8&rev_02:1",
+        "windows-pnp:pci:ven_8086&dev_293e&subsys_04001ab8&rev_00:1",
+        "windows-pnp:scsi:disk&ven_&prod_harddisk_ssd:1",
+        "windows-pnp:swd:mmdevapi:2",
+        "windows-pnp:uefi:res_{43a56d5a-5d67-4896-ab2e-d71ed3698ba2}:1",
+        "windows-pnp:usb:root_hub20:1",
+        "windows-pnp:usb:root_hub30:1",
+        "windows-pnp:usb:vid_203a&pid_fffb:1",
+        "windows-pnp:usb:vid_203a&pid_fffc:1"
+      ]
+    }
+  ]
+}

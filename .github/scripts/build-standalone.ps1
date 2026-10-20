@@ -120,6 +120,9 @@ function Invoke-BinaryBuildFromStage {
   if ($Output -in @("cdxgen", "cbom", "saasbom")) {
     Invoke-AtomSmokeTest -Output $Output
   }
+  if ($Output -in @("hbom", "hbom-slim")) {
+    Invoke-HbomSmokeTest -Output $Output
+  }
   Assert-BinarySizeLimit -Output $Output
 }
 
@@ -183,6 +186,32 @@ function Invoke-AtomSmokeTest {
     throw "atom smoke test FAILED: no components produced; the atom payload is missing or did not run."
   }
   Write-Host "atom smoke test: $smokeCount component(s) from atom, 0 from the disabled-atom control."
+}
+
+# `hbom --dry-run` starts no PowerShell process and writes no file, so it is safe
+# on any build host, yet it still fails when the bundled @cdxgen/cdx-hbom has no
+# Windows collector ("Unsupported HBOM target: win32/<arch>"). The BOM names the
+# platform it targeted, which `--version` and `--help` cannot show.
+function Invoke-HbomSmokeTest {
+  param([Parameter(Mandatory = $true)][string]$Output)
+
+  Write-Host "hbom smoke test: .\$Output.exe --dry-run -p"
+  $stdout = & ".\$Output.exe" --dry-run -p 2>$null
+  $exitCode = $LASTEXITCODE
+  if ($exitCode -ne 0) {
+    throw "hbom smoke test FAILED: .\$Output.exe --dry-run exited with code $exitCode."
+  }
+  $bom = ($stdout -join "`n") | ConvertFrom-Json
+  $entry = $bom.properties | Where-Object { $_.name -eq "cdx:hbom:targetPlatform" } | Select-Object -First 1
+  $platform = if ($entry) { $entry.value } else { "<missing>" }
+  if ($platform -ne "windows") {
+    throw "hbom smoke test FAILED: cdx:hbom:targetPlatform is '$platform', expected 'windows'."
+  }
+  $componentCount = @($bom.components).Count
+  if ($componentCount -eq 0) {
+    throw "hbom smoke test FAILED: the dry-run BOM has no components, so not even the Node baseline ran."
+  }
+  Write-Host "hbom smoke test: targetPlatform=$platform, $componentCount component(s), exit 0."
 }
 
 function Promote-OptionalDependencies {

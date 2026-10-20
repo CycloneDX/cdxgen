@@ -79,9 +79,28 @@ only when requested. Supported hosts:
 - `darwin/arm64` (Apple Silicon macOS)
 - `linux/amd64`
 - `linux/arm64`
+- `windows/amd64` and `windows/arm64` (`@cdxgen/cdx-hbom` 0.6.0 or later; uses the
+  Windows PowerShell 5.1 that ships with Windows)
 
 On an unsupported host, say so directly rather than producing an empty document
 and calling it a success.
+
+### Windows
+
+Run `hbom` from a **local** session. `hbom` never elevates or prompts for UAC.
+
+- A normal local user gets nearly the whole inventory.
+- `--privileged` from an **Administrator** prompt adds TPM, BitLocker, the
+  firmware-confirmed Secure Boot state, and disk reliability counters. From a
+  normal prompt it still succeeds and records `permission-denied` diagnostics.
+- A non-administrator over SSH or WinRM is denied every WMI query: only the
+  processor and memory baseline comes back, with a
+  `windows-cim-platform:network-logon` diagnostic. The fix is a local session or
+  an administrator, not a retry.
+- In secure mode the allowlist entry is `powershell.exe`, matched exactly and
+  case-sensitively. No path allowlist is needed.
+
+Details: <https://cdxgen.github.io/cdxgen/#/PERMISSIONS>
 
 The equivalent library path is `cdxgen -t hbom .`, but prefer the dedicated
 command.
@@ -110,10 +129,10 @@ command, not a collection bug.
 | Flag                      | Effect                                                     |
 | ------------------------- | ---------------------------------------------------------- |
 | `--include-runtime`       | Merge runtime host inventory into the hardware document    |
-| `--privileged`            | Enable collectors that need elevated privileges           |
+| `--privileged`            | Linux: `sudo -n` retries and `dmidecode`. Windows: the elevated-only TPM, BitLocker and reliability batch (needs an already-elevated session; never prompts). No effect on macOS |
 | `--sensitive`             | Include sensitive identifiers (ask the user first)        |
-| `--plist-enrichment`      | macOS property-list enrichment                            |
-| `--no-command-enrichment` | Skip host command invocation                               |
+| `--plist-enrichment`      | macOS property-list enrichment (ignored on Linux and Windows) |
+| `--no-command-enrichment` | Skip optional host commands (Linux runs none; Windows still runs `windows-cim-platform`; macOS ignores it) |
 | `--timeout`               | Bound collector runtime                                    |
 | `--export-proto`          | Protobuf output via `--proto-bin-file`                     |
 | `--dry-run`               | Preview collection without writing                         |
@@ -129,11 +148,13 @@ entirely** and defaults the audit categories to
 adds `host-topology`.
 
 ```bash
-hbom -o /absolute/path/to/hbom.json --bom-audit
+cdxgen -t hbom -o /absolute/path/to/hbom.json --bom-audit .
 cdx-audit --bom /absolute/path/to/hbom.json --direct-bom-audit --categories hbom
 ```
 
-The `hbom` alias expands to the full HBOM review pack in one switch.
+`hbom` itself has no `--bom-audit` flag (it would be accepted and ignored), so
+audit through `cdxgen -t hbom` or `cdx-audit`. The `hbom` alias expands to the
+full HBOM review pack in one switch.
 
 ## Exploring the results
 
@@ -147,6 +168,7 @@ Start with `.hbomsummary` or `.osinfocategories` before drilling into specifics.
 ## Reference
 
 - HBOM guide: <https://cdxgen.github.io/cdxgen/#/HBOM>
+- HBOM permissions (Linux, macOS, and the three Windows session types): <https://cdxgen.github.io/cdxgen/#/PERMISSIONS>
 - macOS OBOM troubleshooting: <https://cdxgen.github.io/cdxgen/#/OBOM_MACOS_TROUBLESHOOTING>
 - OBOM triage patterns: <https://cdxgen.github.io/cdxgen/#/OBOM_LESSONS>
 - Audit rules: <https://cdxgen.github.io/cdxgen/#/BOM_AUDIT>

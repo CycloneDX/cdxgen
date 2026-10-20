@@ -26,7 +26,10 @@ import {
   ensureSupportedHbomSpecVersion,
   hasHbomProjectType,
 } from "../lib/inventory/hbom.js";
-import { getHbomSummary } from "../lib/inventory/hbomAnalysis.js";
+import {
+  getHbomPrivilegeGuidance,
+  getHbomSummary,
+} from "../lib/inventory/hbomAnalysis.js";
 import {
   importProtobomModule,
   isProtoBomPath,
@@ -130,12 +133,13 @@ const args = _yargs
   })
   .option("privileged", {
     description:
-      "Enable privileged Linux enrichment and non-interactive sudo retries for documented permission-sensitive commands.",
+      "Enable privileged enrichment for documented permission-sensitive sources. Linux: privileged enrichment and non-interactive sudo retries. Windows: the TPM, BitLocker, storage-reliability and Secure Boot batch, which only an already-elevated (Run as administrator) session can read; HBOM never prompts for UAC and records permission-denied diagnostics otherwise. No effect on macOS.",
     type: "boolean",
     default: false,
   })
   .option("plist-enrichment", {
-    description: "Enable additional Darwin plist-based enrichment.",
+    description:
+      "Enable additional plist-based enrichment. Darwin only; ignored on Linux and Windows.",
     type: "boolean",
     default: false,
   })
@@ -172,7 +176,10 @@ const args = _yargs
     ["$0", "Generate an HBOM file for the current host"],
     ["$0 -p", "Print the generated HBOM to stdout"],
     ["$0 --platform linux --arch amd64", "Override target selection"],
-    ["$0 --privileged --pretty", "Enable privileged Linux enrichment"],
+    [
+      "$0 --privileged --pretty",
+      "Enable privileged enrichment: sudo retries on Linux, the elevated-only batch on Windows (run from an administrator prompt)",
+    ],
     [
       "$0 diagnostics",
       "Run a live HBOM diagnostic pass and summarize missing commands or permission-sensitive enrichments",
@@ -226,6 +233,9 @@ const options = {
   arch: args.arch,
   command: selectedCommand,
   commandName: hbomCommandName,
+  // yargs turns `--no-command-enrichment` into `commandEnrichment: false` and
+  // leaves `noCommandEnrichment` at its default, so forward both spellings.
+  commandEnrichment: args.commandEnrichment,
   dryRun: args.dryRun,
   input: args.input ? resolve(args.input) : undefined,
   noCommandEnrichment: args.noCommandEnrichment,
@@ -420,9 +430,7 @@ function printHbomDiagnosticsReport(bomJson) {
   }
 
   if (hbomSummary.requiresPrivilegedEnrichment) {
-    console.log(
-      "\nSome Linux enrichments can likely succeed only with --privileged and a target environment that allows non-interactive sudo.",
-    );
+    console.log(`\n${getHbomPrivilegeGuidance(hbomSummary.platform)}`);
   }
 }
 

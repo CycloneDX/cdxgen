@@ -46,12 +46,12 @@ Installing `@cdxgen/cdxgen` from npm exposes the commands in the command map plu
 
 Use `hbom` when you want a hardware BOM for the current host rather than a software inventory.
 
-- Supported collector targets currently come from `@cdxgen/cdx-hbom` (`darwin/arm64`, `linux/amd64`, and `linux/arm64`).
+- Supported collector targets currently come from `@cdxgen/cdx-hbom` (`darwin/arm64`, `linux/amd64`, `linux/arm64`, `windows/amd64`, and `windows/arm64`). Windows needs `@cdxgen/cdx-hbom` 0.6.0 or later and uses the Windows PowerShell 5.1 that ships with Windows.
 - `hbom` dynamically loads the optional hardware collector only when you invoke the command or request `cdxgen -t hbom`.
 - Standalone release assets ship as both `hbom-<os>-<arch>` and `hbom-<os>-<arch>-slim`. The standard `hbom` binary bundles `@cdxgen/cdx-hbom` plus the matching `@cdxgen/cdxgen-plugins-bin*` helpers, while `hbom-slim` keeps only `@cdxgen/cdx-hbom`.
 - Do not mix `hbom` with software project types in the same run. Generate SBOMs and HBOMs separately.
 - `--dry-run` for HBOM still returns a read-only partial BOM when safe local discovery is possible, while blocking collector commands and output writes.
-- Use `hbom diagnostics` when you want a fast summary of missing Linux utilities and permission-sensitive enrichments before deciding whether to install packages or rerun with `--privileged`.
+- Use `hbom diagnostics` when you want a fast summary of missing native utilities and permission-sensitive enrichments before deciding whether to install packages or rerun with `--privileged`. On Windows, `--privileged` is only useful from an already-elevated (**Run as administrator**) session; see [Permissions](PERMISSIONS.md#hbom-permissions).
 
 Examples:
 
@@ -63,6 +63,7 @@ hbom diagnostics
 hbom diagnostics --input hbom.json
 hbom diagnostics --input hbom.cdx
 hbom --platform linux --arch amd64 --privileged -o linux-hbom.json
+hbom --privileged -o hbom.json # Windows: from an elevated prompt, adds TPM, BitLocker and disk reliability data
 cdxgen -t hbom -o hbom.json .
 ```
 
