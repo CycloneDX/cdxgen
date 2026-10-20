@@ -1,0 +1,16 @@
+test/repotests/dotnet-restored-identity/expected/default.json
+  h_6a4cc5cdf68def 1-180
+test/repotests/dotnet-restored-identity/golden.manifest.json
+  h_6a4cc5cdf68def 1-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d02e440b45882c28a9dde90240ca8fa53384e96e",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
