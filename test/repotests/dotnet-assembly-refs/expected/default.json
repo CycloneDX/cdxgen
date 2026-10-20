@@ -209,12 +209,19 @@
         "pkg:nuget/Newtonsoft.Json@12.0.3"
       ],
       "ref": "pkg:nuget/Lib@1.0.0"
+    },
+    {
+      "dependsOn": [
+        "pkg:nuget/App@1.0.0",
+        "pkg:nuget/Lib@1.0.0"
+      ],
+      "ref": "pkg:nuget/dotnet-assembly-refs"
     }
   ],
   "metadata": {
     "authors": [],
     "component": {
-      "bom-ref": "pkg:nuget/dotnet-assembly-refs@latest",
+      "bom-ref": "pkg:nuget/dotnet-assembly-refs",
       "components": [
         {
           "bom-ref": "pkg:nuget/App@1.0.0",
@@ -251,9 +258,8 @@
       ],
       "group": "",
       "name": "dotnet-assembly-refs",
-      "purl": "pkg:nuget/dotnet-assembly-refs@latest",
-      "type": "application",
-      "version": "latest"
+      "purl": "pkg:nuget/dotnet-assembly-refs",
+      "type": "application"
     },
     "lifecycles": [
       {

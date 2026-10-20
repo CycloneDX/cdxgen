@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <Version>5.0.0</Version>
+  </PropertyGroup>
+</Project>

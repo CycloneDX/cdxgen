@@ -1,0 +1,13 @@
+{
+  "description": ".NET project identity from restore output (issue 4522). Directory.Build.props sets Version 3.1.0, so each project file alone says 1.0.0 while its obj/project.assets.json records 3.1.0; every project must be one component at the restored identity. The restore outputs record a Linux CI agent's paths, which do not exist here.",
+  "fixture": "../../data/csharp-restored-identity/VersionFromProps",
+  "scenarios": [
+    {
+      "name": "default",
+      "projectType": ["dotnet"],
+      "options": {
+        "multiProject": true
+      }
+    }
+  ]
+}
