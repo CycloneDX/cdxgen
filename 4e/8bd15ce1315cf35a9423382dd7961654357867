@@ -1,0 +1,28 @@
+lib/server/server.js
+  s_71f301a0b01dc6::t_c7f4743fb4f8aa 690
+  s_71f301a0b01dc6::t_cad1811782c777 31
+lib/inventory/source.js
+  s_71f301a0b01dc6::t_d2c69eaae7ff19 525-527,533-545
+  s_71f301a0b01dc6::t_94ad6d590b84b1 524,528-532,546-576
+lib/server/server.poku.js
+  s_71f301a0b01dc6::t_8d67351dc3eacc 1-7,21,198-201,326-329,347-350
+  s_71f301a0b01dc6::t_a201f38a351a5c 234-271
+lib/ecosystems/gradleutils.poku.js
+  s_71f301a0b01dc6::t_8d67351dc3eacc 1493-1496
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4e8bd15ce1315cf35a9423382dd7961654357867",
+  "prompts": {},
+  "sessions": {
+    "s_71f301a0b01dc6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ee53f96-6c40-480c-9a0d-102759731f8d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
