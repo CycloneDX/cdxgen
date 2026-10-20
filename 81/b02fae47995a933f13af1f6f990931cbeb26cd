@@ -1,0 +1,24 @@
+lib/server/server.js
+  s_71f301a0b01dc6::t_9a797c15ed9e8c 19,626
+lib/helpers/source.js
+  s_71f301a0b01dc6::t_9a797c15ed9e8c 511-563
+lib/server/server.poku.js
+  s_71f301a0b01dc6::t_208cc7fa2e4378 1-7,20,234-268
+  s_71f301a0b01dc6::t_ab91a1384fcda2 269-271
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "81b02fae47995a933f13af1f6f990931cbeb26cd",
+  "prompts": {},
+  "sessions": {
+    "s_71f301a0b01dc6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ee53f96-6c40-480c-9a0d-102759731f8d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
