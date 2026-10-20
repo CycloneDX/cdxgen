@@ -77,6 +77,54 @@ Use the environment variable `CDXGEN_NODE_OPTIONS` to control the permissions fo
 export CDXGEN_NODE_OPTIONS="--permission --allow-fs-read<more restricted directories> --allow-fs-write=/foo/usages.slices.json"
 ```
 
+## HBOM permissions
+
+**Run `hbom` as a normal local user.** That gives nearly the whole hardware inventory on every supported operating system. Elevation (administrator or root) adds a few security- and health-related details. `hbom` never asks for elevation itself: there is no `sudo` password prompt and no UAC prompt.
+
+| Platform                  | Normal user, local session                                             | Administrator or root                                                                                                     | Non-administrator over SSH or WinRM                                                                                                     |
+| ------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **macOS** (Apple Silicon) | Full inventory; every collector command runs as a normal user          | Nothing extra; `--privileged` has no effect                                                                               | Not measured; expected to match a local session                                                                                         |
+| **Linux**                 | `/proc` and `/sys` baseline plus the optional tools that are installed | `--privileged` runs `dmidecode` and retries `drm_info` with non-interactive `sudo -n`                                     | Not measured; expected to match a local session                                                                                         |
+| **Windows**               | Nearly everything; see below                                           | `--privileged` adds TPM details, BitLocker status, the firmware-confirmed Secure Boot state and disk reliability counters | Every WMI query is denied; only the baseline (processors and memory) is produced, with one `permission-denied` diagnostic that says why |
+
+On Linux, `--privileged` may require root or passwordless `sudo` for those commands, depending on the host; a password is never requested.
+
+### Windows session types
+
+`hbom` reads Windows hardware through WMI/CIM with the built-in Windows PowerShell 5.1. What you get depends on the session you start it from:
+
+| Session                                                                              | Result                                                                                                                                                                                                                                                                                                |
+| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Normal user, local session (interactive desktop, scheduled task, CI service account) | System, firmware, board, chassis, processors, memory modules; disks and volumes; network adapters; graphics adapters and monitors, audio, cameras; USB, PCI and Bluetooth devices with driver versions and signing; virtualization-based security status; the Secure Boot registry setting; batteries |
+| Administrator (**Run as administrator**), with `--privileged`                        | Everything above plus TPM version, manufacturer and state; BitLocker protection per volume; Secure Boot confirmed through `Confirm-SecureBootUEFI`; disk wear, temperature and power-on hours                                                                                                         |
+| Non-administrator over SSH or WinRM                                                  | Baseline only: every WMI query is denied                                                                                                                                                                                                                                                              |
+
+What a standard user gets instead of the details that need `--privileged` **and** administrator rights:
+
+| Detail                                                           | Without administrator                                                                                                                                                                                                                                                                 |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| TPM version, manufacturer and state                              | The TPM's presence, name and driver are still reported from the PnP tree                                                                                                                                                                                                              |
+| BitLocker protection status per volume                           | Volumes are listed without encryption status                                                                                                                                                                                                                                          |
+| Secure Boot confirmed by the firmware                            | The Windows Secure Boot registry setting is still reported, with `cdx:hbom:secureBootSource` set to `registry`                                                                                                                                                                        |
+| Disk wear, temperature and power-on hours                        | Disks are listed without them                                                                                                                                                                                                                                                         |
+| Disk bus type, SSD or HDD, and health (no `--privileged` needed) | Windows returns these to a standard user only while the Microsoft Storage Spaces SMP service (`smphost`) is already running, and a standard user cannot start it. Otherwise disks are still listed from the basic disk inventory and the BOM carries one `partial-support` diagnostic |
+
+With `--privileged` and no administrator rights, `hbom` records one `permission-denied` diagnostic per denied class plus one summary diagnostic (`windows-cim-privileged`), each saying "Re-run from an elevated (Run as administrator) prompt; cdx-hbom never requests elevation on Windows", and finishes normally. It does not fail, with or without `--strict`.
+
+**Remote shells as a non-administrator.** Windows treats WMI calls from a network logon (OpenSSH, WinRM, PowerShell remoting) as remote calls, which by default only administrators may make. Every hardware query is denied, each denied namespace costs about five seconds before `hbom` stops querying it, and the BOM carries one diagnostic, `windows-cim-platform:network-logon`, with the hint "WMI denied for a network logon (SSH/WinRM) without administrator rights; run cdx-hbom from a local session or elevated". Your options:
+
+- run `hbom` in a local session, for example as a scheduled task or a CI service;
+- run it as an administrator;
+- grant the account WMI "Remote Enable" (`0x20`) on `root/cimv2`, `root/wmi`, `root/StandardCimv2`, `root/Microsoft/Windows/Storage` and `root/Microsoft/Windows/DeviceGuard`. This was measured on Windows 11 ARM64 build 26200 with a standard user over OpenSSH: it gives a network logon the local standard-user inventory, except monitors (the `WmiMonitor*` classes still deny network logons) and disk bus, media and health. `root/cimv2` alone is not enough, and the TPM and BitLocker classes stay administrator-only whatever you grant. Granting it widens who can query WMI over the network, so it is the administrator's security decision; the click path is in [cdx-hbom's Windows troubleshooting](https://github.com/cdxgen/cdx-hbom/blob/v0.6.0/windows-troubleshooting.md#remote-shells-as-a-non-administrator).
+
+**PowerShell restrictions.** If AppLocker, WDAC or Constrained Language Mode restricts PowerShell, `hbom` still runs and records the language mode in `cdx:hbom:evidence:languageMode`; non-ASCII device names may be degraded, and a `partial-support` diagnostic says so. If `powershell.exe` is blocked entirely, only the Node baseline (processors and memory) is produced and each batch records a `missing-command` or `command-error` diagnostic. Nothing is retried through another shell.
+
+### What cdxgen adds
+
+- `hbom diagnostics` (and `.hbomdiagnostics` in `cdxi`) lists the diagnostics above with a recovery hint that matches the BOM's platform.
+- With `--bom-audit`, HBC-007 reports permission-denied enrichments, HBC-009 reports board and BIOS provenance lost to a network logon, HBC-001 reports an HBOM with no board or firmware provenance, and HBC-004 reports volumes without encryption evidence. Their advice names the Windows steps above.
+- Serial numbers, UUIDs, MAC addresses and device instance serials are redacted by default as `redacted:<last 4>`. Host names, user names and domain names are never collected. Pass `--sensitive` only if you need raw identifiers.
+
 ## HBOM secure-mode preflight
 
 HBOM is slightly different from language package managers because the optional `@cdxgen/cdx-hbom` collector declares its planned commands and local file reads during dry-run mode.
@@ -91,11 +139,23 @@ export CDXGEN_ALLOWED_PATHS="/proc,/sys,/etc"
 hbom -o hbom.json
 ```
 
+On Windows (PowerShell):
+
+```powershell
+hbom --dry-run
+$env:CDXGEN_SECURE_MODE = "true"
+$env:CDXGEN_ALLOWED_COMMANDS = "powershell.exe"
+hbom -o hbom.json
+```
+
 Notes:
 
 - The exact command set is platform-specific.
 - For Linux `hbom --privileged` runs with `@cdxgen/cdx-hbom`, allowlist `sudo` as well when you want the collector's explicit non-interactive retry path to remain available for permission-sensitive commands.
 - Linux hosts often need `CDXGEN_ALLOWED_PATHS` entries such as `/proc`, `/sys`, and `/etc` because the collector reads hardware metadata directly from those trees.
+- On Windows every batch is one `powershell.exe` process and the collector reads no files, so the command allowlist entry `powershell.exe` is all that is needed. `hbom --dry-run` lists the batches by command id and script digest; the full scripts are in `getCommandPlan({ platform: "win32" })` from `@cdxgen/cdx-hbom`. Allowing `powershell.exe` is coarse because it admits any PowerShell invocation, but the scripts are static, readable and read-only, and no elevation path exists.
+- Allowlist entries match the exact command or its file name, case-sensitively, because `@cdxgen/cdx-hbom` applies `CDXGEN_ALLOWED_COMMANDS` again when it starts a process. Use `powershell.exe`, or the full path exactly as the preflight message prints it.
+- `--no-command-enrichment` does not remove the check on Windows and macOS: Windows always runs `windows-cim-platform` and the Darwin collector ignores the option. Only a Linux run without `--privileged` runs no commands at all.
 - If the secure-mode preflight reports a disallowed command or path, rerun with `--dry-run`, review the declaration, and only expand the allowlist if the additional host surface is acceptable for that environment.
 
 ## GitHub Action Workflow sample

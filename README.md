@@ -16,7 +16,7 @@ cdxgen is a CLI tool, library, [REPL](./ADVANCED.md), and server to create, vali
 
 Supported BOM formats:
 
-- Hardware (HBOM) - For supported live hosts such as Apple Silicon macOS and Linux amd64/arm64 systems.
+- Hardware (HBOM) - For supported live hosts such as Apple Silicon macOS, Linux amd64/arm64, and Windows amd64/arm64 systems.
 - Software (SBOM) - For many languages and container images.
 - Cryptography (CBOM) - For Java keystores and certificates, plus JavaScript and TypeScript source-level algorithm inventory.
 - Operations (OBOM) - For Linux container images and VMs running Linux or Windows operating systems.
@@ -187,7 +187,7 @@ The `cbom` and `saasbom` release binaries bundle the Atom analysis stack (`@appt
 
 For AI-heavy repositories, cdxgen also supports an AI-BOM workflow via the `aibom` command or the `-t ai` project type aliases (`ai`, `aibom`, `ai-bom`). This emits AI service/model evidence and pairs naturally with the `ai-bom` BOM-audit category alias for governance, security, performance, AI-agent, and MCP findings.
 
-For host inventories, `hbom --include-runtime` produces a merged HBOM + OBOM view with strict topology links such as interface-name, driver-module, storage/runtime, and explicit secure-boot trust matches, plus a `host-topology` BOM audit pack for higher-confidence host findings. When the live hardware collector reports missing utilities or permission-sensitive enrichments, use `hbom diagnostics` (or inspect the derived `cdx:hbom:analysis:*` summary properties) before deciding whether a rerun with `--privileged` is justified.
+For host inventories, `hbom --include-runtime` produces a merged HBOM + OBOM view with strict topology links such as interface-name, driver-module, storage/runtime (including Windows drive letters), and explicit secure-boot trust matches, plus a `host-topology` BOM audit pack for higher-confidence host findings. When the live hardware collector reports missing utilities or permission-sensitive enrichments, use `hbom diagnostics` (or inspect the derived `cdx:hbom:analysis:*` summary properties) before deciding whether a rerun with `--privileged` is justified. On Windows, `--privileged` only helps from an already-elevated session, and a non-administrator over SSH or WinRM is denied every WMI query; see [HBOM permissions](docs/PERMISSIONS.md#hbom-permissions).
 
 ### Standalone executables (recommended)
 

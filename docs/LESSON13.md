@@ -58,22 +58,22 @@ With the optional `@cdxgen/cdx-hbom` library, dry-run is handled inside the HBOM
 - command-based probes are blocked and listed individually in the activity summary
 - output-file writes remain blocked
 
-This is especially useful on supported macOS and Linux hosts when you want to review exactly which collector commands would run before doing a full inventory.
+This is especially useful on supported macOS, Linux, and Windows hosts when you want to review exactly which collector commands would run before doing a full inventory. On Windows the activity summary lists one blocked `powershell.exe` batch per domain (`windows-cim-platform`, `windows-cim-storage-network`, and so on), each with a short `script sha256:<12 hex>` target instead of the script itself, and no PowerShell process is started.
 
 If you run HBOM in secure mode, this dry-run review is the recommended allowlist authoring step: cdxgen reuses the same declared HBOM commands and paths as a preflight plan and aborts the live run when they fall outside `CDXGEN_ALLOWED_COMMANDS` or `CDXGEN_ALLOWED_PATHS`.
 
 ## 5) Diagnose missing utilities and permission-sensitive enrichments
 
-Before enabling `--privileged` broadly on Linux, ask cdxgen to summarize the HBOM collector gaps:
+Before enabling `--privileged` broadly, ask cdxgen to summarize the HBOM collector gaps:
 
 ```shell
 hbom diagnostics
 ```
 
-This command focuses on the actionable Linux issues surfaced by `@cdxgen/cdx-hbom` 0.4.0:
+This command focuses on the actionable issues surfaced by `@cdxgen/cdx-hbom`:
 
-- **missing-command** — a useful native utility such as `lsusb`, `lspci`, `fwupdmgr`, or `dmidecode` was not installed
-- **permission-denied** — the collector reached a documented permission-sensitive enrichment that usually needs `--privileged`
+- **missing-command** — a useful native utility such as `lsusb`, `lspci`, `fwupdmgr`, or `dmidecode` was not installed on Linux, or `powershell.exe` could not be started on Windows
+- **permission-denied** — the collector reached a documented permission-sensitive enrichment that usually needs `--privileged` (on Windows, also an elevated session; see below)
 
 After you have already generated a BOM, you can summarize the serialized collector diagnostics from the file itself without touching the host again:
 
@@ -99,6 +99,7 @@ Practical guidance:
 - On Apple Silicon macOS, the secure-mode review is often command-focused unless you also enable plist-backed enrichment.
 - On Linux, expect the path allowlist to include the collector's direct-read roots such as `/proc`, `/sys`, and selected files under `/etc`.
 - On Linux with `--privileged`, `@cdxgen/cdx-hbom` may explicitly retry certain permission-sensitive commands through `sudo -n`, so secure-mode command allowlists should include `sudo` when you intend to permit that hardened retry path.
+- On Windows every batch is one `powershell.exe` process and no files are read, so `CDXGEN_ALLOWED_COMMANDS="powershell.exe"` is the whole allowlist and `CDXGEN_ALLOWED_PATHS` is not needed. Entries are compared exactly and case-sensitively (`powershell.exe`, not `PowerShell.EXE`), and `--no-command-enrichment` does not remove the need because `windows-cim-platform` always runs.
 - If secure mode reports a blocked HBOM command or path, rerun `hbom --dry-run`, review the declaration, and only expand the allowlist when the extra collection surface is justified.
 
 ## 7) Validate the result
@@ -128,6 +129,21 @@ hbom --platform linux --arch amd64 --privileged -o linux-hbom.json
 ```
 
 > `--privileged` may require elevated access or passwordless sudo depending on the system. Use it as a targeted follow-up to the diagnostics report rather than as the default first step.
+
+### Windows
+
+`hbom` reads Windows hardware through WMI/CIM with the Windows PowerShell 5.1 that ships with Windows (`@cdxgen/cdx-hbom` 0.6.0 or later). What you get depends on the session you run it from, and `hbom` never asks for elevation:
+
+- **Normal local session** (desktop, scheduled task, CI service account): nearly the whole inventory.
+- **Run as administrator, with `--privileged`**: adds TPM details, BitLocker status per volume, the firmware-confirmed Secure Boot state, and disk reliability counters.
+- **Non-administrator over SSH or WinRM**: every WMI query is denied, so only the processor and memory baseline is produced, with one `windows-cim-platform:network-logon` diagnostic. Run locally, run as an administrator, or grant the account WMI "Remote Enable" (see [HBOM permissions](PERMISSIONS.md#hbom-permissions)).
+
+```shell
+hbom diagnostics
+hbom --privileged -o hbom.json
+```
+
+Run the second command from an elevated prompt. From a normal prompt it still succeeds and records a `permission-denied` diagnostic for each elevated-only item, which `hbom diagnostics` and `.hbomdiagnostics` then explain. The architecture in the BOM comes from `Win32_Processor`, so an x64 Node.js on an ARM64 PC is reported as `arm64`.
 
 ## 9) Preserve sensitive identifiers only when necessary
 
@@ -176,6 +192,7 @@ Examples of links that are allowed:
 - NIC name `wlp2s0` ↔ OBOM `interface_addresses.interface = wlp2s0`
 - HBOM driver `iwlwifi` ↔ OBOM `kernel_modules.name = iwlwifi`
 - HBOM storage device `/dev/nvme0n1` ↔ OBOM mount or logical-drive device identity `/dev/nvme0n1`
+- Windows: HBOM storage volume `cdx:hbom:mountPoint = C:` ↔ OBOM `logical_drives.device_id = C:`
 - HBOM Secure Boot trust fingerprint or subject-key ID ↔ OBOM `secureboot_certificates` identifier with the exact same value
 
 The merged document adds summary properties such as:
@@ -185,7 +202,7 @@ The merged document adds summary properties such as:
 - `cdx:hostview:linkedHardwareComponentCount`
 - `cdx:hostview:linkedRuntimeCategory`
 
-Linked interfaces and storage devices also gain per-component properties such as `cdx:hostview:interface_addresses:count`, `cdx:hostview:kernel_modules:count`, `cdx:hostview:mount_hardening:count`, and `cdx:hostview:runtime-storage:count`.
+Linked interfaces and storage devices also gain per-component properties such as `cdx:hostview:interface_addresses:count`, `cdx:hostview:kernel_modules:count`, `cdx:hostview:mount_hardening:count`, , `cdx:hostview:runtime-storage:count`, and `cdx:hostview:logical_drives:count` on Windows.
 
 ## 12) Audit the merged host view
 
@@ -234,7 +251,7 @@ A generated HBOM typically includes:
 - `components` of CycloneDX `type: "device"`
 - `cdx:hbom:*` properties describing hardware class and collected attributes
 - platform-level evidence properties showing which native commands contributed data
-- Linux diagnostic evidence properties such as `cdx:hbom:evidence:commandDiagnostic*` when command enrichment was missing tools or hit permission-sensitive paths
+- diagnostic evidence properties such as `cdx:hbom:evidence:commandDiagnostic*` when command enrichment was missing tools or hit permission-sensitive paths (on Windows, for example `windows-cim-privileged:tpm` without administrator rights)
 - cdxgen-derived summary properties under `cdx:hbom:analysis:*` for counts, missing command names, and permission-denied rerun guidance
 
 In a merged host view, also inspect:

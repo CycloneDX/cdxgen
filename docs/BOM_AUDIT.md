@@ -588,6 +588,15 @@ Typical reviewer actions:
 - install `fwupdmgr`, `edid-decode`, or other reported native helpers when you need the richer firmware-management or display evidence introduced by newer HBOM collectors
 - use `cdxi` pivots such as `.hbomdiagnostics`, `.hbomfirmware`, `.hbombuses`, and `.hbompower` when you want to inspect the exact hardware surfaces behind the findings
 
+Windows HBOMs are covered by the same packs, driven by the properties the Windows collector emits:
+
+- HBS-001 reports `cdx:hbom:isEncrypted=false` on a volume. On Windows that value comes only from the privileged BitLocker batch, so a run without `--privileged` from an elevated session reports HBC-004 (no encryption posture evidence) instead.
+- HBP-002 also fires for a `cdx:hbom:healthStatus` of `Warning` or `Unhealthy` (the Windows Storage API health state), next to `smartStatus` and wear. `Healthy` and `Unknown` do not fire.
+- HBC-001 and HBC-009 have Windows variants. A network-logon HBOM has no board or firmware provenance (HBC-001) because every WMI query was denied (HBC-009, keyed on the `windows-cim-platform:network-logon` diagnostic). The elevated-only `windows-cim-privileged` batch carries no board or BIOS fields, so its denials surface through HBC-007 instead.
+- HBC-004 and HBC-007 advice names the Windows recovery steps: a local or elevated session, and `--privileged` from an elevated prompt for BitLocker, TPM and reliability data.
+- HBC-008 (`fwupdmgr`) and the EDID and DRM ids behind HBC-010 stay Linux-only: Windows has no such command whose absence could be reported.
+- HMX-003 does not fire on a Windows host view whose drive-letter volumes link to the osquery `logical_drives` rows.
+
 ### `rootfs-hardening` — Offline host and golden-image hardening review
 
 Rules that evaluate reconstructed root filesystems, mounted images, and other offline host snapshots for repository trust, privileged helpers, stale trust anchors, and suspicious service definitions.
