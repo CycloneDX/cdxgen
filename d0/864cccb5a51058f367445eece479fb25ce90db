@@ -1,0 +1,22 @@
+lib/cli/index.js
+  h_0926447d100ad2 1993,2002
+lib/inventory/certificates.js
+  h_0926447d100ad2 1106-1184
+lib/inventory/dynamic.js
+  h_0926447d100ad2 10,53-56,60,180-196,199,250-255
+lib/inventory/traceRunner.js
+  h_0926447d100ad2 198,534-536,547
+lib/inventory/tracedCrypto.js
+  h_0926447d100ad2 6-9,277-395
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d0864cccb5a51058f367445eece479fb25ce90db",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
