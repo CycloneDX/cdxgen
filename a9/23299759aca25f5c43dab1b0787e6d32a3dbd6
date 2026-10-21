@@ -1,0 +1,14 @@
+ci/reconstruct-staged-rootfs.py
+  h_0926447d100ad2 20-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a923299759aca25f5c43dab1b0787e6d32a3dbd6",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
