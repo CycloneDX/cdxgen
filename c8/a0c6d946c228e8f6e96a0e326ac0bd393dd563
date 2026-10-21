@@ -1,0 +1,16 @@
+docs/CBOM_CERTIFICATES.md
+  h_0926447d100ad2 92-128
+docs/CUSTOM_PROPERTIES.md
+  h_0926447d100ad2 2293
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c8a0c6d946c228e8f6e96a0e326ac0bd393dd563",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
