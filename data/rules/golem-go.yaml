@@ -236,7 +236,7 @@
   dry-run-support: full
   condition: |
     components[
-      $prop($, 'cdx:golem:cryptoFinding') = 'GOLEM-CRYPTO-TLS-CUSTOM-ROOTS'
+      'GOLEM-CRYPTO-TLS-CUSTOM-ROOTS' in properties[name = 'cdx:golem:cryptoFinding'].value
     ]
   location: |
     { "bomRef": $."bom-ref", "purl": purl }
@@ -256,7 +256,7 @@
   dry-run-support: full
   condition: |
     components[
-      $prop($, 'cdx:golem:cryptoFinding') = 'GOLEM-CRYPTO-TLS-CUSTOM-VERIFY'
+      'GOLEM-CRYPTO-TLS-CUSTOM-VERIFY' in properties[name = 'cdx:golem:cryptoFinding'].value
     ]
   location: |
     { "bomRef": $."bom-ref", "purl": purl }
@@ -276,7 +276,7 @@
   dry-run-support: full
   condition: |
     components[
-      $prop($, 'cdx:golem:cryptoFinding') = 'GOLEM-CRYPTO-TLS-VERIFY-REPLACED'
+      'GOLEM-CRYPTO-TLS-VERIFY-REPLACED' in properties[name = 'cdx:golem:cryptoFinding'].value
     ]
   location: |
     { "bomRef": $."bom-ref", "purl": purl }
@@ -296,7 +296,7 @@
   dry-run-support: full
   condition: |
     components[
-      $prop($, 'cdx:golem:cryptoFinding') = 'GOLEM-CRYPTO-X509-EMBEDDED-POOL'
+      'GOLEM-CRYPTO-X509-EMBEDDED-POOL' in properties[name = 'cdx:golem:cryptoFinding'].value
     ]
   location: |
     { "bomRef": $."bom-ref", "purl": purl }

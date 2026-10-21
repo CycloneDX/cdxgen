@@ -220,7 +220,7 @@
           cryptoProperties.assetType = 'certificate'
           or cryptoProperties.assetType = 'related-crypto-material'
         )
-        and $prop($, 'cdx:crypto:spkiSha256') in $deny
+        and $exists(properties[name = 'cdx:crypto:spkiSha256'].value[$lowercase($) in $deny])
       ]
     )
   location: |
@@ -259,16 +259,16 @@
       ];
       $badSkis := components[
         cryptoProperties.assetType = 'certificate'
-        and $prop($, 'cdx:crypto:spkiSha256') in $deny
-      ].properties[name = 'cdx:crypto:subjectKeyId'].value[$ != null];
+        and $exists(properties[name = 'cdx:crypto:spkiSha256'].value[$lowercase($) in $deny])
+      ].properties[name = 'cdx:crypto:subjectKeyId'].value[$ != null].$lowercase($);
       components[
         cryptoProperties.assetType = 'certificate'
-        and $not($prop($, 'cdx:crypto:spkiSha256') in $deny)
+        and $not($exists(properties[name = 'cdx:crypto:spkiSha256'].value[$lowercase($) in $deny]))
         and (
-          $count(properties[name = 'cdx:crypto:issuerSpkiSha256'].value[$ in $deny]) > 0
+          $count(properties[name = 'cdx:crypto:issuerSpkiSha256' or name = 'cdx:crypto:unverifiedIssuerSpkiSha256'].value[$lowercase($) in $deny]) > 0
           or (
             $prop($, 'cdx:crypto:authorityKeyId') != null
-            and $prop($, 'cdx:crypto:authorityKeyId') in $badSkis
+            and $lowercase($nullSafeProp($, 'cdx:crypto:authorityKeyId')) in $badSkis
           )
         )
       ]
