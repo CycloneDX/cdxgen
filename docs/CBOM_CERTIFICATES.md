@@ -89,6 +89,43 @@ those certificates enter the same model with
 `tls://<host>:<port>`. TLS 1.3 encrypts its Certificate message, so those
 connections record no chain — see the limitations below.
 
+```bash
+node bin/tracebom.js --cmd 'curl -sk https://api.example.test/' \
+  --proxy-egress --allow-host api.example.test --trace-crypto -o cbom.json
+```
+
+What the run records, and what it deliberately does not:
+
+- **TLS ≤ 1.2 only.** The observer reads the cleartext handshake; a TLS 1.3
+  Certificate message is encrypted and yields nothing.
+- **A presented chain is untrusted server input.** The certificates and their
+  order are the server's own claim. cdxgen records each certificate's
+  identity (hashes, subject, validity, key) and where it was presented, but
+  never turns the order into issuer edges: no `dependsOn` and no
+  `issuerSpkiSha256` come from an observed chain alone. `CBC-004` therefore
+  needs the same certificate found on disk (whose issuer signature a producer
+  could verify) merged with the observation — then the flagged leaf carries
+  both the file path and the `tls://` server.
+- **The proxy must see the connection.** The egress proxy sets `NO_PROXY` to
+  cover loopback, so a loopback fixture server must be reached with
+  `curl --noproxy ""` (or an equivalent override), and by a host name listed
+  in `--allow-host`, not an IP literal — the proxy pins hostnames.
+
+Each TLS protocol component `provides` the certificates and keys presented
+under it, so the graph leads from `crypto/protocol/tls@<version>` to the
+chain a server used.
+
+Which servers presented a denylisted SPKI:
+
+```bash
+jq -r --arg spki "<spki-hex>" '.components[]
+  | select((.properties // [])[] | select(.name=="cdx:crypto:spkiSha256" and .value==$spki))
+  | ."bom-ref", (.evidence.occurrences // [] | map(.location) | .[])' bom.json
+```
+
+or with cdxi: `.certs` lists every certificate with its occurrence count;
+`.certchain <spki-prefix>` walks the verified chain above a certificate.
+
 ## Audit rules
 
 `--bom-audit --bom-audit-categories cbom` runs:
