@@ -1,0 +1,16 @@
+lib/cli/managedBom.js
+  h_0926447d100ad2 17,2756-2758,2760-2767
+lib/inventory/certificates.js
+  h_0926447d100ad2 1220-1226
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9be02be013197fe626e916fe569042e60926b5be",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
