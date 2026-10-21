@@ -1,0 +1,37 @@
+lib/managers/binary.js
+  s_52f5c4eaf6e6b7::t_342e92f3d0f93c 3618-3619
+lib/inventory/certificates.poku.js
+  s_52f5c4eaf6e6b7::t_1763f1547c6fa1 814-840
+  s_52f5c4eaf6e6b7::t_9ff4bb688489f0 11
+data/rules/cbom-security.yaml
+  s_52f5c4eaf6e6b7::t_52ee640e763267 271
+  s_52f5c4eaf6e6b7::t_4015ec1cb1844f 223,262-263,266,268
+lib/inventory/certificates.js
+  s_52f5c4eaf6e6b7::t_dd0facbb64d95b 1136
+  s_52f5c4eaf6e6b7::t_1763f1547c6fa1 1146
+  s_52f5c4eaf6e6b7::t_53be08272f23ce 344-345,349,356,361-364,775-776,778-779,1134,1900,1907-1911
+lib/stages/postgen/auditBom.poku.js
+  s_52f5c4eaf6e6b7::t_d88a0c761e742d 6174-6210
+lib/inventory/goBuildInfo.poku.js
+  s_52f5c4eaf6e6b7::t_dd0facbb64d95b 175-184
+lib/inventory/goBuildInfo.js
+  s_52f5c4eaf6e6b7::t_342e92f3d0f93c 19-21,100-102,105-110,115-121
+data/rules/golem-go.yaml
+  s_52f5c4eaf6e6b7::t_f4798ade1c925f 239,259,279,299
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "398dc0185fb7199a6e80ce3a5b557e6cad29d5ec",
+  "prompts": {},
+  "sessions": {
+    "s_52f5c4eaf6e6b7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6df25678-2bd9-411d-a772-3a7751696245",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
