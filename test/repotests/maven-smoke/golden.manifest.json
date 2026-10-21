@@ -4,6 +4,11 @@
       "name": "default",
       "projectType": ["maven"],
       "options": {}
+    },
+    {
+      "name": "with-maven",
+      "projectType": ["maven"],
+      "options": { "installDeps": true }
     }
   ]
 }

@@ -79,16 +79,19 @@ Trust boundary 5: cdxgen container ←→ container host
 
 #### T1.2 — Arbitrary code execution via build tools
 
-**Threat:** cdxgen invokes `npm install`, `mvn`, `pip install`, `gradle`, etc. These tools execute code from project files (postinstall scripts, `setup.py`, Gradle build scripts).
+**Threat:** cdxgen invokes `npm install`, `mvn`, `pip install`, `gradle`, etc. These tools execute code from project files (postinstall scripts, `setup.py`, Gradle build scripts, `.mvn/jvm.config`, `Directory.Build.rsp`, SwiftPM manifests, `project.clj`, Podfiles).
 
 **Mitigations:**
 
 - Secure mode (`CDXGEN_SECURE_MODE=true`) disables automatic package installation
+- `--no-install-deps` (implied by `cdxgen-secure` and the `--lifecycle pre-build` and `ml-tiny` profiles) also skips the scanned project's own build tooling, falling back to static parsing: Gradle, sbt and Mill (already), and Maven, Leiningen, Poetry/PDM `export`, `dotnet msbuild` property evaluation, SwiftPM (`swift package dump-package`/`show-dependencies`, including the evidence build) and CocoaPods Podfile evaluation (`pod ipc podfile-json`). Each skip prints a message and records a degradation event in the introspection ledger
 - `safeSpawnSync` warns when `pip`/`uv install` is invoked without `--only-binary=:all:` (prevents `setup.py` execution during wheel builds)
 - `safeSpawnSync` warns when Python is invoked without `-S` flag
 - Users are advised to run in sandboxed environments for untrusted projects
 
-**Residual risk:** High — this is a fundamental tension. Accurate dependency resolution often requires invoking build tools that may execute untrusted code. Secure mode trades accuracy for safety.
+**Which tools secure mode still runs:** when dependency installation is left enabled (the default for `cdxgen` outside container scans), secure mode restricts which commands cdxgen may execute (`CDXGEN_ALLOWED_COMMANDS`) but does not stop an allowed build tool from evaluating the scanned project's files. Combine `CDXGEN_SECURE_MODE=true` with `--no-install-deps` — or use `cdxgen-secure` — to keep the project's build tooling from running at all.
+
+**Residual risk:** High — this is a fundamental tension. Accurate dependency resolution often requires invoking build tools that may execute untrusted code. Secure mode trades accuracy for safety; with the project tooling skipped, the SBOM contains only what static parsing of the manifests and lock files can recover (typically direct dependencies only).
 
 #### T1.3 — Environment variable poisoning
 

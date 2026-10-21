@@ -10,11 +10,11 @@ cdxgen supports the Node.js permission [model](https://nodejs.org/api/permission
 
 ## Benefits of Permissions Model
 
-Permissions can be used to control what system resources cdxgen has access to or what actions it can take with those resources. cdxgen would disable automatic package installations when run in secure mode by default.
+Permissions can be used to control what system resources cdxgen has access to or what actions it can take with those resources. cdxgen would disable automatic package installations when run in secure mode by default. Passing `--no-install-deps` (or using the `cdxgen-secure` command, which implies it) additionally skips the scanned project's own build tooling — Maven, Gradle, sbt, Mill, Leiningen, Poetry/PDM export, `dotnet msbuild`, SwiftPM and CocoaPods Podfile evaluation — so no command from those tools starts at all. The `cdxgen-secure` container image enables secure mode but not `--no-install-deps`; pass the flag there too to keep the project's build tooling from running.
 
 ## Limitations of Permissions Model
 
-Secure mode only restricts cdxgen from performing certain activities such as package installation. It does not provide security guarantees in the presence of malicious code.
+Secure mode only restricts cdxgen from performing certain activities such as package installation. With dependency installation left enabled, an allowed build tool still evaluates the scanned project's files (build scripts, `.mvn/` configuration, MSBuild response files, SwiftPM manifests). It does not provide security guarantees in the presence of malicious code.
 
 ## Required permissions
 

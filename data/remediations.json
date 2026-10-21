@@ -111,6 +111,30 @@
     },
     "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES?id=java"
   },
+  "jvm.maven.tooling-disabled": {
+    "ecosystem": "java",
+    "kind": "fallback.engaged",
+    "impact": "transitive-deps",
+    "title": "Maven was skipped because dependency installation is disabled; only pom.xml direct dependencies were captured",
+    "targetTier": "manifest",
+    "actions": [
+      {
+        "kind": "config",
+        "command": "Re-run without --no-install-deps (or outside secure mode) to let cdxgen invoke Maven"
+      },
+      {
+        "kind": "rerun"
+      }
+    ],
+    "verify": {
+      "rules": [],
+      "expectTier": "manifest",
+      "eventsCleared": [
+        "jvm.maven.tooling-disabled"
+      ]
+    },
+    "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"
+  },
   "jvm.gradle.unresolved-config": {
     "ecosystem": "java",
     "kind": "fallback.engaged",
@@ -615,6 +639,30 @@
     },
     "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"
   },
+  "python.poetry-export.tooling-disabled": {
+    "ecosystem": "python",
+    "kind": "fallback.engaged",
+    "impact": "transitive-deps",
+    "title": "poetry/pdm export was skipped because dependency installation is disabled; only lock file packages were captured",
+    "targetTier": "lockfile",
+    "actions": [
+      {
+        "kind": "config",
+        "command": "Re-run without --no-install-deps (or outside secure mode) to let cdxgen invoke poetry/pdm export"
+      },
+      {
+        "kind": "rerun"
+      }
+    ],
+    "verify": {
+      "rules": [],
+      "expectTier": "lockfile",
+      "eventsCleared": [
+        "python.poetry-export.tooling-disabled"
+      ]
+    },
+    "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"
+  },
   "clojure.lein.missing": {
     "ecosystem": "clojure",
     "kind": "fallback.engaged",
@@ -672,6 +720,30 @@
     },
     "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"
   },
+  "clojure.lein.tooling-disabled": {
+    "ecosystem": "clojure",
+    "kind": "fallback.engaged",
+    "impact": "transitive-deps",
+    "title": "lein was skipped because dependency installation is disabled; project.clj was parsed manually",
+    "targetTier": "manifest",
+    "actions": [
+      {
+        "kind": "config",
+        "command": "Re-run without --no-install-deps (or outside secure mode) to let cdxgen invoke lein"
+      },
+      {
+        "kind": "rerun"
+      }
+    ],
+    "verify": {
+      "rules": [],
+      "expectTier": "manifest",
+      "eventsCleared": [
+        "clojure.lein.tooling-disabled"
+      ]
+    },
+    "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"
+  },
   "swift.toolchain.missing": {
     "ecosystem": "swift",
     "kind": "fallback.engaged",
@@ -718,6 +790,30 @@
     },
     "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"
   },
+  "swift.tooling-disabled": {
+    "ecosystem": "swift",
+    "kind": "fallback.engaged",
+    "impact": "transitive-deps",
+    "title": "swift package was skipped because dependency installation is disabled; only Package.resolved packages were captured",
+    "targetTier": "lockfile",
+    "actions": [
+      {
+        "kind": "config",
+        "command": "Re-run without --no-install-deps (or outside secure mode) to let cdxgen invoke swift package"
+      },
+      {
+        "kind": "rerun"
+      }
+    ],
+    "verify": {
+      "rules": [],
+      "expectTier": "lockfile",
+      "eventsCleared": [
+        "swift.tooling-disabled"
+      ]
+    },
+    "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"
+  },
   "dotnet.sdk.missing": {
     "ecosystem": "csharp",
     "kind": "evidence.degraded",
@@ -745,6 +841,30 @@
       "expectTier": "resolved",
       "eventsCleared": [
         "dotnet.sdk.missing"
+      ]
+    },
+    "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"
+  },
+  "dotnet.msbuild.tooling-disabled": {
+    "ecosystem": "csharp",
+    "kind": "fallback.engaged",
+    "impact": "versions",
+    "title": "dotnet msbuild property evaluation was skipped because dependency installation is disabled; versions come from static resolution",
+    "targetTier": "manifest",
+    "actions": [
+      {
+        "kind": "config",
+        "command": "Re-run without --no-install-deps (or outside secure mode) to let cdxgen evaluate MSBuild properties"
+      },
+      {
+        "kind": "rerun"
+      }
+    ],
+    "verify": {
+      "rules": [],
+      "expectTier": "manifest",
+      "eventsCleared": [
+        "dotnet.msbuild.tooling-disabled"
       ]
     },
     "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"
@@ -834,6 +954,30 @@
       "expectTier": "resolved",
       "eventsCleared": [
         "cocoa.pods.missing"
+      ]
+    },
+    "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"
+  },
+  "cocoa.podfile-json.tooling-disabled": {
+    "ecosystem": "cocoa",
+    "kind": "fallback.engaged",
+    "impact": "components",
+    "title": "pod ipc podfile-json was skipped because dependency installation is disabled; all pods from Podfile.lock are included without per-target filtering",
+    "targetTier": "lockfile",
+    "actions": [
+      {
+        "kind": "config",
+        "command": "Re-run without --no-install-deps (or outside secure mode) to let cdxgen evaluate the Podfile for target filtering"
+      },
+      {
+        "kind": "rerun"
+      }
+    ],
+    "verify": {
+      "rules": [],
+      "expectTier": "lockfile",
+      "eventsCleared": [
+        "cocoa.podfile-json.tooling-disabled"
       ]
     },
     "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"
