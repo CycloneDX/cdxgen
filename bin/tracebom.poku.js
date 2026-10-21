@@ -1,6 +1,14 @@
 import { strict as assert } from "node:assert";
 import { spawn } from "node:child_process";
-import { existsSync, readFileSync, unlinkSync } from "node:fs";
+import {
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  unlinkSync,
+} from "node:fs";
+import net from "node:net";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import process from "node:process";
 
@@ -381,6 +389,171 @@ describe("tracebom CLI", () => {
       } catch {
         // ignore
       }
+    }
+  });
+
+  // Observed certificate chains need safer-exec >= 1.2.0 (which reports the
+  // `chain` array), a TLS <= 1.2 server this host can reach, and an egress
+  // tunnel the traced client actually uses. Anything missing skips the live
+  // assertion; the committed fixtures cover the model itself.
+  it("records the certificate chain a TLS 1.2 server presents", async () => {
+    const skip = (message) =>
+      console.log(`skipped (live chain test): ${message}`);
+    let saferExecVersion;
+    try {
+      saferExecVersion = JSON.parse(
+        readFileSync(
+          join(
+            process.cwd(),
+            "node_modules",
+            "@cdxgen",
+            "safer-exec",
+            "package.json",
+          ),
+          "utf-8",
+        ),
+      ).version;
+    } catch {
+      return skip("safer-exec package version unknown");
+    }
+    const [major, minor] = saferExecVersion.split(".").map(Number);
+    if (major < 1 || (major === 1 && minor < 2)) {
+      return skip(`safer-exec ${saferExecVersion} predates chain reporting`);
+    }
+    const freePort = await new Promise((resolve) => {
+      const probe = (port) => {
+        const server = net.createServer();
+        server.once("error", () => {
+          if (port < 9459) {
+            probe(port + 1);
+          } else {
+            resolve(undefined);
+          }
+          server.close();
+        });
+        server.once("listening", () => {
+          server.close(() => resolve(port));
+        });
+        server.listen(port, "127.0.0.1");
+      };
+      probe(9440);
+    });
+    if (!freePort) {
+      return skip("no bindable port in 9440-9459");
+    }
+    const work = mkdtempSync(join(tmpdir(), "cdxgen-tracebom-chain-"));
+    const tmpFile = join(work, "bom.json");
+    let server;
+    try {
+      const openssl = process.env.OPENSSL_BIN || "openssl";
+      const certArgs = [
+        "req",
+        "-x509",
+        "-newkey",
+        "rsa:2048",
+        "-nodes",
+        "-keyout",
+        join(work, "key.pem"),
+        "-out",
+        join(work, "cert.pem"),
+        "-subj",
+        "/CN=localhost",
+        "-days",
+        "1",
+        "-addext",
+        "subjectAltName=DNS:localhost,IP:127.0.0.1",
+      ];
+      const cert = await new Promise((resolve) => {
+        const child = spawn(openssl, certArgs, { stdio: "ignore" });
+        child.on("error", () => resolve(false));
+        child.on("close", (code) => resolve(code === 0));
+      });
+      if (!cert) {
+        return skip(`openssl (${openssl}) could not generate a certificate`);
+      }
+      server = spawn(
+        openssl,
+        [
+          "s_server",
+          "-accept",
+          String(freePort),
+          "-tls1_2",
+          "-www",
+          "-key",
+          join(work, "key.pem"),
+          "-cert",
+          join(work, "cert.pem"),
+        ],
+        { stdio: "ignore" },
+      );
+      const listening = await new Promise((resolve) => {
+        let tries = 0;
+        const attempt = () => {
+          const socket = net.createConnection({
+            host: "127.0.0.1",
+            port: freePort,
+          });
+          socket.once("connect", () => {
+            socket.destroy();
+            resolve(true);
+          });
+          socket.once("error", () => {
+            socket.destroy();
+            if (++tries < 50) {
+              setTimeout(attempt, 100);
+            } else {
+              resolve(false);
+            }
+          });
+        };
+        attempt();
+      });
+      if (!listening) {
+        return skip(
+          `openssl (${openssl}) s_server never listened on ${freePort}`,
+        );
+      }
+      const { status } = await execNode([
+        binPath,
+        "--cmd",
+        `sh -c 'curl -sk --noproxy "" https://localhost:${freePort}/'`,
+        "--proxy-egress",
+        "--allow-host",
+        "localhost",
+        "--allow-port",
+        String(freePort),
+        "--output",
+        tmpFile,
+      ]);
+      assert.strictEqual(status, 0);
+      const bom = JSON.parse(readFileSync(tmpFile, "utf-8"));
+      const certificates = (bom.components || []).filter(
+        (component) =>
+          component.type === "cryptographic-asset" &&
+          component.cryptoProperties?.assetType === "certificate",
+      );
+      if (!certificates.length) {
+        return skip(
+          "no chain was observed (traced curl could not use the egress tunnel)",
+        );
+      }
+      const observed = certificates.find((component) =>
+        (component.properties || []).some(
+          (property) =>
+            property.name === "cdx:crypto:sourceType" &&
+            property.value === "observed-tls",
+        ),
+      );
+      assert.ok(observed, "a certificate with sourceType observed-tls");
+      assert.ok(
+        (observed.evidence?.occurrences || []).some((occurrence) =>
+          occurrence.location.startsWith("tls://"),
+        ),
+        "the server is an occurrence",
+      );
+    } finally {
+      server?.kill();
+      rmSync(work, { recursive: true, force: true });
     }
   });
 });
