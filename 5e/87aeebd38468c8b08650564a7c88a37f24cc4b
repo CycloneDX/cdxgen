@@ -1,0 +1,20 @@
+bin/tracebom.poku.js
+  h_0926447d100ad2 3-11,394-558
+lib/inventory/certificates.poku.js
+  h_0926447d100ad2 10,842-1048
+lib/inventory/tracedCrypto.poku.js
+  h_0926447d100ad2 1-3,6-12,16,248-621
+lib/stages/postgen/auditBom.poku.js
+  h_0926447d100ad2 8-14,17,5964-6090
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5e87aeebd38468c8b08650564a7c88a37f24cc4b",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
