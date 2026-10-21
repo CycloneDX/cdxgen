@@ -84,6 +84,7 @@ The categories that work best in dry-run mode are the formulation-centric ones:
 - `cbom` (alias for `cbom-security,cbom-compliance`)
 - `cbom-compliance`
 - `cbom-security`
+- `go-security`
 - `chrome-extension`
 - `ci-permission`
 - `container-risk`
@@ -268,6 +269,10 @@ cdx-audit --bom bom.evinse.json --direct-bom-audit --categories golem
 | GOLEM-SEC-001  | golem-security    | medium   | Runtime Go dependency has a high-severity semantic security signal |
 | GOLEM-SEC-002  | golem-security    | low      | Go crypto material flows into a crypto sink                        |
 | GOLEM-SEC-003  | golem-security    | low      | Go component has a cryptographic finding                           |
+| GOLEM-SEC-008  | golem-security    | low      | Go component sets a custom TLS root CA pool                        |
+| GOLEM-SEC-009  | golem-security    | medium   | Go component installs a custom certificate verification callback   |
+| GOLEM-SEC-010  | golem-security    | high     | Go component sets InsecureSkipVerify together with custom verification |
+| GOLEM-SEC-011  | golem-security    | low      | Go component appends an embedded PEM bundle to an x509 pool        |
 | GOLEM-SEC-004  | golem-security    | low      | Go module uses a local replacement in analyzed source              |
 | GOLEM-PERF-001 | golem-performance | low      | Go project crosses a native code boundary                          |
 | GOLEM-PERF-002 | golem-performance | low      | Go project relies on generated or embedded build inputs            |
@@ -668,6 +673,27 @@ Rules that evaluate cryptographic assets in a CBOM for weak or deprecated algori
 | CBS-002 | high     | Algorithm uses ECB mode, or CBC without authenticated encryption                     |
 | CBS-003 | high     | Symmetric security level below 128 bits or RSA private key below 2048 bits           |
 | CBS-004 | critical | Outdated TLS or DTLS protocol version such as SSL, TLS 1.0, or TLS 1.1               |
+| CBC-003 | high     | Certificate or key SPKI SHA-256 is one of the eight intermediates Go 1.27.3/1.26.10 distrust (CVE-2026-111943) |
+| CBC-004 | high     | Certificate issued under a Go-distrusted key, by `issuerSpkiSha256` or `authorityKeyId` match |
+| CBC-005 | low      | Classical-only CA certificate valid past the 2035-01-01 post-quantum cutoff (NIST IR 8547, initial public draft) |
+| CBC-006 | medium   | Post-quantum public key certified with a classical signature |
+| CBC-007 | low      | Key or signature algorithm known only by its dotted OID (composite or pre-standard) |
+
+CBC-005 and CBC-006 decide "classical" from the certificate's key and
+signature algorithm OIDs: the same set of OIDs whose algorithm components
+carry `nistQuantumSecurityLevel: 0`. An algorithm with no known OID (reported
+by CBC-007) is not counted as classical by CBC-005.
+
+### `go-security`
+
+Rules for Go binaries in container and rootfs BOMs.
+
+| Rule       | Severity | Description                                                     |
+| ---------- | -------- | --------------------------------------------------------------- |
+| GO-TLS-001 | high     | Go binary built with a toolchain lacking the CVE-2026-111943 distrust list (before go1.26.10, go1.27.0–go1.27.2, and all older lines; release candidates of newer lines carry the fix) |
+
+Custom SPKI deny lists are documented with an example in
+`docs/cbom-custom-spki-denylist.yaml`, loaded via `--bom-audit-rules-dir`.
 
 ### `cbom-compliance`
 
@@ -675,7 +701,8 @@ Rules that evaluate certificate assets in a CBOM for expiry and trust-validation
 
 | Rule    | Severity | Description                                       |
 | ------- | -------- | ------------------------------------------------- |
-| CBC-001 | high     | Certificate has expired or is close to expiration |
+| CBC-001 | high     | Certificate's `notValidAfter` is in the past (compared with `$now()` at audit time) |
+| CBC-002 | medium   | Certificate expires within 30 days |
 
 ## Writing custom rules
 

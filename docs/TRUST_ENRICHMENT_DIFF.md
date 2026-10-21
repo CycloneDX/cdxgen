@@ -183,3 +183,68 @@ Get-Content old-bom.json | ConvertFrom-Json | ConvertTo-Json -Depth 100 | Set-Co
 Get-Content new-bom.json | ConvertFrom-Json | ConvertTo-Json -Depth 100 | Set-Content $env:TEMP\new-bom.sorted.json
 Compare-Object (Get-Content $env:TEMP\old-bom.sorted.json) (Get-Content $env:TEMP\new-bom.sorted.json)
 ```
+
+## 6) Certificate identity changes (2026-10)
+
+The certificate model was rebuilt around the certificate's own identity
+instead of the file it was found in. Three changes are visible in existing
+BOMs:
+
+**bom-refs are keyed by the certificate hash, not the file hash.** Two
+different certificates in one bundle used to collide when they shared a CN
+(all but one was silently dropped); now every certificate keeps its own
+component wherever it appears.
+
+```diff
+-  "bom-ref": "crypto/certificate/Demo%20Root%20A@sha256:7d5015eaa04e55a6e35146dc395745053c2edbbe9cc8caf0e3e99d1696c056db"
++  "bom-ref": "crypto/certificate/Demo%20Root%20A@sha256:a8f6f5f67c8cfa4a8399b2eeba16246978c13ca3b23a0179b06afa7138af864e"
+```
+
+The old ref hashed the containing file (so `Demo Root A` and `Demo Root B`
+from one bundle shared a ref); the new ref hashes the certificate's DER. The
+`version` field and `cdx:crypto:fingerprint` follow the same value, and the
+fingerprint property is now lowercase hex, matching every other digest in the
+BOM (CycloneDX 1.7's `fingerprint` field remains the spec's uppercase-tolerant
+form; producers and consumers match case-insensitively).
+
+**Serial numbers are lowercase hex without padding.** trustinspector report-1
+emitted the serial in decimal; the `certificateProperties.serialNumber` is now
+`serialHex` (e.g. `6a8063a1…`), with no colons and no DER zero padding.
+
+**Every certificate gains a public-key companion keyed by SPKI SHA-256**, so
+cross-signed twins share one key component, plus algorithm components for the
+key and signature algorithms:
+
+```json
+{
+  "type": "cryptographic-asset",
+  "bom-ref": "crypto/public-key/RSA-2048@spki-sha256:eb75b9659717d01b12340f8cd402384d80c5af97861b3f81d2924ccdfe5257a3",
+  "name": "RSA-2048",
+  "cryptoProperties": {
+    "assetType": "related-crypto-material",
+    "relatedCryptoMaterialProperties": {
+      "type": "public-key",
+      "size": 2048,
+      "format": "SPKI",
+      "fingerprint": { "alg": "SHA-256", "content": "eb75b965…" }
+    }
+  },
+  "properties": [
+    { "name": "cdx:crypto:spkiSha256", "value": "eb75b965…" },
+    { "name": "cdx:crypto:spkiSha256Base64", "value": "63W5ZZ…" }
+  ]
+}
+```
+
+At spec version 1.6 the downgrade maps
+`relatedCryptographicAssets` to the deprecated `subjectPublicKeyRef` and
+`signatureAlgorithmRef`, drops `certificateExtensions` and the public-key
+`fingerprint` object, and keeps every matching fact as a `cdx:crypto:`
+property.
+
+The source-directory scan (`--include-crypto` without a container) also
+changed behaviour: private keys, GPG keys and unreadable keystores are no
+longer labelled `assetType: certificate`. A PEM private key becomes
+`related-crypto-material` with `type: private-key` and only its header format;
+a GPG key becomes `related-crypto-material` with `type: public-key`; an
+unreadable keystore carries `cdx:crypto:keystoreReadable=false`.

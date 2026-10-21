@@ -455,7 +455,7 @@ export const DEBUG_MODE =
 7. If updating OSQuery table metadata in `data/queries*.json` (for example `purlType` or `componentType`), review all platform variants (`queries.json`, `queries-win.json`, and `queries-darwin.json`) and keep shared table entries aligned.
 8. Always consider adding/expanding `repotests.yml` coverage with a representative public repository for the ecosystem change; if a stable public repo is not practical, add fixture-backed repo tests under `test/data/` and exercise them from `repotests.yml`.
 9. For container/rootfs or OBOM feature work, also review the companion integration surfaces that usually need to stay aligned: `lib/managers/binary.js`, `lib/managers/binary.poku.js`, `lib/managers/binary.e2e.poku.js`, `lib/stages/postgen/auditBom.poku.js`, `ci/dockertests.sh`, `ci/assertions.sh`, `data/component-tags.json`, `bin/repl.js`, and any relevant docs/rules.
-10. For CBOM source-analysis work, keep `lib/inventory/analyzer.js`, `lib/inventory/analyzer.poku.js`, `lib/inventory/cbomutils.js`, and the `createCryptoCertsBom()` path in `lib/cli/index.js` aligned. The analyzer is intentionally lightweight, so prefer conservative constant propagation over broad speculative inference.
+10. For CBOM source-analysis work, keep `lib/inventory/analyzer.js`, `lib/inventory/analyzer.poku.js`, `lib/inventory/cbomutils.js`, and the `createCryptoCertsBom()` path in `lib/cli/managedBom.js` aligned. The analyzer is intentionally lightweight, so prefer conservative constant propagation over broad speculative inference.
 
 ---
 

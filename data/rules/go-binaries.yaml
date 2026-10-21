@@ -1,0 +1,46 @@
+# Go binary toolchain rules
+# Category: go-security
+# Evaluates the cdx:go:buildVersion property recorded for executable file
+# components during container/rootfs scans.
+
+- id: GO-TLS-001
+  name: "Go binary built with a toolchain that lacks the CVE-2026-111943 distrust list"
+  description: "Go links its standard library statically, so a binary keeps the trust behaviour of the toolchain it was built with. Releases before go1.26.10, and go1.27.0 through go1.27.2, lack the eight SPKI hashes Go uses to distrust the CVE-2026-111943 intermediate CA keys, and older release lines (1.25 and earlier) will never receive them. Release candidates of newer lines (go1.28rc1) already carry the fix."
+  severity: high
+  category: go-security
+  dry-run-support: full
+  condition: |
+    components[
+      type = 'file'
+      and $hasProp($, 'cdx:go:buildVersion')
+      and (
+        $prop($, 'cdx:go:buildVersion') = 'unknown-pre-1.18'
+        or (
+          $m := $match($prop($, 'cdx:go:buildVersion'), /^go(\d+)\.(\d+)(?:\.(\d+))?/);
+          $m != null
+          and $number($m.groups[0]) = 1
+          and (
+            $number($m.groups[1]) < 26
+            or (
+              $number($m.groups[1]) = 26
+              and ($m.groups[2] != null ? $number($m.groups[2]) : 0) < 10
+            )
+            or (
+              $number($m.groups[1]) = 27
+              and ($m.groups[2] != null ? $number($m.groups[2]) : 0) < 3
+            )
+          )
+        )
+      )
+    ]
+  location: |
+    {
+      "bomRef": $firstNonEmpty($."bom-ref", bom.serialNumber)
+    }
+  message: "Go binary '{{ name }}' was built with {{ $prop($, 'cdx:go:buildVersion') }}, which lacks the CVE-2026-111943 distrust list"
+  mitigation: "Rebuild the binary with go1.26.10, go1.27.3 or newer so its crypto/x509 rejects the distrusted intermediate CA keys."
+  evidence: |
+    {
+      "buildVersion": $prop($, 'cdx:go:buildVersion'),
+      "srcFile": $prop($, 'internal:SrcFile')
+    }

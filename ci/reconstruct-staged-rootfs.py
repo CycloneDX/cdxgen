@@ -17,18 +17,18 @@ import sys
 import tarfile
 from pathlib import Path, PurePosixPath
 
+# Mirrors EXTRACT_EXCLUDE_PATHS in lib/managers/docker.js. CA-store paths are
+# deliberately absent there: their regular files are extracted (only symlink
+# and hardlink entries are dropped, by type), so the same certificate files
+# appear in the archive scan and in this reconstructed rootfs.
 EXTRACT_EXCLUDE_PATHS = (
     "etc/machine-id",
     "etc/gshadow",
     "etc/shadow",
     "etc/passwd",
-    "etc/ssl/certs",
-    "etc/pki/ca-trust",
     "usr/lib/systemd/",
     "usr/lib64/libdevmapper.so",
     "usr/sbin/",
-    "cacerts",
-    "ssl/certs",
     "logs/",
     "dev/",
     "proc/",
@@ -38,7 +38,6 @@ EXTRACT_EXCLUDE_PATHS = (
     "usr/share/man/",
     "usr/share/icons/",
     "usr/share/i18n/",
-    "var/lib/ca-certificates",
     "root/.gnupg",
     "root/.dotnet",
     "usr/share/licenses/device-mapper-libs",

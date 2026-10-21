@@ -25,6 +25,8 @@ import {
   printAiBomPedigree,
   printAiBomVariants,
   printCallStack,
+  printCertificateChain,
+  printCertificatesTable,
   printDependencyTree,
   printFormulation,
   printOccurrences,
@@ -1216,6 +1218,32 @@ cdxgenRepl.defineCommand("cryptos", {
   action() {
     if (sbom) {
       printTable(sbom, ["cryptographic-asset"]);
+    } else {
+      console.log(
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM",
+      );
+    }
+    this.displayPrompt();
+  },
+});
+cdxgenRepl.defineCommand("certs", {
+  help: "print the certificate components with role, issuer, expiry and SPKI prefix",
+  action() {
+    if (sbom) {
+      printCertificatesTable(sbom);
+    } else {
+      console.log(
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM",
+      );
+    }
+    this.displayPrompt();
+  },
+});
+cdxgenRepl.defineCommand("certchain", {
+  help: "show the issuer chain above a certificate and the certificates issued under it (.certchain <bom-ref|spki-prefix|cert-prefix>)",
+  action(selector) {
+    if (sbom) {
+      printCertificateChain(sbom, selector);
     } else {
       console.log(
         "⚠ No BOM is loaded. Use .import command to import an existing BOM",
