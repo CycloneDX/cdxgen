@@ -105,7 +105,7 @@
     "smol-toml": "npm:smol-toml@1.9.1",
     "@cdxgen/safer-exec": "npm:@cdxgen/safer-exec@1.0.1",
     "@cdxgen/cdxgen-plugins-bin": "npm:@cdxgen/cdxgen-plugins-bin@4.1.1",
-    "undici": "npm:undici@8.11.2",
+    "undici": "npm:undici@8.12.2",
     "@appthreat/atom-parsetools": "npm:@appthreat/atom-parsetools@1.10.2"
   }
 }
