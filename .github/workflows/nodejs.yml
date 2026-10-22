@@ -72,6 +72,22 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           persist-credentials: false
+      # binary-builds.yml takes the runtime bundled into the SEA binaries from
+      # .nvmrc alone, and Dockerfile-ppc64 installs its own pinned Node.js, so a
+      # Node.js bump that misses either one ships the old runtime.
+      - name: Check Node.js pins agree
+        run: |
+          NVMRC=$(tr -d '[:space:]' < .nvmrc)
+          NODE_24=$(awk 'FNR==2 {print $1}' .versions/node_24)
+          PPC64=$(sed -n 's/^ARG NODE_VERSION=//p' ci/Dockerfile-ppc64)
+          if [ "$NVMRC" != "$NODE_24" ]; then
+            echo "::error file=.nvmrc::.nvmrc is $NVMRC but .versions/node_24 is $NODE_24"
+            exit 1
+          fi
+          if [ "$PPC64" != "$NVMRC" ]; then
+            echo "::error file=ci/Dockerfile-ppc64::Dockerfile-ppc64 NODE_VERSION is $PPC64 but .nvmrc is $NVMRC"
+            exit 1
+          fi
       - id: read-versions
         run: |
           VERSIONS=[`awk 'BEGIN {ORS=""}; NR>2 && NR%2==0 {print ","}; FNR==2 {print "'\''"$1"'\''"}' .versions/node_*`]
