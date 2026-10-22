@@ -1,0 +1,27 @@
+ci/images/alpine/Dockerfile.php8.4
+  s_71f301a0b01dc6::t_df210108ee9e0d 2
+ci/images/alpine/Dockerfile.php8.5
+  s_71f301a0b01dc6::t_6bfbb50341d20d 2
+ci/images/debian/Dockerfile.php8.3
+  s_71f301a0b01dc6::t_b9224daf882d2f 2
+ci/images/debian/Dockerfile.php8.4
+  s_71f301a0b01dc6::t_76148fe7adb287 2
+ci/images/debian/Dockerfile.php8.5
+  s_71f301a0b01dc6::t_a12b506b959644 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a86d8fe83b75859a95c3a9c2659d348565c23e65",
+  "prompts": {},
+  "sessions": {
+    "s_71f301a0b01dc6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ee53f96-6c40-480c-9a0d-102759731f8d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
