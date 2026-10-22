@@ -132,13 +132,51 @@ jq -r --arg spki "<spki-hex>" '.components[]
 or with cdxi: `.certs` lists every certificate with its occurrence count;
 `.certchain <spki-prefix>` walks the verified chain above a certificate.
 
+## Where certificates are found
+
+| Producer | Covers | Notes |
+|---|---|---|
+| Source scan (`createCryptoCertsBom`) | certificate, key and keystore files under the scanned paths, Kubernetes TLS secrets, Android `network_security_config.xml` pins | With the trustinspector plugin (report-2) it parses the files; otherwise cdxgen's own parser does |
+| trustinspector `rootfs` | CA stores, blocklists, server configs, Java truststores, language bundles of a rootfs or container | Plugin only |
+| Rootfs fallback (`lib/inventory/rootfsCerts.js`) | the same locations as the plugin, plus Kubernetes secrets and Android pins | Runs for `-t rootfs` and container scans **only when no plugin is available**, so nothing is counted twice. Symlinks are skipped, only regular files are opened, files over 16 MiB are skipped, and a walk stops at 20,000 files, 500,000 entries or depth 12. Does not read `etc/ca-certificates.conf` (`ca-deselected`) or GPG keyrings |
+| Observed TLS (tracebom) | chains a server presented | see Q3 |
+
+**Container layers.** Whiteouts are applied while the layers are extracted:
+`.wh.<name>` removes `<name>` and `.wh..wh..opq` empties a directory, both for
+content from earlier layers only. A CA removed in a later layer is therefore
+not inventoried. A whiteout path with `..` segments is ignored, and a symlink
+in the way stops a removal, so a hostile layer cannot delete anything outside
+the extraction directory. Package databases follow the same rule: a replaced
+`var/lib/dpkg/status` is read at its final content and a removed one is absent.
+
+**Keystores.** A keystore (JKS, PKCS#12, JCEKS) always gets a
+`related-crypto-material` component, wherever it is read. One the plugin could
+read carries no `cdx:crypto:keystoreReadable` property and depends on the
+certificates it holds; one that cannot be read is `keystoreReadable=false` with
+no certificates. Passwords and keystore contents are never written to the BOM.
+
+**Kubernetes secrets.** `kubernetes.io/tls` secrets are read from `data`
+(base64) and `stringData` (plain PEM); `stringData` wins when both define a
+key, as in Kubernetes. Each key has its own occurrence
+(`<file>#data.tls.crt`, `<file>#stringData.ca.crt`); `internal:SrcFile` keeps
+the file path and `cdx:crypto:k8sSecretName` the secret's name. `tls.key` is
+never read. A malformed document in a multi-document file does not hide the
+others.
+
+**One certificate, several producers.** A certificate found by more than one
+producer (disk, observed TLS, container) is one component whose
+`cdx:crypto:sourceType` property is repeated, one entry per producer, sorted
+and deduplicated. `$hasProp($, 'cdx:crypto:sourceType', 'observed-tls')` and
+`$propValues($, 'cdx:crypto:sourceType')` see every value; `$prop` returns the
+first.
+
 ## Audit rules
 
 `--bom-audit --bom-audit-categories cbom` runs:
 
 | Rule | Fires when |
 |---|---|
-| `CBC-001`/`CBC-002` | a certificate expired, or expires within 30 days |
+| `CBC-001`/`CBC-002` | a certificate expired, or expires within 30 days. A date-only `notValidAfter` (`2026-01-31`) is valid through the end of that day in UTC; values that do not parse are skipped |
 | `CBC-003` | a certificate or key's SPKI SHA-256 is one of the eight Go-distrusted hashes |
 | `CBC-004` | a certificate was issued under a Go-distrusted key (`issuerSpkiSha256` or `authorityKeyId` match) |
 | `CBC-005` | a CA certificate whose key and signature are both classical stays valid past 2035-01-01 (NIST IR 8547, initial public draft) |
