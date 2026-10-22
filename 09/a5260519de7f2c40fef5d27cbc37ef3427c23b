@@ -1,0 +1,26 @@
+lib/inventory/rootfsCerts.js
+  h_0926447d100ad2 1-426
+lib/inventory/rootfsCerts.poku.js
+  h_0926447d100ad2 1-201
+lib/managers/binary.js
+  h_0926447d100ad2 68,1710-1725
+test/data/cbom-certs/mk-rootfs.sh
+  h_0926447d100ad2 1-18
+test/data/cbom-certs/rootfs/app/res/xml/network_security_config.xml
+  h_0926447d100ad2 1-9
+test/data/cbom-certs/rootfs/etc/ssl/certs/ca-certificates.crt
+  h_0926447d100ad2 1-63
+test/data/cbom-certs/rootfs/var/run/secrets/tls/tls-secret.yaml
+  h_0926447d100ad2 1-7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "09a5260519de7f2c40fef5d27cbc37ef3427c23b",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
