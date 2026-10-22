@@ -1,0 +1,18 @@
+lib/inventory/phpBuildInfo.js
+  h_0926447d100ad2 19-21,33-34,47-53,56,62-85,178,309-413
+lib/inventory/phpBuildInfo.poku.js
+  h_0926447d100ad2 20-31,286-438
+lib/managers/binary.js
+  h_0926447d100ad2 70,72-73,3807,3834,3836-3839
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4179e5d86749f1029b7dc686a848f627decb64dd",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
