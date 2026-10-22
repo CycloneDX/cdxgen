@@ -557,7 +557,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up JDK ${{ matrix.java-version }}
-        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6  # v6.0.1
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6.1.0
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
@@ -637,11 +637,11 @@ jobs:
           ~/.swiftly/bin/swiftly init --quiet-shell-followup && \
           . ~/.swiftly/env.sh && \
           hash -r
-      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a  # v1.329.0
+      - uses: ruby/setup-ruby@e1bd6146574da5e0795075b5319b300edb30c5b0  # v1.333.0
         with:
           ruby-version: '3.4.9'
       - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:
           python-version: '3.13'
       - name: setup-cocoapods # Not using an action, as it is not implemented for windows!
@@ -1010,7 +1010,7 @@ jobs:
           bin/cdxgen.js -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo-safe.json --feature-flags safe-pip-install --fail-on-error
         shell: bash
       - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:
           python-version: '3.12'
       - name: repotests blint (--no-install-deps)
@@ -1508,7 +1508,7 @@ jobs:
       # JDK 21 for the gradle steps below (expo-test). The scala repotests that
       # originally needed it moved to the dedicated scala-repotests job.
       - name: Set up JDK
-        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6  # v6.0.1
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6.1.0
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -1753,7 +1753,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up JDK
-        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6  # v6.0.1
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6.1.0
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -1772,7 +1772,7 @@ jobs:
           node-version-file: .nvmrc
           package-manager-cache: false
       - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:
           python-version: '3.13'
       - name: Trim CI agent
@@ -1880,7 +1880,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up JDK
-        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6  # v6.0.1
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6.1.0
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -1960,7 +1960,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up JDK
-        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6  # v6.0.1
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6.1.0
         with:
           distribution: 'temurin'
           java-version: '24'
@@ -2017,7 +2017,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up JDK ${{ matrix.java-version }}
-        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6  # v6.0.1
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6.1.0
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
@@ -2032,7 +2032,7 @@ jobs:
           node-version-file: .nvmrc
           package-manager-cache: false
       - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:
           python-version: '3.13'
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
@@ -2522,7 +2522,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up JDK
-        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6  # v6.0.1
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6.1.0
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -2566,7 +2566,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up JDK
-        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6  # v6.0.1
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6.1.0
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -2640,7 +2640,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up JDK ${{ matrix.java-version }}
-        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6  # v6.0.1
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6.1.0
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
@@ -2696,10 +2696,10 @@ jobs:
           CI: true
           CDXGEN_TEMP_DIR: ${{ runner.temp }}/cdxgen-repotests
       - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:
           python-version: '3.13'
-      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a  # v1.329.0
+      - uses: ruby/setup-ruby@e1bd6146574da5e0795075b5319b300edb30c5b0  # v1.333.0
         with:
           ruby-version: '3.4.9'
       - name: pip install custom-json-diff
@@ -2774,7 +2774,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Setup java
-        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6  # v6.0.1
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6.1.0
         with:
           distribution: temurin
           java-version: 21
