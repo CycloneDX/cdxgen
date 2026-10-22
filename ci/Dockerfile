@@ -18,6 +18,11 @@ ARG NODE_VERSION=24.22.1
 ARG RUBY_VERSION=4.0.7
 ARG JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
 ARG SCALA_VERSION=3.8.4
+# pecl.php.net no longer answers the release lookup `pecl install timezonedb`
+# relies on (rest/r/timezonedb/allreleases2.xml is a 404), so the release
+# tarball is pinned by checksum and installed from a local file.
+ARG TIMEZONEDB_VERSION=2026.5
+ARG TIMEZONEDB_SHA256=affcad3175b7d2d3dde359ca2737addc8c8c95de355c2c73a2bab69bbbc2e012
 
 ENV GOPATH=/opt/app-root/go \
     JAVA_VERSION=$JAVA_VERSION \
@@ -129,8 +134,10 @@ RUN set -e; \
     && npm install --global corepack@latest \
     && npm install -g node-gyp @microsoft/rush --omit=dev \
     && npx node-gyp install \
-    && pecl channel-update pecl.php.net \
-    && pecl install timezonedb \
+    && curl -fsSLo /tmp/timezonedb.tgz "https://pecl.php.net/get/timezonedb-${TIMEZONEDB_VERSION}.tgz" \
+    && echo "${TIMEZONEDB_SHA256}  /tmp/timezonedb.tgz" | sha256sum -c - \
+    && pecl install /tmp/timezonedb.tgz \
+    && rm /tmp/timezonedb.tgz \
     && echo 'extension=timezonedb.so' >> /etc/php.ini \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && php composer-setup.php \
     && mv composer.phar /usr/local/bin/composer \
