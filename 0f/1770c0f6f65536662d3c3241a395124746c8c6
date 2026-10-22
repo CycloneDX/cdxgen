@@ -1,0 +1,21 @@
+.github/workflows/nodejs.yml
+  s_4415ea0c544c7e::t_ec2e8607289c8a 10,29,58-60,64,69-72
+ci/Dockerfile-ppc64
+  s_4415ea0c544c7e::t_fe7cd9854ca143 22-25,52,57,62,68,70-76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0f1770c0f6f65536662d3c3241a395124746c8c6",
+  "prompts": {},
+  "sessions": {
+    "s_4415ea0c544c7e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3b5e6c99-e27c-4411-a596-d9cb5a7bfec6",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
