@@ -1,0 +1,16 @@
+lib/inventory/osinfo.js
+  h_0926447d100ad2 283-287,289-291,317-318,377-382,384-404,407,410-413
+lib/inventory/osinfo.poku.js
+  h_0926447d100ad2 147-151,154-163,171-187,200,210-300
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "eb8f71aa127cbb016a465b7675cc6e59e327fd0a",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
