@@ -46,6 +46,8 @@ Observed categories in the generated OBOM included:
 - `xprotect_entries`
 - `xprotect_meta`
 
+Homebrew packages (`homebrew_packages`) are `pkg:brew/<name>@<version>` components, formulae and casks alike, with `cdx:homebrew:type` set to `formula` or `cask`. They used to be `pkg:swid` components with the Cellar or Caskroom path as the subpath; a policy that selected them by that purl type must select `pkg:brew` now.
+
 ## Quick run
 
 ```bash
