@@ -238,8 +238,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       undici:
-        specifier: 8.12.2
-        version: 8.12.2
+        specifier: 8.12.3
+        version: 8.12.3
       walk-up-path:
         specifier: 4.0.0
         version: 4.0.0
@@ -254,8 +254,8 @@ importers:
         specifier: 2.5.15
         version: 2.5.15
       esmock:
-        specifier: 2.7.9
-        version: 2.7.9
+        specifier: 2.8.0
+        version: 2.8.0
       poku:
         specifier: 4.5.0
         version: 4.5.0
@@ -276,8 +276,8 @@ importers:
         specifier: 2.16.0
         version: 2.16.0
       '@cdxgen/cdx-hbom':
-        specifier: 0.6.0
-        version: 0.6.0
+        specifier: 0.7.0
+        version: 0.7.0
       '@cdxgen/cdx-proto':
         specifier: 2.3.0
         version: 2.3.0
@@ -492,8 +492,8 @@ packages:
   '@bufbuild/protobuf@2.16.0':
     resolution: {integrity: sha512-FWa0sPlqYGJgpTs6OxBRcL/AW4JT0OIO+W1ajerluoTVh8CV0B7XM1qsNCRgnkSCkRCgOICKHRQlY17jrsm0+Q==, tarball: https://registry.npmjs.org/@bufbuild/protobuf/-/protobuf-2.16.0.tgz}
 
-  '@cdxgen/cdx-hbom@0.6.0':
-    resolution: {integrity: sha512-bP8FbTlv9CYyAPdNfX9QhfMz/HKOKHj6hQ6ffBO6MR0EoytcwVPPwU9bzAO8Y49FWuw3BB1MusDE7sQiNXNAEQ==, tarball: https://registry.npmjs.org/@cdxgen/cdx-hbom/-/cdx-hbom-0.6.0.tgz}
+  '@cdxgen/cdx-hbom@0.7.0':
+    resolution: {integrity: sha512-QE4B4wWpTS2MFvHZQ/cFGw1EkQcO7FNbsVLHu1e8vPLi1JabevW8HIbnu6CBo7m246xzhM7BlcUdysQXcJ/yyw==, tarball: https://registry.npmjs.org/@cdxgen/cdx-hbom/-/cdx-hbom-0.7.0.tgz}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -958,8 +958,8 @@ packages:
   esm-env@1.2.2:
     resolution: {integrity: sha512-Epxrv+Nr/CaL4ZcFGPJIYLWFom+YeV1DqMLHJoEd9SYRxNbaFruBwfEX/kkHUJf55j2+TUbmDcmuilbP1TmXHA==, tarball: https://registry.npmjs.org/esm-env/-/esm-env-1.2.2.tgz}
 
-  esmock@2.7.9:
-    resolution: {integrity: sha512-hDJn94mP50HjTzQRw1AW+fPnV3Clv/d4vhfjmHqU9JPckeRilidUwn0LE6SLz07KU7ZxXXRepErsMLui7iRcbQ==, tarball: https://registry.npmjs.org/esmock/-/esmock-2.7.9.tgz}
+  esmock@2.8.0:
+    resolution: {integrity: sha512-sk75FDuOploJ7UpNqe85Zjpw85t02sofuyj0/AIQ7FT/9cNpNx/llgtHvm997Dg7nQGl6i/dd0oOEY/SEgJU+A==, tarball: https://registry.npmjs.org/esmock/-/esmock-2.8.0.tgz}
     engines: {node: '>=14.16.0'}
 
   esrap@2.3.7:
@@ -1293,8 +1293,8 @@ packages:
     engines: {node: '>=16.20.0'}
     hasBin: true
 
-  undici@8.12.2:
-    resolution: {integrity: sha512-XtuDWVdqTLr3NAxm2ly9/hU6kUsJOgGh1RASzMBbsw6aWCOaQzHdW+QQDfdERjfJ2V5vL5pRPa4RetO9UfivDg==, tarball: https://registry.npmjs.org/undici/-/undici-8.12.2.tgz}
+  undici@8.12.3:
+    resolution: {integrity: sha512-+fdndUTwBP86cVjihTp21hZHo7d6oj1c/47XPA3lL8mM0XHs+C4EkcjmgRsFnFk2f/UONGDy9ItBItmXsLOQHw==, tarball: https://registry.npmjs.org/undici/-/undici-8.12.3.tgz}
     engines: {node: '>=22.19.0'}
 
   unpipe@1.0.0:
@@ -1492,7 +1492,7 @@ snapshots:
   '@bufbuild/protobuf@2.16.0':
     optional: true
 
-  '@cdxgen/cdx-hbom@0.6.0':
+  '@cdxgen/cdx-hbom@0.7.0':
     optional: true
 
   '@cdxgen/cdx-proto@2.3.0':
@@ -1885,7 +1885,7 @@ snapshots:
   esm-env@1.2.2:
     optional: true
 
-  esmock@2.7.9: {}
+  esmock@2.8.0: {}
 
   esrap@2.3.7:
     dependencies:
@@ -2273,7 +2273,7 @@ snapshots:
       '@typescript/typescript-win32-arm64': 7.0.2
       '@typescript/typescript-win32-x64': 7.0.2
 
-  undici@8.12.2: {}
+  undici@8.12.3: {}
 
   unpipe@1.0.0:
     optional: true
