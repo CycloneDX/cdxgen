@@ -60,6 +60,10 @@ the .NET host refuses to start it, the logs say
 evidence. Install that .NET runtime, or switch to the self-contained binary or
 the dotnet image.
 
+The BOM's `metadata.tools` names the dosai that produced the evidence, with the
+version that binary reports, so a `DOSAI_CMD` build is recorded as itself. A
+run with no dosai evidence lists no dosai tool.
+
 ## 2) Generate a base .NET SBOM
 
 Enrichment starts from an existing CycloneDX BOM, so produce one first. For a
