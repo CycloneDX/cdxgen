@@ -1,4 +1,8 @@
-FROM ghcr.io/cdxgen/cdxgen:master@sha256:b93020a7f0410ebad9a2e9ee225694c8f312e1fe5c99c0a07ba4b77441950d23
+# npm-release.yml passes the cdxgen image it has just built in the same run, by
+# digest, so a secure image always carries the same cdxgen and Node.js as the
+# image it is tagged alongside. The default only serves local builds.
+ARG BASE_IMAGE=ghcr.io/cdxgen/cdxgen:master@sha256:b93020a7f0410ebad9a2e9ee225694c8f312e1fe5c99c0a07ba4b77441950d23
+FROM ${BASE_IMAGE}
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
