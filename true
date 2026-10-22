@@ -1,2 +1,0 @@
-{"kind":"tool.resolved","ecosystem":"generic","tool":"node","found":"26.7.0","source":"runtime","detail":"The runtime hosting this cdxgen run, recorded for report reproducibility.","timestamp":"2026-09-02T20:10:50.932Z"}
-{"kind":"fallback.engaged","ecosystem":"rust","tool":"cargo","detail":"No Cargo.lock was found beside the manifest, so components carry the declared dependencies without locked versions or the resolved crate graph.","remediationId":"rust.cargo-lock-missing","impact":"transitive-deps","timestamp":"2026-09-02T20:10:50.951Z"}
