@@ -187,6 +187,13 @@ When `CDXGEN_PLUGINS_DIR` points at a packaged plugins directory, cdxgen also lo
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | NUGET_URL | Override NuGet URL. Default is URL from registration hive "RegistrationsBaseUrl/3.6.0" at NuGet V3 API (https://api.nuget.org/v3/index.json). See more at https://learn.microsoft.com/en-us/nuget/api/registration-base-url-resource/ |
 
+### PHP
+
+| Variable     | Description                                                                                                                                                                                                                                                                                                                                                          |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| PHP_CMD      | Override the `php` command cdxgen runs (`-n -v`, which loads no php.ini) to record the PHP of the build host in the BOM's formulation as `pkg:generic/php`. Defaults to `php`. It is used for `--include-formulation` only: the PHP of a container image or an OS scan comes from the files and packages found there.                                                      |
+| COMPOSER_CMD | Override the `composer` command cdxgen runs (`--version --no-plugins --no-scripts --no-interaction`) to record the Composer of the build host in the BOM's formulation as `pkg:generic/composer`. Defaults to `composer`. The PHP path Composer prints is never recorded. This is not one of Composer's own variables; it only changes the command cdxgen runs for this probe. |
+
 ### Pip
 
 | Variable         | Description                                                                                                                                                                                     |

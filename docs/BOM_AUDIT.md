@@ -89,6 +89,7 @@ The categories that work best in dry-run mode are the formulation-centric ones:
 - `host-topology`
 - `mcp-server`
 - `obom-runtime`
+- `php-security`
 - `vscode-extension`
 
 `package-integrity` is only partially covered in dry-run mode. Rules that can be evaluated from the current BOM still run, but predictive upstream analysis is intentionally skipped. `asar-archive` rules are mostly dry-run friendly because cdxgen can still read ASAR headers and file contents natively, recurse into nested archives, and evaluate Electron header-signing metadata in memory, but embedded npm install-script findings remain partial because temp extraction is still blocked.
@@ -556,6 +557,30 @@ When a finding or count summary needs manual follow-up, import the BOM into `cdx
 | CTR-006 | high     | Container image ships dedicated offensive container toolkit         |
 | CTR-007 | medium   | Container image includes seccomp-sensitive namespace escape helper  |
 | CTR-008 | medium   | Container dependency relies on the mutable 'latest' tag             |
+
+### `php-security` — Source-built PHP runtime review
+
+Rules for source-built PHP in container, rootfs and OS (`obom`) BOMs. The
+version comes from the `cdx:php:buildVersion` property on `php`, `php-fpm`,
+`php-cgi`, `phpdbg`, `libphp*.so` and `frankenphp` file components. Only PHP
+that no package manager owns carries it. PHP that dpkg, rpm, apk, Homebrew or
+Chocolatey installed is identified by that package, with the package manager's
+purl, and is left to the vulnerability database, because distro backports keep
+the upstream version number: it has neither the property nor a
+`pkg:generic/php` component. The rules never read PHP configuration, so a
+mitigation never suppresses a finding, and never look at the `php` that
+`--include-formulation` records for the build host.
+
+| Rule        | Severity | Description |
+| ----------- | -------- | ----------- |
+| PHP-RCE-001 | critical | A network-reachable PHP SAPI (`fpm`, `cgi`, `libphp`, `frankenphp`) older than 8.2.35 / 8.3.36 / 8.4.27 / 8.5.12, affected by CVE-2026-109618 and CVE-2026-109619 (unauthenticated RCE) |
+| PHP-RCE-002 | medium   | The same vulnerable build in `cli` or `phpdbg`; not network-reachable itself, but its web SAPIs are |
+
+A pre-release of 8.6 (`8.6.0alpha*`, `8.6.0beta*`, `8.6.0RC1`–`RC3`) is
+flagged because the fix landed in `php-8.6.0RC4`; RC4 and later are not.
+Builds from the php-src `PHP-<M.m>-CVE-2026-109618-109619` backport branches
+keep their old version number, so 8.1-and-older findings are false positives
+for those builds.
 
 ### `vscode-extension` — VS Code Extension Security
 

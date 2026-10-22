@@ -156,3 +156,19 @@ cdxgen /absolute/path/to/rootfs -t rootfs -o rootfs-bom.json --bom-audit --bom-a
 4. Review the metadata annotation summary and `cdx:container:unpackagedExecutableCount` / `cdx:container:unpackagedSharedLibraryCount` properties to gauge how much native inventory sits outside OS package ownership.
 5. Import the BOM into `cdxi` and run `.unpackagedbins` plus `.unpackagedlibs` to inspect those native files directly.
 6. Compare the offline findings with your image baseline and package-ownership expectations before promotion.
+
+## 12) Unpackaged PHP workflow
+
+osquery's package tables list what dpkg, rpm and the like installed, so a PHP built from source, such as the Docker Official `php` images, FrankenPHP or a `/usr/local` build, is not in them. An OBOM reads the version from the files themselves:
+
+```bash
+cdxgen -t os -o obom.json --bom-audit --bom-audit-categories php-security
+jq -r '.components[] | select(.type=="file") | select((.properties // [])[] | select(.name=="cdx:php:buildVersion"))
+  | [.name, ([.properties[] | select(.name=="cdx:php:sapi")][0].value), ([.properties[] | select(.name=="cdx:php:buildVersion")][0].value)] | @tsv' obom.json
+```
+
+1. The probe looks in fixed directories, one level deep, and nowhere else: `/usr/local/{bin,sbin}`, `/usr/local/lib`, the Apache module directories (`/usr/lib/apache2/modules`, `/usr/lib/httpd/modules`, `/usr/lib64/httpd/modules`) and `/opt/<name>/{bin,sbin}` on Linux; `/usr/local/{bin,sbin}` and `/opt/homebrew/{bin,sbin}` on macOS; `C:\php*`, `C:\tools\php*` and `%ProgramFiles%\PHP*` on Windows. PHP in `/usr/bin` is not a candidate: a distro package owns it, and its package is its identity. At most 64 files are looked at, and nothing is executed.
+2. Before a file is opened, the package databases are asked whether they own it: dpkg's lists, the apk database, osquery's `rpm_package_files`, a link into a Homebrew `Cellar`, a Nix or Guix store, and, on Windows, Chocolatey's `php` package under `C:\tools`. Owned PHP produces nothing new; its package row is its identity.
+3. What no package owns becomes a `file` component with `cdx:php:buildVersion`, `cdx:php:buildVersionSource` and `cdx:php:sapi`, plus one `pkg:generic/php@<version>` platform component with a CPE per version. That is what lets `PHP-RCE-001` and `PHP-RCE-002` fire on a host. An OBOM has no dependency graph, so unlike a container BOM it does not link the files to the runtime with edges.
+4. A package database that exists but cannot be read, for example because the scan does not run as root, leaves ownership unknown. The probe then emits nothing for those files, and says so in the thought log. Re-run as a user that can read the database.
+5. PHP bundled inside an application (MAMP, Laravel Herd), PHP deeper under `/opt` than `/opt/<name>/bin` (Remi SCL, cPanel `ea-php`), and Windows installs outside the roots above are not probed.

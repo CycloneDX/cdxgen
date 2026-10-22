@@ -134,6 +134,8 @@ export declare let LEIN_CMD: string;
 export declare let CDXGEN_TEMP_DIR: string;
 export declare const SWIFT_CMD: any;
 export declare const RUBY_CMD: any;
+export declare const PHP_CMD: any;
+export declare const COMPOSER_CMD: any;
 export declare const PYTHON_EXCLUDED_COMPONENTS: string[];
 export declare const PROJECT_TYPE_ALIASES: {
     java: string[];
@@ -1327,65 +1329,25 @@ export declare function parseComposerJson(composerJsonFile: string): Object;
  *
  * @param {string} pkgLockFile composer.lock file
  * @param {array} rootRequires require section from composer.json
+ * @returns {{pkgList: Object[], dependenciesList: Object[], rootList: Object[], platformProperties: {name: string, value: string}[]}|Array}
+ *   The locked packages, the dependency edges between them, the packages the
+ *   root requires, and the lock's `platform`, `platform-dev` and
+ *   `platform-overrides` entries as `cdx:composer:*` properties. The platform
+ *   entries are constraints and assumed versions, not the PHP that runs; the
+ *   caller puts them on the module component. Every locked package carries its
+ *   own `php`, `hhvm`, `ext-*` and `lib-*` requirements as
+ *   `cdx:composer:require:<name>` properties. A lock that is not valid JSON
+ *   gives an empty array.
  */
-export declare function parseComposerLock(pkgLockFile: string, rootRequires: array): never[] | {
-    pkgList: {
-        group: any;
-        name: any;
-        purl: string;
-        "bom-ref": string;
-        version: any;
-        repository: any;
-        license: any;
-        description: any;
-        scope: string;
-        properties: {
-            name: string;
-            value: string;
-        }[];
-        evidence: {
-            identity: {
-                field: string;
-                confidence: number;
-                methods: {
-                    technique: string;
-                    confidence: number;
-                    value: string;
-                }[];
-            };
-        };
+export declare function parseComposerLock(pkgLockFile: string, rootRequires: array): {
+    pkgList: Object[];
+    dependenciesList: Object[];
+    rootList: Object[];
+    platformProperties: {
+        name: string;
+        value: string;
     }[];
-    dependenciesList: {
-        ref: string;
-        dependsOn: any[];
-    }[];
-    rootList: {
-        group: any;
-        name: any;
-        purl: string;
-        "bom-ref": string;
-        version: any;
-        repository: any;
-        license: any;
-        description: any;
-        scope: string;
-        properties: {
-            name: string;
-            value: string;
-        }[];
-        evidence: {
-            identity: {
-                field: string;
-                confidence: number;
-                methods: {
-                    technique: string;
-                    confidence: number;
-                    value: string;
-                }[];
-            };
-        };
-    }[];
-};
+} | any[];
 /**
  * Method to execute dpkg --listfiles to determine the files provided by a given package
  *
@@ -1970,10 +1932,13 @@ export declare function collectExecutables(basePath: any, binPaths: any, exclude
  * @param ldConf {String} Config file used by ldconfig to locate additional paths
  * @param ldConfDirPattern {String} Config directory that can contain more .conf files for ldconfig
  * @param excludePaths {Array[String]} Container-relative paths that should be excluded from the result set
+ * @param extraLibGlobs {Array[String]} Extra container-relative globs for files
+ *   the default paths miss, such as libphp*.so under Apache's modules
+ *   directory. The existing globs are unchanged; this adds candidates only.
  *
  * @return {Array[String]} List of executables
  */
-export declare function collectSharedLibs(basePath: any, libPaths: any, ldConf: string, ldConfDirPattern: string, excludePaths?: any): any;
+export declare function collectSharedLibs(basePath: any, libPaths: any, ldConf: string, ldConfDirPattern: string, excludePaths?: any, extraLibGlobs?: any): any;
 /**
  * Get information about the runtime.
  *

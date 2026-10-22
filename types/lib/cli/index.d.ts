@@ -267,10 +267,12 @@ export declare function createCryptoCertsBom(path: string, options: Object): Pro
  * @param {Array} components Components
  * @param {Object} parentComponent Parent component
  * @param {Array} dependencies Dependencies
+ * @param {Array} [metadataProperties] Properties for the metadata block, from
+ *   generators whose manifest has no component to carry them
  *
  * @returns {Object} Object including BOM Json
  */
-export declare function dedupeBom(options: Object, components: any[], parentComponent: Object, dependencies: any[]): Object;
+export declare function dedupeBom(options: Object, components: any[], parentComponent: Object, dependencies: any[], metadataProperties?: any[]): Object;
 /**
  * Function to create bom string for all languages
  *
