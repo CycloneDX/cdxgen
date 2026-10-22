@@ -1,0 +1,34 @@
+jsr.json
+  s_4415ea0c544c7e::t_91edd92cf4b118 3
+deno.json
+  s_4415ea0c544c7e::t_91edd92cf4b118 3
+package.json
+  s_4415ea0c544c7e::t_91edd92cf4b118 3
+  s_4415ea0c544c7e::t_70f970b1eda44c 147
+.nvmrc
+  s_4415ea0c544c7e::t_91edd92cf4b118 1
+pyproject.toml
+  s_4415ea0c544c7e::t_91edd92cf4b118 3
+.github/workflows/nodejs.yml
+  s_4415ea0c544c7e::t_2ad291d4d17b16 55-64
+pnpm-lock.yaml
+  s_4415ea0c544c7e::t_586b206c75a188 92-93,624-625,782-783,997-998,1113-1114,1508,1526,1535,1574,1712,1845,1933,2087
+uv.lock
+  s_4415ea0c544c7e::t_4da0bf0f792395 186
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "53443c7a74f645c0be4fbc0b514ac13294787efc",
+  "prompts": {},
+  "sessions": {
+    "s_4415ea0c544c7e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3b5e6c99-e27c-4411-a596-d9cb5a7bfec6",
+        "model": "unknown"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
