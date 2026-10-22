@@ -1,0 +1,19 @@
+contrib/alt-runtime-tests.js
+  s_71f301a0b01dc6::t_c3a73f7e8b954f 41-42,60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a7329f8192fce8637d89394b000cea3b2999941f",
+  "prompts": {},
+  "sessions": {
+    "s_71f301a0b01dc6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ee53f96-6c40-480c-9a0d-102759731f8d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
