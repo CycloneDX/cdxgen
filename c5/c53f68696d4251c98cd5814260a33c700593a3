@@ -1,0 +1,23 @@
+test/data/tracebom-chain/capture-crypto.mjs
+  s_236e880d3ee8e7::t_3055073c9de6fd 1-40
+test/data/tracebom-chain/crypto-result.json
+  s_236e880d3ee8e7::t_92eada72edc117 1-170
+test/data/tracebom-chain/gen.sh
+  s_236e880d3ee8e7::t_17defdd913ff50 1-142
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c5c53f68696d4251c98cd5814260a33c700593a3",
+  "prompts": {},
+  "sessions": {
+    "s_236e880d3ee8e7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "52eeaa6b-eddb-4834-83cf-34eb1a185cc1",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}

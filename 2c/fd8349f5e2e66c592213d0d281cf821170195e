@@ -1,0 +1,35 @@
+ci/images/debian/Dockerfile.node26
+  s_8385512298bece::t_a27577e41b8aff 2
+.versions/node_26
+  s_8385512298bece::t_a27577e41b8aff 2
+.oss-scanner/Dockerfile
+  s_8385512298bece::t_a27577e41b8aff 5
+ci/Dockerfile
+  s_8385512298bece::t_a27577e41b8aff 17
+.versions/node_24
+  s_8385512298bece::t_a27577e41b8aff 2
+ci/images/alpine/Dockerfile.node26
+  s_8385512298bece::t_a27577e41b8aff 2
+ci/images/debian/Dockerfile.node24
+  s_8385512298bece::t_a27577e41b8aff 2
+ci/images/alpine/Dockerfile.node24
+  s_8385512298bece::t_a27577e41b8aff 2
+.nvmrc
+  s_8385512298bece::t_a27577e41b8aff 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2cfd8349f5e2e66c592213d0d281cf821170195e",
+  "prompts": {},
+  "sessions": {
+    "s_8385512298bece": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "694c726d-e14e-4a60-af2c-54f41f08b4ad",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
