@@ -1,0 +1,16 @@
+lib/cli/index.js
+  h_0926447d100ad2 912
+lib/cli/index.poku.js
+  h_0926447d100ad2 41,4544-4566
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4ea156eb60794926aecdb6f5e36c35befd2df9c8",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
