@@ -1,0 +1,22 @@
+docs/LESSON16.md
+  h_0926447d100ad2 46,49,59,71
+docs/OBOM_LESSONS.md
+  h_0926447d100ad2 176-201
+docs/OBOM_MACOS_TROUBLESHOOTING.md
+  h_0926447d100ad2 49-50
+docs/PROJECT_TYPES.md
+  h_0926447d100ad2 118
+docs/README.md
+  h_0926447d100ad2 237-247
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ebf241aa9406aa40b4bee05be513c926c9d3b4f2",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
