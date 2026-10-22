@@ -1,0 +1,20 @@
+lib/cli/cryptoCertsPlugin.poku.js
+  h_0926447d100ad2 1-187
+lib/cli/managedBom.js
+  h_0926447d100ad2 2609-2660,2831-2836
+lib/managers/binary.js
+  h_0926447d100ad2 36-39,1712,2209,2265-2311
+lib/managers/binaryRootfsCerts.poku.js
+  h_0926447d100ad2 1-112
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c15bd2b185292ef4d8dc3b42fc6ef083d5bcc7d1",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
