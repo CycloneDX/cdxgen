@@ -1,0 +1,24 @@
+lib/inventory/apkInstalledDb.js
+  h_0926447d100ad2 1-242
+lib/inventory/apkInstalledDb.poku.js
+  h_0926447d100ad2 1-473
+lib/inventory/phpHostProbe.js
+  h_0926447d100ad2 39-42,53-55,189-209,442,445,554-555
+lib/inventory/phpHostProbe.poku.js
+  h_0926447d100ad2 54-60,68,226-266
+test/data/apk-installed-alpine
+  h_0926447d100ad2 1-1062
+test/data/apk-installed-wolfi
+  h_0926447d100ad2 1-802
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "191d4084462addf43a10d87fa41d04137351cc12",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
