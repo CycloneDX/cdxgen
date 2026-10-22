@@ -1,0 +1,22 @@
+.agents/README.md
+  h_0926447d100ad2 34-41
+.agents/skills/sbom-fidelity-loop/SKILL.md
+  h_0926447d100ad2 15-17
+claude-plugin/README.md
+  h_0926447d100ad2 86-87
+claude-plugin/skills/sbom-fidelity-loop/SKILL.md
+  h_0926447d100ad2 15-17,26,35,48-53
+lib/stages/postgen/introspection/skill.poku.js
+  h_0926447d100ad2 29,1141-1185
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a2c318c1efa24af2cb1a7f2784c03c824e6e0810",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
