@@ -1,0 +1,24 @@
+docs/OBOM_LESSONS.md
+  h_0926447d100ad2 184,202
+docs/OBOM_MACOS_TROUBLESHOOTING.md
+  h_0926447d100ad2 51-52
+docs/README.md
+  h_0926447d100ad2 248-249
+lib/cli/index.poku.js
+  h_0926447d100ad2 1981-2033
+lib/inventory/evidenceUtils.js
+  h_0926447d100ad2 558,566-572,574-577,599-602,711-718,724-768
+lib/inventory/evidenceUtils.poku.js
+  h_0926447d100ad2 1287,1302-1394
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9d0d9961a4aedfda2bbb3f435b45405e21402053",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
