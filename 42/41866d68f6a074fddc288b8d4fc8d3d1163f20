@@ -1,0 +1,16 @@
+lib/inventory/evidenceUtils.js
+  h_0926447d100ad2 41,711-712,736-738
+lib/inventory/evidenceUtils.poku.js
+  h_0926447d100ad2 1390,1393-1406
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4241866d68f6a074fddc288b8d4fc8d3d1163f20",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
