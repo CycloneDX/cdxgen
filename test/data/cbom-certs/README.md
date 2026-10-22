@@ -34,3 +34,8 @@ only valid for the certificates committed beside them.
 `generated/mutated-oid-leaf.pem` (when present) is derived at test time by
 flipping OIDs in a committed certificate; see the tests. It is not from a
 real issuer.
+
+`rootfs/` is assembled from `generated/` by `mk-rootfs.sh` (a CA bundle, a
+Kubernetes TLS secret and an Android pin); it feeds the pure-JS rootfs
+fallback tests. `oci-whiteout/build.sh` builds the two-layer OCI archive the
+layer-whiteout tests scan.

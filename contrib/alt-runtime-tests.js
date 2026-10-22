@@ -53,6 +53,8 @@ const KNOWN_GAPS = {
       "worker threads are disabled outside node, so the fan-out assertions cannot hold",
     "lib/inventory/analyzer.poku.js":
       "spawns a helper that assumes the node CLI",
+    "lib/managers/binaryRootfsCerts.poku.js":
+      "spawns process.execPath directly, which under deno needs a run subcommand and permission flags",
     "lib/managers/dockerConnection.poku.js":
       "listening on a unix socket in the temp dir fails under deno",
     "lib/stages/postgen/introspection/reflect.poku.js": "spawns the node CLI directly",
