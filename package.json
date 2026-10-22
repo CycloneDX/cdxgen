@@ -193,7 +193,7 @@
     "@cdxgen/cdxgen-plugins-bin-linuxmusl-arm64": "4.1.1",
     "@cdxgen/cdxgen-plugins-bin-windows-amd64": "4.1.1",
     "@cdxgen/cdxgen-plugins-bin-windows-arm64": "4.1.1",
-    "@cdxgen/safer-exec": "1.1.2",
+    "@cdxgen/safer-exec": "1.2.0",
     "body-parser": "2.3.0",
     "compression": "1.8.2",
     "connect": "3.7.0",
