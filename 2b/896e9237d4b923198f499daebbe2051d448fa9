@@ -1,0 +1,32 @@
+SECURITY.md
+  h_0926447d100ad2 78,85-88,90-95
+docs/ALLOWED_HOSTS_AND_COMMANDS.md
+  h_0926447d100ad2 78
+docs/ARCHITECTURE_ECOSYSTEM_EXAMPLES.md
+  h_0926447d100ad2 113-119,121-122
+docs/BOM_AUDIT.md
+  h_0926447d100ad2 268-274,276-283,671-678,680-681,692-693,712-713,715,727-728,730,763-783
+docs/CBOM_CERTIFICATES.md
+  h_0926447d100ad2 137-142,177-178,180-184
+docs/CUSTOM_PROPERTIES.md
+  h_0926447d100ad2 66-135,493-905,986-1001,1400-1415,1417-1434
+docs/ENV.md
+  h_0926447d100ad2 155-161,228-230
+docs/EVINSE.md
+  h_0926447d100ad2 36-61,63-74
+docs/PROJECT_TYPES.md
+  h_0926447d100ad2 62
+docs/README.md
+  h_0926447d100ad2 239-244
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2b896e9237d4b923198f499daebbe2051d448fa9",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
