@@ -1,0 +1,21 @@
+lib/managers/docker.js
+  s_797ad76f967931::t_0e53a294643adc 21,2030-2134,2215
+test/data/oci-whiteout/build.sh
+  s_797ad76f967931::t_fcebc6fa8171a7 1-58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d95036746dc1821232433c5db0a5357e39e2943e",
+  "prompts": {},
+  "sessions": {
+    "s_797ad76f967931": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "12ea2e25-5d96-4da2-a7fb-223a0762383c",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
