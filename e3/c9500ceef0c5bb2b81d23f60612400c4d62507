@@ -1,0 +1,19 @@
+.nvmrc
+  s_8385512298bece::t_52f45445ce7616 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e3c9500ceef0c5bb2b81d23f60612400c4d62507",
+  "prompts": {},
+  "sessions": {
+    "s_8385512298bece": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "694c726d-e14e-4a60-af2c-54f41f08b4ad",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
