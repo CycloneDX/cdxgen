@@ -44,7 +44,9 @@ Aliases as a project type: `-t dynamic` / `-t trace`.
 
 Evidence recorded on traced components uses
 `technique=instrumentation`, `scope=required`, confidence `0.8`/`0.5`, plus
-hashes and OS package attribution.
+hashes and OS package attribution. A library that a deb, rpm, apk or Homebrew
+package owns gets that package's purl, the same one an OBOM or a container scan
+gives the package.
 
 ## Sandbox limits
 

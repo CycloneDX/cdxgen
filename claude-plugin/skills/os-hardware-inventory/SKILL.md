@@ -1,6 +1,6 @@
 ---
 name: os-hardware-inventory
-description: Collects live operating-system inventory (OBOM) and host hardware inventory (HBOM) as CycloneDX documents using the cdxgen obom and hbom commands, including osquery-backed runtime artifacts, Linux hardening snapshots, GTFOBins enrichment, firmware and bus topology, and macOS permission troubleshooting. Use when asked to inventory a live machine, audit a running host's packages or services, produce a hardware BOM, or check host trust posture.
+description: Collects live operating-system inventory (OBOM) and host hardware inventory (HBOM) as CycloneDX documents using the cdxgen obom and hbom commands, including osquery-backed runtime artifacts, apk packages on Alpine, Wolfi and Chainguard, Linux hardening snapshots, GTFOBins enrichment, firmware and bus topology, and macOS permission troubleshooting. Use when asked to inventory a live machine, audit a running host's packages or services, compare a host's packages with a container scan of the same image, produce a hardware BOM, or check host trust posture.
 ---
 
 # Live OS and hardware inventory
@@ -46,6 +46,21 @@ obom -o /absolute/path/to/obom.json --deep \
 - `sysctl_hardening` and `mount_hardening` snapshots
 - GTFOBins enrichment on privileged and network-active runtime rows — a shell-escape-capable binary running privileged or listening on the network is the signal worth escalating
 
+### Alpine, Wolfi and Chainguard hosts
+
+osquery has no apk table, and the plugin bundle for musl systems such as
+Alpine ships no osquery at all. On these hosts `obom` reads the apk installed
+database instead (`/lib/apk/db/installed`, `/usr/lib/apk/db/installed` or
+`/var/lib/apk/db/installed`).
+
+- Expect the packages and little else: no runtime categories, no hardening
+  snapshots, and no OS component in `metadata.component`. That is the reach of
+  the tool on these hosts, not a failed run.
+- Run it as a user that can read the database, usually root. If the database
+  exists but cannot be read, the OBOM has no packages, and with `--introspect`
+  the `os.apk-installed-db.unreadable` degradation says why. Report that rather
+  than presenting an empty inventory as a clean host.
+
 ### macOS OBOM
 
 Collection uses the bundled osquery binary in **shell mode**, which avoids the
@@ -59,6 +74,42 @@ retrying the same command.
 
 For live-host triage patterns generally, see
 <https://cdxgen.github.io/cdxgen/#/OBOM_LESSONS>.
+
+### Package identity
+
+An OBOM names a package the way a container scan of the same system does, so
+findings and vulnerability matches carry over between the two.
+
+| Package          | Purl in an OBOM                                                                                          |
+| ---------------- | -------------------------------------------------------------------------------------------------------- |
+| deb              | `pkg:deb/ubuntu/php8.3-cli@8.3.6-0ubuntu0.24.04.13?arch=amd64&distro=ubuntu-24.04&distro_name=noble`; `&epoch=N` when the version has one |
+| rpm              | `pkg:rpm/almalinux/openssl-libs@1:3.5.8-1.el9_8?arch=x86_64&distro=almalinux-9.8&epoch=1`; the version is `[epoch:]version-release` |
+| apk              | `pkg:apk/alpine/php84@8.4.27-r0?arch=x86_64&distro=alpine-3.24.3&distro_name=alpine-3.24`                |
+| Homebrew         | `pkg:brew/php@8.5.11_1`; a cask has the same form, and `cdx:homebrew:type` says `formula` or `cask`      |
+| npm and pypi     | `pkg:npm/%40npmcli/agent@4.0.2`, `pkg:pypi/pyyaml@6.0`                                                   |
+
+- None of these purls has a subpath. Where a package was found is evidence,
+  not identity: it is in `evidence.occurrences` (and the `path` property), and
+  a package installed in several places, such as under two Node.js versions,
+  is one component with an occurrence for each.
+- `cdx:deb:source`, `cdx:rpm:sourceRpm` and `cdx:apk:origin` name the source
+  package, which advisories are often keyed by.
+- To compare a host with an image, run `obom` inside a container of the image
+  and `cdxgen -t docker <image>`, then diff the package purls. Leave out the
+  container scan's components tagged `source`; an OBOM has none:
+
+  ```bash
+  jq -r '.components[] | select((.tags // []) | index("source") | not) | (.purl // empty)
+    | select(test("^pkg:(deb|rpm|apk)/"))' image.json | sort -u > image-purls.txt
+  jq -r '.components[] | (.purl // empty) | select(test("^pkg:(deb|rpm|apk)/"))' host.json \
+    | sort -u > host-purls.txt
+  diff image-purls.txt host-purls.txt
+  ```
+
+- An OBOM from cdxgen 13.5.0 or earlier named these packages differently:
+  subpaths such as `#var/lib/dpkg`, no qualifiers, and `pkg:swid` for Homebrew.
+  Regenerate it before diffing it with a newer one. Never rewrite its purls by
+  hand.
 
 ### OS trust inventory modelling
 
