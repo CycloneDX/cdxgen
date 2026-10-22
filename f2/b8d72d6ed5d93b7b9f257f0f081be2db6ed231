@@ -1,0 +1,16 @@
+lib/managers/binary.js
+  h_0926447d100ad2 9-17,2287-2294
+lib/managers/binaryRootfsCerts.poku.js
+  h_0926447d100ad2 24,35-39,44-49,122-146
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f2b8d72d6ed5d93b7b9f257f0f081be2db6ed231",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
