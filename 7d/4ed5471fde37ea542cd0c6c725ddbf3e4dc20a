@@ -1,0 +1,29 @@
+data/rules/php-runtime.yaml
+  s_797ad76f967931::t_469d411baab615 1-143
+lib/stages/postgen/auditBom.poku.js
+  s_71f301a0b01dc6::t_eeee06dfc7059c 6471-6631
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7d4ed5471fde37ea542cd0c6c725ddbf3e4dc20a",
+  "prompts": {},
+  "sessions": {
+    "s_71f301a0b01dc6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ee53f96-6c40-480c-9a0d-102759731f8d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    },
+    "s_797ad76f967931": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "12ea2e25-5d96-4da2-a7fb-223a0762383c",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}

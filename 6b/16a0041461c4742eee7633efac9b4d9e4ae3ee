@@ -1,0 +1,32 @@
+docs/CLI.md
+  s_71f301a0b01dc6::t_e562159e9d95ec 40
+contrib/alt-runtime-tests.js
+  s_71f301a0b01dc6::t_342b304ee4e0e1 45-46
+package.json
+  s_71f301a0b01dc6::t_f9434b87b07f9c 104
+bin/cdxgenSecure.poku.js
+  s_71f301a0b01dc6::t_7e5e581c1422a7 1-51,55-171
+  s_71f301a0b01dc6::t_342b304ee4e0e1 52-54
+bin/cdxgen-secure.js
+  s_71f301a0b01dc6::t_8af6cb4f500e1d 1-15
+README.md
+  s_71f301a0b01dc6::t_e562159e9d95ec 178
+ci/Dockerfile
+  s_71f301a0b01dc6::t_f9434b87b07f9c 165-166
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6b16a0041461c4742eee7633efac9b4d9e4ae3ee",
+  "prompts": {},
+  "sessions": {
+    "s_71f301a0b01dc6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ee53f96-6c40-480c-9a0d-102759731f8d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}

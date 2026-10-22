@@ -1,0 +1,147 @@
+lib/ecosystems/parsers-jvm.js
+  s_71f301a0b01dc6::t_3b7581c8d145d6 23-54,58-62,64-69,71,76-77
+  s_71f301a0b01dc6::t_53033e8bac67d9 152,158-209
+  s_71f301a0b01dc6::t_891f68dff0c121 210-225
+  s_71f301a0b01dc6::t_21871898709558 110,114,117-129
+  s_71f301a0b01dc6::t_dc13f79498c1d6 259-270
+  s_71f301a0b01dc6::t_0f0191a39b4b98 288-289
+  s_71f301a0b01dc6::t_c1347009c5958b 130,311-424
+lib/core/projectConfig.js
+  s_71f301a0b01dc6::t_38bea76d19ba20 48
+lib/inventory/atomUtils.js
+  s_71f301a0b01dc6::t_71b264dc8813f9 318-349
+  s_71f301a0b01dc6::t_01cc5e3e85dcbe 33
+bin/evinse.js
+  s_71f301a0b01dc6::t_e4d72c43674bbb 229-233
+docs/PERMISSIONS.md
+  s_71f301a0b01dc6::t_a9b78c0e183e14 13,17
+lib/ecosystems/gradleutils.js
+  s_71f301a0b01dc6::t_4d7265d2f77a75 56-57,1548-1549
+  s_71f301a0b01dc6::t_7712a2376f4802 26
+  s_71f301a0b01dc6::t_0a9e36962f3cdc 48-50
+  s_71f301a0b01dc6::t_f553e43ce2ac5d 1353-1354,1361-1364
+lib/inventory/envcontext.js
+  s_71f301a0b01dc6::t_0a126319afb382 44
+  s_71f301a0b01dc6::t_70a9ed197e48e1 618-619,622,625-628
+docs/INTROSPECTION.md
+  s_71f301a0b01dc6::t_37fd90d5f70bb2 383-386
+  s_71f301a0b01dc6::t_f5c821df4687c7 94-111
+docs/THREAT_MODEL.md
+  s_71f301a0b01dc6::t_7ad0398e3f28eb 82,86-88,93,95-109
+lib/ecosystems/scalacliutils.js
+  s_71f301a0b01dc6::t_dd114219d9540f 8
+  s_71f301a0b01dc6::t_55a74ad1f955fc 287
+lib/ecosystems/scalasem.js
+  s_71f301a0b01dc6::t_dd114219d9540f 21
+  s_71f301a0b01dc6::t_55a74ad1f955fc 345-346
+lib/inventory/formulationParsers.js
+  s_71f301a0b01dc6::t_70a9ed197e48e1 289
+data/remediations.json
+  s_71f301a0b01dc6::t_9b8c54b7e2d278 118-119,123,131,136,646-647,651,659,727-728,732,740,797-798,802,810,852,857,965-966,970,978,985-1004
+  s_71f301a0b01dc6::t_1a46c4c42937b4 1005-1008
+lib/cli/managedBom.js
+  s_71f301a0b01dc6::t_881fddf66c18fa 532-534,580-590
+  s_71f301a0b01dc6::t_4e131763f31581 2248-2263
+  s_71f301a0b01dc6::t_31af0619247027 43-45
+  s_71f301a0b01dc6::t_dc63be17d03e35 1594-1601
+  s_71f301a0b01dc6::t_b62dfcf580e1cd 42,2264-2265
+lib/server/server.js
+  s_71f301a0b01dc6::t_899a5f85e9ea8d 19
+  s_71f301a0b01dc6::t_2e18784e4b207f 219
+docs/ARCHITECTURE_ECOSYSTEM_EXAMPLES.md
+  s_71f301a0b01dc6::t_a9b78c0e183e14 120
+lib/evinser/swiftsem.js
+  s_71f301a0b01dc6::t_0a3d067fbc027a 589-627,2241-2250,2265,2328-2330,2347,2353-2355
+lib/ecosystems/rusi.js
+  s_71f301a0b01dc6::t_5666157067833d 825-831
+  s_71f301a0b01dc6::t_eb907ee366890a 17
+  s_71f301a0b01dc6::t_2c87da0dbdc612 832-833
+lib/ecosystems/parsers-dotnet.js
+  s_71f301a0b01dc6::t_e45029bc1cf2c3 977-987,990-991
+  s_71f301a0b01dc6::t_4e131763f31581 920-921,1464-1465
+lib/core/deferredExit.poku.js
+  s_71f301a0b01dc6::t_c662b9a560ace4 59-61
+test/matrix/toolchain-matrix.yaml
+  s_71f301a0b01dc6::t_37fd90d5f70bb2 465-466,468-469,487-490,493-498,508-509,531
+lib/inventory/deps.js
+  s_71f301a0b01dc6::t_454a6a1c0cd009 103-104
+  s_71f301a0b01dc6::t_ca3014ea210895 2,13
+  s_71f301a0b01dc6::t_e58eccf4f58d6a 123,183
+docs/EVINSE.md
+  s_71f301a0b01dc6::t_671dec5b2da581 62
+lib/cli/nativeBom.js
+  s_71f301a0b01dc6::t_f818d3970729ff 802-808,812-814,888,902-906,1044-1055,1057-1059,1066-1068
+  s_71f301a0b01dc6::t_fa9a142df81da9 32-35
+  s_71f301a0b01dc6::t_57e46355ce7494 2631-2633,2635-2641,2678-2683
+  s_71f301a0b01dc6::t_6805e37079a5ae 26
+  s_71f301a0b01dc6::t_dc63be17d03e35 1056
+  s_71f301a0b01dc6::t_70c3d2bb150fbf 1980-1990,2366-2376,2378-2386
+bin/cdxgen.js
+  s_71f301a0b01dc6::t_fae7326833e044 24,1273-1280
+  s_71f301a0b01dc6::t_61d67ddc7658ae 42
+  s_71f301a0b01dc6::t_f49d2460283757 1132-1133,1135
+lib/stages/pregen/pregen.js
+  s_71f301a0b01dc6::t_469d9700ddd1d4 31,1489-1494
+SECURITY.md
+  s_71f301a0b01dc6::t_a9b78c0e183e14 46,89
+lib/evinser/evinser.js
+  s_71f301a0b01dc6::t_01cc5e3e85dcbe 683-689,738
+  s_71f301a0b01dc6::t_454a6a1c0cd009 422
+  s_71f301a0b01dc6::t_fefcf31cfcaae1 57
+  s_71f301a0b01dc6::t_eb907ee366890a 19
+  s_71f301a0b01dc6::t_2cca5d34d42ead 410-412,417-421,423-426,428,482-483,485
+  s_71f301a0b01dc6::t_10d2d73ddeab52 413-416
+test/repotests/maven-smoke/expected/default.json
+  s_71f301a0b01dc6::t_a0288a70584b5a 61,68-81
+lib/cli/jvmBom.js
+  s_71f301a0b01dc6::t_c45c4013ad1ef7 506,511-513,515-520,522-541,543-551,553,555-556
+  s_71f301a0b01dc6::t_dd56b08fadca74 501-505,507-510,514,521,542,554,737
+  s_71f301a0b01dc6::t_86ea69b87432f9 552
+  s_71f301a0b01dc6::t_2b599cc7345bd3 10
+  s_71f301a0b01dc6::t_bee6e854d75d9d 38-41
+  s_71f301a0b01dc6::t_132a2b4390153d 723-733,736,738-764,779-784,805,815,1145
+  s_71f301a0b01dc6::t_574045591710a4 76
+  s_71f301a0b01dc6::t_c6cfadb6658f2a 500
+lib/stages/postgen/introspection/reflect.js
+  s_71f301a0b01dc6::t_e8ff6c4913dad2 39
+  s_71f301a0b01dc6::t_f49d2460283757 393-395
+lib/cli/cliOptions.js
+  s_71f301a0b01dc6::t_31931f59eb3f67 692-694,702,725-729
+  s_71f301a0b01dc6::t_510ae973d00f58 128-220,222-227
+  s_71f301a0b01dc6::t_eb907ee366890a 221
+  s_71f301a0b01dc6::t_e1c07824ccaf11 22
+docs/ADVANCED.md
+  s_71f301a0b01dc6::t_671dec5b2da581 500-501
+lib/stages/postgen/introspection/rules.poku.js
+  s_71f301a0b01dc6::t_c7987ccce625dc 116-117,132-135
+lib/cli/degradation.poku.js
+  s_71f301a0b01dc6::t_0d407ce1476959 50-53,63-67,636-637,641
+.agents/skills/sbom-fidelity-loop/SKILL.md
+  s_71f301a0b01dc6::t_ec06b55b93dfc5 36
+  s_71f301a0b01dc6::t_0357603b4716cf 49-54
+  s_71f301a0b01dc6::t_073bf1f90d2dbe 27
+lib/ecosystems/parsers-misc.js
+  s_71f301a0b01dc6::t_e3e21cb98a16b7 21,29-32,3639-3644,3661-3666,3668-3680,3687-3704,3714-3733
+lib/core/projectTooling.js
+  s_71f301a0b01dc6::t_6689b27d081918 36-39,50-54
+  s_71f301a0b01dc6::t_dc63be17d03e35 65-67,70-71,73,88-89,92,94-96
+  s_71f301a0b01dc6::t_e334fffb010562 58,60
+  s_71f301a0b01dc6::t_df6a2e936df268 1-35,40-49,55-57,59,61-64,68-69,72,74-81,83-87,90-91,93,97
+  s_71f301a0b01dc6::t_f3ec2737b9c1f7 82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "79bee79d9b4983c0bc0bd95b3a44344c4d8c10a6",
+  "prompts": {},
+  "sessions": {
+    "s_71f301a0b01dc6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ee53f96-6c40-480c-9a0d-102759731f8d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
