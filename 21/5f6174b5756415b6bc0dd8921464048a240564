@@ -1,0 +1,22 @@
+AGENTS.md
+  h_0926447d100ad2 25-26,509
+claude-plugin/skills/bom-explore/SKILL.md
+  h_0926447d100ad2 120-124
+claude-plugin/skills/container-sbom/SKILL.md
+  h_0926447d100ad2 52-53
+claude-plugin/skills/os-hardware-inventory/SKILL.md
+  h_0926447d100ad2 3,49-63,78-113
+claude-plugin/skills/runtime-trace-bom/SKILL.md
+  h_0926447d100ad2 47-49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "215f6174b5756415b6bc0dd8921464048a240564",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
