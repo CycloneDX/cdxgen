@@ -1,0 +1,16 @@
+lib/cli/index.js
+  h_0926447d100ad2 1181-1186
+lib/cli/managedBom.poku.js
+  h_0926447d100ad2 3166-3188
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c68b8d04bc196f3c7af5173c04cacbb91a759042",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}

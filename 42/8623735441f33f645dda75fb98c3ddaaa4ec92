@@ -1,0 +1,26 @@
+.agents/skills/sbom-fidelity-loop/SKILL.md
+  h_0926447d100ad2 27
+data/remediations.json
+  h_0926447d100ad2 1261-1284
+docs/INTROSPECTION.md
+  h_0926447d100ad2 107
+lib/cli/index.js
+  h_0926447d100ad2 70,277-281,301,863-868
+lib/cli/index.poku.js
+  h_0926447d100ad2 1547-1639
+lib/inventory/phpHostProbe.js
+  h_0926447d100ad2 1-654
+lib/inventory/phpHostProbe.poku.js
+  h_0926447d100ad2 1-607
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "428623735441f33f645dda75fb98c3ddaaa4ec92",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}

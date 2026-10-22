@@ -1,0 +1,14 @@
+lib/ecosystems/parsers-misc.js
+  h_0926447d100ad2 1699,1706-1707
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f9423338708fa98c22cbb3ac9018129b520cee99",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
