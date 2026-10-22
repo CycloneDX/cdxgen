@@ -1,0 +1,40 @@
+types/lib/cli/bomAssembly.d.ts
+  h_0926447d100ad2 95-99,101,322-323,327
+types/lib/cli/bomAssembly.d.ts.map
+  h_0926447d100ad2 1
+types/lib/core/env.d.ts
+  h_0926447d100ad2 116-119,218-227,232-235
+types/lib/core/env.d.ts.map
+  h_0926447d100ad2 1
+types/lib/ecosystems/parsers-misc.d.ts
+  h_0926447d100ad2 189-205,207
+types/lib/ecosystems/parsers-misc.d.ts.map
+  h_0926447d100ad2 1
+types/lib/inventory/envcontext.d.ts
+  h_0926447d100ad2 190-224,237-238,241-242,245
+types/lib/inventory/envcontext.d.ts.map
+  h_0926447d100ad2 1
+types/lib/inventory/osPackageResolver.d.ts
+  h_0926447d100ad2 45-47,51
+types/lib/inventory/osPackageResolver.d.ts.map
+  h_0926447d100ad2 1
+types/lib/inventory/phpBuildInfo.d.ts
+  h_0926447d100ad2 1-142
+types/lib/inventory/phpBuildInfo.d.ts.map
+  h_0926447d100ad2 1
+types/lib/inventory/phpHostProbe.d.ts
+  h_0926447d100ad2 1-35
+types/lib/inventory/phpHostProbe.d.ts.map
+  h_0926447d100ad2 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "48a1608dc29c645f7f7772a33dd4790bad5970ca",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
