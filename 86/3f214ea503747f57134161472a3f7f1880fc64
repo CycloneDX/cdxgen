@@ -1,0 +1,37 @@
+lib/inventory/certificates.js
+  s_797ad76f967931::t_0bd27cec0726a4 794-798,801,805-808,1110-1121,1148-1149,1151-1156,1160,1166,1168-1170,1800-1803,1820,1834,1836-1837,2002-2009
+lib/inventory/tracedCrypto.poku.js
+  s_797ad76f967931::t_85d309a8580014 9,412-415,417,419,595-598,605-608,611,631-837
+test/data/tracebom-chain/bom-1.6.json
+  s_797ad76f967931::t_274a93318e99ec 1
+test/data/tracebom-chain/c-int.pem
+  s_797ad76f967931::t_1b1d981c569c54 2-10,12-18
+test/data/tracebom-chain/c-leaf.pem
+  s_797ad76f967931::t_d565f07f6302f5 2-6,8-15
+test/data/tracebom-chain/c-root.pem
+  s_797ad76f967931::t_16bdc6cc3d14b4 2-18
+test/data/tracebom-chain/crypto-result.json
+  s_797ad76f967931::t_221fca0dd28fb6 25-27,31-33,42-44,48-50,60-62,66-68,100-102,106-108,117-119,123-125,134-136,140-142
+test/data/tracebom-chain/h-int.pem
+  s_797ad76f967931::t_c6f0ee3c0a88c6 2-104
+test/data/tracebom-chain/h-leaf.pem
+  s_797ad76f967931::t_82dabc1ef7a444 2-6,8-60
+test/data/tracebom-chain/h-root.pem
+  s_797ad76f967931::t_4fbcba18873f58 2,4-117
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "863f214ea503747f57134161472a3f7f1880fc64",
+  "prompts": {},
+  "sessions": {
+    "s_797ad76f967931": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "12ea2e25-5d96-4da2-a7fb-223a0762383c",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
