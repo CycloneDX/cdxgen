@@ -63,9 +63,11 @@ wait_port() {
   exit 1
 }
 
+# Each search starts after the previous pick: no server listens yet, so a
+# fixed start could hand out the same port twice.
 port_classical=$(free_port 9440)
-port_hybrid=$(free_port 9441)
-port_tls13=$(free_port 9442)
+port_hybrid=$(free_port $((port_classical + 1)))
+port_tls13=$(free_port $((port_hybrid + 1)))
 echo "ports: classical=$port_classical hybrid=$port_hybrid tls13=$port_tls13"
 
 cd "$tmp"
@@ -118,11 +120,10 @@ wait_port "$port_tls13"
 # The workload: one curl per server. Two load-bearing details:
 #   - --noproxy "": safer-exec sets NO_PROXY to cover loopback, and without
 #     it curl bypasses the egress tunnel, so the chain is never observed.
-#   - the host name localhost, not the 127.0.0.1 literal: the proxy pins
-#     hostnames, and cdxgen's --allow-host values are resolved with the DNS
-#     resolver, which cannot resolve an IP literal, so an IP target is always
-#     denied (proxy.go targetAllowed matches IP targets against AllowIPs
-#     only).
+#   - the host name localhost, not the 127.0.0.1 literal: cdxgen passes
+#     --allow-host values to safer-exec as host names, and safer-exec's
+#     egress proxy matches an IP-literal target against its IP allowlist
+#     only (proxy.go targetAllowed), so an IP target is denied.
 workload=$(printf 'curl -sk --noproxy "" https://localhost:%s/ ; curl -sk --noproxy "" https://localhost:%s/ ; curl -sk --noproxy "" https://localhost:%s/' \
   "$port_classical" "$port_hybrid" "$port_tls13")
 
