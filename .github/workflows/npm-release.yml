@@ -425,7 +425,7 @@ jobs:
   containers-secure-amd64:
     if: github.repository == 'cdxgen/cdxgen'
     runs-on: ubuntu-latest
-    needs: [containers-deploy-manifest]
+    needs: [containers-amd64, containers-deploy-manifest]
     outputs:
       image-uri: ghcr.io/cdxgen/cdxgen-secure@${{ steps.build.outputs.digest }}
     permissions:
@@ -465,6 +465,8 @@ jobs:
           context: .
           file: ci/Dockerfile-secure
           platforms: linux/amd64
+          build-args: |
+            BASE_IMAGE=${{ needs.containers-amd64.outputs.image-uri }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -477,7 +479,7 @@ jobs:
   containers-secure-arm64:
     if: github.repository == 'cdxgen/cdxgen'
     runs-on: ubuntu-24.04-arm
-    needs: [containers-deploy-manifest]
+    needs: [containers-arm64, containers-deploy-manifest]
     outputs:
       image-uri: ghcr.io/cdxgen/cdxgen-secure@${{ steps.build.outputs.digest }}
     permissions:
@@ -517,6 +519,8 @@ jobs:
           context: .
           file: ci/Dockerfile-secure
           platforms: linux/arm64
+          build-args: |
+            BASE_IMAGE=${{ needs.containers-arm64.outputs.image-uri }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
