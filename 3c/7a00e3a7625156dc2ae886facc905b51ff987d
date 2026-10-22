@@ -1,0 +1,25 @@
+ci/Dockerfile
+  s_4415ea0c544c7e::t_d9ab184a853bfc 21-25,137-140
+ci/Dockerfile-bun
+  s_4415ea0c544c7e::t_f3c0f43f621ae7 28-32,132-135
+ci/Dockerfile-deno
+  s_4415ea0c544c7e::t_6631170f70f901 30-34,150-153
+ci/Dockerfile-ppc64
+  s_4415ea0c544c7e::t_f70e06be44ea30 26-30,112-115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3c7a00e3a7625156dc2ae886facc905b51ff987d",
+  "prompts": {},
+  "sessions": {
+    "s_4415ea0c544c7e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3b5e6c99-e27c-4411-a596-d9cb5a7bfec6",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
