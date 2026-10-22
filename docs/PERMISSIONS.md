@@ -10,11 +10,11 @@ cdxgen supports the Node.js permission [model](https://nodejs.org/api/permission
 
 ## Benefits of Permissions Model
 
-Permissions can be used to control what system resources cdxgen has access to or what actions it can take with those resources. cdxgen would disable automatic package installations when run in secure mode by default. Passing `--no-install-deps` (or using the `cdxgen-secure` command, which implies it) additionally skips the scanned project's own build tooling — Maven, Gradle, sbt, Mill, Leiningen, Poetry/PDM export, `dotnet msbuild`, SwiftPM and CocoaPods Podfile evaluation — so no command from those tools starts at all. The `cdxgen-secure` container image enables secure mode but not `--no-install-deps`; pass the flag there too to keep the project's build tooling from running.
+Permissions can be used to control what system resources cdxgen has access to or what actions it can take with those resources. In secure mode cdxgen turns off package installations by default. With installs off it also skips the scanned project's own build tooling, such as Maven, Gradle, sbt, Mill, Leiningen, `poetry export`, `dotnet msbuild`, SwiftPM and CocoaPods, and reads manifests and lock files instead. The `cdxgen-secure` command and the `ghcr.io/cdxgen/cdxgen-secure` image both run in secure mode, so neither needs `--no-install-deps`. The `cdxgen-secure` command keeps installs off even when `--install-deps` is passed; with `CDXGEN_SECURE_MODE=true`, only an explicit `--install-deps` on the command line, or `CDXGEN_INSTALL_DEPS=true`, turns them back on. A config file such as `.cdxgenrc` in the working directory cannot.
 
 ## Limitations of Permissions Model
 
-Secure mode only restricts cdxgen from performing certain activities such as package installation. With dependency installation left enabled, an allowed build tool still evaluates the scanned project's files (build scripts, `.mvn/` configuration, MSBuild response files, SwiftPM manifests). It does not provide security guarantees in the presence of malicious code.
+Secure mode only restricts cdxgen from performing certain activities such as package installation. If installs are turned back on with `--install-deps`, an allowed build tool evaluates the scanned project's files (build scripts, `.mvn/` configuration, MSBuild response files, SwiftPM manifests) as it normally would. It does not provide security guarantees in the presence of malicious code.
 
 ## Required permissions
 

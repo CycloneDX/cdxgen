@@ -497,6 +497,8 @@ output: bom.json
 only: org.springframework
 ```
 
+cdxgen reads the config file from the directory it runs in, which is often the project being scanned, so the file carries that project's trust. It cannot turn installs on when `--no-install-deps` is on the command line, or in secure mode unless `--install-deps` is passed there. An `introspect: true` or `profile: introspect` in the file still produces the introspection report, but does not let the project's build tools run while installs are off. Settings such as `install-deps`, `introspect`, `deep` and `server-url` print a notice when a config file sets them.
+
 ### Environment variables
 
 All command line arguments can also be passed as environment variables using the "CDXGEN\_" prefix.

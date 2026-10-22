@@ -58,13 +58,27 @@
         }
       ],
       "purl": "pkg:maven/org.apache.commons/commons-lang3@3.12.0?type=jar",
-      "type": "library",
+      "type": "framework",
       "version": "3.12.0"
     }
   ],
   "dependencies": [],
   "metadata": {
     "authors": [],
+    "component": {
+      "bom-ref": "pkg:maven/io.cdxgen.test/maven-smoke@1.0.0_type_jar",
+      "group": "io.cdxgen.test",
+      "name": "maven-smoke",
+      "properties": [
+        {
+          "name": "internal:SrcFile",
+          "value": "$ROOT/pom.xml"
+        }
+      ],
+      "purl": "pkg:maven/io.cdxgen.test/maven-smoke@1.0.0?type=jar",
+      "type": "application",
+      "version": "1.0.0"
+    },
     "lifecycles": [
       {
         "phase": "pre-build"

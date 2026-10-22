@@ -462,8 +462,11 @@ cells:
   # fs grants scoped to /app, so its cells mount the branch, the project and
 
   # the output under /app. The first cell runs the shipped policy as-is.
+  # Installs are off there, so cdxgen does not run Maven on the project
+  # (issue 4527) and the cell checks that the skip is reported as such.
 
-  # The second restricts the command policy the way D03/D06 classify: a
+  # The second restricts the command policy the way D03/D06 classify, with
+  # --install-deps so that cdxgen tries to run Maven at all: a
 
   # denied spawn must read as "secure mode restricted this", never as an
 
@@ -481,13 +484,18 @@ cells:
     project: repo://maven-smoke
     type: java
     expect:
-      tier: resolved
-      remediations: []
+      tier: manifest
+      remediations:
+        - jvm.maven.tooling-disabled
+      remediationsBlocked: none
       minComponents: 1
       ledgerComplete: true
-    note: measured 2026-08-30 in-container — resolved (100), 0 remediations,
-      8 components, so the shipped grants let maven resolve. This cell needs no
-      --no-fail-on-error; the policy cell below does.
+    note: measured 2026-10-22 on the host with the secure-mode permission
+      flags, not yet in-container. manifest (45) with jvm.maven.tooling-disabled
+      ranked as advice, 2 components and the parent, because installs are off
+      and Maven is skipped. Until 4527 this cell graded resolved (100) with 8
+      components, and the ledger written to the OS temp directory had lost
+      its events under the permission model.
 
   - id: secure-maven-policy
     group: D
@@ -497,6 +505,8 @@ cells:
     env:
       CDXGEN_SECURE_MODE: "true"
       CDXGEN_ALLOWED_COMMANDS: "git,node,npm,python3,find"
+    extraArgs:
+      - --install-deps
     expect:
       tier: absent
       blockedRemediations:
@@ -518,6 +528,7 @@ cells:
       CDXGEN_SECURE_MODE: "true"
       CDXGEN_ALLOWED_COMMANDS: "git,node,npm,python3,find"
     extraArgs:
+      - --install-deps
       - --no-fail-on-error
     expect:
       tier: manifest

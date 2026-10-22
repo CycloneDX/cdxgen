@@ -24,7 +24,7 @@ environment; it never fixes the project.
 
 The remediation catalog in `data/remediations.json` is deepest where the
 build ecosystems are mainstream: java, npm, python and the generic findings
-carry most of the 53 entries, and go, rust, php, clojure, swift, ruby, dart,
+carry most of the 54 entries, and go, rust, php, clojure, swift, ruby, dart,
 elixir, haskell, csharp and cocoa each carry at least one concrete repair.
 It is shallowest — **zero entries — for c/cpp**: nothing in cdxgen today
 reads a compilation database, so a c/cpp row grading `absent` is the honest
@@ -33,7 +33,7 @@ low score with an empty or near-empty `remediation[]` is expected; report it
 as such. An agent that invents work there has misread the tool's reach, and
 ecosystems listed in `coverageGaps[]` are cdxgen's backlog, never yours.
 
-Two entry-specific scope notes:
+Three entry-specific scope notes:
 
 - `rust.toolchain.missing` can fire only where cdxgen actually spawns cargo:
   under `--deep`, or with `--install-deps` and a `build`/`post-build`
@@ -46,6 +46,12 @@ Two entry-specific scope notes:
   run; treat it as a hypothesis to check against the project, not an
   instruction (see
   [remediation-actions.md](reference/remediation-actions.md)).
+- The `*.tooling-disabled` entries mean the scan was told not to run the
+  project's own build tools, because installs were off (secure mode, the
+  `cdxgen-secure` command, `--no-install-deps` or the pre-build lifecycle).
+  Running those tools runs code from the project. Report the entry and leave
+  the choice to the user; never add `--install-deps` or `--introspect` to get
+  past it unless the user has said the project is trusted.
 
 ## The loop
 

@@ -115,12 +115,12 @@
     "ecosystem": "java",
     "kind": "fallback.engaged",
     "impact": "transitive-deps",
-    "title": "Maven was skipped because dependency installation is disabled; only pom.xml direct dependencies were captured",
-    "targetTier": "manifest",
+    "title": "Maven was skipped because dependency installation is disabled; only the direct dependencies declared in pom.xml files were captured",
+    "targetTier": "resolved",
     "actions": [
       {
         "kind": "config",
-        "command": "Re-run without --no-install-deps (or outside secure mode) to let cdxgen invoke Maven"
+        "command": "Only for a project you trust: pass --install-deps so cdxgen can run Maven. Secure mode keeps installs off unless this flag is given. Outside secure mode, --introspect also runs Maven without installing packages."
       },
       {
         "kind": "rerun"
@@ -128,12 +128,12 @@
     ],
     "verify": {
       "rules": [],
-      "expectTier": "manifest",
+      "expectTier": "resolved",
       "eventsCleared": [
         "jvm.maven.tooling-disabled"
       ]
     },
-    "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"
+    "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES?id=java"
   },
   "jvm.gradle.unresolved-config": {
     "ecosystem": "java",
@@ -643,12 +643,12 @@
     "ecosystem": "python",
     "kind": "fallback.engaged",
     "impact": "transitive-deps",
-    "title": "poetry/pdm export was skipped because dependency installation is disabled; only lock file packages were captured",
-    "targetTier": "lockfile",
+    "title": "poetry export and pdm export were skipped because dependency installation is disabled; only the packages in the lock file were captured",
+    "targetTier": null,
     "actions": [
       {
         "kind": "config",
-        "command": "Re-run without --no-install-deps (or outside secure mode) to let cdxgen invoke poetry/pdm export"
+        "command": "Only for a project you trust: pass --install-deps so cdxgen can run Poetry or PDM. Secure mode keeps installs off unless this flag is given. Outside secure mode, --introspect also runs Poetry or PDM without installing packages."
       },
       {
         "kind": "rerun"
@@ -656,7 +656,7 @@
     ],
     "verify": {
       "rules": [],
-      "expectTier": "lockfile",
+      "expectTier": null,
       "eventsCleared": [
         "python.poetry-export.tooling-disabled"
       ]
@@ -724,12 +724,12 @@
     "ecosystem": "clojure",
     "kind": "fallback.engaged",
     "impact": "transitive-deps",
-    "title": "lein was skipped because dependency installation is disabled; project.clj was parsed manually",
-    "targetTier": "manifest",
+    "title": "Leiningen was skipped because dependency installation is disabled; only the dependencies declared in project.clj were captured",
+    "targetTier": "resolved",
     "actions": [
       {
         "kind": "config",
-        "command": "Re-run without --no-install-deps (or outside secure mode) to let cdxgen invoke lein"
+        "command": "Only for a project you trust: pass --install-deps so cdxgen can run Leiningen. Secure mode keeps installs off unless this flag is given. Outside secure mode, --introspect also runs Leiningen without installing packages."
       },
       {
         "kind": "rerun"
@@ -737,7 +737,7 @@
     ],
     "verify": {
       "rules": [],
-      "expectTier": "manifest",
+      "expectTier": "resolved",
       "eventsCleared": [
         "clojure.lein.tooling-disabled"
       ]
@@ -794,12 +794,12 @@
     "ecosystem": "swift",
     "kind": "fallback.engaged",
     "impact": "transitive-deps",
-    "title": "swift package was skipped because dependency installation is disabled; only Package.resolved packages were captured",
-    "targetTier": "lockfile",
+    "title": "SwiftPM was skipped because dependency installation is disabled; only the packages in Package.resolved were captured",
+    "targetTier": "resolved",
     "actions": [
       {
         "kind": "config",
-        "command": "Re-run without --no-install-deps (or outside secure mode) to let cdxgen invoke swift package"
+        "command": "Only for a project you trust: pass --install-deps so cdxgen can run SwiftPM. Secure mode keeps installs off unless this flag is given. Outside secure mode, --introspect also runs SwiftPM without installing packages."
       },
       {
         "kind": "rerun"
@@ -807,7 +807,7 @@
     ],
     "verify": {
       "rules": [],
-      "expectTier": "lockfile",
+      "expectTier": "resolved",
       "eventsCleared": [
         "swift.tooling-disabled"
       ]
@@ -849,12 +849,12 @@
     "ecosystem": "csharp",
     "kind": "fallback.engaged",
     "impact": "versions",
-    "title": "dotnet msbuild property evaluation was skipped because dependency installation is disabled; versions come from static resolution",
+    "title": "dotnet msbuild was skipped because dependency installation is disabled; package versions set by MSBuild properties that no project or props file defines are empty",
     "targetTier": "manifest",
     "actions": [
       {
         "kind": "config",
-        "command": "Re-run without --no-install-deps (or outside secure mode) to let cdxgen evaluate MSBuild properties"
+        "command": "Only for a project you trust: pass --install-deps so cdxgen can run MSBuild. Secure mode keeps installs off unless this flag is given. Outside secure mode, --introspect also runs MSBuild without installing packages."
       },
       {
         "kind": "rerun"
@@ -962,12 +962,12 @@
     "ecosystem": "cocoa",
     "kind": "fallback.engaged",
     "impact": "components",
-    "title": "pod ipc podfile-json was skipped because dependency installation is disabled; all pods from Podfile.lock are included without per-target filtering",
-    "targetTier": "lockfile",
+    "title": "pod ipc podfile-json was skipped because dependency installation is disabled; every pod from Podfile.lock is included without per-target filtering",
+    "targetTier": null,
     "actions": [
       {
         "kind": "config",
-        "command": "Re-run without --no-install-deps (or outside secure mode) to let cdxgen evaluate the Podfile for target filtering"
+        "command": "Only for a project you trust: pass --install-deps so cdxgen can run CocoaPods. Secure mode keeps installs off unless this flag is given. Outside secure mode, --introspect also runs CocoaPods without installing packages."
       },
       {
         "kind": "rerun"
@@ -975,9 +975,33 @@
     ],
     "verify": {
       "rules": [],
-      "expectTier": "lockfile",
+      "expectTier": null,
       "eventsCleared": [
         "cocoa.podfile-json.tooling-disabled"
+      ]
+    },
+    "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"
+  },
+  "cocoa.podspec.tooling-disabled": {
+    "ecosystem": "cocoa",
+    "kind": "fallback.engaged",
+    "impact": "licenses",
+    "title": "Ruby podspecs were not evaluated because dependency installation is disabled; their pods lack license and author details",
+    "targetTier": null,
+    "actions": [
+      {
+        "kind": "config",
+        "command": "Only for a project you trust: pass --install-deps so cdxgen can run CocoaPods. Secure mode keeps installs off unless this flag is given. Outside secure mode, --introspect also runs CocoaPods without installing packages."
+      },
+      {
+        "kind": "rerun"
+      }
+    ],
+    "verify": {
+      "rules": [],
+      "expectTier": null,
+      "eventsCleared": [
+        "cocoa.podspec.tooling-disabled"
       ]
     },
     "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"
