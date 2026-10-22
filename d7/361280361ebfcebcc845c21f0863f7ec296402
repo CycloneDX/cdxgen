@@ -1,0 +1,56 @@
+.agents/skills/sbom-fidelity-loop/SKILL.md
+  h_6a4cc5cdf68def 27
+SECURITY.md
+  h_6a4cc5cdf68def 46,89
+contrib/mutation-tests.js
+  h_6a4cc5cdf68def 37,44,246-249
+data/remediations.json
+  h_6a4cc5cdf68def 114-137,642-665,723-746,793-816,848-871,961-984
+docs/ARCHITECTURE_ECOSYSTEM_EXAMPLES.md
+  h_6a4cc5cdf68def 120
+docs/PERMISSIONS.md
+  h_6a4cc5cdf68def 13,17
+docs/THREAT_MODEL.md
+  h_6a4cc5cdf68def 82,87,92-94
+lib/cli/degradation.poku.js
+  h_6a4cc5cdf68def 382-385,432,455-476
+lib/cli/jvmBom.js
+  h_6a4cc5cdf68def 658-675,700-706
+lib/cli/jvmBomToolingGate.poku.js
+  h_6a4cc5cdf68def 1-175
+lib/cli/managedBom.js
+  h_6a4cc5cdf68def 48,528-532,536,547,577-587,2175-2197
+lib/cli/managedBomToolingGate.poku.js
+  h_6a4cc5cdf68def 1-401
+lib/cli/nativeBom.js
+  h_6a4cc5cdf68def 48,1936-1939,1945-1962,2323-2340,2342-2344,2570-2594,2602-2622,2625
+lib/cli/nativeBomToolingGate.poku.js
+  h_6a4cc5cdf68def 1-515
+lib/cli/toolingGateSecureMode.poku.js
+  h_6a4cc5cdf68def 1-77
+lib/core/deferredExit.poku.js
+  h_6a4cc5cdf68def 61,68-72,148-155
+lib/evinser/swiftsem.js
+  h_6a4cc5cdf68def 23,2215-2224,2226-2228,2233-2235
+lib/evinser/swiftsemToolingGate.poku.js
+  h_6a4cc5cdf68def 1-116
+lib/stages/postgen/introspection/rules.poku.js
+  h_6a4cc5cdf68def 130-135
+test/repotests/maven-smoke/expected/default.json
+  h_6a4cc5cdf68def 10,14,40,44,65
+test/repotests/maven-smoke/expected/with-maven.json
+  h_6a4cc5cdf68def 1-345
+test/repotests/maven-smoke/golden.manifest.json
+  h_6a4cc5cdf68def 7-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d7361280361ebfcebcc845c21f0863f7ec296402",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

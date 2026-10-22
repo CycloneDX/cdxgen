@@ -1,0 +1,22 @@
+bin/hbom.js
+  h_6a4cc5cdf68def 29-32,136,141-142,179-182,433
+lib/inventory/display.js
+  h_6a4cc5cdf68def 17,479-481,532,553,624,639
+lib/inventory/display.poku.js
+  h_6a4cc5cdf68def 22-23,360-440
+lib/inventory/hbomAnalysis.js
+  h_6a4cc5cdf68def 177-192
+lib/inventory/hbomAnalysis.poku.js
+  h_6a4cc5cdf68def 1-2,5,10,254-406
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3a054846585467d4035ad9f14fe99e344a8c8e1f",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+test/data/hbom-windows/README.md
+  h_6a4cc5cdf68def 1-28
+test/data/hbom-windows/osquery-logical-drives.json
+  h_6a4cc5cdf68def 1-111
+test/data/hbom-windows/vm-parallels-elevated-privileged.json
+  h_6a4cc5cdf68def 1-1958
+test/data/hbom-windows/vm-parallels-elevated.json
+  h_6a4cc5cdf68def 1-1910
+test/data/hbom-windows/vm-parallels-std-local-privileged.json
+  h_6a4cc5cdf68def 1-1950
+test/data/hbom-windows/vm-parallels-std-network-privileged.json
+  h_6a4cc5cdf68def 1-264
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "17b9547a715be60ddf07a407524395dc3c9ec088",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

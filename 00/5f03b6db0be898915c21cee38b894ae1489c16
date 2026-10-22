@@ -1,0 +1,25 @@
+lib/core/env.js
+  s_c08c53b1d4c6e5::t_bb09335c965ef8 1,710-725,730-733,740-741
+lib/core/env.poku.js
+  s_c08c53b1d4c6e5::t_ef3284f1906003 407-422
+lib/inventory/auditCategories.js
+  s_c08c53b1d4c6e5::t_8741a5c6bd0708 1,189,193
+lib/inventory/auditCategories.poku.js
+  s_c08c53b1d4c6e5::t_48a5088ae5805a 77-84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "005f03b6db0be898915c21cee38b894ae1489c16",
+  "prompts": {},
+  "sessions": {
+    "s_c08c53b1d4c6e5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5cc5f8a6-0d05-4d44-8c58-b40a5b24600a",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

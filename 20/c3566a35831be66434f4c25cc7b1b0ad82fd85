@@ -1,0 +1,16 @@
+claude-plugin/reference/commands.md
+  h_6a4cc5cdf68def 50
+claude-plugin/skills/os-hardware-inventory/SKILL.md
+  h_6a4cc5cdf68def 82-83,88-104,132,134-135,151,155-157,171
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "20c3566a35831be66434f4c25cc7b1b0ad82fd85",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

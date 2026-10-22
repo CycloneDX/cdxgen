@@ -1,0 +1,20 @@
+data/rules/host-topology.yaml
+  h_6a4cc5cdf68def 93
+lib/inventory/hostTopology.js
+  h_6a4cc5cdf68def 279,310-316,350,544-551,808-811
+lib/inventory/hostTopology.poku.js
+  h_6a4cc5cdf68def 1-2,11,367-481
+lib/stages/postgen/hostTopologyAudit.poku.js
+  h_6a4cc5cdf68def 1,7,188-243
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bb6178e89aeb0b34f0122688ec88a4b982a687a2",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+data/rules/hbom-compliance.yaml
+  h_6a4cc5cdf68def 19-43,50,157,235,275,285-292,298-299
+data/rules/hbom-performance.yaml
+  h_6a4cc5cdf68def 35,53-56,72-73
+lib/stages/postgen/hbomWindowsAudit.poku.js
+  h_6a4cc5cdf68def 1-213
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f676ce64986cde740a2d1bbbc5793b2b84790fd8",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}

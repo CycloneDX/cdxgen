@@ -1,0 +1,16 @@
+data/rules/hbom-compliance.yaml
+  h_6a4cc5cdf68def 234
+lib/stages/postgen/hbomWindowsAudit.poku.js
+  h_6a4cc5cdf68def 125-131,158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1b1f85adc3d5447fbb3511300c475e7d5e874ac0",
+  "prompts": {},
+  "humans": {
+    "h_6a4cc5cdf68def": {
+      "author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
