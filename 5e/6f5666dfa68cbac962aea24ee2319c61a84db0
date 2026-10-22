@@ -1,0 +1,24 @@
+.agents/skills/sbom-fidelity-loop/SKILL.md
+  h_0926447d100ad2 27
+data/remediations.json
+  h_0926447d100ad2 1285-1308
+docs/CUSTOM_PROPERTIES.md
+  h_0926447d100ad2 774
+docs/INTROSPECTION.md
+  h_0926447d100ad2 107
+lib/cli/managedBom.js
+  h_0926447d100ad2 1217-1219,1347-1349,1354-1362
+lib/cli/managedBom.poku.js
+  h_0926447d100ad2 18,3166,3189-3191,3209-3211,3214-3225,3228-3233
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5e6f5666dfa68cbac962aea24ee2319c61a84db0",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
