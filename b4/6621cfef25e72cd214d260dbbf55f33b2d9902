@@ -1,0 +1,30 @@
+data/remediations.json
+  h_0926447d100ad2 821
+docs/LESSON26.md
+  h_0926447d100ad2 55-61
+lib/cli/managedBom.js
+  h_0926447d100ad2 143,2410-2413
+lib/cli/managedBom.poku.js
+  h_0926447d100ad2 2268,2274,2290-2294,2296,2307
+lib/evinser/evinser.js
+  h_0926447d100ad2 83,670-672
+lib/inventory/dosai.js
+  h_0926447d100ad2 170-230,878-896,910-926,1032,1079-1081,1087,1089-1097
+lib/inventory/dosai.poku.js
+  h_0926447d100ad2 26-28,2023-2175
+lib/stages/pregen/pregen.js
+  h_0926447d100ad2 32-37,157-159,162,164-166
+lib/stages/pregen/pregen.poku.js
+  h_0926447d100ad2 1119,1128-1131,1154,1160-1161,1169-1170,1180-1209
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b46621cfef25e72cd214d260dbbf55f33b2d9902",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
