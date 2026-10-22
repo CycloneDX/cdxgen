@@ -1,0 +1,60 @@
+{
+    "content-hash": "8d17064320e0443e1f58dbb364bf3a29",
+    "packages": [
+        {
+            "name": "acme/archive",
+            "version": "2.1.0",
+            "require": {
+                "ext-zip": "*",
+                "hhvm": ">=4.0",
+                "lib-libxml": ">=2.7.0",
+                "php": "^8.1",
+                "psr/log": "^3.0"
+            },
+            "type": "library",
+            "license": ["MIT"],
+            "description": "Archive helpers"
+        },
+        {
+            "name": "psr/log",
+            "version": "3.0.2",
+            "require": {
+                "php": ">=8.0.0"
+            },
+            "type": "library",
+            "license": ["MIT"],
+            "description": "Common interface for logging libraries"
+        }
+    ],
+    "packages-dev": [
+        {
+            "name": "acme/test-kit",
+            "version": "1.0.0",
+            "require": {
+                "ext-dom": "*",
+                "ext-json": "*",
+                "php": "^8.1",
+                "psr/log": "^3.0"
+            },
+            "type": "library",
+            "license": ["MIT"],
+            "description": "Test helpers"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {},
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": "^8.1",
+        "ext-zip": "*"
+    },
+    "platform-dev": {
+        "ext-xdebug": "*"
+    },
+    "platform-overrides": {
+        "php": "8.1.27"
+    },
+    "plugin-api-version": "2.9.0"
+}

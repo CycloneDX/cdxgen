@@ -1,0 +1,19 @@
+{
+    "name": "acme/php-version-repro",
+    "version": "1.0.0",
+    "require": {
+        "php": "^8.1",
+        "ext-zip": "*",
+        "acme/archive": "^2.1",
+        "psr/log": "^3.0"
+    },
+    "require-dev": {
+        "ext-xdebug": "*",
+        "acme/test-kit": "^1.0"
+    },
+    "config": {
+        "platform": {
+            "php": "8.1.27"
+        }
+    }
+}

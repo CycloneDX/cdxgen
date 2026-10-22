@@ -1,0 +1,143 @@
+# PHP source-build runtime rules
+# Category: php-security
+# Evaluates the cdx:php:* properties recorded for unpackaged PHP binaries and
+# shared libraries during container, rootfs and OS (obom) scans. CVE-2026-109618 and
+# CVE-2026-109619 are unauthenticated remote code execution bugs in request
+# handling; fixed in 8.2.35, 8.3.36, 8.4.27 and 8.5.12.
+# https://www.php.net/archive/2026.php#2026-10-21-5
+#
+# Builds from the php-src PHP-<M.m>-CVE-2026-109618-109619 backport branches
+# keep their old version number, so a version check cannot tell them from a
+# vulnerable build. That caveat is in the finding text.
+
+- id: PHP-RCE-001
+  name: "Network-reachable PHP build affected by CVE-2026-109618 and CVE-2026-109619"
+  description: "A source-built PHP web SAPI older than its fixed release is vulnerable to two unauthenticated RCE bugs in request handling. PHP-FPM, php-cgi, libphp (Apache or embed) and FrankenPHP serve requests, so the worker is reachable from the network. The rule never reads PHP configuration: a mitigation never suppresses a finding."
+  severity: critical
+  category: php-security
+  dry-run-support: full
+  condition: |
+    components[
+      type = 'file'
+      and $hasProp($, 'cdx:php:buildVersion')
+      and $hasProp($, 'cdx:php:sapi')
+      and (
+        $m := $match($prop($, 'cdx:php:buildVersion'), /^(\d+)\.(\d+)\.(\d+)(?:-(dev)|(alpha|beta|RC)(\d+))?$/);
+        $m != null
+        and (
+          $number($m.groups[0]) < 8
+          or ($number($m.groups[0]) = 8 and $number($m.groups[1]) < 2)
+          or (
+            $number($m.groups[0]) = 8
+            and $number($m.groups[1]) = 2
+            and $number($m.groups[2]) < 35
+          )
+          or (
+            $number($m.groups[0]) = 8
+            and $number($m.groups[1]) = 3
+            and $number($m.groups[2]) < 36
+          )
+          or (
+            $number($m.groups[0]) = 8
+            and $number($m.groups[1]) = 4
+            and $number($m.groups[2]) < 27
+          )
+          or (
+            $number($m.groups[0]) = 8
+            and $number($m.groups[1]) = 5
+            and $number($m.groups[2]) < 12
+          )
+          or (
+            $number($m.groups[0]) = 8
+            and $number($m.groups[1]) = 6
+            and $number($m.groups[2]) = 0
+            and $m.groups[4] != null
+            and (
+              $m.groups[4] = 'alpha'
+              or $m.groups[4] = 'beta'
+              or ($m.groups[4] = 'RC' and $number($m.groups[5]) <= 3)
+            )
+          )
+        )
+      )
+      and $prop($, 'cdx:php:sapi') in ['fpm', 'cgi', 'libphp', 'frankenphp']
+    ]
+  location: |
+    {
+      "bomRef": $firstNonEmpty($."bom-ref", bom.serialNumber)
+    }
+  message: "PHP {{ $prop($, 'cdx:php:sapi') }} '{{ name }}' is {{ $prop($, 'cdx:php:buildVersion') }}, which is affected by CVE-2026-109618 and CVE-2026-109619 (unauthenticated RCE); fixed in {{ $startsWith($prop($, 'cdx:php:buildVersion'), '8.2.') ? '8.2.35' : $startsWith($prop($, 'cdx:php:buildVersion'), '8.3.') ? '8.3.36' : $startsWith($prop($, 'cdx:php:buildVersion'), '8.4.') ? '8.4.27' : $startsWith($prop($, 'cdx:php:buildVersion'), '8.5.') ? '8.5.12' : $startsWith($prop($, 'cdx:php:buildVersion'), '8.6.') ? '8.6.0RC4 or later' : 'a supported PHP branch or a vendor backport (builds from the php-src CVE backport branches keep their version number and are false positives)' }}"
+  mitigation: "Upgrade to PHP 8.5.12, 8.4.27, 8.3.36 or 8.2.35. For 8.1 and older, move to a supported branch or a vendor backport. https://www.php.net/archive/2026.php#2026-10-21-5 Interim measures named by the advisory (an admin-level memory_limit=-1, a low post_max_size, session.upload_progress.enabled=0, and fatal_error_backtraces=0 on 8.5) reduce but do not remove the risk. Builds from the php-src PHP-<M.m>-CVE-2026-109618-109619 backport branches keep their old version number and are false positives."
+  evidence: |
+    {
+      "buildVersion": $prop($, 'cdx:php:buildVersion'),
+      "sapi": $prop($, 'cdx:php:sapi'),
+      "source": $prop($, 'cdx:php:buildVersionSource'),
+      "srcFile": $prop($, 'SrcFile')
+    }
+
+- id: PHP-RCE-002
+  name: "PHP CLI build affected by CVE-2026-109618 and CVE-2026-109619"
+  description: "A source-built PHP CLI or phpdbg older than its fixed release contains the same vulnerable request-handling code. The CLI is not network-reachable, but any web SAPI built from the same tree is, so the build should be upgraded."
+  severity: medium
+  category: php-security
+  dry-run-support: full
+  condition: |
+    components[
+      type = 'file'
+      and $hasProp($, 'cdx:php:buildVersion')
+      and $hasProp($, 'cdx:php:sapi')
+      and (
+        $m := $match($prop($, 'cdx:php:buildVersion'), /^(\d+)\.(\d+)\.(\d+)(?:-(dev)|(alpha|beta|RC)(\d+))?$/);
+        $m != null
+        and (
+          $number($m.groups[0]) < 8
+          or ($number($m.groups[0]) = 8 and $number($m.groups[1]) < 2)
+          or (
+            $number($m.groups[0]) = 8
+            and $number($m.groups[1]) = 2
+            and $number($m.groups[2]) < 35
+          )
+          or (
+            $number($m.groups[0]) = 8
+            and $number($m.groups[1]) = 3
+            and $number($m.groups[2]) < 36
+          )
+          or (
+            $number($m.groups[0]) = 8
+            and $number($m.groups[1]) = 4
+            and $number($m.groups[2]) < 27
+          )
+          or (
+            $number($m.groups[0]) = 8
+            and $number($m.groups[1]) = 5
+            and $number($m.groups[2]) < 12
+          )
+          or (
+            $number($m.groups[0]) = 8
+            and $number($m.groups[1]) = 6
+            and $number($m.groups[2]) = 0
+            and $m.groups[4] != null
+            and (
+              $m.groups[4] = 'alpha'
+              or $m.groups[4] = 'beta'
+              or ($m.groups[4] = 'RC' and $number($m.groups[5]) <= 3)
+            )
+          )
+        )
+      )
+      and $prop($, 'cdx:php:sapi') in ['cli', 'phpdbg']
+    ]
+  location: |
+    {
+      "bomRef": $firstNonEmpty($."bom-ref", bom.serialNumber)
+    }
+  message: "PHP {{ $prop($, 'cdx:php:sapi') }} '{{ name }}' is {{ $prop($, 'cdx:php:buildVersion') }}, which is affected by CVE-2026-109618 and CVE-2026-109619 (unauthenticated RCE); fixed in {{ $startsWith($prop($, 'cdx:php:buildVersion'), '8.2.') ? '8.2.35' : $startsWith($prop($, 'cdx:php:buildVersion'), '8.3.') ? '8.3.36' : $startsWith($prop($, 'cdx:php:buildVersion'), '8.4.') ? '8.4.27' : $startsWith($prop($, 'cdx:php:buildVersion'), '8.5.') ? '8.5.12' : $startsWith($prop($, 'cdx:php:buildVersion'), '8.6.') ? '8.6.0RC4 or later' : 'a supported PHP branch or a vendor backport (builds from the php-src CVE backport branches keep their version number and are false positives)' }}. The CLI is not network-reachable, but the same build's web SAPIs are."
+  mitigation: "Upgrade to PHP 8.5.12, 8.4.27, 8.3.36 or 8.2.35. For 8.1 and older, move to a supported branch or a vendor backport. https://www.php.net/archive/2026.php#2026-10-21-5 Builds from the php-src PHP-<M.m>-CVE-2026-109618-109619 backport branches keep their old version number and are false positives."
+  evidence: |
+    {
+      "buildVersion": $prop($, 'cdx:php:buildVersion'),
+      "sapi": $prop($, 'cdx:php:sapi'),
+      "source": $prop($, 'cdx:php:buildVersionSource'),
+      "srcFile": $prop($, 'SrcFile')
+    }
