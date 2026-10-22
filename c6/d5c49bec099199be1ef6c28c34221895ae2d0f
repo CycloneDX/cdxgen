@@ -1,0 +1,18 @@
+lib/inventory/certificates.js
+  h_0926447d100ad2 1632,1708,1830,1877,1885-1887,1971,1974-2011,2086
+lib/inventory/certificates.poku.js
+  h_0926447d100ad2 1079-1193
+lib/stages/postgen/ruleEngine.js
+  h_0926447d100ad2 168-179,329-331
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c6d5c49bec099199be1ef6c28c34221895ae2d0f",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
