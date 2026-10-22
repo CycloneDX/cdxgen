@@ -43,10 +43,10 @@ Example component output in JSON:
 ```json
 {
   "name": "libc6",
-  "version": "2.35-0ubuntu3",
+  "version": "2.39-0ubuntu8.9",
   "type": "library",
   "scope": "required",
-  "purl": "pkg:deb/debian/libc6@2.35-0ubuntu3?arch=amd64",
+  "purl": "pkg:deb/ubuntu/libc6@2.39-0ubuntu8.9?arch=amd64&distro=ubuntu-24.04&distro_name=noble",
   "hashes": [
     {
       "alg": "SHA-256",
@@ -56,7 +56,7 @@ Example component output in JSON:
   "properties": [
     {
       "name": "cdx:dynamic:filePath",
-      "value": "/lib/x86_64-linux-gnu/libc.so.6"
+      "value": "/usr/lib/x86_64-linux-gnu/libc.so.6"
     }
   ],
   "evidence": {
@@ -68,7 +68,7 @@ Example component output in JSON:
           {
             "technique": "instrumentation",
             "confidence": 0.8,
-            "value": "pkg:deb/debian/libc6@2.35-0ubuntu3?arch=amd64"
+            "value": "pkg:deb/ubuntu/libc6@2.39-0ubuntu8.9?arch=amd64&distro=ubuntu-24.04&distro_name=noble"
           }
         ]
       }

@@ -2231,6 +2231,7 @@ cdxgenRepl.defineCommand("tagcloud", {
 });
 // Let's dynamically define more commands from the queries
 [
+  "apk_packages",
   "apt_sources",
   "behavioral_reverse_shell",
   "certificates",

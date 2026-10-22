@@ -117,6 +117,11 @@ See `os-hardware-inventory`.
 
 `.osinfocategories`, `.obomtips`, `.instrumented`
 
+Each category `.osinfocategories` lists is also a command of the same name,
+for example `.deb_packages`, `.rpm_packages`, `.apk_packages` (Alpine, Wolfi
+and Chainguard, read from the apk database), `.homebrew_packages`,
+`.npm_packages`, `.python_packages` and `.processes`.
+
 `.instrumented` isolates trace-derived components — see `runtime-trace-bom`.
 
 ### Vulnerabilities

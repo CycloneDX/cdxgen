@@ -32,7 +32,7 @@
   "homebrew_packages": {
     "query": "SELECT * FROM homebrew_packages where name like '%ssl%' OR name like '%crypto%';",
     "description": "List all homebrew_packages.",
-    "purlType": "swid",
+    "purlType": "brew",
     "componentType": "library"
   },
   "authorized_keys": {

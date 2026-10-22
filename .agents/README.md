@@ -31,7 +31,14 @@ manifest at [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.js
 
 Two skills are mirrored into that plugin: **BOM Slimmer** and **SBOM Fidelity
 Loop**. This directory remains their source of truth — change them here first,
-then copy into `claude-plugin/skills/`. The contributor-facing skills
+then copy into `claude-plugin/skills/` in the same change. The copy differs in
+one way only: an installed plugin has no repository around it, so a
+`../../docs/<Name>.md` link becomes `https://cdxgen.github.io/cdxgen/#/<Name>`.
+`lib/stages/postgen/introspection/skill.poku.js` fails when a copy drifts.
+
+The plugin's own skills, such as `os-hardware-inventory`, describe what cdxgen
+produces. Update them in the change that alters that output, for example a
+purl form or a new OBOM category. The contributor-facing skills
 (**Ecosystem Onboarding**, **Custom Property Author**, **CycloneDX Spec
 Reviewer**) are intentionally not shipped in the plugin, since its audience runs
 cdxgen against their own projects rather than developing cdxgen itself.

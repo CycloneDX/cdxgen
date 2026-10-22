@@ -1401,6 +1401,30 @@
     },
     "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"
   },
+  "os.apk-installed-db.unreadable": {
+    "ecosystem": "generic",
+    "kind": "evidence.degraded",
+    "impact": "components",
+    "title": "The apk installed database could not be read in full, so the packages of this host are missing from the OBOM",
+    "targetTier": null,
+    "actions": [
+      {
+        "kind": "config",
+        "command": "Run cdxgen as a user that can read the apk installed database (for example as root), so the packages it lists are inventoried"
+      },
+      {
+        "kind": "rerun"
+      }
+    ],
+    "verify": {
+      "rules": [],
+      "expectTier": null,
+      "eventsCleared": [
+        "os.apk-installed-db.unreadable"
+      ]
+    },
+    "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"
+  },
   "policy.secure-mode": {
     "ecosystem": "generic",
     "kind": "evidence.degraded",

@@ -12,10 +12,9 @@ it; this skill is the loop that executes those fixes and re-scans. The report
 format is documented in [reference/report-schema.md](reference/report-schema.md)
 and the six remediation action kinds in
 [reference/remediation-actions.md](reference/remediation-actions.md); the
-user-facing feature docs are [docs/CLI.md](../../docs/CLI.md) ("Build
-introspection") and
-[docs/INTROSPECTION.md](../../docs/INTROSPECTION.md), which shows a worked
-degraded-to-repaired transition with both real reports.
+user-facing feature docs are the [CLI reference](../../docs/CLI.md) ("Build
+introspection") and the [introspection guide](../../docs/INTROSPECTION.md),
+which shows a worked degraded-to-repaired transition with both real reports.
 
 The loop measures the environment the user actually has. It fixes the
 environment; it never fixes the project.
@@ -24,7 +23,7 @@ environment; it never fixes the project.
 
 The remediation catalog in `data/remediations.json` is deepest where the
 build ecosystems are mainstream: java, npm, python and the generic findings
-carry most of the 56 entries, and go, rust, php, clojure, swift, ruby, dart,
+carry most of the 57 entries, and go, rust, php, clojure, swift, ruby, dart,
 elixir, haskell, csharp and cocoa each carry at least one concrete repair.
 It is shallowest — **zero entries — for c/cpp**: nothing in cdxgen today
 reads a compilation database, so a c/cpp row grading `absent` is the honest

@@ -49,7 +49,8 @@ service drift offline.
 
 These scans are deliberately broader than a package list. Expect:
 
-- OS package components with purls
+- OS package components with purls — the same purls `obom` gives the packages when run inside the image (vendor, `arch`, `distro`, `distro_name` and `epoch` qualifiers, no subpath), so the two can be diffed; see `os-hardware-inventory`
+- source-package components tagged `source`, added for vulnerability matching; an OBOM has none, so leave them out of such a diff
 - package-owned files and installed commands
 - repository source records, modelled as ordinary `data` components
 - trusted keys and certificates, modelled as `cryptographic-asset` components — **these do not have purls**, so do not treat a missing purl as a defect
