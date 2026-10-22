@@ -1,0 +1,16 @@
+lib/cli/cryptoCertsPlugin.poku.js
+  h_0926447d100ad2 1,189-216
+lib/cli/managedBom.js
+  h_0926447d100ad2 2536,2538,2740-2741,2764-2765
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ce024bf59f162db66ce7a7cdb4b75813a8955de8",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
