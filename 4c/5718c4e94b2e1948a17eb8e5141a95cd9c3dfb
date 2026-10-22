@@ -1,0 +1,56 @@
+data/rules/php-runtime.yaml
+  h_0926447d100ad2 1-143
+docs/ADVANCED.md
+  h_0926447d100ad2 650-652
+docs/ALLOWED_HOSTS_AND_COMMANDS.md
+  h_0926447d100ad2 75
+docs/BOM_AUDIT.md
+  h_0926447d100ad2 92,561-584
+docs/CUSTOM_PROPERTIES.md
+  h_0926447d100ad2 54,331,351,450-456
+docs/ENV.md
+  h_0926447d100ad2 190-196
+docs/OBOM_LESSONS.md
+  h_0926447d100ad2 159-174
+lib/cli/index.js
+  h_0926447d100ad2 118,988-990,1600-1603,6938-6944,7888-7909,7942-7945,8035-8060,8100,9442-9443,9447-9453,9488,9511,9871-9875,10503
+lib/cli/index.poku.js
+  h_0926447d100ad2 31,4232-4542
+lib/helpers/envcontext.js
+  h_0926447d100ad2 5,8-11,14,28,490-591,644-651
+lib/helpers/envcontext.poku.js
+  h_0926447d100ad2 2,5,89-195
+lib/helpers/phpBuildInfo.js
+  h_0926447d100ad2 1-494
+lib/helpers/phpBuildInfo.poku.js
+  h_0926447d100ad2 1-524
+lib/helpers/phpHostProbe.js
+  h_0926447d100ad2 1-647
+lib/helpers/phpHostProbe.poku.js
+  h_0926447d100ad2 1-639
+lib/helpers/utils.js
+  h_0926447d100ad2 1811-1814,15901-16005,16011-16019,16028,16033,16048-16052,16150-16156,16196,21905-21907,21917,21926-21956,21989-22007
+lib/helpers/utils.poku.js
+  h_0926447d100ad2 2,8475,8550,8622,8656-8659,12633-12676,12747-13037
+lib/managers/binary.js
+  h_0926447d100ad2 18-25,1125-1131,1135-1144,3129-3186
+lib/managers/binary.poku.js
+  h_0926447d100ad2 18-19,1770-2329
+lib/stages/postgen/auditBom.poku.js
+  h_0926447d100ad2 5376-5542
+test/data/composer-platform.json
+  h_0926447d100ad2 1-19
+test/data/composer-platform.lock
+  h_0926447d100ad2 1-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4c5718c4e94b2e1948a17eb8e5141a95cd9c3dfb",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
