@@ -1,0 +1,46 @@
+lib/managers/binary.js
+  s_797ad76f967931::t_cc08cc4ec0de03 69-72,1457-1463,1477-1486,3792-3890
+lib/inventory/osPackageResolver.js
+  s_797ad76f967931::t_898a3e61a4aec3 382-384,394,406-436,466-484
+lib/inventory/phpBuildInfo.poku.js
+  s_71f301a0b01dc6::t_18d3ef90eec432 1-274
+lib/managers/binary.poku.js
+  s_71f301a0b01dc6::t_294e0d21ebde42 2449-2450
+  s_71f301a0b01dc6::t_f50c19987289ed 2365-2367
+  s_71f301a0b01dc6::t_beae628d2d64aa 20-24,2321-2363,2368-2448,2451-2456,2459-2538
+  h_0926447d100ad2 2364
+  s_71f301a0b01dc6::t_4ea76e2df57382 2457-2458
+lib/inventory/phpBuildInfo.js
+  s_797ad76f967931::t_4695f21670dc72 1-277
+lib/core/activity.poku.js
+  s_71f301a0b01dc6::t_008429e5c7acf6 1058-1095
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0cc9a60c2f672d1c4d6cf82779e1485bc2c9630b",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  },
+  "sessions": {
+    "s_71f301a0b01dc6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ee53f96-6c40-480c-9a0d-102759731f8d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    },
+    "s_797ad76f967931": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "12ea2e25-5d96-4da2-a7fb-223a0762383c",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+data/rules/php-runtime.yaml
+  h_0926447d100ad2 69,135
+lib/stages/postgen/auditBom.poku.js
+  h_0926447d100ad2 6862,6864-6868
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e603120119c4c27b6eaaa69d379be6f68993d883",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
