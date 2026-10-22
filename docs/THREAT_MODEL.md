@@ -79,16 +79,34 @@ Trust boundary 5: cdxgen container ←→ container host
 
 #### T1.2 — Arbitrary code execution via build tools
 
-**Threat:** cdxgen invokes `npm install`, `mvn`, `pip install`, `gradle`, etc. These tools execute code from project files (postinstall scripts, `setup.py`, Gradle build scripts).
+**Threat:** cdxgen invokes `npm install`, `mvn`, `pip install`, `gradle`, etc. These tools execute code from project files (postinstall scripts, `setup.py`, Gradle build scripts, `.mvn/jvm.config`, `Directory.Build.rsp`, SwiftPM manifests, `project.clj`, Podfiles and podspecs, `.cargo/config.toml`, `build.rs`).
 
 **Mitigations:**
 
-- Secure mode (`CDXGEN_SECURE_MODE=true`) disables automatic package installation
+- Secure mode (`CDXGEN_SECURE_MODE=true`, the `cdxgen-secure` command and image) turns installs off by default
+- With installs off, cdxgen does not run the scanned project's own build tooling (see the next section) and parses manifests and lock files instead
+- A config file in the working directory, a profile or a lifecycle cannot turn installs back on when the operator turned them off, and in secure mode only `--install-deps` on the command line or `CDXGEN_INSTALL_DEPS=true` can
 - `safeSpawnSync` warns when `pip`/`uv install` is invoked without `--only-binary=:all:` (prevents `setup.py` execution during wheel builds)
 - `safeSpawnSync` warns when Python is invoked without `-S` flag
 - Users are advised to run in sandboxed environments for untrusted projects
 
-**Residual risk:** High — this is a fundamental tension. Accurate dependency resolution often requires invoking build tools that may execute untrusted code. Secure mode trades accuracy for safety.
+**Which tools run with installs off:** installs are off in secure mode unless `--install-deps` is passed, with the `cdxgen-secure` command, with `--no-install-deps`, with `--lifecycle pre-build`, with `--profile ml-tiny`, in dry-run mode and for container scans. cdxgen then skips:
+
+- Maven, including the project's `mvnw`, the `--evidence` jar collection and atom's Maven class path step (evinse passes `delombok-mode=no-delombok` to atom)
+- Gradle, sbt and Mill build evaluation and their wrappers, scala-cli and scalasem builds
+- Leiningen (`lein deps :tree-data`)
+- `poetry export` and `pdm export`
+- `dotnet msbuild` property evaluation
+- SwiftPM: `swift package dump-package`, `show-dependencies`, `resolve` and the evidence build; compiler plugin flags read from an existing `.build` directory are dropped
+- CocoaPods: `pod ipc podfile-json` and `pod ipc spec` on Ruby podspecs (JSON podspecs are read directly)
+- Rust: `cargo check` and rusi under `--deep` or `--evidence`; `cargo metadata` runs from the temporary directory with `--offline`, so the project's `.cargo/config.toml` and `rust-toolchain.toml` do not apply
+- Ruby: `bundle exec` for gem module names
+
+The toolchain version probes for formulation also run from the temporary directory, so files such as `global.json` and `rust-toolchain.toml` cannot pick the binary. Tools that read without running project code still run, for example `go list` and `go mod graph`, which download modules through `GOPROXY` and, for modules the proxy does not serve, from the host the module path names. Set `GOPROXY=off` to keep such a scan offline. `CDXGEN_ALLOWED_COMMANDS` is a separate allowlist that applies in any mode.
+
+`--introspect`, given on the command line or as `CDXGEN_INTROSPECT=true`, keeps this tooling running with installs off outside secure mode, because introspection exists to observe the project's own toolchain. The same setting from a config file does not. Each skip prints a message once per scan, and the skips that change the SBOM record a `*.tooling-disabled` event for the introspection report.
+
+**Residual risk:** High. Accurate dependency resolution often requires invoking build tools that may execute untrusted code, and `--install-deps` or `--introspect` turn that back on. With the project tooling skipped, the SBOM contains only what static parsing of the manifests and lock files can recover; for Maven that is the direct dependencies of each pom, with versions from its properties, its dependencyManagement and parent poms inside the scanned directory.
 
 #### T1.3 — Environment variable poisoning
 

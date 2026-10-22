@@ -226,6 +226,11 @@ const args = yargs(hideBin(process.argv))
     default: false,
     type: "boolean",
   })
+  .option("install-deps", {
+    description:
+      "Let evinse run the project's own build tools, such as Maven and SwiftPM, to collect evidence. On by default, and off in secure mode. Pass --no-install-deps for projects you do not trust.",
+    type: "boolean",
+  })
   .option("with-deep-jar-collector", {
     description:
       "Enable collection of all jars from maven cache directory. Useful to improve the recall for callstack evidence.",

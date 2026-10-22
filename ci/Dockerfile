@@ -14,7 +14,7 @@ ARG GRADLE_VERSION=9.7.0
 # renovate: datasource=golang-version depName=golang
 ARG GO_VERSION=1.27.1
 # renovate: datasource=node-version depName=node
-ARG NODE_VERSION=24.21.0
+ARG NODE_VERSION=24.22.1
 ARG RUBY_VERSION=4.0.7
 ARG JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
 ARG SCALA_VERSION=3.9.0
@@ -162,7 +162,8 @@ COPY . /opt/cdxgen
 RUN cd /opt/cdxgen && corepack enable pnpm && pnpm config set global-bin-dir /opt/bin \
     && pnpm install:prod && pnpm cache delete \
     && chmod +x /opt/cdxgen/bin/*.js \
-    && for name in aibom cbom cdxgen cdxgen-secure obom saasbom spdxgen; do ln -sf /opt/cdxgen/bin/cdxgen.js /opt/bin/$name; done \
+    && for name in aibom cbom cdxgen obom saasbom spdxgen; do ln -sf /opt/cdxgen/bin/cdxgen.js /opt/bin/$name; done \
+    && ln -sf /opt/cdxgen/bin/cdxgen-secure.js /opt/bin/cdxgen-secure \
     && ln -sf /opt/cdxgen/bin/audit.js /opt/bin/cdx-audit \
     && ln -sf /opt/cdxgen/bin/convert.js /opt/bin/cdx-convert \
     && ln -sf /opt/cdxgen/bin/validate.js /opt/bin/cdx-validate \

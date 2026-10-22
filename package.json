@@ -101,7 +101,7 @@
     "cdx-verify": "bin/verify.js",
     "cdx-sign": "bin/sign.js",
     "cdxgen": "bin/cdxgen.js",
-    "cdxgen-secure": "bin/cdxgen.js",
+    "cdxgen-secure": "bin/cdxgen-secure.js",
     "cdxi": "bin/repl.js",
     "evinse": "bin/evinse.js",
     "hbom": "bin/hbom.js",

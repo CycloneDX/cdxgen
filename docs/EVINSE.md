@@ -59,6 +59,7 @@ evinse -i bom.json -o bom.evinse.json -l java --with-data-flow .
 | `--rusi-dataflow`                | `none` or `security`     | Rusi data-flow mode. Defaults to security with --with-data-flow, research profile, or --deep, and none otherwise. |
 | `--rusi-patterns`                | off                      | Custom Rusi data-flow pattern JSON file.                                                                          |
 | `--force`                        | off                      | Rebuild the evidence database                                                                                     |
+| `--install-deps`                 | on, off in secure mode   | Let evinse run the project's build tools (Maven, SwiftPM, rusi's cargo). Pass `--no-install-deps` for untrusted code |
 | `--skip-maven-collector`         | off                      | Skip Maven and Gradle cache collection                                                                            |
 | `--with-deep-jar-collector`      | off                      | Collect more jars for better Java recall                                                                          |
 | `--annotate`                     | off                      | Include atom slice contents as annotations                                                                        |
