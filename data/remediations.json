@@ -725,7 +725,7 @@
     "kind": "fallback.engaged",
     "impact": "transitive-deps",
     "title": "Leiningen was skipped because dependency installation is disabled; only the dependencies declared in project.clj were captured",
-    "targetTier": "resolved",
+    "targetTier": null,
     "actions": [
       {
         "kind": "config",
@@ -737,7 +737,7 @@
     ],
     "verify": {
       "rules": [],
-      "expectTier": "resolved",
+      "expectTier": null,
       "eventsCleared": [
         "clojure.lein.tooling-disabled"
       ]
@@ -795,7 +795,7 @@
     "kind": "fallback.engaged",
     "impact": "transitive-deps",
     "title": "SwiftPM was skipped because dependency installation is disabled; only the packages in Package.resolved were captured",
-    "targetTier": "resolved",
+    "targetTier": null,
     "actions": [
       {
         "kind": "config",
@@ -807,7 +807,7 @@
     ],
     "verify": {
       "rules": [],
-      "expectTier": "resolved",
+      "expectTier": null,
       "eventsCleared": [
         "swift.tooling-disabled"
       ]
