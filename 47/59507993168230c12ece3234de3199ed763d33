@@ -1,0 +1,16 @@
+lib/inventory/certificates.js
+  h_0926447d100ad2 1417-1419,1635-1637,1640,1982-1993,2076-2078,2115-2119,2121-2123,2125,2127-2133,2136-2137,2149,2151,2155-2159,2162,2164-2175,2180,2185-2187
+lib/inventory/certificates.poku.js
+  h_0926447d100ad2 1,419-424,426,1197-1324
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4759507993168230c12ece3234de3199ed763d33",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
