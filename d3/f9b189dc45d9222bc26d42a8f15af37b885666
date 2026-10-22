@@ -1,0 +1,72 @@
+.agents/skills/sbom-fidelity-loop/SKILL.md
+  h_0926447d100ad2 27
+bin/repl.js
+  h_0926447d100ad2 2234
+data/cbomosdb-queries.json
+  h_0926447d100ad2 35
+data/component-tags.json
+  h_0926447d100ad2 167
+data/queries-darwin.json
+  h_0926447d100ad2 77
+data/remediations.json
+  h_0926447d100ad2 1404-1427
+docs/CUSTOM_PROPERTIES.md
+  h_0926447d100ad2 77,444,902-905,1416,1648-1651,1717-1720,1985-1988,2174-2177
+docs/INTROSPECTION.md
+  h_0926447d100ad2 97
+lib/cli/index.js
+  h_0926447d100ad2 54,62-65,281-304
+lib/cli/index.poku.js
+  h_0926447d100ad2 1632-2021
+lib/inventory/evidenceUtils.js
+  h_0926447d100ad2 8,24,27,33,37-41,553-556,559,565-567,591-613,681-691,693,705-800
+lib/inventory/evidenceUtils.poku.js
+  h_0926447d100ad2 978-1515
+lib/inventory/osPackagePurl.js
+  h_0926447d100ad2 1-196
+lib/inventory/osPackagePurl.poku.js
+  h_0926447d100ad2 1-473
+lib/inventory/osPackageResolver.js
+  h_0926447d100ad2 10,51-55,57-60,63-66,68-78,90,169,175-177,181,187,190-192,215
+lib/inventory/osPackageResolver.poku.js
+  h_0926447d100ad2 2,46-222
+lib/inventory/osqueryTransform.js
+  h_0926447d100ad2 2,178-181,223-225,243-303
+lib/inventory/osqueryTransform.poku.js
+  h_0926447d100ad2 5,11,17-105,188-416
+lib/managers/binary.js
+  h_0926447d100ad2 60,66,982-995,1029-1049,1136-1148
+lib/managers/binary.poku.js
+  h_0926447d100ad2 2881-3124
+test/data/bom-almalinux-trivy.json
+  h_0926447d100ad2 1-635
+test/data/bom-alpine-trivy.json
+  h_0926447d100ad2 1-1146
+test/data/bom-ubuntu-trivy.json
+  h_0926447d100ad2 1-486
+test/data/bom-wolfi-trivy.json
+  h_0926447d100ad2 1-783
+test/data/os-release-almalinux
+  h_0926447d100ad2 1-19
+test/data/os-release-alpine
+  h_0926447d100ad2 1-6
+test/data/os-release-ubuntu
+  h_0926447d100ad2 1-13
+test/data/os-release-wolfi
+  h_0926447d100ad2 1-6
+test/data/osquery-deb-ubuntu.json
+  h_0926447d100ad2 1-181
+test/data/osquery-rpm-almalinux.json
+  h_0926447d100ad2 1-195
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d3f9b189dc45d9222bc26d42a8f15af37b885666",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
