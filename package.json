@@ -164,14 +164,14 @@
     "ssri": "14.0.0",
     "tar": "7.5.22",
     "treeverse": "3.0.0",
-    "undici": "8.12.2",
+    "undici": "8.12.3",
     "walk-up-path": "4.0.0",
     "yaml": "2.9.1",
     "yargs": "18.2.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
-    "esmock": "2.7.9",
+    "esmock": "2.8.0",
     "poku": "4.5.0",
     "sinon": "22.1.0",
     "typescript": "^7.0.2"
@@ -180,7 +180,7 @@
     "@appthreat/atom": "3.1.1",
     "@appthreat/atom-parsetools": "1.10.2",
     "@bufbuild/protobuf": "2.16.0",
-    "@cdxgen/cdx-hbom": "0.6.0",
+    "@cdxgen/cdx-hbom": "0.7.0",
     "@cdxgen/cdx-proto": "2.3.0",
     "@cdxgen/cdxgen-plugins-bin": "4.1.1",
     "@cdxgen/cdxgen-plugins-bin-darwin-amd64": "4.1.1",
