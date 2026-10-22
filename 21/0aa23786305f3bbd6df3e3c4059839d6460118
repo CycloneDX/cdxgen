@@ -1,0 +1,16 @@
+lib/stages/postgen/annotator.js
+  h_0926447d100ad2 466-474,723-730
+lib/stages/postgen/annotator.poku.js
+  h_0926447d100ad2 669-773
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "210aa23786305f3bbd6df3e3c4059839d6460118",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
