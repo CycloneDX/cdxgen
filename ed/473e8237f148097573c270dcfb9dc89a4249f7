@@ -1,0 +1,18 @@
+data/rules/cbom-security.yaml
+  h_0926447d100ad2 152-153,177-179,316-317
+lib/stages/postgen/auditBom.poku.js
+  h_0926447d100ad2 25-30,5858-5955
+lib/stages/postgen/ruleEngine.js
+  h_0926447d100ad2 388-394,529-564
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ed473e8237f148097573c270dcfb9dc89a4249f7",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
