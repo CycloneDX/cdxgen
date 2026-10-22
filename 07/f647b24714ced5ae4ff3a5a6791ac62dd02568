@@ -1,0 +1,22 @@
+docs/LESSON26.md
+  h_0926447d100ad2 63-66
+lib/cli/managedBom.js
+  h_0926447d100ad2 146,2237,2442-2446,2486
+lib/cli/managedBom.poku.js
+  h_0926447d100ad2 11,2323-2380
+lib/inventory/dosai.js
+  h_0926447d100ad2 13,881-883,1036,1129-1132,1194-1328
+lib/inventory/dosai.poku.js
+  h_0926447d100ad2 2032-2051,2195-2334
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "07f647b24714ced5ae4ff3a5a6791ac62dd02568",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
