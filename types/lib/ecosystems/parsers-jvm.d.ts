@@ -1,10 +1,36 @@
 /**
  * Parse pom file
  *
+ * Versions resolve from the pom's own properties and dependencyManagement.
+ * A caller that has read the pom's parents passes what they define in
+ * `inherited`, so versions the parents manage resolve too. Imported BOMs and
+ * parents outside the scanned directory are not read.
+ *
  * @param {string} pomFile pom file to parse
- * @returns {Object} Object containing pom properties, modules, and array of dependencies
+ * @param {Object} [inherited] Properties and managed versions from parent poms
+ * @param {Object} [inherited.properties] Property name to raw value
+ * @param {Object} [inherited.managedVersions] `groupId:artifactId` to version
+ * @returns {Object} Object containing pom properties, modules, the parent
+ *   reference, the user properties and managed versions this pom defines, and
+ *   array of dependencies
  */
-export declare function parsePom(pomFile: string): Object;
+export declare function parsePom(pomFile: string, inherited?: {
+    properties?: Object;
+    managedVersions?: Object;
+}): Object;
+/**
+ * Parse a pom file together with the parent poms it names that are present
+ * inside the scanned directory, without running Maven. Properties and
+ * dependencyManagement versions from those parents resolve the versions the
+ * pom leaves to them. Parents outside the directory and imported BOMs are not
+ * read, so the versions they manage stay empty.
+ *
+ * @param {string} pomFile Pom file to parse
+ * @param {string} rootDir Scanned directory; parents outside it are ignored
+ * @param {Map} [cache] Reused across the poms of one scan
+ * @returns {Object} Same shape as parsePom
+ */
+export declare function parsePomWithLocalParents(pomFile: string, rootDir: string, cache?: Map<any, any>): Object;
 /**
  * Every pom file of the reactor an aggregator pom builds: its own modules,
  * recursively through nested aggregators. A recursive dependency:tree run

@@ -62,6 +62,20 @@ export declare function atomFrontendArgKeys(language: string): Set<string>;
  */
 export declare function atomCompileCommandsArgs(src: string, language: string, options?: Object): string[];
 /**
+ * The arguments that stop atom's Java frontend from running the scanned
+ * project's build. In its default delombok mode, atom runs
+ * `mvn dependency:build-classpath` inside a Maven project, which loads the
+ * project's `.mvn` configuration and build extensions, so delombok and
+ * dependency fetching are turned off whenever the project's own tooling may
+ * not run.
+ *
+ * @param {string} language atom `-l` value
+ * @param {Object} options CLI options
+ * @returns {string[]|undefined} Arguments to add to the atom command, or
+ *   undefined when the installed atom cannot be told to leave the build alone
+ */
+export declare function atomBuildToolArgs(language: string, options?: Object): string[] | undefined;
+/**
  * Convert cdxgen's glob-style exclude patterns to a Scala/Java regex string.
  *
  * @param {string[]} patterns Glob patterns from cdxgen's `--exclude` option

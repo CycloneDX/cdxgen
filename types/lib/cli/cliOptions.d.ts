@@ -38,6 +38,49 @@ export declare function validateSpecVersion(specVersion: number, commandName?: s
  */
 export declare function isUserProvided(value: any, yaDefault: any): boolean;
 /**
+ * The value the operator gave an option on the command line or through its
+ * CDXGEN_* environment variable. yargs also fills options in from defaults
+ * and from a config file, which cannot be told apart in its output.
+ *
+ * @param {string} option kebab-case option name
+ * @param {object} [context]
+ * @param {string[]} [context.argv] Raw command-line arguments
+ * @param {object} [context.env] Environment variables
+ * @param {boolean} [context.boolean] Read the option as a boolean flag
+ * @returns {string|boolean|undefined} The operator's value, or undefined
+ */
+export declare function operatorOptionChoice(option: string, { argv, env, boolean }?: {
+    argv?: string[];
+    env?: object;
+    boolean?: boolean;
+}): string | boolean | undefined;
+/**
+ * Make the operator's choice about running the scanned project's own code
+ * final. A config file is read from the working directory, which is usually
+ * the scanned project, so it carries that project's trust. Neither the config
+ * file nor a profile or lifecycle may turn installs on when the operator
+ * disabled them, and secure mode keeps installs off unless the operator
+ * passes --install-deps. Introspection keeps the project's build tools
+ * running with installs off, which is likewise the operator's decision, so
+ * introspection asked for only by the config file does not do that.
+ *
+ * **Mutates `options` in place.**
+ *
+ * @param {object} options The options object, after applyAdvancedOptions
+ * @param {object} [context]
+ * @param {object} [context.projectConfig] Sanitized config file contents
+ * @param {boolean} [context.isSecureMode] Whether cdxgen runs in secure mode
+ * @param {string[]} [context.argv] Raw command-line arguments
+ * @param {object} [context.env] Environment variables
+ * @returns {void}
+ */
+export declare function applyOperatorToolingChoice(options: object, context?: {
+    projectConfig?: object;
+    isSecureMode?: boolean;
+    argv?: string[];
+    env?: object;
+}): void;
+/**
  * Combine the custom metadata properties of every source (discussion 4391):
  * the `--metadata-property` flag, the CDXGEN_METADATA_PROPERTY and
  * CDXGEN_METADATA_PROPERTIES environment variables, and a config file's

@@ -21,6 +21,14 @@ export declare function parseValue(raw: string | number | Array<string | number>
  */
 export declare function parseQueryString(q: Object, body?: Object, options?: Object): Object;
 /**
+ * Check request options that the server must refuse outright.
+ *
+ * @param {Object} reqOptions Options parsed from the request
+ * @param {Object} operatorOptions Options the server was started with
+ * @returns {Object|null} Error object with status, error and details, or null
+ */
+export declare function validateRequestOptions(reqOptions: Object, operatorOptions?: Object): Object | null;
+/**
  * Extracts query parameters from an incoming HTTP request object.
  * Handles repeated keys by collecting their values into an array.
  * Returns an empty object if the URL cannot be parsed.

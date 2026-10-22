@@ -20,6 +20,16 @@ export declare function getHbomCommandDiagnosticSummary(bomJson: Object): Object
  */
 export declare function isHbomLikeBom(bomJson: Object): boolean;
 /**
+ * Explain how the permission-denied enrichments of an HBOM can be recovered.
+ *
+ * Windows never uses sudo: the elevated-only batch needs an already-elevated
+ * session, and a network logon is denied every WMI query.
+ *
+ * @param {string|undefined} platform `cdx:hbom:platform` of the HBOM
+ * @returns {string} Guidance for the platform; the Linux wording for any other platform
+ */
+export declare function getHbomPrivilegeGuidance(platform: string | undefined): string;
+/**
  * Return a component's `cdx:hbom:hardwareClass` property value.
  *
  * @param {Object} component CycloneDX component

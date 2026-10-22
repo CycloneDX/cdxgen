@@ -57,7 +57,7 @@ export declare function resolveSaferExecBinary(): string | undefined;
  * @param {boolean} [options.denyPersistenceWrites] - Deny writes to auto-execution and persistence locations
  * @param {boolean} [options.privateTmp] - Private tmpfs /tmp and /var/tmp (Linux)
  * @param {string} [options.protectHome] - Home isolation: read-only, tmpfs, or off (Linux)
- * @returns {Promise<{libPaths: string[], httpAccessEntries: Object[], egressEntries?: Object[], dryRunSummary?: Object}>} Collected libraries, HTTP URLs, proxy egress decisions, and the dry-run summary
+ * @returns {Promise<{libPaths: string[], httpAccessEntries: Object[], cryptoEntries?: Object[], cryptoComponents?: Object[], cryptoResult?: Object, egressEntries?: Object[], dryRunSummary?: Object}>} Collected libraries, HTTP URLs, crypto observations, proxy egress decisions, and the dry-run summary
  * @throws {Error} When the @cdxgen/safer-exec tracing runtime is not installed
  *   (for example after pruning it from a standalone payload), since the traced
  *   command could never run and the BOM would silently be empty
@@ -94,6 +94,9 @@ export declare function executeAndTrace(commandStr: string, workingDir?: string,
 }): Promise<{
     libPaths: string[];
     httpAccessEntries: Object[];
+    cryptoEntries?: Object[];
+    cryptoComponents?: Object[];
+    cryptoResult?: Object;
     egressEntries?: Object[];
     dryRunSummary?: Object;
 }>;

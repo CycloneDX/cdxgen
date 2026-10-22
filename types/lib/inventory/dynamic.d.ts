@@ -23,13 +23,18 @@ export declare function librarySubpath(libPath: string): string | null;
  * Services are detected from HTTP request URLs collected during tracing and
  * follow the CycloneDX service schema with endpoints.
  *
+ * The certificate chains servers presented in TLS ≤ 1.2 handshakes become the
+ * shared certificate model, with `provides` edges from the TLS protocol
+ * components.
+ *
  * @param {string} commandStr - Shell command to execute and trace (e.g. "node --version")
  * @param {string} workingDir - Working directory for the traced process
  * @param {Object} [traceOptions] - Additional sandbox options forwarded to executeAndTrace
- * @returns {Promise<{components: Array<Object>, services: Array<Object>}>} Components and services
+ * @returns {Promise<{components: Array<Object>, services: Array<Object>, dependencies: Array<Object>}>} Components, services and dependencies
  */
 export declare function buildDynamicComponents(commandStr: string, workingDir: string, traceOptions?: Object): Promise<{
     components: Array<Object>;
     services: Array<Object>;
+    dependencies: Array<Object>;
 }>;
 //# sourceMappingURL=dynamic.d.ts.map

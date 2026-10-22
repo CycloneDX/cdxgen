@@ -61,6 +61,28 @@ export declare function resolveInstalledNugetVersion(range: string, installedVer
  */
 export declare function dotnetManifestProjectDir(manifestFile: string, projectPath?: string): string;
 /**
+ * The path, on this machine, of the project file a project.assets.json belongs to.
+ *
+ * Restore records the project file and the directory it wrote the assets file
+ * to (`outputPath`) as absolute paths on the machine that ran it, which can be
+ * a CI agent, a container, another operating system, or this tree reached
+ * through another path. Where the project file sits relative to that
+ * directory does not change when the tree moves, so the project file is that
+ * offset applied to the directory the assets file is in. An assets file that
+ * records no output path is taken to be in its project's `obj/`. The recorded
+ * path itself is used only when no offset can be worked out, as when restore
+ * wrote to another drive than the project's.
+ *
+ * Nothing is read from disk: the name is spelled as restore recorded it, which
+ * can differ in case from the file a case-insensitive file system holds.
+ *
+ * @param {string} assetsFile project.assets.json path
+ * @param {string} [projectPath] Project file restore recorded
+ * @param {string} [outputPath] Directory restore recorded writing the assets file to
+ * @returns {string|undefined} Project file path, or undefined when none can be named
+ */
+export declare function dotnetRestoredProjectFile(assetsFile: string, projectPath?: string, outputPath?: string): string | undefined;
+/**
  * Index the MSBuild properties that props files define, by the directory each
  * file sits in and across the whole scan, so the candidates for every project
  * come from one read of each file.
@@ -192,10 +214,17 @@ export declare function lookupNugetVersion(versions: Object, name: string): stri
  * @param {Object} restoredNames Package ids as this project's restore output spells them,
  *        keyed by lowercased id. NuGet ids are case-insensitive, so a reference spelled
  *        differently names the same package and takes the restored spelling.
+ * @param {{name: string, version: (string|undefined)}} [projectIdentity] Package id and
+ *        version this project's project.assets.json records for the project. They name the
+ *        project in place of what the project file states.
  *
- * @returns {Object} Containing parent component, package, and dependencies
+ * @returns {Object} Containing parent component, package, dependencies, and the
+ *   `$(Name)` version labels left unresolved without msbuild
  */
-export declare function parseCsProjData(csProjData: string, projFile: string, pkgNameVersions?: Object, msbuildInstalled?: boolean, pkgVersionLabelCandidates?: Object, centralVersions?: Object, fallbackVersions?: Object, restoredNames?: Object): Object;
+export declare function parseCsProjData(csProjData: string, projFile: string, pkgNameVersions?: Object, msbuildInstalled?: boolean, pkgVersionLabelCandidates?: Object, centralVersions?: Object, fallbackVersions?: Object, restoredNames?: Object, projectIdentity?: {
+    name: string;
+    version: (string | undefined);
+}): Object;
 /**
  * Whether a file of a NuGet package is an assembly a consuming project can
  * reference: a .dll, .exe, or .so under lib/, ref/, or runtimes/.
@@ -213,13 +242,20 @@ export declare function isReferencedDotnetPackageFile(packageFile: string): bool
  *
  * @param {string} csProjData Raw JSON string of the project.assets.json file
  * @param {string} assetsJsonFile Path to the project.assets.json file, used for evidence properties
- * @returns {{ pkgList: Object[], dependenciesList: Object[], projectPath: (string|undefined) }}
- *          `projectPath` is the project file the restore output belongs to, as restore recorded it
+ * @returns {{ pkgList: Object[], dependenciesList: Object[], projectPath: (string|undefined), outputPath: (string|undefined), projectIdentity: ({name: string, version: (string|undefined)}|undefined) }}
+ *          `projectPath` is the project file the restore output belongs to and `outputPath` the
+ *          directory restore wrote it to, both as restore recorded them. `projectIdentity` is the
+ *          package id and version restore evaluated for the project, which root the dependency tree.
  */
 export declare function parseCsProjAssetsData(csProjData: string, assetsJsonFile: string): {
     pkgList: Object[];
     dependenciesList: Object[];
     projectPath: (string | undefined);
+    outputPath: (string | undefined);
+    projectIdentity: ({
+        name: string;
+        version: (string | undefined);
+    } | undefined);
 };
 /**
  * Parse a .NET packages.lock.json file and return the package list, dependency tree,

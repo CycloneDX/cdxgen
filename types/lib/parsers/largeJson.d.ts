@@ -18,6 +18,19 @@ export declare function indexJsonObject(filePath: string, options?: Object): Map
     end: number;
 }>;
 /**
+ * Decode one member of the top-level object in a JSON file, reading the file
+ * only up to the end of that member. A member near the start of a large file
+ * costs a few bounded reads, however large the rest of the file is; the rest
+ * is not checked for well-formedness.
+ *
+ * @param {string} filePath JSON file whose top-level value is an object
+ * @param {string} name Member to decode
+ * @param {Object} [options] Batch and chunk size overrides, for tests
+ * @returns {*} The decoded value, or undefined when the object has no such member
+ * @throws {SyntaxError} When the object is malformed before the member ends
+ */
+export declare function readJsonMember(filePath: string, name: string, options?: Object): any;
+/**
  * Decode the JSON value stored in a byte range of a file, without ever holding
  * more than a bounded run of it in one string.
  *

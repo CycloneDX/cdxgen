@@ -9,7 +9,8 @@ export declare function isDocumentationJar(jarName: string): boolean;
  * Collect maven dependencies
  *
  * @param {string} mavenCmd Maven command to use
- * @param {string} basePath Path to the maven project
+ * @param {string} basePath Path to the maven project. Without it Maven is not
+ *   run, and only the local repository is read when includeCacheDir is set.
  * @param {boolean} cleanup Remove temporary directories
  * @param {boolean} includeCacheDir Include maven and gradle cache directories
  */
