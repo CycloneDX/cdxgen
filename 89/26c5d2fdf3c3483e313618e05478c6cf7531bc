@@ -1,0 +1,33 @@
+lib/inventory/certificates.js
+  s_52f5c4eaf6e6b7::t_a2f40e4f8f12c1 1991-1996
+lib/inventory/display.js
+  s_52f5c4eaf6e6b7::t_a2f40e4f8f12c1 1052-1058
+lib/managers/docker.js
+  s_52f5c4eaf6e6b7::t_9e7e8531ed6e7d 2143-2144
+  s_52f5c4eaf6e6b7::t_7dd658a8e1005d 2082-2113,2138-2142
+  s_52f5c4eaf6e6b7::t_f29259028ec26a 2120-2122
+contrib/alt-runtime-tests.js
+  s_52f5c4eaf6e6b7::t_b367506809dcf5 56-57
+lib/managers/docker.poku.js
+  s_52f5c4eaf6e6b7::t_f410fce5b7fae4 3041,3146-3156
+  s_52f5c4eaf6e6b7::t_6b0b37053095b7 3157-3161
+lib/inventory/certificates.poku.js
+  s_52f5c4eaf6e6b7::t_75404f814f0547 21,1326-1340
+  s_52f5c4eaf6e6b7::t_09145fcc1b03d9 1341-1342
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8926c5d2fdf3c3483e313618e05478c6cf7531bc",
+  "prompts": {},
+  "sessions": {
+    "s_52f5c4eaf6e6b7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6df25678-2bd9-411d-a772-3a7751696245",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
