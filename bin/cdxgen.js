@@ -140,6 +140,11 @@ import { prepareEnv } from "../lib/stages/pregen/pregen.js";
 import { validateSpdx } from "../lib/validator/bomValidator.js";
 import { validateGeneratedBom } from "../lib/validator/index.js";
 
+// The environment as the operator launched cdxgen. The CLI later copies some
+// parsed options into the environment (--introspect becomes
+// CDXGEN_INTROSPECT), so the operator's own choices are read from this copy.
+const launchEnv = { ...process.env };
+
 // Support for config files. The config file lives in the directory under
 // analysis, so it carries that directory's trust level; see
 // sanitizeProjectConfig for the boundary this applies.
@@ -1276,6 +1281,7 @@ const advancedWarnings = applyAdvancedOptionsImpl(options, {
 // project, so whether the project's own code may run stays the operator's
 // choice from the command line and environment.
 applyOperatorToolingChoice(options, {
+  env: launchEnv,
   isSecureMode: isSecureModeActive(),
   projectConfig: config,
 });
