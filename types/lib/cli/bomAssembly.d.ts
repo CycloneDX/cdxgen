@@ -92,13 +92,8 @@ export declare const addLifecyclesSection: (options: Object) => any[];
 /**
  * Function to create metadata block
  *
- * @param {Object} [parentComponent] Component the BOM describes
- * @param {Object} [options] CLI options
- * @param {Object} [context] Generator context. `context.metadataProperties`
- *   holds facts of a manifest that has no component to carry them, such as the
- *   platform data of a composer.lock whose composer.json names no project.
  */
-export declare function addMetadata(parentComponent?: Object, options?: Object, context?: Object): {
+export declare function addMetadata(parentComponent?: {}, options?: {}, context?: {}): {
     timestamp: string;
     tools: {
         components?: object[];
@@ -319,12 +314,10 @@ export declare function emitAiInventorySummary(aiInventory: object, discoveryPat
  * @param {Array} components Components
  * @param {Object} parentComponent Parent component
  * @param {Array} dependencies Dependencies
- * @param {Array} [metadataProperties] Properties for the metadata block, from
- *   generators whose manifest has no component to carry them
  *
  * @returns {Object} Object including BOM Json
  */
-export declare function dedupeBom(options: Object, components: any[], parentComponent: Object, dependencies: any[], metadataProperties?: any[]): Object;
+export declare function dedupeBom(options: Object, components: any[], parentComponent: Object, dependencies: any[]): Object;
 /**
  * Checks whether the user explicitly selected a project type alias that
  * belongs to the given base project type.

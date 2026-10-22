@@ -186,25 +186,65 @@ export declare function parseComposerJson(composerJsonFile: string): Object;
  *
  * @param {string} pkgLockFile composer.lock file
  * @param {array} rootRequires require section from composer.json
- * @returns {{pkgList: Object[], dependenciesList: Object[], rootList: Object[], platformProperties: {name: string, value: string}[]}|Array}
- *   The locked packages, the dependency edges between them, the packages the
- *   root requires, and the lock's `platform`, `platform-dev` and
- *   `platform-overrides` entries as `cdx:composer:*` properties. The platform
- *   entries are constraints and assumed versions, not the PHP that runs; the
- *   caller puts them on the module component. Every locked package carries its
- *   own `php`, `hhvm`, `ext-*` and `lib-*` requirements as
- *   `cdx:composer:require:<name>` properties. A lock that is not valid JSON
- *   gives an empty array.
  */
-export declare function parseComposerLock(pkgLockFile: string, rootRequires: array): {
-    pkgList: Object[];
-    dependenciesList: Object[];
-    rootList: Object[];
-    platformProperties: {
-        name: string;
-        value: string;
+export declare function parseComposerLock(pkgLockFile: string, rootRequires: array): never[] | {
+    pkgList: {
+        group: any;
+        name: any;
+        purl: any;
+        "bom-ref": string;
+        version: any;
+        repository: any;
+        license: any;
+        description: any;
+        scope: string;
+        properties: {
+            name: string;
+            value: string;
+        }[];
+        evidence: {
+            identity: {
+                field: string;
+                confidence: number;
+                methods: {
+                    technique: string;
+                    confidence: number;
+                    value: string;
+                }[];
+            };
+        };
     }[];
-} | any[];
+    dependenciesList: {
+        ref: string;
+        dependsOn: any[];
+    }[];
+    rootList: {
+        group: any;
+        name: any;
+        purl: any;
+        "bom-ref": string;
+        version: any;
+        repository: any;
+        license: any;
+        description: any;
+        scope: string;
+        properties: {
+            name: string;
+            value: string;
+        }[];
+        evidence: {
+            identity: {
+                field: string;
+                confidence: number;
+                methods: {
+                    technique: string;
+                    confidence: number;
+                    value: string;
+                }[];
+            };
+        };
+    }[];
+};
 /**
  * Method to execute dpkg --listfiles to determine the files provided by a given package
  *

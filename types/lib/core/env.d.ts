@@ -113,10 +113,6 @@ export declare let CDXGEN_TEMP_DIR: string;
 export declare const SWIFT_CMD: string;
 /** Resolved Ruby executable command (RUBY_CMD env var, or "ruby"). */
 export declare const RUBY_CMD: string;
-/** Resolved PHP executable command (PHP_CMD env var, or "php"). */
-export declare const PHP_CMD: string;
-/** Resolved Composer executable command (COMPOSER_CMD env var, or "composer"). */
-export declare const COMPOSER_CMD: string;
 /** Python package components that can be excluded from the generated BOM. */
 export declare const PYTHON_EXCLUDED_COMPONENTS: string[];
 /** Map of base cdxgen project type to the array of accepted alias strings. */
@@ -216,23 +212,11 @@ export declare function isFeatureEnabled(cliOptions: Object, feature: string): b
  */
 export declare function hasAnyProjectType(projectTypes: any[], options: Object, defaultStatus?: boolean): any;
 /**
- * Extract the lowercase command name from an invoked command path, without
- * directories or a trailing `.js`, `.cjs`, `.mjs` or `.exe` extension. Both
- * `/` and `\\` separators are handled, so a Windows path is inspected the
- * same way on any host.
- *
- * @param {string} [commandPath] Invoked command path or name
- * @returns {string} Lowercase command name
- */
-export declare function getCommandName(commandPath?: string): string;
-/**
  * Determine whether the predictive dependency audit should run for the current
  * CLI invocation.
  *
- * OBOM and HBOM runs (commands named `obom` or `hbom`, including `hbom-slim`)
- * and explicit `-t os` / OS / hardware project types alone keep the direct BOM
- * audit findings but skip the predictive dependency audit. Only the command
- * name is tested, never the directories leading to it.
+ * OBOM-focused runs (`obom` or explicit `-t os` / OS aliases only) should keep
+ * the direct BOM audit findings but skip the predictive dependency audit.
  *
  * @param {object} options CLI options
  * @param {string} [commandPath] Invoked command path or name

@@ -42,11 +42,8 @@ export declare function collectExecutables(basePath: any, binPaths: any, exclude
  * @param ldConf {String} Config file used by ldconfig to locate additional paths
  * @param ldConfDirPattern {String} Config directory that can contain more .conf files for ldconfig
  * @param excludePaths {Array[String]} Container-relative paths that should be excluded from the result set
- * @param extraLibGlobs {Array[String]} Extra container-relative globs for files
- *   the default paths miss, such as libphp*.so under Apache's modules
- *   directory. The existing globs are unchanged; this adds candidates only.
  *
  * @return {Array[String]} List of executables
  */
-export declare function collectSharedLibs(basePath: any, libPaths: any, ldConf: string, ldConfDirPattern: string, excludePaths?: any, extraLibGlobs?: any): any;
+export declare function collectSharedLibs(basePath: any, libPaths: any, ldConf: string, ldConfDirPattern: string, excludePaths?: any): any;
 //# sourceMappingURL=osPackageResolver.d.ts.map
