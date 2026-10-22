@@ -12,10 +12,9 @@ it; this skill is the loop that executes those fixes and re-scans. The report
 format is documented in [reference/report-schema.md](reference/report-schema.md)
 and the six remediation action kinds in
 [reference/remediation-actions.md](reference/remediation-actions.md); the
-user-facing feature docs are [docs/CLI.md](../../docs/CLI.md) ("Build
-introspection") and
-[docs/INTROSPECTION.md](../../docs/INTROSPECTION.md), which shows a worked
-degraded-to-repaired transition with both real reports.
+user-facing feature docs are the [CLI reference](../../docs/CLI.md) ("Build
+introspection") and the [introspection guide](../../docs/INTROSPECTION.md),
+which shows a worked degraded-to-repaired transition with both real reports.
 
 The loop measures the environment the user actually has. It fixes the
 environment; it never fixes the project.
