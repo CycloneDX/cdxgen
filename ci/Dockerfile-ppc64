@@ -19,6 +19,10 @@ ARG GRADLE_VERSION=9.7.0
 # renovate: datasource=golang-version depName=golang
 ARG GO_VERSION=1.27.1
 ARG PYTHON_VERSION=3.12
+# AlmaLinux's own nodejs package trails the upstream security releases, so the
+# official build for this version is installed instead.
+# renovate: datasource=node-version depName=node
+ARG NODE_VERSION=24.22.1
 
 ENV GOPATH=/opt/app-root/go \
     SBT_VERSION=$SBT_VERSION \
@@ -45,23 +49,31 @@ RUN set -e; \
     url=; \
     case "${ARCH_NAME##*-}" in \
         'x86_64') \
+            NODE_ARCH='x64'; \
             OS_ARCH_SUFFIX=''; \
             GOBIN_VERSION='amd64'; \
             ;; \
         'aarch64') \
+            NODE_ARCH='arm64'; \
             OS_ARCH_SUFFIX='-aarch64'; \
             GOBIN_VERSION='arm64'; \
             ;; \
         'ppc64le') \
+            NODE_ARCH='ppc64le'; \
             OS_ARCH_SUFFIX='-ppc64le'; \
             GOBIN_VERSION='ppc64le'; \
             ;; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
     esac; \
-    echo -e "[nodejs]\nname=nodejs\nstream=20\nprofiles=\nstate=enabled\n" > /etc/dnf/modules.d/nodejs.module \
-    && microdnf install --nodocs -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
+    microdnf install --nodocs -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
         python${PYTHON_VERSION} python${PYTHON_VERSION}-devel python${PYTHON_VERSION}-pip ruby ruby-devel java-21-openjdk-headless \
-        pcre2 which tar gzip zip unzip bzip2 sudo nodejs ncurses gnupg2 \
+        pcre2 which tar xz gzip zip unzip bzip2 sudo ncurses gnupg2 \
+    && NODE_TARBALL="node-v${NODE_VERSION}-linux-${NODE_ARCH}.tar.xz" \
+    && curl -fsSLO "https://nodejs.org/dist/v${NODE_VERSION}/${NODE_TARBALL}" \
+    && curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/SHASUMS256.txt" | grep " ${NODE_TARBALL}\$" | sha256sum -c - \
+    && tar -xJf "${NODE_TARBALL}" -C /usr/local --strip-components=1 --no-same-owner --exclude='*.md' --exclude=LICENSE \
+    && rm "${NODE_TARBALL}" \
+    && node --version \
     && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 10 \
     && alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYTHON_VERSION} 10 \
     && python${PYTHON_VERSION} --version \
