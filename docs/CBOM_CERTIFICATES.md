@@ -110,6 +110,12 @@ What the run records, and what it deliberately does not:
   cover loopback, so a loopback fixture server must be reached with
   `curl --noproxy ""` (or an equivalent override), and by a host name listed
   in `--allow-host`, not an IP literal — the proxy pins hostnames.
+- **Identity is the certificate hash, but the name is the server's too.** The
+  bom-ref embeds the certificate's name (PLAN §2.1). A server that presents a
+  certificate under a different subject than the copy on disk therefore
+  produces two components with the same `@sha256:` and different names; this
+  is the contract, and it never hides a certificate from the `spkiSha256`
+  deny-list queries above.
 
 Each TLS protocol component `provides` the certificates and keys presented
 under it, so the graph leads from `crypto/protocol/tls@<version>` to the
