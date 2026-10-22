@@ -1,0 +1,22 @@
+deno.json
+  h_0926447d100ad2 3
+jsr.json
+  h_0926447d100ad2 3
+package.json
+  h_0926447d100ad2 3
+pyproject.toml
+  h_0926447d100ad2 3
+uv.lock
+  h_0926447d100ad2 186
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3c3b8edb459ae3d2ffbed2b03be91456c80c8c2b",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
