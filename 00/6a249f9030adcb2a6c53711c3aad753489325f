@@ -1,0 +1,36 @@
+.github/workflows/dockertests.yml
+  h_0926447d100ad2 68
+docs/CBOM_CERTIFICATES.md
+  h_0926447d100ad2 111-123
+docs/BOM_AUDIT.md
+  h_0926447d100ad2 88,699-718
+docs/CUSTOM_PROPERTIES.md
+  h_0926447d100ad2 2295
+lib/managers/binary.poku.js
+  s_71f301a0b01dc6::t_beae628d2d64aa 2368,2451,2459-2461,2499-2522
+  s_71f301a0b01dc6::t_f50c19987289ed 2365-2367
+  s_71f301a0b01dc6::t_294e0d21ebde42 2449-2450
+  s_71f301a0b01dc6::t_4ea76e2df57382 2457-2458
+  h_0926447d100ad2 2364
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "006a249f9030adcb2a6c53711c3aad753489325f",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  },
+  "sessions": {
+    "s_71f301a0b01dc6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ee53f96-6c40-480c-9a0d-102759731f8d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
