@@ -48,6 +48,10 @@
       "name": "aws-crt-php",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": ">=5.5"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -108,6 +112,22 @@
       ],
       "name": "aws-sdk-php",
       "properties": [
+        {
+          "name": "cdx:composer:require:ext-json",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-pcre",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-simplexml",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=8.1"
+        },
         {
           "name": "internal:Namespaces",
           "value": "Aws\\"
@@ -178,6 +198,10 @@
       ],
       "name": "instantiator",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": "^8.4"
+        },
         {
           "name": "internal:Namespaces",
           "value": "Doctrine\\Instantiator\\"
@@ -267,6 +291,14 @@
       "name": "guzzle",
       "properties": [
         {
+          "name": "cdx:composer:require:ext-json",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:php",
+          "value": "^7.2.5 || ^8.0"
+        },
+        {
           "name": "internal:Namespaces",
           "value": "GuzzleHttp\\"
         },
@@ -349,6 +381,10 @@
       ],
       "name": "promises",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": "^7.2.5 || ^8.0"
+        },
         {
           "name": "internal:Namespaces",
           "value": "GuzzleHttp\\Promise\\"
@@ -437,6 +473,10 @@
       "name": "psr7",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": "^7.2.5 || ^8.0"
+        },
+        {
           "name": "internal:Namespaces",
           "value": "GuzzleHttp\\Psr7\\"
         },
@@ -511,6 +551,10 @@
       "name": "jmespath.php",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": "^7.2.5 || ^8.0"
+        },
+        {
           "name": "internal:Namespaces",
           "value": "JmesPath\\"
         },
@@ -568,6 +612,10 @@
       ],
       "name": "deep-copy",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": "^7.1 || ^8.0"
+        },
         {
           "name": "internal:Namespaces",
           "value": "DeepCopy\\"
@@ -634,6 +682,22 @@
       ],
       "name": "php-parser",
       "properties": [
+        {
+          "name": "cdx:composer:require:ext-ctype",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-json",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-tokenizer",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.4"
+        },
         {
           "name": "internal:Namespaces",
           "value": "PhpParser\\"
@@ -707,6 +771,26 @@
       "name": "manifest",
       "properties": [
         {
+          "name": "cdx:composer:require:ext-dom",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-libxml",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-phar",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-xmlwriter",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:php",
+          "value": "^7.2 || ^8.0"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -771,6 +855,10 @@
       "name": "version",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": "^7.2 || ^8.0"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -826,6 +914,10 @@
       ],
       "name": "php-mock-integration",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=5.6"
+        },
         {
           "name": "internal:Namespaces",
           "value": "phpmock\\integration\\"
@@ -895,6 +987,10 @@
       ],
       "name": "php-mock-phpunit",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=7"
+        },
         {
           "name": "internal:Namespaces",
           "value": "phpmock\\phpunit\\"
@@ -967,6 +1063,10 @@
       "name": "php-mock",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": "^5.6 || ^7.0 || ^8.0"
+        },
+        {
           "name": "internal:Namespaces",
           "value": "phpmock\\"
         },
@@ -1037,6 +1137,22 @@
       "name": "php-code-coverage",
       "properties": [
         {
+          "name": "cdx:composer:require:ext-dom",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-libxml",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-xmlwriter",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -1098,6 +1214,10 @@
       "name": "php-file-iterator",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -1158,6 +1278,10 @@
       "name": "php-invoker",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -1216,6 +1340,10 @@
       ],
       "name": "php-text-template",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
         {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
@@ -1276,6 +1404,10 @@
       "name": "php-timer",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -1334,6 +1466,34 @@
       ],
       "name": "phpunit",
       "properties": [
+        {
+          "name": "cdx:composer:require:ext-dom",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-json",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-libxml",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-mbstring",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-xml",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-xmlwriter",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
         {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
@@ -1394,6 +1554,10 @@
       ],
       "name": "http-client",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": "^7.0 || ^8.0"
+        },
         {
           "name": "internal:Namespaces",
           "value": "Psr\\Http\\Client\\"
@@ -1459,6 +1623,10 @@
       ],
       "name": "http-factory",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.1"
+        },
         {
           "name": "internal:Namespaces",
           "value": "Psr\\Http\\Message\\"
@@ -1529,6 +1697,10 @@
       "name": "http-message",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": "^7.2 || ^8.0"
+        },
+        {
           "name": "internal:Namespaces",
           "value": "Psr\\Http\\Message\\"
         },
@@ -1597,6 +1769,10 @@
       "name": "getallheaders",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": ">=5.6"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -1652,6 +1828,10 @@
       ],
       "name": "cli-parser",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
         {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
@@ -1709,6 +1889,10 @@
       "name": "code-unit-reverse-lookup",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -1764,6 +1948,10 @@
       ],
       "name": "code-unit",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
         {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
@@ -1833,6 +2021,10 @@
       "name": "comparator",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -1894,6 +2086,10 @@
       "name": "complexity",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -1953,6 +2149,10 @@
       ],
       "name": "diff",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
         {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
@@ -2015,6 +2215,10 @@
       ],
       "name": "environment",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
         {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
@@ -2093,6 +2297,10 @@
       "name": "exporter",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -2153,6 +2361,10 @@
       "name": "global-state",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -2212,6 +2424,10 @@
       "name": "lines-of-code",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -2268,6 +2484,10 @@
       "name": "object-enumerator",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -2323,6 +2543,10 @@
       ],
       "name": "object-reflector",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
         {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
@@ -2388,6 +2612,10 @@
       "name": "recursion-context",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -2443,6 +2671,10 @@
       ],
       "name": "resource-operations",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
         {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
@@ -2500,6 +2732,10 @@
       "name": "type",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -2555,6 +2791,10 @@
       ],
       "name": "version",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.3"
+        },
         {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
@@ -2616,6 +2856,22 @@
       ],
       "name": "php_codesniffer",
       "properties": [
+        {
+          "name": "cdx:composer:require:ext-simplexml",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-tokenizer",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-xmlwriter",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=5.4.0"
+        },
         {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
@@ -2681,6 +2937,10 @@
       "name": "deprecation-contracts",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": ">=8.1"
+        },
+        {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
         }
@@ -2739,6 +2999,10 @@
       ],
       "name": "filesystem",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=8.4"
+        },
         {
           "name": "internal:Namespaces",
           "value": "Symfony\\Component\\Filesystem\\"
@@ -2802,6 +3066,10 @@
       ],
       "name": "polyfill-ctype",
       "properties": [
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.2"
+        },
         {
           "name": "internal:Namespaces",
           "value": "Symfony\\Polyfill\\Ctype\\"
@@ -2871,6 +3139,14 @@
       ],
       "name": "polyfill-mbstring",
       "properties": [
+        {
+          "name": "cdx:composer:require:ext-iconv",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.2"
+        },
         {
           "name": "internal:Namespaces",
           "value": "Symfony\\Polyfill\\Mbstring\\"
@@ -2946,6 +3222,10 @@
       "name": "polyfill-php80",
       "properties": [
         {
+          "name": "cdx:composer:require:php",
+          "value": ">=7.2"
+        },
+        {
           "name": "internal:Namespaces",
           "value": "Symfony\\Polyfill\\Php80\\"
         },
@@ -3011,6 +3291,22 @@
       ],
       "name": "tokenizer",
       "properties": [
+        {
+          "name": "cdx:composer:require:ext-dom",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-tokenizer",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:ext-xmlwriter",
+          "value": "*"
+        },
+        {
+          "name": "cdx:composer:require:php",
+          "value": "^7.2 || ^8.0"
+        },
         {
           "name": "internal:SrcFile",
           "value": "$ROOT/composer.lock"
@@ -3301,6 +3597,16 @@
     "lifecycles": [
       {
         "phase": "pre-build"
+      }
+    ],
+    "properties": [
+      {
+        "name": "cdx:composer:platform:ext-readline",
+        "value": "*"
+      },
+      {
+        "name": "cdx:composer:platform:ext-zip",
+        "value": "*"
       }
     ],
     "timestamp": "1970-01-01T00:00:00.000Z",

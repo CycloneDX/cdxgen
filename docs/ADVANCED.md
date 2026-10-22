@@ -990,7 +990,9 @@ The resulting protobuf BOM can be consumed directly by companion commands such a
 Pass the argument `--include-formulation` to collect the following information under the `formulation` section:
 
 - git metadata such as files in the tree, origin url, branch, and CI environment variables
-- build tools versions (Java, Python, Node.js, gcc, dotnet, rustc)
+- build tools versions (Java, Python, Node.js, gcc, dotnet, rustc, Go, Ruby, PHP and Composer)
+
+The `php` and `composer` components are `platform` components with the `pkg:generic` purl type and a CPE, for example `pkg:generic/php@8.5.11` and `cpe:2.3:a:php:php:8.5.11:*:*:*:*:*:*:*`. A probe of the `PATH` cannot tell which package manager installed the tool, so it names no distro or package manager. A PHP that reports a distro revision, such as Ubuntu 22.04's `8.1.2-1ubuntu2.14`, keeps that version and gets no CPE, because the distro backports fixes under the old upstream number. Like the other toolchains they carry no `bom-ref`, so the same `pkg:generic/php` runtime found in a scanned image cannot collide with them. They describe the machine that generated the BOM, not the runtime of what it describes: container image and OS scans identify PHP by the package that installed it, or, for PHP built from source, by the files found there. Use `PHP_CMD` and `COMPOSER_CMD` to choose the commands (see [ENV.md](ENV.md)).
 
 Example:
 

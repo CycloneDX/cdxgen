@@ -189,6 +189,21 @@ toolchains. Bring your own deny list with
 your SPKI hashes to the `$deny` arrays, and see
 `docs/cbom-custom-spki-denylist.yaml` for a documented example.
 
+The PHP counterpart is `PHP-RCE-001`/`PHP-RCE-002` (category
+`php-security`). Each source-built `php`, `php-fpm`, `php-cgi`, `phpdbg`,
+`libphp*.so` or `frankenphp` file component that no package manager owns
+carries `cdx:php:buildVersion`, `cdx:php:buildVersionSource` and
+`cdx:php:sapi` in container, rootfs and OS (`obom`) scans, and depends on a
+`pkg:generic/php@<version>` platform component with a CPE. PHP that a package
+manager owns is identified by its package and carries none of these:
+
+```bash
+jq -r '.components[] | select((.properties // [])[] | select(.name=="cdx:php:buildVersion"))
+  | [.name, ([.properties[] | select(.name=="cdx:php:buildVersion")][0].value)] | @tsv' bom.json
+```
+
+See `docs/BOM_AUDIT.md` for the fixed releases and the CLI/web split.
+
 ## Post-quantum certificates
 
 ML-DSA (RFC 9881), SLH-DSA (RFC 9909) and ML-KEM (RFC 9935) keys and
