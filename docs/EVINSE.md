@@ -33,45 +33,45 @@ evinse -i bom.json -o bom.evinse.json -l java --with-data-flow .
 
 ## CLI reference
 
-| Flag                             | Default                  | Description                                                                                                       |
-| -------------------------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| `-i, --input`                    | `bom.json`               | Input CycloneDX BOM                                                                                               |
-| `-o, --output`                   | `bom.evinse.json`        | Output enriched BOM                                                                                               |
-| `-l, --language`                 | `java`                   | Source language                                                                                                   |
-| `--compile-commands`             | autodetected             | C/C++ `compile_commands.json` (or its directory) for atom 4.0+; see [LESSON27.md](LESSON27.md)                    |
-| `--golem-command`                | `GOLEM_CMD`              | Use a specific `golem` binary for Go Evinse                                                                       |
-| `--golem-callgraph`              | `static` / `none`        | Go call graph mode: `none`, `static`, `cha`, `rta`, or `vta`                                                      |
-| `--golem-dataflow`               | `none` / `all`           | Go data-flow mode: `none`, `security`, `crypto`, or `all`                                                         |
-| `--golem-dataflow-callgraph`     | `none`                   | Call graph mode for Golem data-flow dynamic summary replay                                                        |
-| `--golem-dataflow-pattern-packs` | `all`                    | Data-flow pattern packs such as `crypto`, `process`, `filesystem`, or `all`                                       |
-| `--golem-dataflow-max-slices`    | bounded by cdxgen        | Maximum Golem data-flow slices to retain                                                                          |
-| `--golem-dataflow-workers`       | capped CPU count         | Worker cap for predictable Go data-flow performance                                                               |
-| `--golem-max-procs`              | capped CPU count         | Go scheduler thread cap for Golem                                                                                 |
-| `--golem-memory-limit`           | none                     | Optional Golem soft memory limit such as `4GiB`                                                                   |
-| `--golem-patterns`               | `./...`                  | Comma-separated Go package patterns                                                                               |
-| `--golem-tags`                   | none                     | Comma-separated Go build tags                                                                                     |
-| `--golem-tests`                  | off                      | Include Go test variants in Golem analysis                                                                        |
-| `--rusi-command`                 | `RUSI_CMD`               | Use a specific `rusi` binary for Rust Evinse                                                                      |
-| `--rusi-mode`                    | `analyze`                | Rusi analysis mode. analyze or cryptos                                                                            |
-| `--rusi-backend`                 | `stable`                 | Rusi analysis backend. stable or compiler                                                                         |
-| `--rusi-toolchain`               | `auto`                   | Rust toolchain for the Rusi compiler backend (e.g., auto, nightly, stable).                                       |
-| `--rusi-callgraph`               | `static`                 | Rusi call graph mode.                                                                                             |
-| `--rusi-dataflow`                | `none` or `security`     | Rusi data-flow mode. Defaults to security with --with-data-flow, research profile, or --deep, and none otherwise. |
-| `--rusi-patterns`                | off                      | Custom Rusi data-flow pattern JSON file.                                                                          |
-| `--force`                        | off                      | Rebuild the evidence database                                                                                     |
+| Flag                             | Default                  | Description                                                                                                          |
+| -------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| `-i, --input`                    | `bom.json`               | Input CycloneDX BOM                                                                                                  |
+| `-o, --output`                   | `bom.evinse.json`        | Output enriched BOM                                                                                                  |
+| `-l, --language`                 | `java`                   | Source language                                                                                                      |
+| `--compile-commands`             | autodetected             | C/C++ `compile_commands.json` (or its directory) for atom 4.0+; see [LESSON27.md](LESSON27.md)                       |
+| `--golem-command`                | `GOLEM_CMD`              | Use a specific `golem` binary for Go Evinse                                                                          |
+| `--golem-callgraph`              | `static` / `none`        | Go call graph mode: `none`, `static`, `cha`, `rta`, or `vta`                                                         |
+| `--golem-dataflow`               | `none` / `all`           | Go data-flow mode: `none`, `security`, `crypto`, or `all`                                                            |
+| `--golem-dataflow-callgraph`     | `none`                   | Call graph mode for Golem data-flow dynamic summary replay                                                           |
+| `--golem-dataflow-pattern-packs` | `all`                    | Data-flow pattern packs such as `crypto`, `process`, `filesystem`, or `all`                                          |
+| `--golem-dataflow-max-slices`    | bounded by cdxgen        | Maximum Golem data-flow slices to retain                                                                             |
+| `--golem-dataflow-workers`       | capped CPU count         | Worker cap for predictable Go data-flow performance                                                                  |
+| `--golem-max-procs`              | capped CPU count         | Go scheduler thread cap for Golem                                                                                    |
+| `--golem-memory-limit`           | none                     | Optional Golem soft memory limit such as `4GiB`                                                                      |
+| `--golem-patterns`               | `./...`                  | Comma-separated Go package patterns                                                                                  |
+| `--golem-tags`                   | none                     | Comma-separated Go build tags                                                                                        |
+| `--golem-tests`                  | off                      | Include Go test variants in Golem analysis                                                                           |
+| `--rusi-command`                 | `RUSI_CMD`               | Use a specific `rusi` binary for Rust Evinse                                                                         |
+| `--rusi-mode`                    | `analyze`                | Rusi analysis mode. analyze or cryptos                                                                               |
+| `--rusi-backend`                 | `stable`                 | Rusi analysis backend. stable or compiler                                                                            |
+| `--rusi-toolchain`               | `auto`                   | Rust toolchain for the Rusi compiler backend (e.g., auto, nightly, stable).                                          |
+| `--rusi-callgraph`               | `static`                 | Rusi call graph mode.                                                                                                |
+| `--rusi-dataflow`                | `none` or `security`     | Rusi data-flow mode. Defaults to security with --with-data-flow, research profile, or --deep, and none otherwise.    |
+| `--rusi-patterns`                | off                      | Custom Rusi data-flow pattern JSON file.                                                                             |
+| `--force`                        | off                      | Rebuild the evidence database                                                                                        |
 | `--install-deps`                 | on, off in secure mode   | Let evinse run the project's build tools (Maven, SwiftPM, rusi's cargo). Pass `--no-install-deps` for untrusted code |
-| `--skip-maven-collector`         | off                      | Skip Maven and Gradle cache collection                                                                            |
-| `--with-deep-jar-collector`      | off                      | Collect more jars for better Java recall                                                                          |
-| `--annotate`                     | off                      | Include atom slice contents as annotations                                                                        |
-| `--with-data-flow`               | off                      | Enable inter-procedural data-flow slicing                                                                         |
-| `--with-reachables`              | off                      | Enable reachability-based slicing                                                                                 |
-| `--profile`                      | `generic`                | Use `research` to enable dosai data-flow and crypto analysis for .NET projects                                    |
-| `--usages-slices-file`           | `usages.slices.json`     | Reuse an existing usages slice file                                                                               |
-| `--data-flow-slices-file`        | `data-flow.slices.json`  | Reuse an existing data-flow slice file                                                                            |
-| `--reachables-slices-file`       | `reachables.slices.json` | Reuse an existing reachables slice file and its `_1.json`, `_2.json`, ... chunks                                  |
-| `--semantics-slices-file`        | `semantics.slices.json`  | Reuse an existing semantics slice file                                                                            |
-| `--openapi-spec-file`            | `openapi.json`           | Reuse an existing OpenAPI spec file                                                                               |
-| `-p, --print`                    | off                      | Print evidence tables after generation                                                                            |
+| `--skip-maven-collector`         | off                      | Skip Maven and Gradle cache collection                                                                               |
+| `--with-deep-jar-collector`      | off                      | Collect more jars for better Java recall                                                                             |
+| `--annotate`                     | off                      | Include atom slice contents as annotations                                                                           |
+| `--with-data-flow`               | off                      | Enable inter-procedural data-flow slicing                                                                            |
+| `--with-reachables`              | off                      | Enable reachability-based slicing                                                                                    |
+| `--profile`                      | `generic`                | Use `research` to enable dosai data-flow and crypto analysis for .NET projects                                       |
+| `--usages-slices-file`           | `usages.slices.json`     | Reuse an existing usages slice file                                                                                  |
+| `--data-flow-slices-file`        | `data-flow.slices.json`  | Reuse an existing data-flow slice file                                                                               |
+| `--reachables-slices-file`       | `reachables.slices.json` | Reuse an existing reachables slice file and its `_1.json`, `_2.json`, ... chunks                                     |
+| `--semantics-slices-file`        | `semantics.slices.json`  | Reuse an existing semantics slice file                                                                               |
+| `--openapi-spec-file`            | `openapi.json`           | Reuse an existing OpenAPI spec file                                                                                  |
+| `-p, --print`                    | off                      | Print evidence tables after generation                                                                               |
 
 ## Supported languages
 
