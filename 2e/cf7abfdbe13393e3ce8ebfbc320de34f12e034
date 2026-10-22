@@ -1,0 +1,18 @@
+lib/cli/nativeBom.poku.js
+  h_0926447d100ad2 992-996,1020
+package.json
+  h_0926447d100ad2 167,174,183
+pnpm-lock.yaml
+  h_0926447d100ad2 241-242,257-258,279-280,495-496,961-962,1296-1297,1495,1888,2276
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2ecf7abfdbe13393e3ce8ebfbc320de34f12e034",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
