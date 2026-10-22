@@ -1,0 +1,22 @@
+docs/ADVANCED.md
+  h_0926447d100ad2 995
+lib/inventory/envcontext.js
+  h_0926447d100ad2 48-51,618-631,641-643,651-652,654-660,678-685,697-700,703-712
+lib/inventory/envcontext.poku.js
+  h_0926447d100ad2 525-526,580,598-628,677-692,701-702
+lib/inventory/phpBuildInfo.js
+  h_0926447d100ad2 86-151,405-410,412-416,418
+lib/inventory/phpBuildInfo.poku.js
+  h_0926447d100ad2 26-27,440-525
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f8cc2713eac8b8d8b6e9bd755b0e40bd8984213f",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
