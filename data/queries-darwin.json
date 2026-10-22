@@ -74,7 +74,7 @@
   "homebrew_packages": {
     "query": "SELECT * FROM homebrew_packages;",
     "description": "Homebrew formula and cask inventory including auto-update behavior.",
-    "purlType": "swid",
+    "purlType": "brew",
     "componentType": "application"
   },
   "npm_packages": {

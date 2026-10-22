@@ -164,6 +164,7 @@
       "windows_programs",
       "processor",
       "services_snapshot",
+      "apk_packages",
       "apt_sources",
       "apt_ppa_sources",
       "behavioral_reverse_shell",
