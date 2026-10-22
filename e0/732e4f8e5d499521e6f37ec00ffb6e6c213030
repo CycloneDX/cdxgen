@@ -1,0 +1,16 @@
+lib/cli/bomAssembly.js
+  h_0926447d100ad2 761
+lib/cli/bomAssembly.poku.js
+  h_0926447d100ad2 7,883-901
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e0732e4f8e5d499521e6f37ec00ffb6e6c213030",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
