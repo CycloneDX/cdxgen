@@ -1,0 +1,23 @@
+lib/inventory/tracedCrypto.poku.js
+  s_52f5c4eaf6e6b7::t_dd68846117b44e 565-618
+lib/inventory/tracedCrypto.js
+  s_52f5c4eaf6e6b7::t_6bd8daa745a1d7 324-332
+lib/inventory/certificates.js
+  s_52f5c4eaf6e6b7::t_6bd8daa745a1d7 91-92,101,709-716,1550-1553,1947
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e26d786c7021fb0919e2e033656929596fc98f8a",
+  "prompts": {},
+  "sessions": {
+    "s_52f5c4eaf6e6b7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6df25678-2bd9-411d-a772-3a7751696245",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
