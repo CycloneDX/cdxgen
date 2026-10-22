@@ -38,6 +38,8 @@ const KNOWN_GAPS = {
     "lib/stages/postgen/introspection/loop.poku.js": "spawns the node, deno and bun CLIs directly",
     "lib/stages/postgen/introspection/skill.poku.js": "spawns the node CLI directly",
     "lib/core/deferredExit.poku.js": "spawns the node CLI directly",
+    "lib/cli/toolingGateCli.poku.js":
+      "spawns the node CLI directly, and bun resolves the cdxgen-secure symlink, so argv[1] no longer names the command",
   },
   deno: {
     "bin/commands.poku.js":
@@ -55,6 +57,7 @@ const KNOWN_GAPS = {
     "lib/stages/postgen/introspection/loop.poku.js": "spawns the node, deno and bun CLIs directly",
     "lib/stages/postgen/introspection/skill.poku.js": "spawns the node CLI directly",
     "lib/core/deferredExit.poku.js": "spawns the node CLI directly",
+    "lib/cli/toolingGateCli.poku.js": "spawns the node CLI directly",
     "lib/packaging.poku.js": "drives npm pack, which assumes the node CLI",
     "lib/stages/pregen/envAudit.poku.js":
       "assigns globalThis.Deno, which is read only under deno",
