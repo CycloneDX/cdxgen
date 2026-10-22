@@ -1,0 +1,34 @@
+types/lib/cli/index.d.ts
+  h_0926447d100ad2 270-271,275
+types/lib/cli/index.d.ts.map
+  h_0926447d100ad2 1
+types/lib/helpers/envcontext.d.ts
+  h_0926447d100ad2 187-227
+types/lib/helpers/envcontext.d.ts.map
+  h_0926447d100ad2 1
+types/lib/helpers/phpBuildInfo.d.ts
+  h_0926447d100ad2 1-142
+types/lib/helpers/phpBuildInfo.d.ts.map
+  h_0926447d100ad2 1
+types/lib/helpers/phpHostProbe.d.ts
+  h_0926447d100ad2 1-35
+types/lib/helpers/phpHostProbe.d.ts.map
+  h_0926447d100ad2 1
+types/lib/helpers/utils.d.ts
+  h_0926447d100ad2 137-138,1332-1348,1350,1935-1937,1941
+types/lib/helpers/utils.d.ts.map
+  h_0926447d100ad2 1
+types/lib/managers/binary.d.ts.map
+  h_0926447d100ad2 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e69a0ec3b0c6a52a652216f4ff7de086d7eeec18",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
