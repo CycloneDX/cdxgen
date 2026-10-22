@@ -166,11 +166,12 @@ export declare function parsePixiLockFile(pixiLockFileName: string, path: string
  */
 export declare function parsePixiTomlFile(pixiToml: string): {};
 /**
- * Method to run cli command `pixi install`
+ * Method to run cli command `pixi install` in the project directory.
  *
- *
+ * @param {string} projectPath Directory containing pixi.toml
+ * @returns {boolean} true when pixi install succeeded
  */
-export declare function generatePixiLockFile(_path: any): void;
+export declare function generatePixiLockFile(projectPath: string): boolean;
 /**
  * Parse a Mojo `mojoproject.toml` manifest.
  *

@@ -116,6 +116,16 @@ export declare function dropRedundantSourceComponents(pkgList: any[]): any[];
  */
 export declare function getOSPackages(src: string, imageConfig: Object, options?: {}): Object;
 /**
+ * Split a `Name <address>` maintainer string into an `organizationalContact`.
+ *
+ * @param {string} value Maintainer or supplier string
+ * @returns {{name: string, email?: string}|undefined} The contact, if any
+ */
+export declare function parseOrganizationalContact(value: string): {
+    name: string;
+    email?: string;
+} | undefined;
+/**
  * Collect the dependency edges trivy recorded for one OS package component.
  *
  * Trivy keys its `dependencies` by its own bom-refs, which may leave the `+` of

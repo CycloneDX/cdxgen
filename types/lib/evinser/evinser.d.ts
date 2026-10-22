@@ -204,14 +204,14 @@ export declare function mergeServiceDefinitions(target: Object, source: Object):
  *   which is reused when present so `golem`/`atom-tools` and `cdxgen` can be
  *   run as separate steps.
  *
- * @param {object|undefined} golemReport Parsed golem analysis report, when one
- *   was produced.
+ * @param {object|null|undefined} golemReport Parsed golem analysis report,
+ *   when one was produced; a missing or `null` report adds no services.
  * @param {string} dirPath Project directory the report was produced from.
  * @param {Object} options Command line options.
  * @param {Object} [servicesMap={}] Service map to populate.
  * @returns {Object} The service map
  */
-export declare function collectGoServices(golemReport: object | undefined, dirPath: string, options?: Object, servicesMap?: Object): Object;
+export declare function collectGoServices(golemReport: object | null | undefined, dirPath: string, options?: Object, servicesMap?: Object): Object;
 /**
  * Function to analyze the project
  *

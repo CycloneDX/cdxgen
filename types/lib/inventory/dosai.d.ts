@@ -1,4 +1,42 @@
 /**
+ * The .NET runtime a framework-dependent dosai needs, read from the error the
+ * .NET host prints when it refuses to start dosai.
+ *
+ * When an older runtime is installed, the host names the exact framework
+ * version it looked for. When it finds no .NET at all, it names only its own
+ * version. The app host comes from the pack of the runtime the app targets, so
+ * its major version is still the .NET release to install.
+ *
+ * @param {Object|string} resultOrOutput spawnSync result, or the text it printed
+ * @returns {{version: (string|undefined), major: (string|undefined)}|undefined}
+ *   The framework version, when the host named it, and the .NET major version;
+ *   undefined when the output is not a .NET host launch failure
+ */
+export declare function dosaiDotnetRequirement(resultOrOutput: Object | string): {
+    version: (string | undefined);
+    major: (string | undefined);
+} | undefined;
+/**
+ * What stopped dosai from starting, for warnings and ledger details.
+ *
+ * @param {{version: (string|undefined), major: (string|undefined)}} [requirement] Result of dosaiDotnetRequirement
+ * @returns {string} A clause naming the missing .NET runtime when it is known
+ */
+export declare function dosaiDotnetRequirementDetail(requirement?: {
+    version: (string | undefined);
+    major: (string | undefined);
+}): string;
+/**
+ * How to get dosai running when the .NET host refused to start it.
+ *
+ * @param {{version: (string|undefined), major: (string|undefined)}} [requirement] Result of dosaiDotnetRequirement
+ * @returns {string} Install instructions, naming the .NET major version when it is known
+ */
+export declare function dosaiDotnetRequirementAdvice(requirement?: {
+    version: (string | undefined);
+    major: (string | undefined);
+}): string;
+/**
  * Translate cdxgen --exclude globs into dosai --exclude globs.
  *
  * Dosai is an evidence analyzer, so the translation follows the exclude
@@ -41,6 +79,55 @@ export declare function isDosaiDotnetLanguage(language: string): boolean;
  * @returns {Object|undefined} Parsed JSON content, or undefined when missing or invalid
  */
 export declare function readDosaiJsonFile(jsonFile: string): Object | undefined;
+/**
+ * The `--sections` value that writes exactly the sections cdxgen reads.
+ *
+ * Passed as `dosaiMethodsSections` by callers that know their run will not
+ * need the whole report (see {@link runsEvidenceAnalysis}); an older dosai
+ * that rejects `--sections` falls back to the full report on its own.
+ *
+ * @returns {string} Comma-separated section list for dosai `--sections`
+ */
+export declare function dosaiMethodsSectionsArgument(): string;
+/**
+ * Whether this scan will run the evidence (evinse) analysis.
+ *
+ * One place answers for both the trim decision in `createCsharpBom` and the
+ * evinse gate in `bin/cdxgen.js`: `--evidence` alone runs it, and so does
+ * `--include-crypto` alone, after profiles are applied (`--profile research`
+ * turns on both). Testing `options.evidence` alone would trim a report that
+ * `--include-crypto` then needs full.
+ *
+ * @param {Object} options Scan options after profile expansion
+ * @returns {boolean} True when the scan will run evinse
+ */
+export declare function runsEvidenceAnalysis(options: Object): boolean;
+/**
+ * The top-level sections a dosai methods report left out, empty for a full
+ * report. dosai v4 reports have no `OmittedSections`, so they count as full.
+ *
+ * @param {Object} [report] A dosai methods report as read by readDosaiMethodsReport
+ * @returns {string[]} The omitted section names
+ */
+export declare function dosaiOmittedSections(report?: Object): string[];
+/**
+ * The top-level sections a dosai methods report file left out, read from its
+ * Metadata alone. dosai writes Metadata first, so this reads only the head of
+ * the file, however large the report is. A missing or unreadable file counts
+ * as full: the read that follows reports it.
+ *
+ * @param {string} reportFile Path to the dosai methods JSON
+ * @returns {string[]} The omitted section names
+ */
+export declare function dosaiReportFileOmittedSections(reportFile: string): string[];
+/**
+ * The omitted sections of a dosai methods report that cdxgen reads, so the
+ * evidence built from the report lacks their input.
+ *
+ * @param {string[]} omittedSections Sections the report left out
+ * @returns {string[]} The ones cdxgen reads
+ */
+export declare function dosaiSectionsCdxgenReads(omittedSections: string[]): string[];
 /**
  * Read a dosai methods report of any size.
  *
@@ -98,6 +185,13 @@ export declare function dosaiRunTimedOut(result: Object): boolean;
  */
 export declare function dosaiRunStopReason(result: Object): "timeout" | "buffer" | "signal" | undefined;
 /**
+ * Note that the .NET host's refusal to start a dosai executable has been
+ * reported, so dosai runs of the same executable do not repeat the warning.
+ *
+ * @param {string} executable dosai executable
+ */
+export declare function markDosaiLaunchFailureReported(executable: string): void;
+/**
  * Whether the dosai run that should have written a file was stopped (by the
  * time limit, the output buffer limit, or a signal) and already reported so.
  *
@@ -106,13 +200,29 @@ export declare function dosaiRunStopReason(result: Object): "timeout" | "buffer"
  */
 export declare function dosaiRunWasStopped(outputFile: string): boolean;
 /**
+ * Whether the dosai run that should have written a file failed in a way it has
+ * already reported: it was stopped (see dosaiRunWasStopped), or the .NET host
+ * refused to start dosai and the warning named the missing runtime.
+ *
+ * @param {string} outputFile Output file passed to the dosai run
+ * @returns {boolean} true when the failure has been reported
+ */
+export declare function dosaiFailureReported(outputFile: string): boolean;
+/**
  * Run a dosai subcommand ("methods", "dataflows", or "crypto") against a source
  * tree and write its JSON output to the given file.
+ *
+ * Flags cdxgen adds for its own benefit that an older dosai may not know
+ * (--exclude, --sections, --crypto-dataflows) are optional: when dosai reports
+ * them as unknown, every rejected one is dropped in a single retry, later runs
+ * of the same executable skip them up front, and dropping is reported once
+ * (a warning for --exclude, whose loss changes results; a debug line for the
+ * size-only flags). A run that rejects anything else has simply failed.
  *
  * @param {string} command Dosai subcommand to execute
  * @param {string} src Source directory to analyze
  * @param {string} outputFile Path where the dosai JSON output is written
- * @param {Object} [options] Options carrying dosaiCommand, dataFlowPatterns, patternPacks, or exclude globs
+ * @param {Object} [options] Options carrying dosaiCommand, dataFlowPatterns, patternPacks, exclude globs, or dosaiMethodsSections
  * @returns {boolean} True when the command succeeded and produced the output file, false otherwise
  */
 export declare function runDosaiCommand(command: string, src: string, outputFile: string, options?: Object): boolean;
@@ -121,7 +231,7 @@ export declare function runDosaiCommand(command: string, src: string, outputFile
  *
  * @param {string} src Source directory to analyze
  * @param {string} outputFile Path where the methods slice JSON is written
- * @param {Object} [options] Options forwarded to runDosaiCommand
+ * @param {Object} [options] Options forwarded to runDosaiCommand; `dosaiMethodsSections` names the top-level sections to write (see dosaiMethodsSectionsArgument), omitted for the full report
  * @returns {boolean} True when the slice was produced successfully
  */
 export declare function createDosaiMethodsSlice(src: string, outputFile: string, options?: Object): boolean;
@@ -152,16 +262,39 @@ export declare function createDosaiCryptoAnalysis(src: string, outputFile: strin
  */
 export declare function analyzeDosaiCrypto(src: string, options?: Object): Object | undefined;
 /**
+ * The tool component naming the dosai behind a methods report.
+ *
+ * A report that a dosai run of this process wrote names the executable that
+ * wrote it, with the version that executable reports. A report reused from an
+ * earlier run names the version recorded in its Metadata, or the configured
+ * dosai's own version when that is a build of the same release. No component
+ * is returned for a report that is missing or that no dosai wrote, such as
+ * when the .NET host refused to start dosai.
+ *
+ * The cdxgen-plugins-bin manifest component is returned as-is only for its
+ * own binary at its own version. Any other dosai gets a component built from
+ * the manifest's project fields (description, licenses, references), without
+ * the bundled binary's hashes or path.
+ *
+ * @param {string} reportFile Path of the dosai methods report
+ * @param {Object} [report] The report as read, for its Metadata
+ * @param {Object} [manifestComponent] dosai component of the cdxgen-plugins-bin manifest
+ * @returns {Object[]} The dosai tool component, or an empty array
+ */
+export declare function dosaiToolComponents(reportFile: string, report?: Object, manifestComponent?: Object): Object[];
+/**
  * Persist the combined native dosai report to options.semanticsSlicesFile.
  *
  * Mirrors the rusi/golem persistence contract (analyzeRusiProject /
  * analyzeGolemProject on branch feat/rusi-persist-report): when a semantics-
  * slices path is provided, the FULL native report is written there and kept so
  * downstream tools (depscan) can consume the complete methods + data-flow
- * facts that cdxgen only projects a subset of into the SBOM evidence. dotnet
- * does not otherwise use the semantics slice (atom is never run for dotnet),
- * so the path is free to carry the combined dosai report. Returns the resolved
- * durable path when something was persisted, otherwise undefined.
+ * facts that cdxgen only projects a subset of into the SBOM evidence. A
+ * methods report the user supplied with --usages-slices-file is written as
+ * given, with a recorded degradation when it was trimmed with --sections.
+ * dotnet does not otherwise use the semantics slice (atom is never run for
+ * dotnet), so the path is free to carry the combined dosai report. Returns the
+ * resolved durable path when something was persisted, otherwise undefined.
  */
 export declare function persistDosaiSemanticsReport(options: any, methodsSlice: any, dataFlowSlice: any): any;
 /**
@@ -277,6 +410,12 @@ export declare function collectDosaiServiceComponents(methodsSlice: Object, serv
 export declare function collectDosaiServicesFromMethods(methodsSlice: Object, servicesMap?: Object): Object;
 /**
  * Normalize a services map into a sorted array of CycloneDX service objects.
+ *
+ * This is where evinse's service maps — dosai, golem, kosi, scalasem, an
+ * OpenAPI document, and the atom usage and type detectors — become
+ * `services[]`, so it is also where every endpoint is percent-encoded into the
+ * iri-reference CycloneDX requires. The collectors keep the readable template
+ * (`/users/{id}`); the BOM gets `/users/%7Bid%7D`.
  *
  * @param {Object} [servicesMap] Map of service name to service definition with Set-backed endpoints
  * @returns {Object[]} Array of service objects with sorted endpoint arrays and properties

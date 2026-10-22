@@ -1,0 +1,1 @@
+{"version":3,"file":"rootfsCerts.d.ts","sourceRoot":"","sources":["../../../lib/inventory/rootfsCerts.js"],"names":[],"mappings":"AAqBA,eAAO,MAAM,kBAAkB;;;;;EAK7B,CAAC;AA0IH;;;;;;;;;;;;;;GAcG;AACH,wBAAgB,yBAAyB,CAAC,OAAO,EAJtC,MAIsC,EAAE,MAAM,AAHtD,CACA,EADQ,MAGmD,GAFjD;IAAC,UAAU,EAAE,MAAM,EAAE,CAAC;IAAC,YAAY,EAAE,MAAM,EAAE,CAAC;IAAC,QAAQ,EAAE,MAAM,EAAE,CAAA;CAAC,CA6N9E"}

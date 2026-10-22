@@ -183,8 +183,9 @@ export declare function tryLoadNvmAndInstallTool(nodeVersion: string): boolean;
  *
  * @param {String} filePath Path
  * @param {String} nvmNodePath Path to node version in nvm
+ * @param {Object} [options] CLI options
  */
-export declare function doNpmInstall(filePath: string, nvmNodePath: string): void;
+export declare function doNpmInstall(filePath: string, nvmNodePath: string, options?: Object): void;
 /**
  * Method to check and build the swift project
  *

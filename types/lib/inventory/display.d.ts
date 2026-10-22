@@ -224,4 +224,22 @@ export declare function printEnvironmentAuditFindings(envAuditFindings?: EnvAudi
  * @param {EnvAuditFinding[]} envAuditFindings Audit findings to display
  */
 export declare function displaySelfThreatModel(filePath: string, config: Object, options: Object, envAuditFindings: EnvAuditFinding[]): void;
+/**
+ * Print a table of the BOM's certificate components: role, name, issuer,
+ * expiry, the SPKI prefix and how many locations each certificate appears
+ * in, with a marker when the audit flagged it.
+ *
+ * @param {Object} bomJson CycloneDX BOM JSON object
+ * @returns {void}
+ */
+export declare function printCertificatesTable(bomJson: Object): void;
+/**
+ * Print the issuer chain above a certificate and the certificates issued
+ * under it, walking the verified `dependsOn` edges.
+ *
+ * @param {Object} bomJson CycloneDX BOM JSON object
+ * @param {string} selector bom-ref, SPKI hex prefix or certificate ref prefix
+ * @returns {void}
+ */
+export declare function printCertificateChain(bomJson: Object, selector: string): void;
 //# sourceMappingURL=display.d.ts.map

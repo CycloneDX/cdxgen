@@ -134,12 +134,12 @@ or with cdxi: `.certs` lists every certificate with its occurrence count;
 
 ## Where certificates are found
 
-| Producer | Covers | Notes |
-|---|---|---|
-| Source scan (`createCryptoCertsBom`) | certificate, key and keystore files under the scanned paths, Kubernetes TLS secrets, Android `network_security_config.xml` pins | With the trustinspector plugin (report-2) it parses the files; otherwise cdxgen's own parser does |
-| trustinspector `rootfs` | CA stores, blocklists, server configs, Java truststores, language bundles of a rootfs or container | Plugin only |
-| Rootfs fallback (`lib/inventory/rootfsCerts.js`) | the same locations as the plugin, plus Kubernetes secrets and Android pins | Runs for `-t rootfs` and container scans **only when no plugin is available**, so nothing is counted twice. Symlinks are skipped, only regular files are opened, files over 16 MiB are skipped, and a walk stops at 20,000 files, 500,000 entries or depth 12. Does not read `etc/ca-certificates.conf` (`ca-deselected`) or GPG keyrings |
-| Observed TLS (tracebom) | chains a server presented | see Q3 |
+| Producer                                         | Covers                                                                                                                          | Notes                                                                                                                                                                                                                                                                                                                                     |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Source scan (`createCryptoCertsBom`)             | certificate, key and keystore files under the scanned paths, Kubernetes TLS secrets, Android `network_security_config.xml` pins | With the trustinspector plugin (report-2) it parses the files; otherwise cdxgen's own parser does                                                                                                                                                                                                                                         |
+| trustinspector `rootfs`                          | CA stores, blocklists, server configs, Java truststores, language bundles of a rootfs or container                              | Plugin only                                                                                                                                                                                                                                                                                                                               |
+| Rootfs fallback (`lib/inventory/rootfsCerts.js`) | the same locations as the plugin, plus Kubernetes secrets and Android pins                                                      | Runs for `-t rootfs` and container scans **only when no plugin is available**, so nothing is counted twice. Symlinks are skipped, only regular files are opened, files over 16 MiB are skipped, and a walk stops at 20,000 files, 500,000 entries or depth 12. Does not read `etc/ca-certificates.conf` (`ca-deselected`) or GPG keyrings |
+| Observed TLS (tracebom)                          | chains a server presented                                                                                                       | see Q3                                                                                                                                                                                                                                                                                                                                    |
 
 **Container layers.** Whiteouts are applied while the layers are extracted:
 `.wh.<name>` removes `<name>` and `.wh..wh..opq` empties a directory, both for
@@ -174,14 +174,14 @@ first.
 
 `--bom-audit --bom-audit-categories cbom` runs:
 
-| Rule | Fires when |
-|---|---|
+| Rule                | Fires when                                                                                                                                                                     |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `CBC-001`/`CBC-002` | a certificate expired, or expires within 30 days. A date-only `notValidAfter` (`2026-01-31`) is valid through the end of that day in UTC; values that do not parse are skipped |
-| `CBC-003` | a certificate or key's SPKI SHA-256 is one of the eight Go-distrusted hashes |
-| `CBC-004` | a certificate was issued under a Go-distrusted key (`issuerSpkiSha256` or `authorityKeyId` match) |
-| `CBC-005` | a CA certificate whose key and signature are both classical stays valid past 2035-01-01 (NIST IR 8547, initial public draft) |
-| `CBC-006` | a post-quantum key certified with a classical signature |
-| `CBC-007` | an algorithm named only by its dotted OID (composite or pre-standard) |
+| `CBC-003`           | a certificate or key's SPKI SHA-256 is one of the eight Go-distrusted hashes                                                                                                   |
+| `CBC-004`           | a certificate was issued under a Go-distrusted key (`issuerSpkiSha256` or `authorityKeyId` match)                                                                              |
+| `CBC-005`           | a CA certificate whose key and signature are both classical stays valid past 2035-01-01 (NIST IR 8547, initial public draft)                                                   |
+| `CBC-006`           | a post-quantum key certified with a classical signature                                                                                                                        |
+| `CBC-007`           | an algorithm named only by its dotted OID (composite or pre-standard)                                                                                                          |
 
 `GO-TLS-001` (category `go-security`) flags Go binaries built with unpatched
 toolchains. Bring your own deny list with

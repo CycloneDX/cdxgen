@@ -75,6 +75,18 @@ export declare const makeRequest: (path: string, method: string, forRegistry?: s
  */
 export declare const isImageReference: (fullImageName: string) => boolean;
 /**
+ * Whether an image named in a scanned manifest, such as a docker-compose file
+ * or a Kubernetes spec, may be pulled and inventoried. The name comes from the
+ * scanned project, so a local archive path would read files outside the
+ * allowed paths and a registry outside CDXGEN_ALLOWED_HOSTS would bypass the
+ * host allowlist.
+ *
+ * @param {string} fullImageName Image name from the manifest
+ * @param {Object} [imageObj] Result of parseImageName for the same name
+ * @returns {boolean} true when the image may be followed
+ */
+export declare const isFollowableManifestImage: (fullImageName: string, imageObj?: Object) => boolean;
+/**
  * Parse image name
  *
  * docker pull debian

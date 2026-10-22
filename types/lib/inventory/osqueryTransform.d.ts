@@ -81,4 +81,33 @@ export declare function shouldCreateOsQueryPurl(componentType: string): boolean;
  * @returns {string|null} Canonical purl string, or `null` when the parts do not form a valid purl
  */
 export declare function createOsQueryPurl(purlType: string, group: string | null, name: string, version: string, qualifiers: Object | null, subpath: string | null): string | null;
+/**
+ * The version and purl of a row from an OS package table: `deb_packages`,
+ * `rpm_packages`, `homebrew_packages` or the rows of the apk database.
+ *
+ * Such a row is named the way the package manager's own scan names it: deb,
+ * rpm and apk with the vendor and the `arch`, `distro`, `distro_name` and
+ * `epoch` qualifiers of the container scan, an rpm version joined to its
+ * release, a Homebrew package by its name and version. A row's `path`,
+ * `admindir` or source file is not a path inside the package, so none of them
+ * becomes a subpath.
+ *
+ * @param {string} purlType `deb`, `rpm`, `apk` or `brew`
+ * @param {Object} res osquery row
+ * @param {string} name Component name derived from the row
+ * @param {Object} [distro] What getDistroInfo() reports; the host's by default
+ * @returns {{version: string, purl: string|null}} The component version and the purl, which is null when the row cannot be expressed as one
+ */
+export declare function createOsQueryPackageIdentity(purlType: string, res: Object, name: string, distro?: Object): {
+    version: string;
+    purl: string | null;
+};
+/**
+ * The property name an OS package table column is emitted under.
+ *
+ * @param {string|undefined} purlType Purl type of the table
+ * @param {string} column Column name
+ * @returns {string|undefined} The property name, or undefined when the column is not emitted
+ */
+export declare function osPackagePropertyName(purlType: string | undefined, column: string): string | undefined;
 //# sourceMappingURL=osqueryTransform.d.ts.map

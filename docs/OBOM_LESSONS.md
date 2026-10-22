@@ -173,7 +173,6 @@ jq -r '.components[] | select(.type=="file") | select((.properties // [])[] | se
 4. A package database that exists but cannot be read, for example because the scan does not run as root, leaves ownership unknown. The probe then emits nothing for those files, and the `php.host-probe.package-db-unreadable` degradation is recorded when introspection is on. Re-run as a user that can read the database.
 5. PHP bundled inside an application (MAMP, Laravel Herd), PHP deeper under `/opt` than `/opt/<name>/bin` (Remi SCL, cPanel `ea-php`), and Windows installs outside the roots above are not probed.
 
-
 ## 13) Package identity: the same package, the same purl
 
 An OBOM names the OS packages of a host the way `cdxgen -t docker` names the packages of an image, so findings, vulnerability matches and diffs carry over from one to the other:

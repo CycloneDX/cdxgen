@@ -76,14 +76,18 @@ export declare function addEvidenceForDotnet(pkgList: Object[], slicesFile: stri
  * @param {Array} results Query Results
  * @param {Boolean} enhance Optionally enhance results by invoking additional package manager commands
  */
-export declare function convertOSQueryResults(queryCategory: string, queryObj: Object, results: any[], enhance?: boolean, osPackageListers?: undefined): {
-    name: string;
-    group: string;
-    version: string;
-    description: any;
-    publisher: string;
-    "bom-ref": string;
-    scope: any;
-    type: any;
-}[];
+export declare function convertOSQueryResults(queryCategory: string, queryObj: Object, results: any[], enhance?: boolean, osPackageListers?: undefined): any[];
+/**
+ * Convert the packages of an apk installed database into components.
+ *
+ * The packages are named as the container scan names an Alpine, Wolfi or
+ * Chainguard package, and grouped with the other OS package categories under
+ * `cdx:osquery:category` = `apk_packages`. Beyond what an osquery package row
+ * gives, an apk record knows its licence and home page, which become
+ * `licenses` and a `website` external reference.
+ *
+ * @param {Object[]} packages Packages from readApkInstalledDb()
+ * @returns {Object[]} Components
+ */
+export declare function convertApkPackages(packages: Object[]): Object[];
 //# sourceMappingURL=evidenceUtils.d.ts.map

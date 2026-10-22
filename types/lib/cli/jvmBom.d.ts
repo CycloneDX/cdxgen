@@ -67,6 +67,26 @@ export declare function createJarBom(path: string, options: Object): Object;
  */
 export declare function discoverSbtProjectsFromCmd(basePath: string, sbtCmd: string, env: Object, launcherArgs?: string[]): string[];
 /**
+ * Read one pom.xml without running Maven: the module it declares and its
+ * direct dependencies. Versions resolve from the pom's properties and
+ * dependencyManagement and from parent poms inside the scanned directory.
+ * Versions that an imported BOM or a parent outside the directory manages
+ * stay empty, and transitive dependencies are unknown.
+ *
+ * No dependency edges are produced. The build-fidelity rules (BF-JVM-001,
+ * BF-GEN-001) recognise a pom read without Maven by its missing graph, and a
+ * graph of direct edges alone would pass for a resolved one.
+ *
+ * @param {string} pomFile pom.xml to read
+ * @param {string} rootPath Scanned directory
+ * @param {Map} [cache] Parent pom results shared by the poms of one scan
+ * @returns {{moduleComponent: Object|undefined, pkgList: Object[]}}
+ */
+export declare function readMavenModuleStatically(pomFile: string, rootPath: string, cache?: Map<any, any>): {
+    moduleComponent: Object | undefined;
+    pkgList: Object[];
+};
+/**
  * Function to create bom string for Java projects
  *
  * @param {string} path to the project

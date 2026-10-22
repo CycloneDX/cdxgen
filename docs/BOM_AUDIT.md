@@ -265,22 +265,22 @@ cdx-audit --bom bom.evinse.json --direct-bom-audit --categories golem
 
 `golem` is an alias for `golem-security,golem-performance,golem-compliance`.
 
-| Rule           | Category          | Severity | Description                                                        |
-| -------------- | ----------------- | -------- | ------------------------------------------------------------------ |
-| GOLEM-SEC-001  | golem-security    | medium   | Runtime Go dependency has a high-severity semantic security signal |
-| GOLEM-SEC-002  | golem-security    | low      | Go crypto material flows into a crypto sink                        |
-| GOLEM-SEC-003  | golem-security    | low      | Go component has a cryptographic finding                           |
-| GOLEM-SEC-008  | golem-security    | low      | Go component sets a custom TLS root CA pool                        |
-| GOLEM-SEC-009  | golem-security    | medium   | Go component installs a custom certificate verification callback   |
+| Rule           | Category          | Severity | Description                                                            |
+| -------------- | ----------------- | -------- | ---------------------------------------------------------------------- |
+| GOLEM-SEC-001  | golem-security    | medium   | Runtime Go dependency has a high-severity semantic security signal     |
+| GOLEM-SEC-002  | golem-security    | low      | Go crypto material flows into a crypto sink                            |
+| GOLEM-SEC-003  | golem-security    | low      | Go component has a cryptographic finding                               |
+| GOLEM-SEC-008  | golem-security    | low      | Go component sets a custom TLS root CA pool                            |
+| GOLEM-SEC-009  | golem-security    | medium   | Go component installs a custom certificate verification callback       |
 | GOLEM-SEC-010  | golem-security    | high     | Go component sets InsecureSkipVerify together with custom verification |
-| GOLEM-SEC-011  | golem-security    | low      | Go component appends an embedded PEM bundle to an x509 pool        |
-| GOLEM-SEC-004  | golem-security    | low      | Go module uses a local replacement in analyzed source              |
-| GOLEM-PERF-001 | golem-performance | low      | Go project crosses a native code boundary                          |
-| GOLEM-PERF-002 | golem-performance | low      | Go project relies on generated or embedded build inputs            |
-| GOLEM-PERF-003 | golem-performance | low      | Go data-flow evidence was truncated or sanitized                   |
-| GOLEM-COMP-001 | golem-compliance  | low      | Go module appears private or workspace-local                       |
-| GOLEM-COMP-002 | golem-compliance  | medium   | Vendored Go module lacks license-file evidence                     |
-| GOLEM-COMP-003 | golem-compliance  | low      | Go module graph uses exclude directives                            |
+| GOLEM-SEC-011  | golem-security    | low      | Go component appends an embedded PEM bundle to an x509 pool            |
+| GOLEM-SEC-004  | golem-security    | low      | Go module uses a local replacement in analyzed source                  |
+| GOLEM-PERF-001 | golem-performance | low      | Go project crosses a native code boundary                              |
+| GOLEM-PERF-002 | golem-performance | low      | Go project relies on generated or embedded build inputs                |
+| GOLEM-PERF-003 | golem-performance | low      | Go data-flow evidence was truncated or sanitized                       |
+| GOLEM-COMP-001 | golem-compliance  | low      | Go module appears private or workspace-local                           |
+| GOLEM-COMP-002 | golem-compliance  | medium   | Vendored Go module lacks license-file evidence                         |
+| GOLEM-COMP-003 | golem-compliance  | low      | Go module graph uses exclude directives                                |
 
 These rules use properties such as `cdx:golem:securitySignalSeverity`, `cdx:golem:usageScopes`, `cdx:golem:cryptoDataFlow`, `cdx:golem:cryptoFinding`, `cdx:golem:localReplacement`, `cdx:golem:privateModuleCandidate`, `cdx:golem:vendored`, `cdx:golem:licenseFileCount`, `cdx:golem:nativeArtifactCount`, `cdx:golem:goGenerateCount`, `cdx:golem:goEmbedCount`, `cdx:golem:dataFlowTruncated`, and `cdx:golem:goModExcludeCount`.
 
@@ -668,17 +668,17 @@ Rules that evaluate Chrome/Chromium/Edge/Brave extension metadata for broad site
 
 Rules that evaluate cryptographic assets in a CBOM for weak or deprecated algorithms, insecure cipher modes, insufficient key sizes, and outdated protocol versions. Use `--bom-audit-categories cbom` or `crypto-bom` to enable both `cbom-security` and `cbom-compliance`.
 
-| Rule    | Severity | Description                                                                          |
-| ------- | -------- | ------------------------------------------------------------------------------------ |
-| CBS-001 | high     | Weak or deprecated cryptographic algorithm such as MD5, SHA-1, RC4, DES, or Blowfish |
-| CBS-002 | high     | Algorithm uses ECB mode, or CBC without authenticated encryption                     |
-| CBS-003 | high     | Symmetric security level below 128 bits or RSA private key below 2048 bits           |
-| CBS-004 | critical | Outdated TLS or DTLS protocol version such as SSL, TLS 1.0, or TLS 1.1               |
-| CBC-003 | high     | Certificate or key SPKI SHA-256 is one of the eight intermediates Go 1.27.3/1.26.10 distrust (CVE-2026-111943) |
-| CBC-004 | high     | Certificate issued under a Go-distrusted key, by `issuerSpkiSha256` or `authorityKeyId` match |
+| Rule    | Severity | Description                                                                                                      |
+| ------- | -------- | ---------------------------------------------------------------------------------------------------------------- |
+| CBS-001 | high     | Weak or deprecated cryptographic algorithm such as MD5, SHA-1, RC4, DES, or Blowfish                             |
+| CBS-002 | high     | Algorithm uses ECB mode, or CBC without authenticated encryption                                                 |
+| CBS-003 | high     | Symmetric security level below 128 bits or RSA private key below 2048 bits                                       |
+| CBS-004 | critical | Outdated TLS or DTLS protocol version such as SSL, TLS 1.0, or TLS 1.1                                           |
+| CBC-003 | high     | Certificate or key SPKI SHA-256 is one of the eight intermediates Go 1.27.3/1.26.10 distrust (CVE-2026-111943)   |
+| CBC-004 | high     | Certificate issued under a Go-distrusted key, by `issuerSpkiSha256` or `authorityKeyId` match                    |
 | CBC-005 | low      | Classical-only CA certificate valid past the 2035-01-01 post-quantum cutoff (NIST IR 8547, initial public draft) |
-| CBC-006 | medium   | Post-quantum public key certified with a classical signature |
-| CBC-007 | low      | Key or signature algorithm known only by its dotted OID (composite or pre-standard) |
+| CBC-006 | medium   | Post-quantum public key certified with a classical signature                                                     |
+| CBC-007 | low      | Key or signature algorithm known only by its dotted OID (composite or pre-standard)                              |
 
 CBC-005 and CBC-006 decide "classical" from the certificate's key and
 signature algorithm OIDs: the same set of OIDs whose algorithm components
@@ -689,8 +689,8 @@ by CBC-007) is not counted as classical by CBC-005.
 
 Rules for Go binaries in container and rootfs BOMs.
 
-| Rule       | Severity | Description                                                     |
-| ---------- | -------- | --------------------------------------------------------------- |
+| Rule       | Severity | Description                                                                                                                                                                            |
+| ---------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | GO-TLS-001 | high     | Go binary built with a toolchain lacking the CVE-2026-111943 distrust list (before go1.26.10, go1.27.0–go1.27.2, and all older lines; release candidates of newer lines carry the fix) |
 
 Custom SPKI deny lists are documented with an example in
@@ -709,10 +709,10 @@ the upstream version number: it has neither the property nor a
 mitigation never suppresses a finding, and never look at the `php` that
 `--include-formulation` records for the build host.
 
-| Rule        | Severity | Description |
-| ----------- | -------- | ----------- |
+| Rule        | Severity | Description                                                                                                                                                                             |
+| ----------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | PHP-RCE-001 | critical | A network-reachable PHP SAPI (`fpm`, `cgi`, `libphp`, `frankenphp`) older than 8.2.35 / 8.3.36 / 8.4.27 / 8.5.12, affected by CVE-2026-109618 and CVE-2026-109619 (unauthenticated RCE) |
-| PHP-RCE-002 | medium   | The same vulnerable build in `cli` or `phpdbg`; not network-reachable itself, but its web SAPIs are |
+| PHP-RCE-002 | medium   | The same vulnerable build in `cli` or `phpdbg`; not network-reachable itself, but its web SAPIs are                                                                                     |
 
 A pre-release of 8.6 (`8.6.0alpha*`, `8.6.0beta*`, `8.6.0RC1`–`RC3`) is
 flagged because the fix landed in `php-8.6.0RC4`; RC4 and later are not.
@@ -724,10 +724,10 @@ for those builds.
 
 Rules that evaluate certificate assets in a CBOM for expiry and trust-validation problems. Use `--bom-audit-categories cbom` or `crypto-bom` to enable both `cbom-security` and `cbom-compliance`.
 
-| Rule    | Severity | Description                                       |
-| ------- | -------- | ------------------------------------------------- |
+| Rule    | Severity | Description                                                                         |
+| ------- | -------- | ----------------------------------------------------------------------------------- |
 | CBC-001 | high     | Certificate's `notValidAfter` is in the past (compared with `$now()` at audit time) |
-| CBC-002 | medium   | Certificate expires within 30 days |
+| CBC-002 | medium   | Certificate expires within 30 days                                                  |
 
 ## Writing custom rules
 
@@ -760,27 +760,27 @@ Rules are YAML files placed in a directory and loaded via `--bom-audit-rules-dir
 
 The rule engine registers custom functions for working with CycloneDX properties:
 
-| Function                      | Description                                                                                                              | Example                                                                              |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| `$prop(obj, name)`            | Extract a property value by name                                                                                         | `$prop($, 'cdx:npm:hasInstallScript')`                                               |
-| `$nullSafeProp(obj, name)`    | Extract a property value but return `""` when it is missing; useful for string matching                                  | `$nullSafeProp($, 'cdx:github:workflow:triggers') ~> $contains('pull_request')`      |
-| `$hasProp(obj, name)`         | Check if property exists                                                                                                 | `$hasProp($, 'cdx:npm:risky_scripts')`                                               |
-| `$hasProp(obj, name, value)`  | Check if property equals value                                                                                           | `$hasProp($, 'cdx:npm:isLink', 'true')`                                              |
-| `$p(obj, name)`               | Short alias for `$prop`                                                                                                  | `$p($, 'cdx:go:local_dir')`                                                          |
-| `$hasP(obj, name, value)`     | Short alias for `$hasProp`                                                                                               | `$hasP($, 'cdx:gem:yanked', 'true')`                                                 |
-| `$propBool(obj, name)`        | Extracts property and normalizes to JS boolean ( true / false / null ). Case-insensitive and null-safe.                  | `$propBool($, 'cdx:github:workflow:hasWritePermissions') = true`                     |
-| `$propList(obj, name)`        | Splits comma-separated property strings into a trimmed JSONata array. Returns [] if missing.                             | `$propList($, 'cdx:github:workflow:triggers')`                                       |
-| `$listContains(val, target)`  | Safely checks if val (array or string) contains target. Works with both $propList output and raw strings.                | `$listContains($propList($, 'cdx:vscode-extension:contributes'), 'terminal-access')` |
-| `$safeStr(val)`               | Guarantees a trimmed string return. Converts null/undefined to "" . Ideal for regex matching and template interpolation. | `$match($safeStr($prop($, 'cdx:npm:versionSpecifiers')), /^\^/)`                     |
-| `$propValues(obj, name)`      | Returns every value of a repeatable property (such as `cdx:crypto:sourceType`) as an array.                              | `'observed-tls' in $propValues($, 'cdx:crypto:sourceType')`                          |
-| `$certEndMillis(val)`         | Certificate end of validity in epoch milliseconds. A date-only value is valid through the end of that UTC day; unparseable values give nothing.| `$certEndMillis(cryptoProperties.certificateProperties.notValidAfter) < $toMillis($now())`|
-| `$startsWith(str, prefix)`    | String prefix check                                                                                                      | `$startsWith(purl, 'pkg:nix/')`                                                      |
-| `$endsWith(str, suffix)`      | String suffix check                                                                                                      | `$endsWith(name, '-beta')`                                                           |
-| `$arrayContains(arr, value)`  | Check array membership                                                                                                   | `$arrayContains(tags, 'deprecated')`                                                 |
-| `$auditComponents(bom)`       | Return a deduplicated array of top-level BOM components plus any `formulation[].components`                              | `$auditComponents($)[$prop($, 'cdx:github:action:isShaPinned') = 'false']`           |
-| `$auditServices(bom)`         | Return a deduplicated array of top-level BOM services                                                                    | `$auditServices($)[$contains($safeStr($prop($, 'cdx:service:ExecStart')), '/tmp/')]` |
-| `$auditWorkflows(bom)`        | Return a deduplicated array of all `formulation[].workflows` entries                                                     | `$auditWorkflows($)[$prop($, 'cdx:github:workflow:hasHighRiskTrigger') = 'true']`    |
-| `$formulationComponents(bom)` | Return only `formulation[].components`                                                                                   | `$formulationComponents($)[$prop($, 'cdx:github:step:type') = 'run']`                |
+| Function                      | Description                                                                                                                                     | Example                                                                                    |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `$prop(obj, name)`            | Extract a property value by name                                                                                                                | `$prop($, 'cdx:npm:hasInstallScript')`                                                     |
+| `$nullSafeProp(obj, name)`    | Extract a property value but return `""` when it is missing; useful for string matching                                                         | `$nullSafeProp($, 'cdx:github:workflow:triggers') ~> $contains('pull_request')`            |
+| `$hasProp(obj, name)`         | Check if property exists                                                                                                                        | `$hasProp($, 'cdx:npm:risky_scripts')`                                                     |
+| `$hasProp(obj, name, value)`  | Check if property equals value                                                                                                                  | `$hasProp($, 'cdx:npm:isLink', 'true')`                                                    |
+| `$p(obj, name)`               | Short alias for `$prop`                                                                                                                         | `$p($, 'cdx:go:local_dir')`                                                                |
+| `$hasP(obj, name, value)`     | Short alias for `$hasProp`                                                                                                                      | `$hasP($, 'cdx:gem:yanked', 'true')`                                                       |
+| `$propBool(obj, name)`        | Extracts property and normalizes to JS boolean ( true / false / null ). Case-insensitive and null-safe.                                         | `$propBool($, 'cdx:github:workflow:hasWritePermissions') = true`                           |
+| `$propList(obj, name)`        | Splits comma-separated property strings into a trimmed JSONata array. Returns [] if missing.                                                    | `$propList($, 'cdx:github:workflow:triggers')`                                             |
+| `$listContains(val, target)`  | Safely checks if val (array or string) contains target. Works with both $propList output and raw strings.                                       | `$listContains($propList($, 'cdx:vscode-extension:contributes'), 'terminal-access')`       |
+| `$safeStr(val)`               | Guarantees a trimmed string return. Converts null/undefined to "" . Ideal for regex matching and template interpolation.                        | `$match($safeStr($prop($, 'cdx:npm:versionSpecifiers')), /^\^/)`                           |
+| `$propValues(obj, name)`      | Returns every value of a repeatable property (such as `cdx:crypto:sourceType`) as an array.                                                     | `'observed-tls' in $propValues($, 'cdx:crypto:sourceType')`                                |
+| `$certEndMillis(val)`         | Certificate end of validity in epoch milliseconds. A date-only value is valid through the end of that UTC day; unparseable values give nothing. | `$certEndMillis(cryptoProperties.certificateProperties.notValidAfter) < $toMillis($now())` |
+| `$startsWith(str, prefix)`    | String prefix check                                                                                                                             | `$startsWith(purl, 'pkg:nix/')`                                                            |
+| `$endsWith(str, suffix)`      | String suffix check                                                                                                                             | `$endsWith(name, '-beta')`                                                                 |
+| `$arrayContains(arr, value)`  | Check array membership                                                                                                                          | `$arrayContains(tags, 'deprecated')`                                                       |
+| `$auditComponents(bom)`       | Return a deduplicated array of top-level BOM components plus any `formulation[].components`                                                     | `$auditComponents($)[$prop($, 'cdx:github:action:isShaPinned') = 'false']`                 |
+| `$auditServices(bom)`         | Return a deduplicated array of top-level BOM services                                                                                           | `$auditServices($)[$contains($safeStr($prop($, 'cdx:service:ExecStart')), '/tmp/')]`       |
+| `$auditWorkflows(bom)`        | Return a deduplicated array of all `formulation[].workflows` entries                                                                            | `$auditWorkflows($)[$prop($, 'cdx:github:workflow:hasHighRiskTrigger') = 'true']`          |
+| `$formulationComponents(bom)` | Return only `formulation[].components`                                                                                                          | `$formulationComponents($)[$prop($, 'cdx:github:step:type') = 'run']`                      |
 
 ### Message templates
 

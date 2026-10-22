@@ -21,13 +21,21 @@
  * rather than reading `isWin`/`isMac` here, or the Windows and Linux branches
  * become untestable on a macOS developer machine.
  *
+ * Every environment-derived root must be absolute by the *target* platform's
+ * rules, never the host's (`path.isAbsolute` would accept `\cache` on a
+ * Windows host): a relative value is ignored, so it cannot point inside the
+ * working directory. XDG requires this of `XDG_CACHE_HOME`; the home and
+ * `LOCALAPPDATA` roots get the same treatment for the same reason.
+ *
  * @param {Object} inputs Resolution inputs.
  * @param {"linux"|"macos"|"windows"} inputs.platform Which convention to apply.
- * @param {string} [inputs.cdxgenCacheDir] `CDXGEN_CACHE_DIR`.
+ * @param {string} [inputs.cdxgenCacheDir] `CDXGEN_CACHE_DIR`, an explicit
+ *   override taken as given.
  * @param {string} [inputs.xdgCacheHome] `XDG_CACHE_HOME`. Ignored unless
- *   absolute, per the XDG spec, so it cannot point inside the working directory.
- * @param {string} [inputs.home] Home directory.
- * @param {string} [inputs.localAppData] `LOCALAPPDATA`.
+ *   `/`-rooted.
+ * @param {string} [inputs.home] Home directory. Ignored unless absolute.
+ * @param {string} [inputs.localAppData] `LOCALAPPDATA`. Ignored unless drive-
+ *   or UNC-rooted; the home profile is the fallback.
  * @returns {string|null} Absolute path, or null when nothing resolves.
  */
 export declare function resolveCacheDirFor({ platform, cdxgenCacheDir, xdgCacheHome, home, localAppData, }: {

@@ -46,14 +46,34 @@ export declare const OS_DISTRO_ALIAS: {
     "ubuntu-24.10": string;
     "ubuntu-25.04": string;
     "ubuntu-25.10": string;
+    "ubuntu-26.04": string;
+    "ubuntu-26.10": string;
     "debian-15": string;
     "debian-14": string;
     "debian-14.5": string;
     "debian-13": string;
+    "debian-13.7": string;
+    "debian-13.6": string;
     "debian-13.5": string;
+    "debian-13.4": string;
+    "debian-13.3": string;
+    "debian-13.2": string;
+    "debian-13.1": string;
     "debian-12": string;
-    "debian-12.5": string;
+    "debian-12.15": string;
+    "debian-12.14": string;
+    "debian-12.13": string;
+    "debian-12.12": string;
+    "debian-12.11": string;
+    "debian-12.10": string;
+    "debian-12.9": string;
+    "debian-12.8": string;
+    "debian-12.7": string;
     "debian-12.6": string;
+    "debian-12.5": string;
+    "debian-12.4": string;
+    "debian-12.2": string;
+    "debian-12.1": string;
     "debian-11": string;
     "debian-11.5": string;
     "debian-10": string;
@@ -183,11 +203,15 @@ export declare function _resetOsReleaseCache(): void;
  *   - namespace   {string}  canonical purl namespace (e.g. "ubuntu", "alpine",
  *                           "azure-linux" for both Azure Linux and CBL-Mariner)
  *   - distroId    {string}  ID + "-" + VERSION_ID with a canonical vendor
- *                           prefix (e.g. "ubuntu-22.04", "azure-linux-3.0")
- *   - distroName  {string}  codename/alias          (e.g. "jammy")
+ *                           prefix (e.g. "ubuntu-22.04", "azure-linux-3.0",
+ *                           "alpine-3.24.3")
+ *   - distroName  {string}  release codename, or a token OS_DISTRO_ALIAS knows
+ *                           (e.g. "jammy", "rhel", "alpine-3.24"); empty when
+ *                           the distro has neither
  *
- * Mirrors the logic in lib/managers/binary.js getOSPackages() so that both
- * callers share a single implementation.
+ * lib/managers/binary.js getOSPackages() reads its distro from here, so a
+ * container scan and an OBOM run on the same system give a package the same
+ * `distro` and `distro_name` qualifiers.
  *
  * @param {string} [root="/"] - Filesystem root to look for os-release.
  * @returns {{ purlType: string, namespace: string, distroId: string, distroName: string }}

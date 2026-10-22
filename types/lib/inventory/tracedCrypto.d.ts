@@ -29,6 +29,28 @@ export declare function suiteCipher(suiteName: string): {
  */
 export declare function normalizeTracedCryptoComponents(cbomComponents: Object[]): Object[];
 /**
+ * Builds the shared certificate model for the chains servers presented in TLS
+ * ≤ 1.2 handshakes, from the `chain` arrays of safer-exec's crypto result
+ * (report channel, safer-exec ≥ 1.2.0; earlier releases and TLS 1.3 entries
+ * carry no chain and yield nothing). The records go through the shared
+ * certificate collector, so bom-refs, properties and dedup match certificates
+ * found on disk. A presented chain is untrusted server input: no issuer edges
+ * are inferred from it, and the certificate and public-key components link
+ * through the collector as every producer's do. Each TLS protocol component
+ * provides the certificates and keys presented under it — the edge safer-
+ * exec's own CBOM records — which answers which servers presented a key.
+ *
+ * @param {Object} cryptoResult safer-exec CRYPTO result (`result.crypto`)
+ * @param {Set<string>} protocolRefs bom-refs of the protocol components in the BOM;
+ *   a provides edge is only emitted for a protocol that is actually present
+ * @returns {{components: Object[], dependencies: Object[]}} certificate,
+ *   public-key and algorithm components, and the protocol provides edges
+ */
+export declare function observedChainComponents(cryptoResult: Object, protocolRefs?: Set<string>): {
+    components: Object[];
+    dependencies: Object[];
+};
+/**
  * Maps the crypto libraries safer-exec reported to the paths they were loaded
  * from.
  *

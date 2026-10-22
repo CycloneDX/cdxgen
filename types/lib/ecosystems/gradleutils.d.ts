@@ -1,10 +1,11 @@
+import { isProjectToolingAllowed } from "../core/projectTooling.js";
+export { isProjectToolingAllowed };
 /**
  * Method to return the gradle command to use.
  *
  * Project-local wrapper scripts (`gradlew`) are attacker-controlled files in
- * the scanned project, so they are only used when dependency tooling is
- * allowed (`options.installDeps !== false`); otherwise the system Gradle is
- * used.
+ * the scanned project, so they are only used when the project's own tooling
+ * may run (see isProjectToolingAllowed); otherwise the system Gradle is used.
  *
  * @param {string} srcPath Path to look for gradlew wrapper
  * @param {string|null} rootPath Root directory to look for gradlew wrapper
@@ -178,8 +179,8 @@ _includeCacheDir?: boolean): Promise<Object>;
  * Method to return the mill command to use.
  *
  * The project-local `mill` script is an attacker-controlled file in the
- * scanned project, so it is only used when dependency tooling is allowed
- * (`options.installDeps !== false`).
+ * scanned project, so it is only used when the project's own tooling may run
+ * (see isProjectToolingAllowed).
  *
  * @param {string} srcPath Path to look for mill wrapper
  * @param {Object} [options] CLI options (`installDeps` gates wrapper use)
@@ -221,14 +222,15 @@ export declare function findMillDaemons(rootPath: string): Map<string, Set<numbe
  * @param {string} rootPath Scanned tree
  * @param {Map<string, Set<number>>} [runningBefore] Result of
  *   {@link findMillDaemons} taken before the scan
+ * @param {Object} [options] CLI options
  */
-export declare function stopMillDaemons(rootPath: string, runningBefore?: Map<string, Set<number>>): void;
+export declare function stopMillDaemons(rootPath: string, runningBefore?: Map<string, Set<number>>, options?: Object): void;
 /**
  * Method to return the maven command to use.
  *
  * Project-local wrapper scripts (`mvnw`) are attacker-controlled files in the
- * scanned project, so they are only used when dependency tooling is allowed
- * (`options.installDeps !== false`); otherwise the installed Maven is used.
+ * scanned project, so they are only used when the project's own tooling may
+ * run (see isProjectToolingAllowed); otherwise the installed Maven is used.
  *
  * @param {string} srcPath Path to look for maven wrapper
  * @param {string} rootPath Root directory to look for maven wrapper

@@ -107,6 +107,16 @@ export declare function verboseBuild(basePath: string): undefined | string;
  */
 export declare function sanitizeSwiftModuleArgs(tokens: Array<string>): Array<string>;
 /**
+ * Remove the arguments that would make SourceKit load code named by the
+ * project. A `.build` directory that cdxgen did not create is project content,
+ * so the compiler arguments read from it are cleaned this way whenever the
+ * project's own tooling may not run.
+ *
+ * @param {Array<String>} args Sanitized compiler arguments
+ * @returns {Array<String>} Arguments without plugin and clang pass-through flags
+ */
+export declare function withoutSwiftPluginArgs(args: Array<string>): Array<string>;
+/**
  * Extract the per-module compiler invocations printed by a verbose swift
  * build.
  *

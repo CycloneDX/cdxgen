@@ -1,9 +1,12 @@
 /**
- * Load and validate rules from a directory of YAML files
- * @param {string} rulesDir - Path to directory containing .yaml rule files
- * @returns {Promise<Array>} Array of parsed rule objects
+ * Parse a certificate notValidAfter value.
+ *
+ * @param {*} value timestamp or date-only string
+ * @returns {number|undefined} epoch milliseconds, or undefined when the value
+ *   does not parse
  */
-export declare function loadRules(rulesDir: string): Promise<any[]>;
+export declare function parseCertificateEndMillis(value: any): number | undefined;
+export declare function loadRules(rulesDir: any): Promise<any[]>;
 /**
  * Evaluate a single rule against the BOM using JSONata
  * @param {Object} rule - Parsed rule object

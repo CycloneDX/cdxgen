@@ -67,6 +67,21 @@ export declare function findLicenseId(name: string): any;
  */
 export declare function licenseIdFromText(content: string): string | undefined;
 /**
+ * Identify every license a notice grants, in the order the notice grants
+ * them. A notice can grant several: one LICENSE file holding an MIT grant and
+ * an Apache-2.0 grant (gopkg.in/yaml.v3), or a choice of licenses followed by
+ * each full text (github.com/spdx/tools-golang). A license text quotes others
+ * (the GNU GPL names the GNU Lesser GPL, the MPL names the GNU licenses), so
+ * only phrases that a grant carries count: a GNU license is found by its title
+ * standing on a line of its own, the others by a sentence of their grant.
+ * A notice none of these phrases match falls back to {@link guessLicenseId}.
+ *
+ * @param {string} content License file contents
+ * @returns {string[]} SPDX license ids or expressions; empty when none is
+ *   recognized
+ */
+export declare function guessLicenseIds(content: string): string[];
+/**
  * Method to guess the spdx license id from license contents
  *
  * @param {string} content License file contents
