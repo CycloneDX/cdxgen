@@ -1,0 +1,20 @@
+lib/core/env.js
+  h_0926447d100ad2 304-310
+lib/inventory/envcontext.js
+  h_0926447d100ad2 23,33,48,361-362,364,388,605-698,714-715,764-771
+lib/inventory/envcontext.poku.js
+  h_0926447d100ad2 1,17,23,54-55,450-731
+lib/inventory/formulationParsers.js
+  h_0926447d100ad2 288-289
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "061b95cb3fb933de8db262a3f372c1f31af306ba",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}

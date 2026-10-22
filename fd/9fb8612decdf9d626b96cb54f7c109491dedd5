@@ -1,0 +1,14 @@
+lib/managers/binary.poku.js
+  h_0926447d100ad2 2539-2603
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fd9fb8612decdf9d626b96cb54f7c109491dedd5",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}

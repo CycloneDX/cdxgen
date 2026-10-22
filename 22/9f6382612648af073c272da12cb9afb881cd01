@@ -1,0 +1,21 @@
+docs/BOM_AUDIT.md
+  h_0926447d100ad2 88,699-717
+  h_0926447d100ad2 718
+docs/CUSTOM_PROPERTIES.md
+  h_0926447d100ad2 2298
+.github/workflows/dockertests.yml
+  h_0926447d100ad2 68
+docs/CBOM_CERTIFICATES.md
+  h_0926447d100ad2 192-204
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "229f6382612648af073c272da12cb9afb881cd01",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
