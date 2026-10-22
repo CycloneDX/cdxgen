@@ -1,0 +1,23 @@
+deno.json
+  s_4415ea0c544c7e::t_b5c9cb44bb6eb4 108
+package.json
+  s_4415ea0c544c7e::t_18c7932c817e64 167
+pnpm-lock.yaml
+  s_4415ea0c544c7e::t_b977da4a4a0f67 241-242,841-842,914-915,976-977,1296-1297,1736,1767,1847,1897,2035,2217,2276
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "306a882ae560edf6aae1d7ed1acd59c620dba53a",
+  "prompts": {},
+  "sessions": {
+    "s_4415ea0c544c7e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3b5e6c99-e27c-4411-a596-d9cb5a7bfec6",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
