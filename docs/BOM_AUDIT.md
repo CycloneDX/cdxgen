@@ -698,12 +698,16 @@ Custom SPKI deny lists are documented with an example in
 
 ### `php-security`
 
-Rules for source-built PHP in container and rootfs BOMs. The version comes
-from the `cdx:php:buildVersion` property on `php`, `php-fpm`, `php-cgi`,
-`phpdbg`, `libphp*.so` and `frankenphp` file components; distro-packaged PHP
-is left to the vulnerability database, because distro backports keep the
-upstream version number. The rules never read PHP configuration, so a
-mitigation never suppresses a finding.
+Rules for source-built PHP in container, rootfs and OS (`obom`) BOMs. The
+version comes from the `cdx:php:buildVersion` property on `php`, `php-fpm`,
+`php-cgi`, `phpdbg`, `libphp*.so` and `frankenphp` file components. Only PHP
+that no package manager owns carries it. PHP that dpkg, rpm, apk, Homebrew or
+Chocolatey installed is identified by that package, with the package manager's
+purl, and is left to the vulnerability database, because distro backports keep
+the upstream version number: it has neither the property nor a
+`pkg:generic/php` component. The rules never read PHP configuration, so a
+mitigation never suppresses a finding, and never look at the `php` that
+`--include-formulation` records for the build host.
 
 | Rule        | Severity | Description |
 | ----------- | -------- | ----------- |

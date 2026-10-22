@@ -1,7 +1,7 @@
 # PHP source-build runtime rules
 # Category: php-security
 # Evaluates the cdx:php:* properties recorded for unpackaged PHP binaries and
-# shared libraries during container/rootfs scans. CVE-2026-109618 and
+# shared libraries during container, rootfs and OS (obom) scans. CVE-2026-109618 and
 # CVE-2026-109619 are unauthenticated remote code execution bugs in request
 # handling; fixed in 8.2.35, 8.3.36, 8.4.27 and 8.5.12.
 # https://www.php.net/archive/2026.php#2026-10-21-5
