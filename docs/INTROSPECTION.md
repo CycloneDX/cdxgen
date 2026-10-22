@@ -104,7 +104,7 @@ appears on one side only. The per-ecosystem coverage today:
 | rust      | 3       | `rust.cargo-lock-missing` (manifest-only parse), `rust.toolchain.missing` (cargo could not run) and `rust.cargo-metadata-unavailable`  |
 | ruby      | 2       | host build-requirements gaps                                                                                                           |
 | go        | 2       | `go.toolchain.missing` (the go executable could not run) and `go.mod-only-fallback` (the manual `go.mod` parse)                        |
-| php       | 3       | `php.no-lockfile`, `php.composer.missing` and `php.host-probe.package-db-unreadable`                                                   |
+| php       | 4       | `php.no-lockfile`, `php.composer.missing`, `php.host-probe.package-db-unreadable` and `php.composer.platform-unattributed`             |
 | dart      | 1       | `dart.pub-get-needed`: `pubspec.yaml` parsed without `pubspec.lock`                                                                    |
 | elixir    | 1       | `elixir.deps-not-fetched`: `mix.exs` without `mix.lock`                                                                                |
 | haskell   | 1       | `haskell.freeze-missing`: no `cabal.project.freeze`                                                                                    |

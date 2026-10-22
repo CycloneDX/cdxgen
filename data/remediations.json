@@ -1282,6 +1282,30 @@
     },
     "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES?id=php"
   },
+  "php.composer.platform-unattributed": {
+    "ecosystem": "php",
+    "kind": "evidence.degraded",
+    "impact": "versions",
+    "title": "A composer.lock below the scanned directory sits beside a composer.json without a name, so its PHP and extension requirements were not recorded",
+    "targetTier": null,
+    "actions": [
+      {
+        "kind": "config",
+        "command": "Give the project a \"name\" in its composer.json, or scan the project directory itself"
+      },
+      {
+        "kind": "rerun"
+      }
+    ],
+    "verify": {
+      "rules": [],
+      "expectTier": null,
+      "eventsCleared": [
+        "php.composer.platform-unattributed"
+      ]
+    },
+    "docs": "https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES?id=php"
+  },
   "dart.pub-get-needed": {
     "ecosystem": "dart",
     "kind": "evidence.degraded",
