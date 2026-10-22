@@ -1,0 +1,35 @@
+lib/inventory/certificates.js
+  s_52f5c4eaf6e6b7::t_20e563d7fa39d7 1158-1160,1162-1163
+.gitignore
+  s_52f5c4eaf6e6b7::t_9db1d83a765c9d 209
+lib/inventory/tracedCrypto.poku.js
+  s_52f5c4eaf6e6b7::t_20e563d7fa39d7 586-609
+test/data/tracebom-chain/gen.sh
+  s_52f5c4eaf6e6b7::t_9db1d83a765c9d 66-67,69-70,123-126
+test/data/tracebom-chain/bom.json
+  s_797ad76f967931::t_50e1229b5263f6 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "87a032f5f6ae10b31e0ccf4d9a1299e11f2f8cee",
+  "prompts": {},
+  "sessions": {
+    "s_52f5c4eaf6e6b7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6df25678-2bd9-411d-a772-3a7751696245",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    },
+    "s_797ad76f967931": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "12ea2e25-5d96-4da2-a7fb-223a0762383c",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
