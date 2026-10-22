@@ -91,23 +91,24 @@ producer in `lib/` records it at a specific fallback or failure; the catalog
 and the producers are kept in lock-step by a test that fails when an id
 appears on one side only. The per-ecosystem coverage today:
 
-| Ecosystem     | Entries | Produced by                                                                                                     |
-| ------------- | ------- | --------------------------------------------------------------------------------------------------------------- |
-| java          | 8       | Maven, Gradle and sbt fallbacks and command failures                                                            |
-| npm           | 5       | Missing lockfile, missing `node_modules`, unparseable lockfiles, git dependencies                               |
-| python        | 5       | The generic lockfile entry plus per-manager uv/poetry/pdm/pipenv variants                                       |
-| generic       | 5       | Binary inventory, secure mode, host allow-list, dry-run and offline policy                                      |
-| go            | 2       | `go.toolchain.missing` (the go executable could not run) and `go.mod-only-fallback` (the manual `go.mod` parse) |
-| rust          | 2       | `rust.cargo-lock-missing` (manifest-only parse) and `rust.toolchain.missing` (cargo could not run)              |
-| php           | 2       | `php.no-lockfile` and `php.composer.missing`                                                                    |
-| clojure       | 2       | lein and the Clojure CLI unavailable                                                                            |
-| swift         | 2       | toolchain and `swift package resolve` failures                                                                  |
-| ruby          | 2       | host build-requirements gaps                                                                                    |
-| csharp, cocoa | 1 each  | .NET SDK, cocoapods unavailable                                                                                 |
-| dart          | 1       | `dart.pub-get-needed` — `pubspec.yaml` parsed without `pubspec.lock`                                            |
-| elixir        | 1       | `elixir.deps-not-fetched` — `mix.exs` without `mix.lock`                                                        |
-| haskell       | 1       | `haskell.freeze-missing` — no `cabal.project.freeze`                                                            |
-| helm          | none    | A chart is `manifest` forever (`at-ceiling`); it scores 100 and proposes nothing                                |
+| Ecosystem | Entries | Produced by                                                                                                                            |
+| --------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| java      | 9       | Maven, Gradle and sbt fallbacks and command failures, the jar heuristic, and Maven skipped with installs off                           |
+| generic   | 7       | Binary inventory, build rate limits, secure mode, host allow-list, dry-run, offline and rate-limit policy                              |
+| python    | 7       | The generic lockfile and pyproject entries, per-manager uv/poetry/pdm/pipenv variants, and poetry/pdm export skipped with installs off |
+| npm       | 5       | Missing lockfile, missing `node_modules`, unparseable or old lockfiles, git dependencies                                               |
+| csharp    | 5       | The .NET SDK unavailable, msbuild skipped with installs off, and dosai reports that could not be kept whole                            |
+| clojure   | 3       | lein and the Clojure CLI unavailable, and lein skipped with installs off                                                               |
+| swift     | 3       | Toolchain and `swift package resolve` failures, and SwiftPM skipped with installs off                                                  |
+| cocoa     | 3       | cocoapods unavailable, and the Podfile or Ruby podspecs not evaluated with installs off                                                |
+| rust      | 3       | `rust.cargo-lock-missing` (manifest-only parse), `rust.toolchain.missing` (cargo could not run) and `rust.cargo-metadata-unavailable`  |
+| ruby      | 2       | host build-requirements gaps                                                                                                           |
+| go        | 2       | `go.toolchain.missing` (the go executable could not run) and `go.mod-only-fallback` (the manual `go.mod` parse)                        |
+| php       | 2       | `php.no-lockfile` and `php.composer.missing`                                                                                           |
+| dart      | 1       | `dart.pub-get-needed`: `pubspec.yaml` parsed without `pubspec.lock`                                                                    |
+| elixir    | 1       | `elixir.deps-not-fetched`: `mix.exs` without `mix.lock`                                                                                |
+| haskell   | 1       | `haskell.freeze-missing`: no `cabal.project.freeze`                                                                                    |
+| helm      | none    | A chart is `manifest` forever (`at-ceiling`); it scores 100 and proposes nothing                                                       |
 
 ## The report
 
@@ -379,8 +380,10 @@ Groups, one axis at a time:
   lockfile-only fixtures; the ledger must record and the verdict must not
   crash on any runtime, including under the deno image's permission model.
 - **D — secure mode.** The `cdxgen-secure` image runs the shipped permission
-  policy; a second cell restricts the command policy explicitly and requires
-  the denied Maven remediation to be ranked _blocked_ with a policy reason —
+  policy, where installs are off, so Maven is skipped and the cell expects
+  `jvm.maven.tooling-disabled` ranked as advice. A second cell passes
+  `--install-deps`, restricts the command policy explicitly and requires
+  the denied Maven remediation to be ranked _blocked_ with a policy reason,
   never an unblocked instruction to install Maven. Since the deferred
   fail-on-error exit, the shipped posture (fail-on-error defaulting on in
   secure mode) completes with the BOM, both reports and exit 5; only the

@@ -175,7 +175,7 @@ Regardless of how you install, the following commands are available:
 | `obom`          | Alias for `cdxgen -t os`                                                                                             | yes                              |
 | `saasbom`       | Alias for SaaSBOM-oriented `cdxgen` defaults                                                                         | yes                              |
 | `spdxgen`       | Alias for `cdxgen --format spdx`                                                                                     | use `cdxgen`                     |
-| `cdxgen-secure` | Alias for hardened `cdxgen` defaults                                                                                 | use `cdxgen`                     |
+| `cdxgen-secure` | `cdxgen` in secure mode, with dependency installation always off                                                     | use `cdxgen`                     |
 
 Standalone GitHub release binaries are published for `cdxgen`, `cdxgen-slim`, `aibom`, `cbom`, `obom`, `saasbom`, `hbom`, `hbom-slim`, `cdx-audit`, `cdx-convert`, `cdx-sign`, `cdx-validate`, `cdx-verify`, and `tracebom`.
 

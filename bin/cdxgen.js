@@ -4,7 +4,6 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import http from "node:http";
 import https from "node:https";
-import { tmpdir } from "node:os";
 import {
   basename,
   dirname,
@@ -22,6 +21,7 @@ import { hideBin } from "yargs/helpers";
 import { getExactAiInventoryType } from "../lib/cli/bomAssembly.js";
 import {
   applyAdvancedOptions as applyAdvancedOptionsImpl,
+  applyOperatorToolingChoice,
   buildOptionsFromArgs,
   isUserProvided,
   validateSpecVersion,
@@ -39,6 +39,7 @@ import {
   PROJECT_CONFIG_FILENAMES,
   sanitizeProjectConfig,
 } from "../lib/core/projectConfig.js";
+import { isSecureModeActive } from "../lib/core/projectTooling.js";
 import {
   ui as defaultUi,
   installConsoleShim,
@@ -138,6 +139,11 @@ import { auditEnvironment } from "../lib/stages/pregen/envAudit.js";
 import { prepareEnv } from "../lib/stages/pregen/pregen.js";
 import { validateSpdx } from "../lib/validator/bomValidator.js";
 import { validateGeneratedBom } from "../lib/validator/index.js";
+
+// The environment as the operator launched cdxgen. The CLI later copies some
+// parsed options into the environment (--introspect becomes
+// CDXGEN_INTROSPECT), so the operator's own choices are read from this copy.
+const launchEnv = { ...process.env };
 
 // Support for config files. The config file lives in the directory under
 // analysis, so it carries that directory's trust level; see
@@ -1128,8 +1134,10 @@ let autoLedgerSidecar;
 if (options.introspect) {
   process.env.CDXGEN_INTROSPECT = "true";
   if (!isDryRun && !readEnvironmentVariable("CDXGEN_INTROSPECT_LEDGER")) {
+    // The temp directory, not the OS one: under the permission model it is
+    // the directory cdxgen is granted writes to.
     autoLedgerSidecar = join(
-      tmpdir(),
+      getTmpDir(),
       `cdxgen-introspect-ledger-${process.pid}.jsonl`,
     );
     process.env.CDXGEN_INTROSPECT_LEDGER = autoLedgerSidecar;
@@ -1267,7 +1275,15 @@ if (options.lifecycle) {
 }
 const isHbomOnlyInvocation = isHbomOnlyProjectTypes(options.projectType);
 const advancedWarnings = applyAdvancedOptionsImpl(options, {
-  isSecureMode,
+  isSecureMode: isSecureModeActive(),
+});
+// The config file comes from the working directory, usually the scanned
+// project, so whether the project's own code may run stays the operator's
+// choice from the command line and environment.
+applyOperatorToolingChoice(options, {
+  env: launchEnv,
+  isSecureMode: isSecureModeActive(),
+  projectConfig: config,
 });
 if (options?.technique && Array.isArray(options.technique)) {
   if (options.technique.length === 1) {

@@ -34,14 +34,14 @@ const REPO_ROOT = path.resolve(import.meta.dirname, "..");
  * Load a real golden BOM file to use as the mutation base.
  * Falls back to a synthetic BOM if the golden file is not yet generated.
  */
-function loadBaseBom(which = "cargo-smoke") {
+function loadBaseBom(which = "cargo-smoke", scenario = "default") {
   const goldenPath = path.join(
     REPO_ROOT,
     "test",
     "repotests",
     which,
     "expected",
-    "default.json",
+    `${scenario}.json`,
   );
   try {
     return JSON.parse(readFileSync(goldenPath, "utf-8"));
@@ -243,8 +243,10 @@ function runMutationTests() {
   });
 
   test("change a component scope → caught", () => {
-    // Use maven-smoke golden which has scoped components
-    const mavenBom = loadBaseBom("maven-smoke");
+    // Use the with-maven golden (dependency installation on): the default
+    // maven-smoke scenario is statically parsed, and its direct dependencies
+    // carry no scope to mutate.
+    const mavenBom = loadBaseBom("maven-smoke", "with-maven");
     const mavenNorm = normalizeBom(mavenBom, { projectRoot: "/test" });
     const mutated = structuredClone(mavenBom);
     for (const c of mutated.components || []) {

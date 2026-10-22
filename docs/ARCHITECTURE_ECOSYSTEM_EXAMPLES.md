@@ -117,7 +117,7 @@ Node.js shows how one generator can combine several layers of evidence: static s
 | requirements support  | falls back to `requirements*.txt` and `requirements/*.txt` when lockfile-first paths are absent              |
 | metadata shaping      | extracts a parent component from `pyproject.toml` and attaches `internal:SrcFile` metadata                   |
 | deeper tree option    | can build a frozen dependency tree when installs are allowed                                                 |
-| safer fallback        | can use export-based flows such as `poetry export` or `pdm export` when install-time behavior is not desired |
+| export fallback       | uses `poetry export` or `pdm export` when installs are off but the project's tooling may run (`--introspect` outside secure mode); both load plugins from the project tree, so a scan with installs off otherwise reads the lock file alone |
 | formulation support   | collects formulation items from deeper Python environment resolution                                         |
 | BOM assembly          | returns through `buildBomNSData(options, pkgList, "pypi", context)`                                          |
 
