@@ -185,6 +185,47 @@ export declare function collectRubyInfo(dir: string): {
     version: string;
 } | undefined;
 /**
+ * Collect the PHP version of the PHP found on the PATH.
+ *
+ * `-n` stops PHP loading any php.ini, so a PHPRC or an auto_prepend_file cannot
+ * run code, and `-v` is used rather than `-r 'echo PHP_VERSION;'` because the
+ * shell on Windows does not quote arguments. The first line is
+ * `PHP 8.5.11 (cli) (built: Sep 22 2026 13:32:06) (NTS)`.
+ *
+ * The identity is `pkg:generic/php`: a probe of the PATH cannot tell which
+ * package manager, if any, installed this PHP. A banner with a distro revision,
+ * such as Ubuntu 22.04's `PHP 8.1.2-1ubuntu2.14`, is recorded as reported but
+ * without a CPE: the distro backports fixes under the old upstream number.
+ *
+ * @param {string} dir Working directory
+ * @returns Object containing the PHP details
+ */
+export declare function collectPhpInfo(dir: string): Object | undefined;
+/**
+ * Collect the Composer version.
+ *
+ * `--no-plugins` and `--no-scripts` keep the plugins and scripts of the
+ * project in the working directory from running, which `composer --version`
+ * would otherwise let a plugin do. It needs no network. The banner is
+ * `Composer version 2.10.3 2026-08-27 13:34:23`, but an older Composer on a
+ * newer PHP prints deprecation notices above it, so the first line that starts
+ * with it is read; the line after it names the PHP Composer runs on, with its
+ * path, and is never read. The banner must start its line: an indented echo of
+ * the project's composer.json in an error block does not count. Only a stable
+ * release is recorded: a pre-release or a snapshot has no version a CPE can
+ * name.
+ *
+ * @param {string} dir Working directory
+ * @returns Object containing the Composer details
+ */
+export declare function collectComposerInfo(dir: string): {
+    type: string;
+    name: string;
+    version: string;
+    cpe: string;
+    purl: string;
+} | undefined;
+/**
  * Method to run a swift command
  *
  * @param {String} dir Working directory
