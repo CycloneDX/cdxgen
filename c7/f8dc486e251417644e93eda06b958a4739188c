@@ -1,0 +1,39 @@
+deno.json
+  s_8385512298bece::t_06c4931260b288 3
+package.json
+  s_8385512298bece::t_06c4931260b288 3
+.versions/node_24
+  s_8385512298bece::t_06c4931260b288 2
+ci/Dockerfile
+  s_8385512298bece::t_06c4931260b288 17
+pyproject.toml
+  s_8385512298bece::t_06c4931260b288 3
+.versions/node_26
+  s_8385512298bece::t_06c4931260b288 2
+ci/images/alpine/Dockerfile.node26
+  s_8385512298bece::t_06c4931260b288 2
+jsr.json
+  s_8385512298bece::t_06c4931260b288 3
+.versions/node_22
+  s_8385512298bece::t_06c4931260b288 2
+ci/images/alpine/Dockerfile.node24
+  s_8385512298bece::t_06c4931260b288 2
+uv.lock
+  s_8385512298bece::t_2c7423dad22dd3 186
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c7f8dc486e251417644e93eda06b958a4739188c",
+  "prompts": {},
+  "sessions": {
+    "s_8385512298bece": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "694c726d-e14e-4a60-af2c-54f41f08b4ad",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
