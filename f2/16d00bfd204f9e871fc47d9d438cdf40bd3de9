@@ -1,0 +1,19 @@
+.github/workflows/binary-builds.yml
+  s_797ad76f967931::t_19019390b1bea9 93,109-114
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f216d00bfd204f9e871fc47d9d438cdf40bd3de9",
+  "prompts": {},
+  "sessions": {
+    "s_797ad76f967931": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "12ea2e25-5d96-4da2-a7fb-223a0762383c",
+        "model": "unknown"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
