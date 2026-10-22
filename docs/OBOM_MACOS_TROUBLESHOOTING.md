@@ -48,6 +48,8 @@ Observed categories in the generated OBOM included:
 
 Homebrew packages (`homebrew_packages`) are `pkg:brew/<name>@<version>` components, formulae and casks alike, with `cdx:homebrew:type` set to `formula` or `cask`. They used to be `pkg:swid` components with the Cellar or Caskroom path as the subpath; a policy that selected them by that purl type must select `pkg:brew` now.
 
+npm packages (`npm_packages`) are `pkg:npm/<name>@<version>` components, with a scope as the namespace (`pkg:npm/%40anthropic-ai/sdk@0.91.1`). The `package.json` path they were found at, often under a home directory such as `~/.nvm/versions/node/<version>`, is in `evidence.occurrences` and the `path` property, not in the purl. A package installed under several Node.js versions or prefixes is one component with an occurrence for each.
+
 ## Quick run
 
 ```bash

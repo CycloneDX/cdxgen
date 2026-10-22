@@ -245,6 +245,8 @@ The operating system packages of an OBOM are named the way a container scan name
 
 The apk packages carry `cdx:osquery:category` = `apk_packages` like the packages of the other categories. If the apk database exists but cannot be read, for example because the scan does not run as root, the OBOM has no apk packages and the `os.apk-installed-db.unreadable` degradation is recorded when introspection is on.
 
+The npm and pypi packages that osquery finds (`npm_packages`, `python_packages`) are named without the path they were found at, for example `pkg:npm/%40npmcli/agent@4.0.2` or `pkg:pypi/pyyaml@6.0`. Each path is an occurrence in `evidence.occurrences` (and the `path` property), so a package installed in several places, such as under two Node.js versions, is listed once with all of its locations.
+
 When `trustinspector` is available, live-host OBOM generation also enriches matching macOS and Windows components with code-signing / notarization / Authenticode properties and emits additional host-trust `data` components for Gatekeeper and WDAC posture. See [Trust enrichment BOM diff examples](./TRUST_ENRICHMENT_DIFF.md) for compact before/after excerpts.
 
 For macOS-specific setup and permission caveats, see [OBOM macOS troubleshooting](./OBOM_MACOS_TROUBLESHOOTING.md).
