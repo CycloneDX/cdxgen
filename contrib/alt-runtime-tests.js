@@ -42,6 +42,8 @@ const KNOWN_GAPS = {
       "spawns the node CLI directly, and bun resolves the cdxgen-secure symlink, so argv[1] no longer names the command",
   },
   deno: {
+    "bin/cdxgenSecure.poku.js":
+      "spawns process.execPath directly, which under deno needs a run subcommand and permission flags",
     "bin/commands.poku.js":
       "spawns process.argv0 directly, which under deno needs a run subcommand and permission flags",
     "bin/tracebom.poku.js":

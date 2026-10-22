@@ -37,7 +37,7 @@ Some commands are focused aliases rather than separate implementations.
 | `spdxgen`                                     | `cdxgen --format spdx`                                                                                                                           |
 | `cbom`                                        | `cdxgen` with `includeCrypto`, `evidence`, `deep`, and CycloneDX `1.7` defaults suited for CBOM generation; rejects `-t os` — use `obom` instead |
 | `saasbom`                                     | `cdxgen` with `evidence`, `deep`, and CycloneDX `1.7` defaults suited for service-evidence collection                                            |
-| `cdxgen-secure`                               | `cdxgen` with secure mode enabled and dependency installation disabled by default                                                                |
+| `cdxgen-secure`                               | `cdxgen` in secure mode, with dependency installation always off, under Node.js, Bun and Deno alike                                              |
 | `aibom`, `cbom`, `obom`, `saasbom`, `spdxgen` | still accept the regular `cdxgen` flags in addition to their alias behavior                                                                      |
 
 Installing `@cdxgen/cdxgen` from npm exposes the commands in the command map plus the aliases in this section. The standalone `aibom`, `cbom`, `obom`, and `saasbom` release binaries preserve the same alias behavior. The `cbom`, `obom`, and `saasbom` binaries also include protobuf export support, so `--export-proto --proto-bin-file <file>` works without installing optional npm dependencies separately.

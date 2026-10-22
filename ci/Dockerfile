@@ -162,7 +162,8 @@ COPY . /opt/cdxgen
 RUN cd /opt/cdxgen && corepack enable pnpm && pnpm config set global-bin-dir /opt/bin \
     && pnpm install:prod && pnpm cache delete \
     && chmod +x /opt/cdxgen/bin/*.js \
-    && for name in aibom cbom cdxgen cdxgen-secure obom saasbom spdxgen; do ln -sf /opt/cdxgen/bin/cdxgen.js /opt/bin/$name; done \
+    && for name in aibom cbom cdxgen obom saasbom spdxgen; do ln -sf /opt/cdxgen/bin/cdxgen.js /opt/bin/$name; done \
+    && ln -sf /opt/cdxgen/bin/cdxgen-secure.js /opt/bin/cdxgen-secure \
     && ln -sf /opt/cdxgen/bin/audit.js /opt/bin/cdx-audit \
     && ln -sf /opt/cdxgen/bin/convert.js /opt/bin/cdx-convert \
     && ln -sf /opt/cdxgen/bin/validate.js /opt/bin/cdx-validate \
