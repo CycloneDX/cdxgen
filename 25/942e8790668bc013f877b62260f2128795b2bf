@@ -1,0 +1,22 @@
+data/rules/php-runtime.yaml
+  h_0926447d100ad2 4
+docs/BOM_AUDIT.md
+  h_0926447d100ad2 701-710
+docs/CBOM_CERTIFICATES.md
+  h_0926447d100ad2 194-198
+docs/CUSTOM_PROPERTIES.md
+  h_0926447d100ad2 2304
+docs/OBOM_LESSONS.md
+  h_0926447d100ad2 159-175
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "25942e8790668bc013f877b62260f2128795b2bf",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
