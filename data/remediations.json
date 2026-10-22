@@ -818,7 +818,7 @@
     "ecosystem": "csharp",
     "kind": "evidence.degraded",
     "impact": "components",
-    "title": ".NET SDK is not installed, so dotnet slices are degraded",
+    "title": "The .NET runtime dosai needs is not installed, so dotnet slices are degraded",
     "targetTier": "resolved",
     "actions": [
       {

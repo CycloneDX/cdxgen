@@ -52,9 +52,17 @@ export DOSAI_CMD=/opt/dosai/dosai-full
 
 dosai recognises the .NET language family through `isDosaiDotnetLanguage()`:
 `csharp`, `cs`, `dotnet`, `vb`, `vbnet`, `fsharp`, `fs`, and the framework
-variants. The `.NET SDK must be installed` message in the logs means dosai ran
-but could not bootstrap; switch to the self-contained binary or the dotnet
-image.
+variants. The dosai in `@cdxgen/cdxgen-plugins-bin` is framework-dependent, so
+it starts only on a .NET runtime at least as new as the one it targets. When
+the .NET host refuses to start it, the logs say
+`WARNING: dosai needs the .NET runtime <version> or newer, which is not installed`
+(or that no .NET installation was found) and the BOM carries no dosai
+evidence. Install that .NET runtime, or switch to the self-contained binary or
+the dotnet image.
+
+The BOM's `metadata.tools` names the dosai that produced the evidence, with the
+version that binary reports, so a `DOSAI_CMD` build is recorded as itself. A
+run with no dosai evidence lists no dosai tool.
 
 ## 2) Generate a base .NET SBOM
 
