@@ -29,6 +29,18 @@
     "purlType": "vscode-extension",
     "componentType": "application"
   },
+  "chrome_search_engines": {
+    "query": "SELECT chrome_search_engines.*, chrome_search_engines.browser_type || '/' || chrome_search_engines.uid || '/' || chrome_search_engines.profile AS label FROM users JOIN chrome_search_engines USING (uid);",
+    "description": "The default search engine of every Chromium-based browser profile, for each user.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "ai_agent_skills": {
+    "query": "SELECT ai_agent_skills.*, hash.sha256 FROM users JOIN ai_agent_skills USING (uid) LEFT JOIN hash ON hash.path = ai_agent_skills.path UNION ALL SELECT ai_agent_skills.*, hash.sha256 FROM ai_agent_skills LEFT JOIN hash ON hash.path = ai_agent_skills.path WHERE ai_agent_skills.scope = 'system';",
+    "description": "AI agent skills (SKILL.md packages) installed for each user, through Claude Code plugins and system-wide, with the SHA-256 of each SKILL.md. Skills have no package identity, so they get no purl.",
+    "purlType": "generic",
+    "componentType": "file"
+  },
   "apps": {
     "query": "select * from apps;",
     "description": "macOS applications installed in known search paths (e.g., /Applications).",
@@ -46,6 +58,12 @@
     "description": "macOS (>= 10.15) system extension table.",
     "purlType": "swid",
     "componentType": "application"
+  },
+  "gpu_info": {
+    "query": "SELECT *, driver_version AS version, vendor AS publisher FROM gpu_info;",
+    "description": "GPU inventory with the vendor, model and installed driver version.",
+    "purlType": "swid",
+    "componentType": "device"
   },
   "certificates": {
     "query": "SELECT * FROM certificates WHERE path != 'Other People';",
@@ -75,6 +93,12 @@
     "query": "SELECT * FROM homebrew_packages;",
     "description": "Homebrew formula and cask inventory including auto-update behavior.",
     "purlType": "brew",
+    "componentType": "application"
+  },
+  "macports_packages": {
+    "query": "select * from macports_packages;",
+    "description": "Retrieves the active ports of the MacPorts registry.",
+    "purlType": "macports",
     "componentType": "application"
   },
   "npm_packages": {
