@@ -1,0 +1,24 @@
+AGENTS.md
+  h_0926447d100ad2 26
+claude-plugin/skills/os-hardware-inventory/SKILL.md
+  h_0926447d100ad2 96,100-101,120-121
+docs/OBOM_LESSONS.md
+  h_0926447d100ad2 187,205
+docs/README.md
+  h_0926447d100ad2 254-255
+lib/inventory/evidenceUtils.js
+  h_0926447d100ad2 563-565,603-606,749-750,752-754,768-770,774-785
+lib/inventory/evidenceUtils.poku.js
+  h_0926447d100ad2 2012-2158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c1aa504c437c2377afa416b9e2e655fc4b4edcda",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
