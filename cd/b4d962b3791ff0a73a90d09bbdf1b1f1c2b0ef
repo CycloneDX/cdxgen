@@ -1,0 +1,22 @@
+lib/inventory/osPackagePurl.js
+  h_0926447d100ad2 7-10,20-22,24-33,39,126-128,130,152-156,162-164,170-174,177-179,182,184,196-213,219-226
+lib/inventory/osPackagePurl.poku.js
+  h_0926447d100ad2 1,43-50,84-93,387-542
+lib/inventory/osinfo.js
+  h_0926447d100ad2 279-280,342-350,356-358,385-386
+lib/inventory/osinfo.poku.js
+  h_0926447d100ad2 190-228
+lib/inventory/osqueryTransform.js
+  h_0926447d100ad2 66-67,247-248,253-254,258,274-277,286-291,296,298-327,338-341
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cdb4d962b3791ff0a73a90d09bbdf1b1f1c2b0ef",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
