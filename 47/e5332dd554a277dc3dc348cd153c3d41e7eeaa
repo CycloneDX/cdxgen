@@ -1,0 +1,18 @@
+lib/inventory/agentSkillSpec.js
+  h_0926447d100ad2 1-17
+lib/inventory/agentSkillSpec.poku.js
+  h_0926447d100ad2 1-36
+lib/inventory/communityAiConfigParser.js
+  h_0926447d100ad2 8,283-284,288
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "47e5332dd554a277dc3dc348cd153c3d41e7eeaa",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
