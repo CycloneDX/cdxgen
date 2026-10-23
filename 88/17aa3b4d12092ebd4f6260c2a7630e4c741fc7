@@ -1,0 +1,16 @@
+data/rules/obom-runtime.yaml
+  h_0926447d100ad2 114-116,1778-1805
+lib/stages/postgen/auditBom.poku.js
+  h_0926447d100ad2 2573-2630
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8817aa3b4d12092ebd4f6260c2a7630e4c741fc7",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
