@@ -44,6 +44,8 @@ obom -o /absolute/path/to/obom.json --deep \
 
 - osquery-derived runtime artifacts: processes, listening ports, users, services, scheduled jobs
 - `sysctl_hardening` and `mount_hardening` snapshots
+- packages of pacman (Arch and its derivatives), snap, flatpak and Homebrew on Linux, alongside deb and rpm
+- AI agent skills installed for each user and system-wide (`ai_agent_skills`), and GPUs with their driver versions (`gpu_info`)
 - GTFOBins enrichment on privileged and network-active runtime rows — a shell-escape-capable binary running privileged or listening on the network is the signal worth escalating
 
 ### Alpine, Wolfi and Chainguard hosts
@@ -85,15 +87,22 @@ findings and vulnerability matches carry over between the two.
 | deb              | `pkg:deb/ubuntu/php8.3-cli@8.3.6-0ubuntu0.24.04.13?arch=amd64&distro=ubuntu-24.04&distro_name=noble`; `&epoch=N` when the version has one |
 | rpm              | `pkg:rpm/almalinux/openssl-libs@1:3.5.8-1.el9_8?arch=x86_64&distro=almalinux-9.8&epoch=1`; the version is `[epoch:]version-release` |
 | apk              | `pkg:apk/alpine/php84@8.4.27-r0?arch=x86_64&distro=alpine-3.24.3&distro_name=alpine-3.24`                |
+| pacman           | `pkg:alpm/arch/zlib@1:1.3.2-4?arch=x86_64`; the vendor and `arch` only, the version as pacman reports it  |
 | Homebrew         | `pkg:brew/php@8.5.11_1`; a cask has the same form, and `cdx:homebrew:type` says `formula` or `cask`      |
+| MacPorts         | `pkg:macports/openssl3@3.6.0_0`; the version is `version_revision`                                       |
+| snap             | `pkg:snap/core22@20250408`; the revision, channel and confinement are `cdx:snap:*` properties            |
+| flatpak          | `pkg:flatpak/org.gnome.Calculator@48.1?arch=x86_64&branch=stable`; named by the application ID           |
 | npm and pypi     | `pkg:npm/%40npmcli/agent@4.0.2`, `pkg:pypi/pyyaml@6.0`                                                   |
 
 - None of these purls has a subpath. Where a package was found is evidence,
   not identity: it is in `evidence.occurrences` (and the `path` property), and
   a package installed in several places, such as under two Node.js versions,
   is one component with an occurrence for each.
-- `cdx:deb:source`, `cdx:rpm:sourceRpm` and `cdx:apk:origin` name the source
-  package, which advisories are often keyed by.
+- `cdx:deb:source`, `cdx:rpm:sourceRpm`, `cdx:apk:origin` and `cdx:alpm:pkgbase`
+  name the source package, which advisories are often keyed by.
+- An AI agent skill from `ai_agent_skills` is a `file` component with no purl;
+  its bom-ref is the SHA-256 of its SKILL.md, and each place it is installed is
+  an occurrence.
 - To compare a host with an image, run `obom` inside a container of the image
   and `cdxgen -t docker <image>`, then diff the package purls. Leave out the
   container scan's components tagged `source`; an OBOM has none:
@@ -106,7 +115,7 @@ findings and vulnerability matches carry over between the two.
   diff image-purls.txt host-purls.txt
   ```
 
-- An OBOM from cdxgen 13.5.0 or earlier named these packages differently:
+- An OBOM from cdxgen 13.4.0 or earlier named these packages differently:
   subpaths such as `#var/lib/dpkg`, no qualifiers, and `pkg:swid` for Homebrew.
   Regenerate it before diffing it with a newer one. Never rewrite its purls by
   hand.
