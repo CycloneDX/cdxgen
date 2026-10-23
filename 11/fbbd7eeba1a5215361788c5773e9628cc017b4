@@ -1,0 +1,26 @@
+AGENTS.md
+  h_0926447d100ad2 25-26
+claude-plugin/skills/os-hardware-inventory/SKILL.md
+  h_0926447d100ad2 47-48,90,92-94,101-105,118
+docs/BOM_AUDIT.md
+  h_0926447d100ad2 492-495
+docs/CUSTOM_PROPERTIES.md
+  h_0926447d100ad2 78,172-176,450,911-924,1667-1670,1784-1792,2113-2117,2237-2243
+docs/OBOM_LESSONS.md
+  h_0926447d100ad2 182-185,187,204
+docs/OBOM_MACOS_TROUBLESHOOTING.md
+  h_0926447d100ad2 5-15
+docs/README.md
+  h_0926447d100ad2 235,237,244-248
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "11fbbd7eeba1a5215361788c5773e9628cc017b4",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
