@@ -1,0 +1,42 @@
+types/lib/cli/managedBom.d.ts.map
+  h_0926447d100ad2 1
+types/lib/ecosystems/pythonutils.d.ts
+  h_0926447d100ad2 101
+types/lib/inventory/agentSkillSpec.d.ts
+  h_0926447d100ad2 1-13
+types/lib/inventory/agentSkillSpec.d.ts.map
+  h_0926447d100ad2 1
+types/lib/inventory/certificates.d.ts.map
+  h_0926447d100ad2 1
+types/lib/inventory/communityAiConfigParser.d.ts.map
+  h_0926447d100ad2 1
+types/lib/inventory/evidenceUtils.d.ts
+  h_0926447d100ad2 93-107
+types/lib/inventory/evidenceUtils.d.ts.map
+  h_0926447d100ad2 1
+types/lib/inventory/osPackagePurl.d.ts
+  h_0926447d100ad2 3-5,12,47-49,51,59,66-70,73-75,78,80,91,93
+types/lib/inventory/osPackagePurl.d.ts.map
+  h_0926447d100ad2 1
+types/lib/inventory/osinfo.d.ts
+  h_0926447d100ad2 202-203
+types/lib/inventory/osinfo.d.ts.map
+  h_0926447d100ad2 1
+types/lib/inventory/osqueryTransform.d.ts
+  h_0926447d100ad2 86-87,92-93,97,107-126
+types/lib/inventory/osqueryTransform.d.ts.map
+  h_0926447d100ad2 1
+types/lib/validator/bomValidator.d.ts.map
+  h_0926447d100ad2 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a4f3e0455db6ea35eed38501cb134580b2020de6",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
