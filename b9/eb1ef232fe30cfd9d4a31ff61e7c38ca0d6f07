@@ -1,0 +1,16 @@
+lib/inventory/certificates.js
+  h_0926447d100ad2 918-923,926
+lib/inventory/certificates.poku.js
+  h_0926447d100ad2 12,826-855
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b9eb1ef232fe30cfd9d4a31ff61e7c38ca0d6f07",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
