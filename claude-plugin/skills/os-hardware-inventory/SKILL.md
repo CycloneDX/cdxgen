@@ -94,11 +94,14 @@ findings and vulnerability matches carry over between the two.
 | flatpak          | `pkg:flatpak/org.gnome.Calculator@48.1?arch=x86_64&branch=stable`; named by the application ID           |
 | npm and pypi     | `pkg:npm/%40npmcli/agent@4.0.2`, `pkg:pypi/pyyaml@6.0`                                                   |
 | Firefox add-on   | `pkg:swid/uBlock%2BOrigin@1.75.0?tag_id=uBlock0%40raymondhill.net`; the `tag_id` is the add-on ID        |
+| Chromium ext.    | `pkg:chrome-extension/nmmhkkegccagdldgiimedpiccmgmieda@1.0.0.6`; as `-t chrome-extension` names it       |
+| VS Code ext.     | `pkg:vscode-extension/redhat/vscode-yaml@2.0.0`; as `-t vscode-extension` names it                       |
 
 - None of these purls has a subpath. Where a package was found is evidence,
   not identity: it is in `evidence.occurrences` (and the `path` property), and
-  a package installed in several places, such as under two Node.js versions or
-  two Firefox profiles, is one component with an occurrence for each.
+  a package installed in several places, such as under two Node.js versions,
+  two browser profiles or two editors, is one component with an occurrence for
+  each.
 - `cdx:deb:source`, `cdx:rpm:sourceRpm`, `cdx:apk:origin` and `cdx:alpm:pkgbase`
   name the source package, which advisories are often keyed by.
 - An AI agent skill from `ai_agent_skills` is a `file` component with no purl;
@@ -117,8 +120,9 @@ findings and vulnerability matches carry over between the two.
   ```
 
 - An OBOM from cdxgen 13.4.0 or earlier named these packages differently:
-  subpaths such as `#var/lib/dpkg` or a Firefox profile path, no qualifiers,
-  and `pkg:swid` for Homebrew.
+  subpaths such as `#var/lib/dpkg` or a browser profile path, no qualifiers,
+  `pkg:swid` for Homebrew, and the publisher's display name as the namespace
+  of a VS Code extension.
   Regenerate it before diffing it with a newer one. Never rewrite its purls by
   hand.
 

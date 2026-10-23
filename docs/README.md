@@ -253,6 +253,8 @@ The npm and pypi packages that osquery finds (`npm_packages`, `python_packages`)
 
 A Firefox add-on (`firefox_addons`) is named by its add-on ID, not by the profile it was found in: `pkg:swid/uBlock%2BOrigin@1.75.0?tag_id=uBlock0%40raymondhill.net`. Each profile it is installed in is an occurrence, so an add-on in several profiles, or installed by several users, is listed once. On Linux, osquery 5.24.0 also reads the profiles that Firefox 147 and later create under `~/.config/mozilla/firefox`.
 
+Chromium and VS Code extensions (`chrome_extensions`, `vscode_extensions`) get the purls `-t chrome-extension` and `-t vscode-extension` give them, for example `pkg:chrome-extension/nmmhkkegccagdldgiimedpiccmgmieda@1.0.0.6` and `pkg:vscode-extension/redhat/vscode-yaml@2.0.0`. Each browser profile or editor the extension is installed in is an occurrence.
+
 When `trustinspector` is available, live-host OBOM generation also enriches matching macOS and Windows components with code-signing / notarization / Authenticode properties and emits additional host-trust `data` components for Gatekeeper and WDAC posture. See [Trust enrichment BOM diff examples](./TRUST_ENRICHMENT_DIFF.md) for compact before/after excerpts.
 
 For macOS-specific setup and permission caveats, see [OBOM macOS troubleshooting](./OBOM_MACOS_TROUBLESHOOTING.md).
