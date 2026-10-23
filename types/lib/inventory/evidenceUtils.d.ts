@@ -90,4 +90,19 @@ export declare function convertOSQueryResults(queryCategory: string, queryObj: O
  * @returns {Object[]} Components
  */
 export declare function convertApkPackages(packages: Object[]): Object[];
+/**
+ * Convert the rows of the `ai_agent_skills` query into components.
+ *
+ * A skill installed on the host is what the `ai-skill` project scan finds in a
+ * repository, so it is a `file` component with the same `cdx:file:kind` and
+ * `cdx:skill:*` properties, and no purl: a skill has no package identity. Its
+ * bom-ref is the SHA-256 of its SKILL.md rather than the path, which is under a
+ * home directory, and where it was found is an occurrence. The same skill
+ * found under several roots, such as a plugin marketplace checkout and the
+ * plugin cache, is one component with one occurrence for each.
+ *
+ * @param {Object[]} results Rows of `ai_agent_skills` joined with `hash`
+ * @returns {Object[]} Components
+ */
+export declare function convertAgentSkillRows(results: Object[]): Object[];
 //# sourceMappingURL=evidenceUtils.d.ts.map
