@@ -1,0 +1,16 @@
+lib/inventory/evidenceUtils.js
+  h_0926447d100ad2 974-975,978
+lib/inventory/osPackagePurl.js
+  h_0926447d100ad2 193-196,198-212,214-215,221-223,225-235
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "19aee6faf1f66df8cb6844ad32836ce4b7fa4267",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
