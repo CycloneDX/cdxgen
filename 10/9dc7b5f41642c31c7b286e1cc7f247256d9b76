@@ -1,0 +1,26 @@
+data/cbomosdb-queries.json
+  h_0926447d100ad2 20-25,42-47
+data/component-tags.json
+  h_0926447d100ad2 184-190
+data/queries-darwin.json
+  h_0926447d100ad2 32-43,62-67,98-103
+data/queries-win.json
+  h_0926447d100ad2 33-44,103-108,188
+data/queries.json
+  h_0926447d100ad2 33-44,84-106,123-128
+lib/core/activity.poku.js
+  h_0926447d100ad2 686-754
+lib/inventory/cbomutils.poku.js
+  h_0926447d100ad2 29-83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "109dc7b5f41642c31c7b286e1cc7f247256d9b76",
+  "prompts": {},
+  "humans": {
+    "h_0926447d100ad2": {
+      "author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
