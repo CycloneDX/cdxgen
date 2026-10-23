@@ -489,6 +489,10 @@ Recent additions broaden the Linux and trust-aware host coverage:
 | OBOM-LNX-017 | medium   | Linux sysctl posture diverges from common hardening baseline         |
 | OBOM-LNX-018 | high     | Linux temporary mount is missing key hardening flags                 |
 | OBOM-LNX-019 | high     | Live Linux runtime artifact matches GTFOBins execution helper        |
+| OBOM-LNX-020 | high     | Privileged listener on a non-local interface from a writable path    |
+| OBOM-LNX-021 | medium   | Linux APT source uses plaintext HTTP transport                       |
+| OBOM-LNX-022 | medium   | Linux authorized_keys entry uses deprecated ssh-rsa algorithm        |
+| OBOM-LNX-023 | medium   | Linux snap installed in devmode confinement                          |
 | OBOM-WIN-001 | high     | Windows drive without BitLocker protection                           |
 | OBOM-WIN-002 | high     | Windows Security Center unhealthy state                              |
 | OBOM-WIN-003 | critical | Windows Run key references temporary/script execution path           |

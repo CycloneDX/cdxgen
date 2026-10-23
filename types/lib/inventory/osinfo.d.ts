@@ -199,7 +199,8 @@ export declare function _resetOsReleaseCache(): void;
  * Derive structured distro information from an os-release file.
  *
  * Returns an object with:
- *   - purlType    {string}  "deb" | "apk" | "rpm"
+ *   - purlType    {string}  "deb" | "apk" | "rpm" | "alpm" (Arch and the
+ *                           distros built on it)
  *   - namespace   {string}  canonical purl namespace (e.g. "ubuntu", "alpine",
  *                           "azure-linux" for both Azure Linux and CBL-Mariner)
  *   - distroId    {string}  ID + "-" + VERSION_ID with a canonical vendor

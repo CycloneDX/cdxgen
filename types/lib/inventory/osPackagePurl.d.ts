@@ -1,13 +1,15 @@
 /**
  * The purl types an OS scan builds from what a package manager reports.
- * deb, rpm and apk belong to a distro; brew belongs to none.
+ * deb, rpm, apk and alpm belong to a distro; brew, macports, snap and flatpak
+ * belong to none. brew, macports, snap and flatpak are not purl-spec types;
+ * cdx-purl builds them as it builds `pkg:chocolatey`.
  */
 export declare const OS_PACKAGE_PURL_TYPES: Set<string>;
 /**
  * Whether a purl type is one of the OS package managers handled here.
  *
  * @param {string|undefined} type Purl type
- * @returns {boolean} true for deb, rpm, apk and brew
+ * @returns {boolean} true for the types in OS_PACKAGE_PURL_TYPES
  */
 export declare function isOsPackagePurlType(type: string | undefined): boolean;
 /**
@@ -42,9 +44,11 @@ export declare function osPackageEpoch(pkg: {
  *   puts it in the version as well as in the `epoch` qualifier, and an OBOM must
  *   name the package the same way.
  * - deb: the version exactly as dpkg reports it, epoch included.
- * - apk and brew: the version as it is.
+ * - macports: `version_revision`, the form `port installed` prints.
+ * - apk, alpm, brew, snap and flatpak: the version as it is. A pacman version
+ *   already holds its epoch and release (`1:1.3.2-4`).
  *
- * @param {{type: string, version?: string, release?: string, epoch?: string|number}} pkg Package
+ * @param {{type: string, version?: string, release?: string, epoch?: string|number, revision?: string|number}} pkg Package
  * @returns {string} The version, or an empty string when the package has none
  */
 export declare function osPackageVersion(pkg: {
@@ -52,22 +56,28 @@ export declare function osPackageVersion(pkg: {
     version?: string;
     release?: string;
     epoch?: string | number;
+    revision?: string | number;
 }): string;
 /**
  * Build the purl of an OS package.
  *
  * deb, rpm and apk purls take their vendor (`ubuntu`, `almalinux`, `alpine`,
  * `wolfi`) and the `distro` and `distro_name` qualifiers from the distro, plus
- * `arch` and `epoch` from the package. A qualifier with no value is left out.
- * brew purls carry neither vendor nor qualifiers.
+ * `arch` and `epoch` from the package. alpm purls take the vendor (`arch`,
+ * `manjaro`) and `arch` only: that is all the alpm type defines, and an Arch
+ * system is rolling, with no release to name. A qualifier with no value is
+ * left out. brew, macports and snap purls carry neither vendor nor qualifiers;
+ * a flatpak purl carries the `arch` and `branch` of the flatpak ref.
  *
  * @param {Object} pkg The package
- * @param {string} pkg.type `deb`, `rpm`, `apk` or `brew`
- * @param {string} pkg.name Package name
- * @param {string} [pkg.version] deb: the dpkg version. rpm: the version tag only. apk: version-rN.
+ * @param {string} pkg.type One of OS_PACKAGE_PURL_TYPES
+ * @param {string} pkg.name Package name; a flatpak's application ID
+ * @param {string} [pkg.version] deb: the dpkg version. rpm: the version tag only. apk: version-rN. macports: the version without its revision.
  * @param {string} [pkg.release] rpm release tag
  * @param {string|number} [pkg.epoch] rpm epoch tag
+ * @param {string|number} [pkg.revision] MacPorts revision
  * @param {string} [pkg.arch] Package architecture
+ * @param {string} [pkg.branch] flatpak branch (`stable`, `48`)
  * @param {{namespace?: string, distroId?: string, distroName?: string}} [distro]
  *   What getDistroInfo() reports; read from the host's os-release when left out
  * @returns {string|null} The purl, or null when the parts do not form a valid one
@@ -78,7 +88,9 @@ export declare function buildOsPackagePurl(pkg: {
     version?: string;
     release?: string;
     epoch?: string | number;
+    revision?: string | number;
     arch?: string;
+    branch?: string;
 }, distro?: {
     namespace?: string;
     distroId?: string;

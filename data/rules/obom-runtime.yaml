@@ -111,8 +111,9 @@
       "deviceId": name,
       "driveLetter": version,
       "protectionStatus": $prop($, 'protection_status'),
-      "encryptionMethod": $prop($, 'encryption_method'),
-      "percentageEncrypted": $prop($, 'percentage_encrypted')
+      "encryptionMethod": description,
+      "percentageEncrypted": $prop($, 'percentage_encrypted'),
+      "protectorTypes": $prop($, 'protector_types')
     }
 
 - id: OBOM-WIN-002
@@ -1773,4 +1774,32 @@
       "keyFile": $prop($, 'key_file'),
       "comment": description,
       "uid": $prop($, 'uid')
+    }
+
+- id: OBOM-LNX-023
+  name: "Linux snap installed in devmode confinement"
+  description: "A snap installed with --devmode runs without its sandbox being enforced: policy violations are only logged. Devmode is meant for snap development, not for software a host relies on."
+  severity: medium
+  category: obom-runtime
+  dry-run-support: full
+  condition: |
+    components[
+      $prop($, 'cdx:osquery:category') = 'snap_packages'
+      and $lowercase($safeStr($prop($, 'cdx:snap:confinement'))) = 'devmode'
+    ]
+  location: |
+    {
+      "bomRef": $."bom-ref",
+      "purl": purl
+    }
+  message: "Snap '{{ name }}' {{ version }} (revision {{ $prop($, 'cdx:snap:revision') }}) is installed in devmode confinement, so its sandbox is not enforced"
+  mitigation: "Reinstall the snap from a stable channel with strict confinement, or remove it. If devmode is required for development, keep it off production and shared hosts."
+  evidence: |
+    {
+      "snap": name,
+      "version": version,
+      "revision": $prop($, 'cdx:snap:revision'),
+      "channel": $prop($, 'cdx:snap:channel'),
+      "confinement": $prop($, 'cdx:snap:confinement'),
+      "grade": $prop($, 'grade')
     }

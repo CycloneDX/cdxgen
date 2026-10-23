@@ -83,16 +83,18 @@ export declare function shouldCreateOsQueryPurl(componentType: string): boolean;
 export declare function createOsQueryPurl(purlType: string, group: string | null, name: string, version: string, qualifiers: Object | null, subpath: string | null): string | null;
 /**
  * The version and purl of a row from an OS package table: `deb_packages`,
- * `rpm_packages`, `homebrew_packages` or the rows of the apk database.
+ * `rpm_packages`, `pacman_packages`, `homebrew_packages`, `macports_packages`,
+ * `snap_packages`, `flatpak_packages` or the rows of the apk database.
  *
  * Such a row is named the way the package manager's own scan names it: deb,
  * rpm and apk with the vendor and the `arch`, `distro`, `distro_name` and
  * `epoch` qualifiers of the container scan, an rpm version joined to its
- * release, a Homebrew package by its name and version. A row's `path`,
+ * release, a MacPorts version joined to its revision, a flatpak by its
+ * application ID with the `arch` and `branch` of its ref. A row's `path`,
  * `admindir` or source file is not a path inside the package, so none of them
  * becomes a subpath.
  *
- * @param {string} purlType `deb`, `rpm`, `apk` or `brew`
+ * @param {string} purlType One of OS_PACKAGE_PURL_TYPES
  * @param {Object} res osquery row
  * @param {string} name Component name derived from the row
  * @param {Object} [distro] What getDistroInfo() reports; the host's by default
@@ -101,6 +103,26 @@ export declare function createOsQueryPurl(purlType: string, group: string | null
 export declare function createOsQueryPackageIdentity(purlType: string, res: Object, name: string, distro?: Object): {
     version: string;
     purl: string | null;
+};
+/**
+ * The columns of an OS package row that give its licence and its home page.
+ * They become the component's `licenses` and a `website` reference rather than
+ * properties. `separator` splits a licence column that lists several: pacman
+ * keeps one licence per entry, which osquery joins with commas.
+ */
+export declare const OS_PACKAGE_LICENSE_COLUMNS: {
+    alpm: {
+        license: string;
+        separator: string;
+        website: string;
+    };
+    snap: {
+        license: string;
+    };
+    flatpak: {
+        license: string;
+        website: string;
+    };
 };
 /**
  * The property name an OS package table column is emitted under.

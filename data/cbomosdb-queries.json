@@ -17,6 +17,12 @@
     "purlType": "rpm",
     "componentType": "library"
   },
+  "pacman_packages": {
+    "query": "select * from pacman_packages where name like '%ssl%' OR name like '%crypto%';",
+    "description": "Retrieves the crypto and TLS libraries pacman installed on Arch Linux and the distros built on it.",
+    "purlType": "alpm",
+    "componentType": "library"
+  },
   "python_packages": {
     "query": "select * from python_packages where name like '%ssl%' OR name like '%crypto%';",
     "description": "Python packages installed on system.",
@@ -33,6 +39,12 @@
     "query": "SELECT * FROM homebrew_packages where name like '%ssl%' OR name like '%crypto%';",
     "description": "List all homebrew_packages.",
     "purlType": "brew",
+    "componentType": "library"
+  },
+  "macports_packages": {
+    "query": "select * from macports_packages where name like '%ssl%' OR name like '%crypto%';",
+    "description": "Retrieves the crypto and TLS libraries among the active MacPorts ports.",
+    "purlType": "macports",
     "componentType": "library"
   },
   "authorized_keys": {

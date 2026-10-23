@@ -2,6 +2,17 @@
 
 This guide covers common issues when generating an OBOM on macOS with `cdxgen -t os` / `obom`.
 
+## What changed with osquery 5.24.0
+
+cdxgen-plugins-bin 4.2.0 bundles osquery `5.24.0`. On macOS it brings:
+
+- `macports_packages`: the active ports under `/opt/local`, as `pkg:macports/<name>@<version>_<revision>` components
+- `ai_agent_skills`: the SKILL.md packages installed for each user under `~/.claude/skills`, `~/.agents/skills`, `~/.codex/skills`, `~/.cursor/skills` and `~/.copilot/skills`, and through Claude Code plugins. They are `file` components with the same `cdx:skill:*` properties as the `ai-skill` project scan, the SHA-256 of the SKILL.md as their hash, and no purl
+- `gpu_info`: the GPU as a `device` component. Apple Silicon reports one integrated GPU with no separate driver version
+- `chrome_search_engines`: the default search engine of each Chromium-based browser profile. A profile that never changed its default has no row
+- `safari_extensions.path` is now the extension's `.appex` bundle. osquery 5.23.1 reported its glob pattern (`/Applications/<App>.app/Contents/PlugIns/%.appex/Contents/Info.plist`), which became the purl subpath, so every Safari extension has a new purl and bom-ref
+- `npm_packages` and `python_packages` also scan the MacPorts prefix, and a memory leak in the `processes` table is fixed
+
 ## What changed with osquery 5.23.0
 
 The bundled osquery was updated to `5.23.0`, which made a few macOS-specific improvements relevant to OBOM collection:
